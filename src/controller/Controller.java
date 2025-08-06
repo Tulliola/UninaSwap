@@ -7,8 +7,11 @@ import gui.FrameDiLogin;
 
 
 public class Controller {
+	private FrameDiLogin loginFrame;
+	
 	public Controller() {
-		FrameDiLogin loginFrame = new FrameDiLogin(this);
+		loginFrame = new FrameDiLogin(this);
+		loginFrame.setVisible(true);
 	}	
 	
 	public static void main(String[] args) {
