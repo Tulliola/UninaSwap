@@ -12,7 +12,7 @@ public class DBConnection implements AutoCloseable{
 		
 	}
 	
-	public DBConnection getConnessioneAlDB() {
+	public static DBConnection getConnessioneAlDB() {
 		if(connessioneAlDB == null)
 			connessioneAlDB = new DBConnection();
 		
@@ -28,7 +28,7 @@ public class DBConnection implements AutoCloseable{
 		
 		String passwordDiAccesso;
 		
-		try(BufferedReader buffer = new BufferedReader(new FileReader(new File("/src/database/pwdfile")))){
+		try(BufferedReader buffer = new BufferedReader(new FileReader(new File("src/database/pwdfile")))){
 			passwordDiAccesso = buffer.readLine();
 			
 			if(connessione == null || connessione.isClosed()) {
