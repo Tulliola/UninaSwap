@@ -7,6 +7,7 @@ import java.sql.*;
 
 //Import dal package Database
 import database.DBConnection;
+
 //Import dal package GUI
 import gui.*;
 
@@ -22,13 +23,10 @@ public class Controller {
 	private static Connection connessioneDB;
 	
 	public Controller() {
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
 		this.definisciConnessioneAlDB();
-	
-		frameDiRegistrazione = new FrameDiRegistrazione(this);
-		frameDiRegistrazione.setVisible(true);
-	}	
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
+	}
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
@@ -64,5 +62,11 @@ public class Controller {
 		frameDiRegistrazione.dispose();
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
+	}
+
+	public void passaAFrameDiRegistrazione() {
+		frameDiLogin.dispose();
+		frameDiRegistrazione = new FrameDiRegistrazione(this);
+		frameDiRegistrazione.setVisible(true);
 	}
 }
