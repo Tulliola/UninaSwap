@@ -2,7 +2,6 @@ package dto;
 
 public class ProfiloUtente {
 	private String username;
-
 	private String email;
 	private double saldo;
 	private byte[] immagineProfilo;
@@ -21,6 +20,7 @@ public class ProfiloUtente {
 	public String toString() {
 		return username;
 	}
+
 
 	//Getter e Setter per username
 	public String getUsername() {

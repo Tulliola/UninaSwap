@@ -5,6 +5,7 @@ import java.sql.*;
 
 import javax.swing.*;
 
+
 import database.dao.implementazioni.*;
 import database.dao.interfacce.*;
 
@@ -25,10 +26,12 @@ import eccezioni.*;
 public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
+
 	private FrameProfiloUtente frameProfiloUtente;
 	private FrameCambiaImmagine frameCambiaImmagine;
 	
 	private ProfiloUtente utenteLoggato;
+
 	
 	private static Connection connessioneDB;
 	
@@ -93,6 +96,7 @@ public class Controller {
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
 		frameDiRegistrazione.setVisible(true);
 	}
+
 	
 	public void passaAFrameCambiaImmagine() {
 		frameProfiloUtente.setVisible(false);
@@ -113,5 +117,6 @@ public class Controller {
 				
 		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		caricamentoTornaALoginFrame.setVisible(true);
+
 	}
 }

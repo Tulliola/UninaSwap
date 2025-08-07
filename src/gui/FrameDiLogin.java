@@ -249,6 +249,7 @@ public class FrameDiLogin extends JFrame {
 	public void checkPassword(String password) {
 		if(password == null || password.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
+
 	}
 	
 	private void clickAccedi() {
