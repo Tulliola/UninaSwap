@@ -6,24 +6,26 @@ import java.sql.*;
 
 import javax.swing.*;
 
-import database.DBConnection;
-import database.dao.implementazioni.*;
-import database.dao.interfacce.*;
-import dto.*;
+
+
 //Import dal package GUI
 import gui.*;
 
 //Import dal package DTO
 
+//Import dal package DAO
+import database.DBConnection;
+import database.dao.*;
+import database.dao.implementazioni.*;
+import dto.*;
 //Import dal package Eccezioni
-import eccezioni.NomeSchemaException;
+import eccezioni.*;
 
 
 public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
 	
-	private ProfiloUtenteDAO profiloDAO;
 	
 	private static Connection connessioneDB;
 	
@@ -78,9 +80,17 @@ public class Controller {
 	}
 
 
+
 	public void onAccessoClicked(String email, String password) throws SQLException{
-		profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmail(email, password);
 		System.out.println(profiloLoggato);
+	}
+	
+	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
+		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		profiloInRegistrazione.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
+
 	}
 }
