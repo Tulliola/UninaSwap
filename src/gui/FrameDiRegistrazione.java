@@ -168,8 +168,7 @@ public class FrameDiRegistrazione extends JFrame {
 		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
 
-		labelDiErrore.setForeground(Color.red);
-		labelDiErrore.setText("prova");
+		labelDiErrore.setForeground(Color.red); 
 		labelDiErrore.setVisible(false);
 		
 		panelInput.add(label);
