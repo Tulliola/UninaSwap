@@ -7,6 +7,9 @@ import java.sql.*;
 import javax.swing.*;
 
 import database.DBConnection;
+import database.dao.implementazioni.*;
+import database.dao.interfacce.*;
+import dto.*;
 //Import dal package GUI
 import gui.*;
 
@@ -19,6 +22,9 @@ import eccezioni.NomeSchemaException;
 public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
+	
+	private ProfiloUtenteDAO profiloDAO;
+	
 	private static Connection connessioneDB;
 	
 	public Controller() {
@@ -58,6 +64,7 @@ public class Controller {
 			System.out.println("La connessione è stata definita con successo.");
 		
 	}
+	
 	public void tornaALogin() {
 		frameDiRegistrazione.dispose();
 		frameDiLogin = new FrameDiLogin(this);
@@ -68,5 +75,12 @@ public class Controller {
 		frameDiLogin.dispose();
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
 		frameDiRegistrazione.setVisible(true);
+	}
+
+
+	public void onAccessoClicked(String email, String password) throws SQLException{
+		profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmail(email, password);
+		System.out.println(profiloLoggato);
 	}
 }
