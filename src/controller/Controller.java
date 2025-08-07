@@ -6,14 +6,18 @@ import java.sql.*;
 
 import javax.swing.*;
 
-import database.DBConnection;
 //Import dal package GUI
 import gui.*;
 
 //Import dal package DTO
 
+//Import dal package DAO
+import database.DBConnection;
+import database.dao.*;
+import database.dao.implementazioni.*;
+
 //Import dal package Eccezioni
-import eccezioni.NomeSchemaException;
+import eccezioni.*;
 
 
 public class Controller {
@@ -68,5 +72,11 @@ public class Controller {
 		frameDiLogin.dispose();
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
 		frameDiRegistrazione.setVisible(true);
+	}
+	
+	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
+		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		profiloInRegistrazione.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
 	}
 }
