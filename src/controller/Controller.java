@@ -7,6 +7,9 @@ import java.sql.*;
 import javax.swing.*;
 
 
+import database.dao.implementazioni.*;
+import database.dao.interfacce.*;
+import dto.*;
 
 //Import dal package GUI
 import gui.*;
@@ -26,6 +29,9 @@ public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
 	
+
+	private ProfiloUtenteDAO profiloDAO;
+
 	
 	private static Connection connessioneDB;
 	
@@ -39,6 +45,7 @@ public class Controller {
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
 	}
+
 	
 	private static void definisciConnessioneAlDB() {
 		DBConnection dbConn = DBConnection.getConnessioneAlDB();
@@ -82,7 +89,7 @@ public class Controller {
 
 
 	public void onAccessoClicked(String email, String password) throws SQLException{
-		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmail(email, password);
 		System.out.println(profiloLoggato);
 	}
