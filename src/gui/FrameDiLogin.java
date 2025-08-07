@@ -48,6 +48,7 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(Box.createRigidArea(new Dimension(25, 25)));
 		
 		//Settaggio del riquadro blu
+		contentPane.add(Box.createRigidArea(new Dimension(0, 30)));
 		settingBluePane();
 		
 		//Aggiunta delle Lable e dei TextField necessari per l'accesso
@@ -199,6 +200,7 @@ public class FrameDiLogin extends JFrame {
 		});
 		
 		aggiungiBottoniLogin(registratiButton);		
+
 		
 		buttonsPane.add(accediButton);
 		buttonsPane.add(Box.createRigidArea(new Dimension(20, 20)));
