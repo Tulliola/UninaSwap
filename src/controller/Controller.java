@@ -7,7 +7,7 @@ import gui.*;
 
 
 public class Controller {
-	private FrameDiLogin frameDiLogin;
+//	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
 	
 	public Controller() {
