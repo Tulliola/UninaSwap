@@ -14,6 +14,7 @@ public class FrameDiRegistrazione extends JFrame {
 	//Panels
 	private JPanel contentPane;
 	private JPanel panelInserimentoDati;
+	private JPanel panelTextELabel;
 
 	//Textfields
 	private JTextField usernameTextField;
@@ -61,15 +62,14 @@ public class FrameDiRegistrazione extends JFrame {
 		panelInserimentoDati.setBackground(new Color(198, 210, 222));	
 		
 		//Crea spazio tra il motto e i campi di testo
-		contentPane.add(Box.createRigidArea(new Dimension(0, 50)));
+		contentPane.add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		JLabel campiObbligatori = new JLabel();
-		campiObbligatori.setText("I campi con * sono obbligatori.");
-		campiObbligatori.setAlignmentX(CENTER_ALIGNMENT);
-		
-		panelInserimentoDati.add(campiObbligatori);
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		this.aggiungiTextFields();
+		
+		//Crea spazio tra i textfields e il bottone
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.aggiungiBottoneDiRegistrazione();
 	
 		panelInserimentoDati.setAlignmentX(CENTER_ALIGNMENT);
@@ -111,34 +111,48 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiTextFields() {
+		panelTextELabel = new JPanel();
+		panelTextELabel.setLayout(new BoxLayout(panelTextELabel, BoxLayout.Y_AXIS));
+		panelTextELabel.setOpaque(false);
+		
+		JLabel campiObbligatori = new JLabel();
+		campiObbligatori.setText("I campi con * sono obbligatori.");
+		campiObbligatori.setAlignmentX(LEFT_ALIGNMENT);
+		panelTextELabel.add(campiObbligatori);
+		panelTextELabel.add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		usernameTextField = new JTextField();
-		this.aggiungiTextField(usernameTextField, "Inserisci il tuo username");
+		this.aggiungiTextField(panelTextELabel, usernameTextField, "Inserisci il tuo username");
 
 		emailTextField = new JTextField();
-		this.aggiungiTextField(emailTextField, "Inserisci la tua email istituzionale");
+		this.aggiungiTextField(panelTextELabel, emailTextField, "Inserisci la tua email istituzionale");
 		
 		passwordTextField = new JPasswordField();
-		this.aggiungiTextField(passwordTextField, "Inserisci la tua password istituzionale");
+		this.aggiungiTextField(panelTextELabel, passwordTextField, "Inserisci la tua password istituzionale");
 	
 		residenzaTextField = new JTextField();
-		this.aggiungiTextField(residenzaTextField, "Inserisci la tua residenza");
+		this.aggiungiTextField(panelTextELabel, residenzaTextField, "Inserisci la tua residenza");
 		
+		
+		panelTextELabel.setAlignmentX(CENTER_ALIGNMENT);
+		
+		panelInserimentoDati.add(panelTextELabel);
 	}
 	
-	private void aggiungiTextField(JTextField textFieldInput, String stringaPerLabel) {
+	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, String stringaPerLabel) {
 		JLabel label = new JLabel();
 		label.setText(stringaPerLabel);
 		label.setForeground(Color.black);
 		label.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		label.setAlignmentX(CENTER_ALIGNMENT);
+		label.setAlignmentX(LEFT_ALIGNMENT);
 		
 		textFieldInput.setMaximumSize(new Dimension(300, 30));
-		textFieldInput.setAlignmentX(CENTER_ALIGNMENT);
+		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
 		
-		panelInserimentoDati.add(label);
-		panelInserimentoDati.add(textFieldInput);
+		panelInput.add(label);
+		panelInput.add(textFieldInput);
 		
-		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 15)));
+		panelInput.add(Box.createRigidArea(new Dimension(0, 15)));
 	}
 	
 	private void aggiungiBottoneDiRegistrazione() {
