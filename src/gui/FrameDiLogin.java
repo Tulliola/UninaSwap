@@ -12,7 +12,8 @@ public class FrameDiLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Controller mainController;
-	public FrameDiLogin(Controller controller) {
+	
+	public FrameDiLogin(Controller controller) {		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 800);
 		contentPane = new JPanel();
