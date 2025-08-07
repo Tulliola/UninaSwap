@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import controller.Controller;
 
 public class FrameDiLogin extends JFrame {
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel fieldPane;
