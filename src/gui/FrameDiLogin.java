@@ -8,7 +8,7 @@ import javax.swing.border.EmptyBorder;
 import controller.Controller;
 
 public class FrameDiLogin extends JFrame {
-	//TODO aggiungere variabili di istanza
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel fieldPane;

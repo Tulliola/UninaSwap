@@ -3,19 +3,22 @@ package controller;
 import java.sql.*;
 
 //Import dal package GUI
-import gui.FrameDiLogin;
+import gui.*;
 
 
 public class Controller {
-	private FrameDiLogin loginFrame;
+	private FrameDiLogin frameDiLogin;
+	private FrameDiRegistrazione frameDiRegistrazione;
 	
 	public Controller() {
-		loginFrame = new FrameDiLogin(this);
-		loginFrame.setVisible(true);
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
+		frameDiRegistrazione = new FrameDiRegistrazione(this);
+		frameDiRegistrazione.setVisible(true);
+		
 	}	
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
 	}
 }
-
