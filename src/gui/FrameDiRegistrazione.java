@@ -1,11 +1,18 @@
 package gui;
 
 import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
 import controller.Controller;
+
+//Eccezioni
+import eccezioni.UsernameException;
+import eccezioni.EmailException;
+import eccezioni.PasswordException;
+import eccezioni.ResidenzaException;
 
 public class FrameDiRegistrazione extends JFrame {
 
@@ -16,14 +23,21 @@ public class FrameDiRegistrazione extends JFrame {
 	private JPanel panelInserimentoDati;
 	private JPanel panelTextELabel;
 
+	//Buttons
+	private JButton bottoneDiRegistrazione;
+	private JButton bottoneTornaALogin;
+
 	//Textfields
 	private JTextField usernameTextField;
 	private JTextField emailTextField;
 	private JTextField residenzaTextField;
 	private JPasswordField passwordTextField;
 	
-	//Buttons
-	private JButton bottoneDiRegistrazione;
+	//Label di errore
+	private JLabel lblErroreUsername;
+	private JLabel lblErroreEmail;
+	private JLabel lblErrorePassword;
+	private JLabel lblErroreResidenza;
 	
 	//Controller
     private Controller mainController;
@@ -105,7 +119,7 @@ public class FrameDiRegistrazione extends JFrame {
 		mottoApplicativo.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
 		mottoApplicativo.setForeground(new Color(65, 106, 144));
 		mottoApplicativo.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		contentPane.add(nomeApplicativo);
 		contentPane.add(mottoApplicativo);
 	}
@@ -132,7 +146,6 @@ public class FrameDiRegistrazione extends JFrame {
 	
 		residenzaTextField = new JTextField();
 		this.aggiungiTextField(panelTextELabel, residenzaTextField, "Inserisci la tua residenza");
-		
 		
 		panelTextELabel.setAlignmentX(CENTER_ALIGNMENT);
 		
@@ -165,7 +178,69 @@ public class FrameDiRegistrazione extends JFrame {
 		bottoneDiRegistrazione.setFocusable(false);
 		bottoneDiRegistrazione.setAlignmentX(CENTER_ALIGNMENT);
 		
+		//Logica del bottone
+		bottoneDiRegistrazione.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				checkDatiRegistrazione();
+			}
+		});
+		
 		panelInserimentoDati.add(bottoneDiRegistrazione);
 		
+	}
+
+	private void checkDatiRegistrazione() {
+	
+		try {
+			checkUsername(usernameTextField.getText());
+			checkEmail(emailTextField.getText());
+			checkPassword(passwordTextField.getText());
+			checkResidenza(residenzaTextField.getText());
+		}
+		catch(UsernameException exc1) {
+			
+		}
+		catch(EmailException exc2) {
+			
+		}
+		catch(PasswordException exc3) {
+			
+		}
+		
+	}
+	
+	private void checkUsername(String usernameIn) {
+		if(usernameIn == null || usernameIn.length() == 0)
+			throw new UsernameException("Il campo username è obbligatorio.");
+		
+		if(usernameIn.length() > 20)
+			throw new UsernameException("L'username deve essere di massimo 20 caratteri.");
+		
+		if(usernameIn.contains(" "))
+			throw new UsernameException("L'username non deve contenere spazi vuoti.");
+	}
+	
+	private void checkPassword(String passwordIn) {
+		if(passwordIn == null || passwordIn.length() == 0)
+			throw new PasswordException("Il campo password è obbligatorio.");
+		
+	}
+	
+	private void checkEmail(String emailIn) {
+		if(emailIn == null || emailIn.length() == 0)
+			throw new EmailException("Il campo email è obbligatorio.");
+		
+	}
+	
+	private void checkResidenza(String residenzaIn) {
+		if(residenzaIn == null || residenzaIn.isBlank())
+			throw new ResidenzaException("Il campo residenza è obbligatorio.");
+		
+		if(residenzaIn.startsWith(" "))
+			throw new ResidenzaException("La residenza non può iniziare con uno spazio vuoto.");
+		
+		if(residenzaIn.endsWith(" "))
+			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
+
 	}
 }
