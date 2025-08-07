@@ -71,8 +71,9 @@ public class FrameDiRegistrazione extends JFrame {
 	private void impostaPanelInserimentoDati() {
 		panelInserimentoDati = new JPanel();
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
-		panelInserimentoDati.setPreferredSize(new Dimension(400, 400));
-		panelInserimentoDati.setMaximumSize(new Dimension(400, 400));
+		panelInserimentoDati.setBorder(BorderFactory.createLineBorder(Color.black, 2, false));
+		panelInserimentoDati.setPreferredSize(new Dimension(400, 430));
+		panelInserimentoDati.setMaximumSize(new Dimension(400, 430));
 		panelInserimentoDati.setBackground(new Color(198, 210, 222));	
 		
 		//Crea spazio tra il motto e i campi di testo
@@ -84,7 +85,10 @@ public class FrameDiRegistrazione extends JFrame {
 		
 		//Crea spazio tra i textfields e il bottone
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		this.aggiungiBottoneDiRegistrazione();
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 10)));
+		this.aggiungiBottoneTornaAlLogin();
 	
 		panelInserimentoDati.setAlignmentX(CENTER_ALIGNMENT);
 		
@@ -176,7 +180,8 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiBottoneDiRegistrazione() {
-		this.impostaSettingsBottone(bottoneDiRegistrazione);
+		bottoneDiRegistrazione = new JButton();
+		this.impostaSettingsBottone(bottoneDiRegistrazione, "Registrati");
 		
 		//Logica del bottone
 		bottoneDiRegistrazione.addActionListener(new ActionListener() {
@@ -184,7 +189,6 @@ public class FrameDiRegistrazione extends JFrame {
 				nascondiLabelErrore();
 				resettaBordiTextField();
 				checkDatiRegistrazione();
-				mainController.tornaALogin();
 			}
 		});
 		
@@ -192,27 +196,29 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiBottoneTornaAlLogin() {
-		this.impostaSettingsBottone(bottoneTornaALogin);
+		bottoneTornaALogin = new JButton();
+		this.impostaSettingsBottone(bottoneTornaALogin, "Torna al login");
 		
 		//Logica del bottone
-//		bottoneTornaALogin.addActionListener(new ActionListener() {
-//			public void actionPerfomed(ActionEvent e) {
-//				mainController.tornaALogin();
-//			}
-//
-//		});
+		bottoneTornaALogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainController.tornaALogin();
+			}
+
+		});
 		
 		panelInserimentoDati.add(bottoneTornaALogin);
 	}
 	
-	private void impostaSettingsBottone(JButton bottoneIn) {
-		bottoneDiRegistrazione = new JButton();
-		bottoneDiRegistrazione.setText("Registrati");
-		bottoneDiRegistrazione.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneDiRegistrazione.setBackground(new Color(65, 106, 144));
-		bottoneDiRegistrazione.setForeground(Color.white);
-		bottoneDiRegistrazione.setFocusable(false);
-		bottoneDiRegistrazione.setAlignmentX(CENTER_ALIGNMENT);
+	private void impostaSettingsBottone(JButton bottoneIn, String testoBottone) {
+
+		bottoneIn.setText(testoBottone);
+		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
+		bottoneIn.setBorder(BorderFactory.createEtchedBorder());
+		bottoneIn.setBackground(new Color(65, 106, 144));
+		bottoneIn.setForeground(Color.white);
+		bottoneIn.setFocusable(false);
+		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 
 	private void checkDatiRegistrazione() {
