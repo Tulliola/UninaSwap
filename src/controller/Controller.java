@@ -1,6 +1,9 @@
 package controller;
 
+import java.awt.event.*;
 import java.sql.*;
+
+import javax.swing.*;
 
 //Import dal package GUI
 import gui.*;
@@ -14,11 +17,14 @@ public class Controller {
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
-		frameDiRegistrazione.setVisible(true);
-		
 	}	
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
+	}
+
+	public void passaAFrameDiRegistrazione() {
+		frameDiLogin.dispose();
+		frameDiRegistrazione.setVisible(true);
 	}
 }
