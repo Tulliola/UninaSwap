@@ -27,10 +27,12 @@ public class Controller {
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);		
 	}
+
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
 	}
+
 	
 	private static void definisciConnessioneAlDB() {
 		DBConnection dbConn = DBConnection.getConnessioneAlDB();
