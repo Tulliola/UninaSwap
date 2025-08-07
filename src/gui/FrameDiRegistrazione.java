@@ -34,10 +34,10 @@ public class FrameDiRegistrazione extends JFrame {
 	private JPasswordField passwordTextField;
 	
 	//Label di errore
-	private JLabel lblErroreUsername;
-	private JLabel lblErroreEmail;
-	private JLabel lblErrorePassword;
-	private JLabel lblErroreResidenza;
+	private JLabel lblErroreUsername = new JLabel();
+	private JLabel lblErroreEmail = new JLabel();
+	private JLabel lblErrorePassword = new JLabel();
+	private JLabel lblErroreResidenza = new JLabel();
 	
 	//Controller
     private Controller mainController;
@@ -71,8 +71,9 @@ public class FrameDiRegistrazione extends JFrame {
 	private void impostaPanelInserimentoDati() {
 		panelInserimentoDati = new JPanel();
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
-		panelInserimentoDati.setPreferredSize(new Dimension(400, 400));
-		panelInserimentoDati.setMaximumSize(new Dimension(400, 400));
+		panelInserimentoDati.setBorder(BorderFactory.createLineBorder(Color.black, 2, false));
+		panelInserimentoDati.setPreferredSize(new Dimension(400, 430));
+		panelInserimentoDati.setMaximumSize(new Dimension(400, 430));
 		panelInserimentoDati.setBackground(new Color(198, 210, 222));	
 		
 		//Crea spazio tra il motto e i campi di testo
@@ -84,7 +85,10 @@ public class FrameDiRegistrazione extends JFrame {
 		
 		//Crea spazio tra i textfields e il bottone
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		this.aggiungiBottoneDiRegistrazione();
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 10)));
+		this.aggiungiBottoneTornaAlLogin();
 	
 		panelInserimentoDati.setAlignmentX(CENTER_ALIGNMENT);
 		
@@ -130,29 +134,29 @@ public class FrameDiRegistrazione extends JFrame {
 		panelTextELabel.setOpaque(false);
 		
 		JLabel campiObbligatori = new JLabel();
-		campiObbligatori.setText("I campi con * sono obbligatori.");
+		campiObbligatori.setText("Tutti i campi sono obbligatori.");
 		campiObbligatori.setAlignmentX(LEFT_ALIGNMENT);
 		panelTextELabel.add(campiObbligatori);
 		panelTextELabel.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		usernameTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, usernameTextField, "Inserisci il tuo username");
+		this.aggiungiTextField(panelTextELabel, usernameTextField, lblErroreUsername, "Inserisci il tuo username");
 
 		emailTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, emailTextField, "Inserisci la tua email istituzionale");
+		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale");
 		
 		passwordTextField = new JPasswordField();
-		this.aggiungiTextField(panelTextELabel, passwordTextField, "Inserisci la tua password istituzionale");
+		this.aggiungiTextField(panelTextELabel, passwordTextField, lblErrorePassword, "Inserisci la tua password istituzionale");
 	
 		residenzaTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, residenzaTextField, "Inserisci la tua residenza");
+		this.aggiungiTextField(panelTextELabel, residenzaTextField, lblErroreResidenza, "Inserisci la tua residenza");
 		
 		panelTextELabel.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelInserimentoDati.add(panelTextELabel);
 	}
 	
-	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, String stringaPerLabel) {
+	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, JLabel labelDiErrore, String stringaPerLabel) {
 		JLabel label = new JLabel();
 		label.setText(stringaPerLabel);
 		label.setForeground(Color.black);
@@ -160,33 +164,60 @@ public class FrameDiRegistrazione extends JFrame {
 		label.setAlignmentX(LEFT_ALIGNMENT);
 		
 		textFieldInput.setMaximumSize(new Dimension(300, 30));
+		textFieldInput.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
+		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
+
+		labelDiErrore.setForeground(Color.red); 
+		labelDiErrore.setVisible(false);
 		
 		panelInput.add(label);
 		panelInput.add(textFieldInput);
+		panelInput.add(labelDiErrore);
 		
 		panelInput.add(Box.createRigidArea(new Dimension(0, 15)));
 	}
 	
 	private void aggiungiBottoneDiRegistrazione() {
-		
 		bottoneDiRegistrazione = new JButton();
-		bottoneDiRegistrazione.setText("Registrati");
-		bottoneDiRegistrazione.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneDiRegistrazione.setBackground(new Color(65, 106, 144));
-		bottoneDiRegistrazione.setForeground(Color.white);
-		bottoneDiRegistrazione.setFocusable(false);
-		bottoneDiRegistrazione.setAlignmentX(CENTER_ALIGNMENT);
+		this.impostaSettingsBottone(bottoneDiRegistrazione, "Registrati");
 		
 		//Logica del bottone
 		bottoneDiRegistrazione.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				nascondiLabelErrore();
+				resettaBordiTextField();
 				checkDatiRegistrazione();
 			}
 		});
 		
 		panelInserimentoDati.add(bottoneDiRegistrazione);
+	}
+	
+	private void aggiungiBottoneTornaAlLogin() {
+		bottoneTornaALogin = new JButton();
+		this.impostaSettingsBottone(bottoneTornaALogin, "Torna al login");
 		
+		//Logica del bottone
+		bottoneTornaALogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainController.tornaALogin();
+			}
+
+		});
+		
+		panelInserimentoDati.add(bottoneTornaALogin);
+	}
+	
+	private void impostaSettingsBottone(JButton bottoneIn, String testoBottone) {
+
+		bottoneIn.setText(testoBottone);
+		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
+		bottoneIn.setBorder(BorderFactory.createEtchedBorder());
+		bottoneIn.setBackground(new Color(65, 106, 144));
+		bottoneIn.setForeground(Color.white);
+		bottoneIn.setFocusable(false);
+		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 
 	private void checkDatiRegistrazione() {
@@ -198,16 +229,20 @@ public class FrameDiRegistrazione extends JFrame {
 			checkResidenza(residenzaTextField.getText());
 		}
 		catch(UsernameException exc1) {
-			
+			settaLabelETextFieldDiErrore(lblErroreUsername, exc1.getMessage(), usernameTextField);
 		}
 		catch(EmailException exc2) {
-			
+			settaLabelETextFieldDiErrore(lblErroreEmail, exc2.getMessage(), emailTextField);
 		}
 		catch(PasswordException exc3) {
-			
+			settaLabelETextFieldDiErrore(lblErrorePassword, exc3.getMessage(), passwordTextField);
+		}
+		catch(ResidenzaException exc4) {
+			settaLabelETextFieldDiErrore(lblErroreResidenza, exc4.getMessage(), residenzaTextField);
 		}
 		
 	}
+	
 	
 	private void checkUsername(String usernameIn) {
 		if(usernameIn == null || usernameIn.length() == 0)
@@ -220,17 +255,20 @@ public class FrameDiRegistrazione extends JFrame {
 			throw new UsernameException("L'username non deve contenere spazi vuoti.");
 	}
 	
+	
 	private void checkPassword(String passwordIn) {
 		if(passwordIn == null || passwordIn.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
 		
 	}
 	
+	
 	private void checkEmail(String emailIn) {
 		if(emailIn == null || emailIn.length() == 0)
 			throw new EmailException("Il campo email è obbligatorio.");
 		
 	}
+	
 	
 	private void checkResidenza(String residenzaIn) {
 		if(residenzaIn == null || residenzaIn.isBlank())
@@ -242,5 +280,25 @@ public class FrameDiRegistrazione extends JFrame {
 		if(residenzaIn.endsWith(" "))
 			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
 
+	}
+	
+	private void nascondiLabelErrore() {
+		lblErroreUsername.setVisible(false);
+		lblErroreEmail.setVisible(false);
+		lblErrorePassword.setVisible(false);
+		lblErroreResidenza.setVisible(false);
+	}
+	
+	private void resettaBordiTextField() {
+		usernameTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+		emailTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+		passwordTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+		residenzaTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+	}
+	
+	private void settaLabelETextFieldDiErrore(JLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
+		labelInput.setText(messaggioDiErrore);
+		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+		labelInput.setVisible(true);
 	}
 }
