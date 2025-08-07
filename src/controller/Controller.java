@@ -1,13 +1,12 @@
 package controller;
 
-//Import dalle librerie standard
+
+import java.awt.event.*;
 import java.sql.*;
 
-//Import dal package Utilities
+import javax.swing.*;
 
-//Import dal package Database
 import database.DBConnection;
-
 //Import dal package GUI
 import gui.*;
 
@@ -27,6 +26,7 @@ public class Controller {
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);		
 	}
+
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
