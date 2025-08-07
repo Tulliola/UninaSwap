@@ -121,6 +121,7 @@ public class FrameDiLogin extends JFrame {
 		oppureRegistrati.setAlignmentX(CENTER_ALIGNMENT);
 		
 		aggiungiBottoniLogin(registratiButton);		
+
 		
 		buttonsPane.add(accediButton);
 		buttonsPane.add(Box.createRigidArea(new Dimension(20, 20)));

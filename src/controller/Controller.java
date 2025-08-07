@@ -11,14 +11,20 @@ public class Controller {
 	private FrameDiRegistrazione frameDiRegistrazione;
 	
 	public Controller() {
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+	
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
 		frameDiRegistrazione.setVisible(true);
-		
 	}	
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
+	}
+	
+	public void tornaALogin() {
+		frameDiRegistrazione.dispose();
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
 	}
 }
