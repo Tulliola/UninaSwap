@@ -243,9 +243,6 @@ public class FrameDiRegistrazione extends JFrame {
 		}
 		catch(SQLException exc5) {
 			String statoDiErrore = exc5.getSQLState();
-			System.out.println(statoDiErrore);
-			System.out.println(exc5.getErrorCode());
-			System.out.println(exc5.getMessage());
 			
 			if(statoDiErrore.equals("23505")) {
 				if(exc5.getMessage().contains("unic"))
