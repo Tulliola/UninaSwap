@@ -180,7 +180,7 @@ public class FrameDiRegistrazione extends JFrame {
 	
 	private void aggiungiBottoneDiRegistrazione() {
 		bottoneDiRegistrazione = new JButton();
-		this.impostaSettingsBottone(bottoneDiRegistrazione, "Registrati");
+		this.impostaSettingsBottone(bottoneDiRegistrazione, "Conferma registrazione");
 		
 		//Logica del bottone
 		bottoneDiRegistrazione.addActionListener(new ActionListener() {
@@ -213,7 +213,6 @@ public class FrameDiRegistrazione extends JFrame {
 
 		bottoneIn.setText(testoBottone);
 		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneIn.setBorder(BorderFactory.createEtchedBorder());
 		bottoneIn.setBackground(new Color(65, 106, 144));
 		bottoneIn.setForeground(Color.white);
 		bottoneIn.setFocusable(false);

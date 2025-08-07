@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -179,7 +180,7 @@ public class FrameDiLogin extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				nascondiErrori();
-				checkDatiAccesso();
+				clickAccedi();
 			}
 			
 		});
@@ -228,9 +229,24 @@ public class FrameDiLogin extends JFrame {
 	}
 		
 	public void checkDatiAccesso() {
+		checkEmail(emailField.getText());
+		checkPassword(passwordField.getText());
+	}
+	
+	public void checkEmail(String email) {
+		if(email == null || email.length() == 0)
+			throw new EmailException("Il campo email è obbligatorio.");
+	}
+	
+	public void checkPassword(String password) {
+		if(password == null || password.length() == 0)
+			throw new PasswordException("Il campo password è obbligatorio.");
+	}
+	
+	private void clickAccedi() {
 		try {
-			checkEmail(emailField.getText());
-			checkPassword(passwordField.getText());
+			checkDatiAccesso();
+			mainController.onAccessoClicked(emailField.getText(), passwordField.getText());
 		}
 		catch(EmailException e) {
 			erroreEmail.setText(e.getMessage());
@@ -244,15 +260,8 @@ public class FrameDiLogin extends JFrame {
 			
 			passwordField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 		}
-	}
-	
-	public void checkEmail(String email) {
-		if(email == null || email.length() == 0)
-			throw new EmailException("Il campo email è obbligatorio.");
-	}
-	
-	public void checkPassword(String password) {
-		if(password == null || password.length() == 0)
-			throw new PasswordException("Il campo password è obbligatorio.");
+		catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
