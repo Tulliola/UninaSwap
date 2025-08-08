@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +30,7 @@ public class FrameDiLogin extends JFrame {
 	//Label di errore
 	JLabel erroreEmail = new JLabel();
 	JLabel errorePassword = new JLabel();
+	JLabel erroreComunicazioneDatabase = new JLabel();
 	
 	//Controller con cui comunicare
 	private Controller mainController;
@@ -148,7 +150,13 @@ public class FrameDiLogin extends JFrame {
 		fieldPane.setAlignmentX(CENTER_ALIGNMENT);
 		
 		bluePane.add(fieldPane);
-		bluePane.add(Box.createVerticalStrut(30));
+		bluePane.add(Box.createVerticalStrut(20));
+		
+		erroreComunicazioneDatabase.setForeground(Color.RED);
+		erroreComunicazioneDatabase.setAlignmentX(CENTER_ALIGNMENT);
+		erroreComunicazioneDatabase.setVisible(false);
+		bluePane.add(erroreComunicazioneDatabase);
+		bluePane.add(Box.createVerticalStrut(10));
 		
 		contentPane.add(bluePane);
 	}
@@ -177,9 +185,9 @@ public class FrameDiLogin extends JFrame {
 	private void aggiungiBottoniLogin() {
 		accediButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e){
 				nascondiErrori();
-				checkDatiAccesso();
+				clickAccedi();
 			}
 			
 		});
@@ -214,6 +222,7 @@ public class FrameDiLogin extends JFrame {
 	public void nascondiErrori() {
 		erroreEmail.setVisible(false);
 		errorePassword.setVisible(false);
+		erroreComunicazioneDatabase.setVisible(false);
 			
 		emailField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		passwordField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -228,22 +237,8 @@ public class FrameDiLogin extends JFrame {
 	}
 		
 	public void checkDatiAccesso() {
-		try {
-			checkEmail(emailField.getText());
-			checkPassword(passwordField.getText());
-		}
-		catch(EmailException e) {
-			erroreEmail.setText(e.getMessage());
-			erroreEmail.setVisible(true);
-			
-			emailField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-		}
-		catch(PasswordException e) {
-			errorePassword.setText(e.getMessage());
-			errorePassword.setVisible(true);
-			
-			passwordField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-		}
+		checkEmail(emailField.getText());
+		checkPassword(passwordField.getText());
 	}
 	
 	public void checkEmail(String email) {
@@ -254,5 +249,37 @@ public class FrameDiLogin extends JFrame {
 	public void checkPassword(String password) {
 		if(password == null || password.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
+	}
+	
+	private void clickAccedi() {
+		try {
+			checkDatiAccesso();
+			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
+			nascondiErrori();
+		}
+		catch(EmailException e) {
+			erroreEmail.setText(e.getMessage());
+			erroreEmail.setVisible(true);
+
+			emailField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+		}
+		catch(PasswordException e) {
+			errorePassword.setText(e.getMessage());
+			errorePassword.setVisible(true);
+			
+			passwordField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+		}
+		catch(UtenteNonTrovatoException e) {
+			erroreComunicazioneDatabase.setText(e.getMessage());
+			erroreComunicazioneDatabase.setVisible(true);
+		}
+		catch(UtentePasswordMismatchException e) {
+			erroreComunicazioneDatabase.setText(e.getMessage());
+			erroreComunicazioneDatabase.setVisible(true);
+		}
+		catch(SQLException e) {
+			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
+			erroreComunicazioneDatabase.setVisible(true);
+		}
 	}
 }
