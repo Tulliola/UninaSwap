@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -13,6 +14,7 @@ import eccezioni.UsernameException;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
 import eccezioni.ResidenzaException;
+import eccezioni.MatricolaNonTrovataException;
 
 public class FrameDiRegistrazione extends JFrame {
 
@@ -38,6 +40,7 @@ public class FrameDiRegistrazione extends JFrame {
 	private JLabel lblErroreEmail = new JLabel();
 	private JLabel lblErrorePassword = new JLabel();
 	private JLabel lblErroreResidenza = new JLabel();
+	private JLabel lblErroreDalDB =  new JLabel();
 	
 	//Controller
     private Controller mainController;
@@ -86,6 +89,14 @@ public class FrameDiRegistrazione extends JFrame {
 		//Crea spazio tra i textfields e il bottone
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
 		
+		lblErroreDalDB = new JLabel();
+		lblErroreDalDB.setForeground(Color.red);
+		lblErroreDalDB.setVisible(false);
+		lblErroreDalDB.setAlignmentX(CENTER_ALIGNMENT);
+		
+		panelInserimentoDati.add(lblErroreDalDB);
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 5)));
+		
 		this.aggiungiBottoneDiRegistrazione();
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 10)));
 		this.aggiungiBottoneTornaAlLogin();
@@ -133,12 +144,6 @@ public class FrameDiRegistrazione extends JFrame {
 		panelTextELabel.setLayout(new BoxLayout(panelTextELabel, BoxLayout.Y_AXIS));
 		panelTextELabel.setOpaque(false);
 		
-		JLabel campiObbligatori = new JLabel();
-		campiObbligatori.setText("Tutti i campi sono obbligatori.");
-		campiObbligatori.setAlignmentX(LEFT_ALIGNMENT);
-		panelTextELabel.add(campiObbligatori);
-		panelTextELabel.add(Box.createRigidArea(new Dimension(0, 20)));
-		
 		usernameTextField = new JTextField();
 		this.aggiungiTextField(panelTextELabel, usernameTextField, lblErroreUsername, "Inserisci il tuo username");
 
@@ -180,14 +185,14 @@ public class FrameDiRegistrazione extends JFrame {
 	
 	private void aggiungiBottoneDiRegistrazione() {
 		bottoneDiRegistrazione = new JButton();
-		this.impostaSettingsBottone(bottoneDiRegistrazione, "Registrati");
+		this.impostaSettingsBottone(bottoneDiRegistrazione, "Conferma registrazione");
 		
 		//Logica del bottone
 		bottoneDiRegistrazione.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				nascondiLabelErrore();
 				resettaBordiTextField();
-				checkDatiRegistrazione();
+				clickConfermaRegistrazione();
 			}
 		});
 		
@@ -213,20 +218,16 @@ public class FrameDiRegistrazione extends JFrame {
 
 		bottoneIn.setText(testoBottone);
 		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneIn.setBorder(BorderFactory.createEtchedBorder());
 		bottoneIn.setBackground(new Color(65, 106, 144));
 		bottoneIn.setForeground(Color.white);
 		bottoneIn.setFocusable(false);
 		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 
-	private void checkDatiRegistrazione() {
-	
+	private void clickConfermaRegistrazione() {
 		try {
-			checkUsername(usernameTextField.getText());
-			checkEmail(emailTextField.getText());
-			checkPassword(passwordTextField.getText());
-			checkResidenza(residenzaTextField.getText());
+			checkDatiRegistrazione();
+			mainController.onConfermaRegistrazioneButtonClicked(usernameTextField.getText(), emailTextField.getText(), passwordTextField.getText(), residenzaTextField.getText());
 		}
 		catch(UsernameException exc1) {
 			settaLabelETextFieldDiErrore(lblErroreUsername, exc1.getMessage(), usernameTextField);
@@ -240,7 +241,32 @@ public class FrameDiRegistrazione extends JFrame {
 		catch(ResidenzaException exc4) {
 			settaLabelETextFieldDiErrore(lblErroreResidenza, exc4.getMessage(), residenzaTextField);
 		}
+		catch(SQLException exc5) {
+			String statoDiErrore = exc5.getSQLState();
+			
+			if(statoDiErrore.equals("23505")) {
+				if(exc5.getMessage().contains("unic"))
+					lblErroreDalDB.setText("Questo username non è disponibile.");
+				else
+					lblErroreDalDB.setText("Esiste già un account associato a questa email");
+			}
+			else if(statoDiErrore.equals("P0008")) {
+				lblErroreDalDB.setText("La password o l'email sono sbagliate");
+			}
+			lblErroreDalDB.setVisible(true);
+		}
+		catch(MatricolaNonTrovataException exc6) {
+			lblErroreDalDB.setText(exc6.getMessage());
+			lblErroreDalDB.setVisible(true);
+		}
 		
+	}
+	private void checkDatiRegistrazione() throws UsernameException, EmailException, PasswordException, ResidenzaException{
+	
+		checkUsername(usernameTextField.getText());
+		checkEmail(emailTextField.getText());
+		checkPassword(passwordTextField.getText());
+		checkResidenza(residenzaTextField.getText());
 	}
 	
 	
@@ -287,6 +313,7 @@ public class FrameDiRegistrazione extends JFrame {
 		lblErroreEmail.setVisible(false);
 		lblErrorePassword.setVisible(false);
 		lblErroreResidenza.setVisible(false);
+		lblErroreDalDB.setVisible(false);
 	}
 	
 	private void resettaBordiTextField() {
