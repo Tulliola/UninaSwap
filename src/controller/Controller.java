@@ -86,7 +86,7 @@ public class Controller {
 		frameDiRegistrazione.setVisible(true);
 	}
 
-	
+	//ciao
 	public void passaAFrameCambiaImmagine() {
 		frameProfiloUtente.setVisible(false);
 		frameCambiaImmagine = new FrameCambiaImmagine(this);
