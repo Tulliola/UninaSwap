@@ -29,26 +29,14 @@ public class Controller {
 	private FrameCambiaImmagine frameCambiaImmagine;
 	
 	private ProfiloUtente utenteLoggato;
-
 	
 	private static Connection connessioneDB;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
-	
-		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		
-		try {
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
-			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
-			frameProfiloUtente.setVisible(true);
-		}
-		catch(SQLException exc) {
-			
-		}
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 	}
 
 	
@@ -101,18 +89,36 @@ public class Controller {
 		frameCambiaImmagine = new FrameCambiaImmagine(this);
 		frameCambiaImmagine.setVisible(true);
 	}
+	
+	public void passaAFrameProfiloUtente() {
+		//TODO cambiare quando facciamo la home page. bisogna fare la dispose di frameHomePage
+		frameDiLogin.dispose();
+		frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
+		frameProfiloUtente.setVisible(true);
+	}
 
 	public void onAccessoButtonClicked(String email, String password) throws SQLException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
+		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
+		
+		//Arrivato a questo punto, se non è sollevata eccezione, email e password matchano con qualche riga nel DB.
+		
+		//TODO cambiare quando facciamo la home page.
+		passaAFrameProfiloUtente();
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
 		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		
 		profiloInRegistrazione.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
 				
+		//Arrivato a questo punto, se non è stata sollevata eccezione, la registrazione è andata a buon fine.
+		
 		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		caricamentoTornaALoginFrame.setVisible(true);
+		this.tornaALogin();
+	}
+	
+	public void onSalvaModificheProfiloClicked() {
+		
 	}
 }

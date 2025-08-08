@@ -47,7 +47,15 @@ public class MyJTextField extends JTextField {
 			this.setBackground(coloreDaDisabilitato);
 		}
 		else
-			this.setBackground(coloreDaDisabilitato);
+			this.setBackground(coloreDaAbilitato);
 
 	}
+	
+	public void cambiaStatoEnabled() {
+		if(!(this.isEnabled()))
+			this.setEnabled(true);
+		else
+			this.setEnabled(false);
+	}
+
 }

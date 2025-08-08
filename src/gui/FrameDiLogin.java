@@ -186,7 +186,6 @@ public class FrameDiLogin extends JFrame {
 		text.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		text.setAlignmentX(LEFT_ALIGNMENT);
 		text.setBorder(blackBorder);
-		text.setFocusTraversalKeysEnabled(false);
 		text.addActionListener(new ActionListener() {
 
 			@Override
