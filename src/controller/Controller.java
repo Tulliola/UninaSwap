@@ -5,7 +5,7 @@ import java.sql.*;
 
 import javax.swing.*;
 
-//Aggiunto questo commento: war is over
+//Aggiunto questo commento: war is over 2
 
 import database.dao.implementazioni.*;
 import database.dao.interfacce.*;
