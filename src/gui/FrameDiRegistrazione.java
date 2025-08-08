@@ -172,6 +172,9 @@ public class FrameDiRegistrazione extends JFrame {
 		textFieldInput.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
+		Border blackBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
+		Border spacedBorder = new EmptyBorder(0, 5, 0, 0);
+		textFieldInput.setBorder(new CompoundBorder(blackBorder, spacedBorder));
 
 		labelDiErrore.setForeground(Color.red); 
 		labelDiErrore.setVisible(false);
@@ -327,5 +330,16 @@ public class FrameDiRegistrazione extends JFrame {
 		labelInput.setText(messaggioDiErrore);
 		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 		labelInput.setVisible(true);
+	}
+	
+	private void vaiATextFieldVuoto() {
+		if(usernameTextField.getText().length() == 0)
+			usernameTextField.requestFocus();
+		else if(emailTextField.getText().length() == 0)
+			emailTextField.requestFocus();
+		else if(passwordTextField.getText().length() == 0)
+			passwordTextField.requestFocus();
+		else if(residenzaTextField.getText().length() == 0)
+			residenzaTextField.requestFocus();
 	}
 }

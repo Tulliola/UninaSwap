@@ -14,36 +14,57 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 
 	@Override
-	public ProfiloUtente recuperaUtenteConEmail(String emailOrUsername, String password) throws SQLException{
+	public ProfiloUtente recuperaUtenteConEmail(String emailOrUsername, String password) throws SQLException  {
+		
+		isUtenteExisting(emailOrUsername);
+		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE PW = ? AND (Email = ? OR Username = ?);")){
-				ps.setString(1, password);
-				ps.setString(2, emailOrUsername);
-				ps.setString(3, emailOrUsername);
-				
-				ResultSet rs = ps.executeQuery();
-				
-				if(rs.next()) {
-					return new ProfiloUtente(
+			ps.setString(1, password);
+			ps.setString(2, emailOrUsername);
+			ps.setString(3, emailOrUsername);
+			
+			try(ResultSet rs = ps.executeQuery()){
+			
+				isPasswordMatching(rs);
+			
+				return new ProfiloUtente(
 						rs.getString("username"),
 						rs.getString("email"),
 						rs.getDouble("saldo"),
 						rs.getString("residenza"),
 						rs.getBytes("immagine_profilo")
-					);
-				}
-				else
-					throw new UtenteNonTrovatoException("Utente non trovato");
+				);
+			}
 		}
+	}
+	
+	private void isUtenteExisting(String emailOrUsername) throws SQLException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE (Email = ? OR Username = ?);")){
+			ps.setString(1, emailOrUsername);
+			ps.setString(2, emailOrUsername);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				if(!(rs.next())){
+					throw new UtenteNonTrovatoException("Utente non trovato");
+				}
+			}
+		}
+	}
+	
+	private void isPasswordMatching(ResultSet rs) throws SQLException{
+			if(!(rs.next()))
+				throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
 
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException {
 		String sqlQuery = "SELECT Matricola FROM Studente WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, emailIn);
-			ResultSet resSet = prepStat.executeQuery();
+			try(ResultSet resSet = prepStat.executeQuery()){
 			
-			if(resSet.next())
-				return resSet.getString("Matricola");
+				if(resSet.next())
+					return resSet.getString("Matricola");
+			}
 		}
 		
 		return null;
