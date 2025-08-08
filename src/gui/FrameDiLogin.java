@@ -377,9 +377,7 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setVisible(true);
 		}
 	}
-	
-	//blabla
-	
+
 	private JTextField vaiATextFieldVuoto() {
 		if(emailField.getText().length() == 0) {
 			emailField.requestFocus();
