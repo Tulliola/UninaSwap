@@ -71,6 +71,9 @@ public class Controller {
 	}
 	
 	public void tornaALogin() {
+		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
+		caricamentoTornaALoginFrame.setVisible(true);
+
 		frameDiRegistrazione.dispose();
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
@@ -82,15 +85,17 @@ public class Controller {
 		frameDiRegistrazione.setVisible(true);
 	}
 
-	public void onAccessoClicked(String email, String password) throws SQLException{
+	public void onAccessoButtonClicked(String email, String password) throws SQLException{
 		profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmail(email, password);
 	}
 	
-	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
-		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
+	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, 
+													 String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException {
 		
+		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		profiloInRegistrazione.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
-
+		
+		
 	}
 }
