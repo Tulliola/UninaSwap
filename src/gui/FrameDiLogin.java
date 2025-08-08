@@ -348,7 +348,7 @@ public class FrameDiLogin extends JFrame {
 	private void clickAccedi() {
 		try {
 			checkDatiAccesso();
-			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
+			mainController.onAccessoClicked(emailField.getText(), passwordField.getText());
 			nascondiErrori();
 		}
 		catch(EmailException e) {
