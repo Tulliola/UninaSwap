@@ -5,10 +5,14 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.CompoundBorder;
 
 import controller.Controller;
 import eccezioni.*;
+import utilities.MyJPasswordField;
+import utilities.MyJTextField;
 
 public class FrameDiLogin extends JFrame {
 
@@ -21,7 +25,7 @@ public class FrameDiLogin extends JFrame {
 	
 	//Field per l'accesso
 	private JTextField emailField;
-	private JPasswordField passwordField;
+	private JTextField passwordField;
 	
 	//Bottoni per accedere
 	private JButton accediButton = new JButton("Accedi");
@@ -129,19 +133,24 @@ public class FrameDiLogin extends JFrame {
 	}
 	
 	private void aggiungiFieldAccesso() {
+		
 		JLabel email = new JLabel("Email istituzionale o Username");
-		emailField = new JTextField();
-		aggiungiFieldAccesso(email, emailField, erroreEmail);
+		emailField = new MyJTextField();
+		
+		JLabel password = new JLabel("Password");
+		passwordField = new MyJTextField();
+		
+//		aggiungiFieldAccesso(email, emailField, erroreEmail, passwordField, null);
+
 		
 		fieldPane.add(email);
-		fieldPane.add(emailField);
+		fieldPane.add((JTextField)emailField);
 		fieldPane.add(erroreEmail);
 		
 		fieldPane.add(Box.createRigidArea(new Dimension(15, 15)));
 		
-		JLabel password = new JLabel("Password");
-		passwordField = new JPasswordField();
-		aggiungiFieldAccesso(password, passwordField, errorePassword);
+//		aggiungiFieldAccesso(password, passwordField, errorePassword, accediButton, emailField);
+
 		
 		fieldPane.add(password);
 		fieldPane.add(passwordField);
@@ -161,20 +170,55 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(bluePane);
 	}
 	
-	private void aggiungiFieldAccesso(JLabel field, JTextField text, JLabel errore) {
+	private void aggiungiFieldAccesso(JLabel field, MyJTextField text, JLabel errore, JComponent nextComponent, JComponent previousComponent) {
 		errore.setForeground(Color.RED);
 		errore.setVisible(false);
 		
-		field.setForeground(Color.black);
+		field.setForeground(Color.BLACK);
 		field.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		field.setAlignmentX(LEFT_ALIGNMENT);
 	
 		text.setMaximumSize(new Dimension(300, 30));
 		text.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		text.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		text.setAlignmentX(LEFT_ALIGNMENT);
+		text.settaBordiTextField(Color.BLACK);
+		text.setFocusTraversalKeysEnabled(false);
+		text.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				nextComponent.requestFocus();
+			}
+			
+		});
+		
+		text.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//Non fa niente
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
+					if(previousComponent != null)
+						previousComponent.requestFocus();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+					nextComponent.requestFocus();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//Non fa niente
+			}
+			
+		});
 	}
 	
+
 	private void settingButtonsPane() {
 		buttonsPane = new JPanel();
 		buttonsPane.setLayout(new BoxLayout(buttonsPane, BoxLayout.Y_AXIS));
@@ -189,6 +233,28 @@ public class FrameDiLogin extends JFrame {
 				nascondiErrori();
 				clickAccedi();
 			}
+		});
+		
+		accediButton.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					nascondiErrori();
+					clickAccedi(); 
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_UP) {
+					passwordField.requestFocus();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+					registratiButton.requestFocus();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {}
 			
 		});
 		
@@ -203,6 +269,30 @@ public class FrameDiLogin extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainController.passaAFrameDiRegistrazione();
+			}
+			
+		});
+		
+		registratiButton.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//Non fa nulla
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					mainController.passaAFrameDiRegistrazione();
+				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+					emailField.requestFocus();
+				else if(e.getKeyCode() == KeyEvent.VK_UP)
+					accediButton.requestFocus();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//Non fa nulla
 			}
 			
 		});
@@ -224,8 +314,8 @@ public class FrameDiLogin extends JFrame {
 		errorePassword.setVisible(false);
 		erroreComunicazioneDatabase.setVisible(false);
 			
-		emailField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		passwordField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		settaBordiTextField(emailField, Color.BLACK);
+		settaBordiTextField(passwordField, Color.BLACK);
 	}
 	
 	private void aggiungiBottoniLogin(JButton button) {
@@ -233,7 +323,6 @@ public class FrameDiLogin extends JFrame {
 		button.setBackground(new Color(65, 106, 144));
 		button.setForeground(Color.WHITE);
 		button.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		button.setFocusable(false);
 	}
 		
 	public void checkDatiAccesso() {
@@ -261,14 +350,14 @@ public class FrameDiLogin extends JFrame {
 		catch(EmailException e) {
 			erroreEmail.setText(e.getMessage());
 			erroreEmail.setVisible(true);
-
-			emailField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+			emailField.requestFocus();
+			settaBordiTextField(emailField, Color.RED);
 		}
 		catch(PasswordException e) {
 			errorePassword.setText(e.getMessage());
 			errorePassword.setVisible(true);
-			
-			passwordField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+			passwordField.requestFocus();
+			settaBordiTextField(passwordField, Color.RED);
 		}
 		catch(UtenteNonTrovatoException e) {
 			erroreComunicazioneDatabase.setText(e.getMessage());
@@ -282,5 +371,32 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
 			erroreComunicazioneDatabase.setVisible(true);
 		}
+	}
+	
+	private JTextField vaiATextFieldVuoto() {
+		if(emailField.getText().length() == 0) {
+			emailField.requestFocus();
+			return emailField;
+		}
+		else if(passwordField.getText().length() == 0) {
+			passwordField.requestFocus();
+			return passwordField;
+		}
+		return null;
+	}
+	
+	private void settaBordiTextField(JTextField text, Color chosenColor) {
+		Border chosenBorder;;
+		Border spacedBorder;
+		
+		if(chosenColor == Color.RED)
+			chosenBorder = BorderFactory.createLineBorder(chosenColor, 2);
+		
+		else	
+			chosenBorder = BorderFactory.createLineBorder(chosenColor, 1);
+		
+		spacedBorder = new EmptyBorder(0, 5, 0, 0);
+		text.setBorder(new CompoundBorder(chosenBorder, spacedBorder));		
+	
 	}
 }

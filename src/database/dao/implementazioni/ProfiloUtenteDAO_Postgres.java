@@ -23,30 +23,32 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			ps.setString(2, emailOrUsername);
 			ps.setString(3, emailOrUsername);
 			
-			ResultSet rs = ps.executeQuery();
+			try(ResultSet rs = ps.executeQuery()){
 			
-			isPasswordMatching(rs);
+				isPasswordMatching(rs);
 			
-			return new ProfiloUtente(
-					rs.getString("username"),
-					rs.getString("email"),
-					rs.getDouble("saldo"),
-					rs.getString("residenza"),
-					rs.getBytes("immagine_profilo")
+				return new ProfiloUtente(
+						rs.getString("username"),
+						rs.getString("email"),
+						rs.getDouble("saldo"),
+						rs.getString("residenza"),
+						rs.getBytes("immagine_profilo")
 				);
+			}
 		}
 	}
-	
+
 
 	@Override
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException {
 		String sqlQuery = "SELECT Matricola FROM Studente WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, emailIn);
-			ResultSet resSet = prepStat.executeQuery();
+			try(ResultSet resSet = prepStat.executeQuery()){
 			
-			if(resSet.next())
-				return resSet.getString("Matricola");
+				if(resSet.next())
+					return resSet.getString("Matricola");
+			}
 		}
 		
 		return null;
