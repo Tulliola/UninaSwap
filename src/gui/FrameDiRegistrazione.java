@@ -41,6 +41,7 @@ public class FrameDiRegistrazione extends JFrame {
 	private JLabel lblErrorePassword = new JLabel();
 	private JLabel lblErroreResidenza = new JLabel();
 	private JLabel lblErroreDalDB =  new JLabel();
+
 	
 	//Controller
     private Controller mainController;

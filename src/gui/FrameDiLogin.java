@@ -32,9 +32,13 @@ public class FrameDiLogin extends JFrame {
 	private JButton registratiButton = new JButton("Registrati");
 	
 	//Label di errore
-	JLabel erroreEmail = new JLabel();
-	JLabel errorePassword = new JLabel();
-	JLabel erroreComunicazioneDatabase = new JLabel();
+	private JLabel erroreEmail = new JLabel();
+	private JLabel errorePassword = new JLabel();
+	private JLabel erroreComunicazioneDatabase = new JLabel();
+	
+	//Border dei TextField
+	private Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	private Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
 	
 	//Controller con cui comunicare
 	private Controller mainController;
@@ -135,12 +139,12 @@ public class FrameDiLogin extends JFrame {
 	private void aggiungiFieldAccesso() {
 		
 		JLabel email = new JLabel("Email istituzionale o Username");
-		emailField = new MyJTextField();
+		emailField = new JTextField();
 		
 		JLabel password = new JLabel("Password");
-		passwordField = new MyJTextField();
+		passwordField = new JPasswordField();
 		
-//		aggiungiFieldAccesso(email, emailField, erroreEmail, passwordField, null);
+		aggiungiFieldAccesso(email, emailField, erroreEmail, passwordField, null);
 
 		
 		fieldPane.add(email);
@@ -149,7 +153,7 @@ public class FrameDiLogin extends JFrame {
 		
 		fieldPane.add(Box.createRigidArea(new Dimension(15, 15)));
 		
-//		aggiungiFieldAccesso(password, passwordField, errorePassword, accediButton, emailField);
+		aggiungiFieldAccesso(password, passwordField, errorePassword, accediButton, emailField);
 
 		
 		fieldPane.add(password);
@@ -170,7 +174,7 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(bluePane);
 	}
 	
-	private void aggiungiFieldAccesso(JLabel field, MyJTextField text, JLabel errore, JComponent nextComponent, JComponent previousComponent) {
+	private void aggiungiFieldAccesso(JLabel field, JTextField text, JLabel errore, JComponent nextComponent, JComponent previousComponent) {
 		errore.setForeground(Color.RED);
 		errore.setVisible(false);
 		
@@ -181,7 +185,7 @@ public class FrameDiLogin extends JFrame {
 		text.setMaximumSize(new Dimension(300, 30));
 		text.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		text.setAlignmentX(LEFT_ALIGNMENT);
-		text.settaBordiTextField(Color.BLACK);
+		text.setBorder(blackBorder);
 		text.setFocusTraversalKeysEnabled(false);
 		text.addActionListener(new ActionListener() {
 
@@ -206,7 +210,8 @@ public class FrameDiLogin extends JFrame {
 						previousComponent.requestFocus();
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-					nextComponent.requestFocus();
+					if(nextComponent != null)
+						nextComponent.requestFocus();
 				}
 			}
 
@@ -284,8 +289,6 @@ public class FrameDiLogin extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER)
 					mainController.passaAFrameDiRegistrazione();
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-					emailField.requestFocus();
 				else if(e.getKeyCode() == KeyEvent.VK_UP)
 					accediButton.requestFocus();
 			}
@@ -309,13 +312,15 @@ public class FrameDiLogin extends JFrame {
 		bluePane.add(buttonsPane);
 	}
 	
+	
+	
 	public void nascondiErrori() {
 		erroreEmail.setVisible(false);
 		errorePassword.setVisible(false);
 		erroreComunicazioneDatabase.setVisible(false);
-			
-		settaBordiTextField(emailField, Color.BLACK);
-		settaBordiTextField(passwordField, Color.BLACK);
+		
+		emailField.setBorder(blackBorder);
+		passwordField.setBorder(blackBorder);
 	}
 	
 	private void aggiungiBottoniLogin(JButton button) {
@@ -350,13 +355,13 @@ public class FrameDiLogin extends JFrame {
 			erroreEmail.setText(e.getMessage());
 			erroreEmail.setVisible(true);
 			emailField.requestFocus();
-			settaBordiTextField(emailField, Color.RED);
+			emailField.setBorder(redBorder);
 		}
 		catch(PasswordException e) {
 			errorePassword.setText(e.getMessage());
 			errorePassword.setVisible(true);
 			passwordField.requestFocus();
-			settaBordiTextField(passwordField, Color.RED);
+			passwordField.setBorder(redBorder);
 		}
 		catch(UtenteNonTrovatoException e) {
 			erroreComunicazioneDatabase.setText(e.getMessage());
@@ -382,20 +387,5 @@ public class FrameDiLogin extends JFrame {
 			return passwordField;
 		}
 		return null;
-	}
-	
-	private void settaBordiTextField(JTextField text, Color chosenColor) {
-		Border chosenBorder;;
-		Border spacedBorder;
-		
-		if(chosenColor == Color.RED)
-			chosenBorder = BorderFactory.createLineBorder(chosenColor, 2);
-		
-		else	
-			chosenBorder = BorderFactory.createLineBorder(chosenColor, 1);
-		
-		spacedBorder = new EmptyBorder(0, 5, 0, 0);
-		text.setBorder(new CompoundBorder(chosenBorder, spacedBorder));		
-	
 	}
 }
