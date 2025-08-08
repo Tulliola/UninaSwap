@@ -14,7 +14,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 
 	@Override
-	public ProfiloUtente recuperaUtenteConEmail(String emailOrUsername, String password) throws SQLException  {
+	public ProfiloUtente recuperaUtenteConEmailOUsername(String emailOrUsername, String password) throws SQLException  {
 		
 		isUtenteExisting(emailOrUsername);
 		
@@ -37,25 +37,8 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			}
 		}
 	}
-	
-	private void isUtenteExisting(String emailOrUsername) throws SQLException{
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE (Email = ? OR Username = ?);")){
-			ps.setString(1, emailOrUsername);
-			ps.setString(2, emailOrUsername);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				if(!(rs.next())){
-					throw new UtenteNonTrovatoException("Utente non trovato");
-				}
-			}
-		}
-	}
-	
-	private void isPasswordMatching(ResultSet rs) throws SQLException{
-			if(!(rs.next()))
-				throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
-	}
 
+	@Override
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException {
 		String sqlQuery = "SELECT Matricola FROM Studente WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
@@ -88,5 +71,23 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		}
 		else
 			throw new MatricolaNonTrovataException("Non è stata trovata alcuna matricola associata a questa email.");
+	}
+	
+	//Metodi di utilità non ereditati dall'interfaccia
+	private void isUtenteExisting(String emailOrUsername) throws SQLException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE (Email = ? OR Username = ?);")){
+			ps.setString(1, emailOrUsername);
+			ps.setString(2, emailOrUsername);
+			
+			ResultSet rs = ps.executeQuery();
+			if(!(rs.next())){
+				throw new UtenteNonTrovatoException("Utente non trovato");
+			}
+		}
+	}
+	
+	private void isPasswordMatching(ResultSet rs) throws SQLException{
+		if(!(rs.next()))
+			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
 }

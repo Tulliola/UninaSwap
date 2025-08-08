@@ -1,5 +1,4 @@
 package utilities;
-
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
@@ -24,4 +23,5 @@ public class MyJTextField extends JPasswordField {
 		spacedBorder = new EmptyBorder(0, 5, 0, 0);
 		this.setBorder(new CompoundBorder(chosenBorder, spacedBorder));		
 	}
+
 }
