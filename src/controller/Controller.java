@@ -26,17 +26,30 @@ import eccezioni.*;
 public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
+	private FrameProfiloUtente frameProfiloUtente;
+	private FrameCambiaImmagine frameCambiaImmagine;
 	
-	private ProfiloUtenteDAO profiloDAO;
+	private ProfiloUtente utenteLoggato;
 	
 	private static Connection connessioneDB;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+//		
+		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		ProfiloUtente utente;
+		try {
+			 utente = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
+			 frameProfiloUtente = new FrameProfiloUtente(this, utente);
+			 frameProfiloUtente.setVisible(true);
+		}catch(SQLException exc) {
+			
+		}
 	}
-
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();
@@ -66,14 +79,11 @@ public class Controller {
 			System.exit(0);
 		}
 		else
-			System.out.println("La connessione è stata definita con successo.");
+			System.out.println("La connessione al database è stata definita con successo.");
 		
 	}
 	
 	public void tornaALogin() {
-		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
-		caricamentoTornaALoginFrame.setVisible(true);
-
 		frameDiRegistrazione.dispose();
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
@@ -84,10 +94,16 @@ public class Controller {
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
 		frameDiRegistrazione.setVisible(true);
 	}
+	
+	public void passaAFrameCambiaImmagine() {
+		frameProfiloUtente.setVisible(false);
+		frameCambiaImmagine = new FrameCambiaImmagine(this);
+		frameCambiaImmagine.setVisible(true);
+	}
 
 	public void onAccessoButtonClicked(String email, String password) throws SQLException{
-		profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmail(email, password);
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, 
@@ -95,7 +111,8 @@ public class Controller {
 		
 		ProfiloUtenteDAO_Postgres profiloInRegistrazione = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		profiloInRegistrazione.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
-		
-		
+				
+		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
+		caricamentoTornaALoginFrame.setVisible(true);
 	}
 }
