@@ -205,11 +205,11 @@ public class FrameDiLogin extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_UP) {
+				if(e.getKeyCode() == KeyEvent.VK_UP) {
 					if(previousComponent != null)
 						previousComponent.requestFocus();
 				}
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if(nextComponent != null)
 						nextComponent.requestFocus();
 				}
@@ -376,17 +376,5 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
 			erroreComunicazioneDatabase.setVisible(true);
 		}
-	}
-
-	private JTextField vaiATextFieldVuoto() {
-		if(emailField.getText().length() == 0) {
-			emailField.requestFocus();
-			return emailField;
-		}
-		else if(passwordField.getText().length() == 0) {
-			passwordField.requestFocus();
-			return passwordField;
-		}
-		return null;
 	}
 }

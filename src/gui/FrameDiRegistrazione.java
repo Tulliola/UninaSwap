@@ -26,8 +26,8 @@ public class FrameDiRegistrazione extends JFrame {
 	private JPanel panelTextELabel;
 
 	//Buttons
-	private JButton bottoneDiRegistrazione;
-	private JButton bottoneTornaALogin;
+	private JButton bottoneDiRegistrazione = new JButton();
+	private JButton bottoneTornaALogin = new JButton();
 
 	//Textfields
 	private JTextField usernameTextField;
@@ -42,6 +42,9 @@ public class FrameDiRegistrazione extends JFrame {
 	private JLabel lblErroreResidenza = new JLabel();
 	private JLabel lblErroreDalDB =  new JLabel();
 
+	//Bordi
+	Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
 	
 	//Controller
     private Controller mainController;
@@ -146,23 +149,21 @@ public class FrameDiRegistrazione extends JFrame {
 		panelTextELabel.setOpaque(false);
 		
 		usernameTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, usernameTextField, lblErroreUsername, "Inserisci il tuo username");
-
 		emailTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale");
-		
 		passwordTextField = new JPasswordField();
-		this.aggiungiTextField(panelTextELabel, passwordTextField, lblErrorePassword, "Inserisci la tua password istituzionale");
-	
 		residenzaTextField = new JTextField();
-		this.aggiungiTextField(panelTextELabel, residenzaTextField, lblErroreResidenza, "Inserisci la tua residenza");
+		
+		this.aggiungiTextField(panelTextELabel, usernameTextField, lblErroreUsername, "Inserisci il tuo username", emailTextField, null);
+		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale", passwordTextField, usernameTextField);	
+		this.aggiungiTextField(panelTextELabel, passwordTextField, lblErrorePassword, "Inserisci la tua password istituzionale", residenzaTextField, emailTextField);
+		this.aggiungiTextField(panelTextELabel, residenzaTextField, lblErroreResidenza, "Inserisci la tua residenza", bottoneDiRegistrazione, passwordTextField);
 		
 		panelTextELabel.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelInserimentoDati.add(panelTextELabel);
 	}
 	
-	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, JLabel labelDiErrore, String stringaPerLabel) {
+	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, JLabel labelDiErrore, String stringaPerLabel, JComponent nextComponent, JComponent	previousComponent) {
 		JLabel label = new JLabel();
 		label.setText(stringaPerLabel);
 		label.setForeground(Color.black);
@@ -173,9 +174,35 @@ public class FrameDiRegistrazione extends JFrame {
 		textFieldInput.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
-		Border blackBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
-		Border spacedBorder = new EmptyBorder(0, 5, 0, 0);
-		textFieldInput.setBorder(new CompoundBorder(blackBorder, spacedBorder));
+		textFieldInput.setBorder(blackBorder);
+		textFieldInput.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//Non fa niente
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_DOWN) {
+					if(nextComponent != null) {
+						nextComponent.setFocusable(true);
+						nextComponent.requestFocus();
+					}
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_UP) {
+					if(previousComponent != null) {
+						previousComponent.setFocusable(true);
+						previousComponent.requestFocus();
+					}
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//Non fa niente
+			}
+		});
 
 		labelDiErrore.setForeground(Color.red); 
 		labelDiErrore.setVisible(false);
@@ -188,7 +215,7 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiBottoneDiRegistrazione() {
-		bottoneDiRegistrazione = new JButton();
+//		bottoneDiRegistrazione = new JButton();
 		this.impostaSettingsBottone(bottoneDiRegistrazione, "Conferma registrazione");
 		
 		//Logica del bottone
@@ -200,11 +227,42 @@ public class FrameDiRegistrazione extends JFrame {
 			}
 		});
 		
+		bottoneDiRegistrazione.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//Non fa niente
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					nascondiLabelErrore();
+					resettaBordiTextField();
+					clickConfermaRegistrazione();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+//					bottoneTornaALogin.setFocusable(true);
+					bottoneTornaALogin.requestFocus();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_UP) {
+					residenzaTextField.requestFocus();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//Non fa niente
+			}
+			
+		});
+		
+		
 		panelInserimentoDati.add(bottoneDiRegistrazione);
 	}
 	
 	private void aggiungiBottoneTornaAlLogin() {
-		bottoneTornaALogin = new JButton();
+//		bottoneTornaALogin = new JButton();
 		this.impostaSettingsBottone(bottoneTornaALogin, "Torna al login");
 		
 		//Logica del bottone
@@ -213,6 +271,31 @@ public class FrameDiRegistrazione extends JFrame {
 				mainController.tornaALogin();
 			}
 
+		});
+		
+		bottoneTornaALogin.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//Non fa niente
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_UP) {
+//					bottoneDiRegistrazione.setFocusable(true);
+					bottoneDiRegistrazione.requestFocus();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					mainController.tornaALogin();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//Non fa niente
+			}
+			
 		});
 		
 		panelInserimentoDati.add(bottoneTornaALogin);
@@ -224,7 +307,7 @@ public class FrameDiRegistrazione extends JFrame {
 		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		bottoneIn.setBackground(new Color(65, 106, 144));
 		bottoneIn.setForeground(Color.white);
-		bottoneIn.setFocusable(false);
+//		bottoneIn.setFocusable(false);
 		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 
@@ -234,15 +317,19 @@ public class FrameDiRegistrazione extends JFrame {
 			mainController.onConfermaRegistrazioneButtonClicked(usernameTextField.getText(), emailTextField.getText(), passwordTextField.getText(), residenzaTextField.getText());
 		}
 		catch(UsernameException exc1) {
+			usernameTextField.requestFocus();
 			settaLabelETextFieldDiErrore(lblErroreUsername, exc1.getMessage(), usernameTextField);
 		}
 		catch(EmailException exc2) {
+			emailTextField.requestFocus();
 			settaLabelETextFieldDiErrore(lblErroreEmail, exc2.getMessage(), emailTextField);
 		}
 		catch(PasswordException exc3) {
+			passwordTextField.requestFocus();
 			settaLabelETextFieldDiErrore(lblErrorePassword, exc3.getMessage(), passwordTextField);
 		}
 		catch(ResidenzaException exc4) {
+			residenzaTextField.requestFocus();
 			settaLabelETextFieldDiErrore(lblErroreResidenza, exc4.getMessage(), residenzaTextField);
 		}
 		catch(SQLException exc5) {
@@ -321,26 +408,15 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void resettaBordiTextField() {
-		usernameTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		emailTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		passwordTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-		residenzaTextField.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+		usernameTextField.setBorder(blackBorder);
+		emailTextField.setBorder(blackBorder);
+		passwordTextField.setBorder(blackBorder);
+		residenzaTextField.setBorder(blackBorder);
 	}
 	
 	private void settaLabelETextFieldDiErrore(JLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
 		labelInput.setText(messaggioDiErrore);
-		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+		textFieldInput.setBorder(redBorder);
 		labelInput.setVisible(true);
-	}
-	
-	private void vaiATextFieldVuoto() {
-		if(usernameTextField.getText().length() == 0)
-			usernameTextField.requestFocus();
-		else if(emailTextField.getText().length() == 0)
-			emailTextField.requestFocus();
-		else if(passwordTextField.getText().length() == 0)
-			passwordTextField.requestFocus();
-		else if(residenzaTextField.getText().length() == 0)
-			residenzaTextField.requestFocus();
 	}
 }
