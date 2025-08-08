@@ -1,7 +1,5 @@
 package controller;
 
-//commento di prova
-
 import java.awt.event.*;
 import java.sql.*;
 
