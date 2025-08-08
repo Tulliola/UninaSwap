@@ -5,8 +5,6 @@ import java.sql.*;
 
 import javax.swing.*;
 
-//Aggiunto questo commento: war is over 2
-
 import database.dao.implementazioni.*;
 import database.dao.interfacce.*;
 
@@ -37,8 +35,20 @@ public class Controller {
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+	
+		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		try {
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
+			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
+			frameProfiloUtente.setVisible(true);
+		}
+		catch(SQLException exc) {
+			
+		}
 	}
 
 	
@@ -86,7 +96,6 @@ public class Controller {
 		frameDiRegistrazione.setVisible(true);
 	}
 
-	//ciao
 	public void passaAFrameCambiaImmagine() {
 		frameProfiloUtente.setVisible(false);
 		frameCambiaImmagine = new FrameCambiaImmagine(this);

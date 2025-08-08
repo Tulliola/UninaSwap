@@ -9,12 +9,11 @@ import javax.swing.border.EmptyBorder;
 
 public class MyJPanel extends JPanel {
 	
-	public void aggiungiTextField(JTextField textFieldInput, String stringaPerLabel) {
-		JLabel label = new JLabel();
-		label.setText(stringaPerLabel);
-		label.setForeground(Color.black);
-		label.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		label.setAlignmentX(LEFT_ALIGNMENT);
+	public void aggiungiTextField(JTextField textFieldInput, JLabel labelIn, String stringaPerLabel) {
+		labelIn.setText(stringaPerLabel);
+		labelIn.setForeground(Color.black);
+		labelIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
+		labelIn.setAlignmentX(LEFT_ALIGNMENT);
 		
 		textFieldInput.setMaximumSize(new Dimension(300, 30));
 		textFieldInput.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
@@ -26,13 +25,20 @@ public class MyJPanel extends JPanel {
 			textFieldInput.setBackground(Color.lightGray);
 		}
 		
-		this.add(label);
+		this.add(labelIn);
 		this.add(textFieldInput);
 	}
 	
-	public void aggiungiTextField(JTextField textFieldInput, String stringaPerLabel, String stringPerTextField) {
-		this.aggiungiTextField(textFieldInput, stringaPerLabel);
-		
+	public void aggiungiTextField(JTextField textFieldInput, JLabel labelIn, String stringaPerLabel, String stringPerTextField) {
 		textFieldInput.setText(stringPerTextField);
+		
+		this.aggiungiTextField(textFieldInput, labelIn, stringaPerLabel);		
+	}
+	
+	public void aggiungiTextField(JTextField textFieldInput, JLabel labelIn, String stringaPerLabel, String stringPerTextField, Icon immagineLabel) {
+		labelIn.setIcon(immagineLabel);
+		labelIn.setHorizontalTextPosition(SwingConstants.LEFT);
+		
+		this.aggiungiTextField(textFieldInput, labelIn, stringaPerLabel, stringPerTextField);		
 	}
 }
