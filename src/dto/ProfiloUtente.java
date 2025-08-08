@@ -6,14 +6,15 @@ public class ProfiloUtente {
 	private double saldo;
 	private byte[] immagineProfilo;
 	private String residenza;
+	private String password;
 	
-	
-	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo) {
+	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo, String password) {
 		this.username = username;
 		this.email = email;
 		this.saldo = saldo;
 		this.residenza = residenza;
 		this.immagineProfilo = immagine_profilo;
+		this.password = password;
 	}
 	
 	@Override
@@ -62,5 +63,13 @@ public class ProfiloUtente {
 	
 	public void setResidenza(String residenza) {
 		this.residenza = residenza;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

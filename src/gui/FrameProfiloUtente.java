@@ -15,6 +15,7 @@ import controller.Controller;
 import dto.ProfiloUtente;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
+import utilities.MyJTextField;
 
 public class FrameProfiloUtente extends JFrame {
 
@@ -100,9 +101,8 @@ public class FrameProfiloUtente extends JFrame {
 	
 	private void aggiungiOpzioneCambiaImmagine() {
 		
-		MyJLabel lblCambiaImmagine = new MyJLabel();
-		lblCambiaImmagine.setText("Cambia immagine di profilo");
-		lblCambiaImmagine.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
+		MyJLabel lblCambiaImmagine = new MyJLabel("Cambia immagine di profilo");
+
 		lblCambiaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
 		lblCambiaImmagine.aggiungiEffettoCliccabilita();
@@ -127,21 +127,74 @@ public class FrameProfiloUtente extends JFrame {
 		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
 		
 		
-		JTextField saldoTextField = new JTextField();
-		JLabel lblSaldo = new JLabel();
+		MyJTextField saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo()));
+		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
 		saldoTextField.setEnabled(false);
+		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
+		lblSaldo.setAlignmentX(LEFT_ALIGNMENT);
 		
-		JTextField residenzaTextField = new JTextField();
-		MyJLabel lblResidenza = new MyJLabel();
+		MyJTextField passwordTextField = new MyJTextField(utenteLoggato.getPassword());
+		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
+		passwordTextField.setEnabled(false);
+		MyJLabel lblPassword = new MyJLabel("La tua password", iconaModifyScalata);
+		lblPassword.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblPassword.setAlignmentX(LEFT_ALIGNMENT);
+		
+		lblPassword.aggiungiEffettoCliccabilita();
+		lblPassword.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				passwordTextField.setEnabled(true);
+				passwordTextField.setBackground(Color.white);
+			}
+		});
+
+		MyJTextField emailTextField = new MyJTextField(String.valueOf(utenteLoggato.getEmail()));
+		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
+		emailTextField.setEnabled(false);
+		MyJLabel lblEmail = new MyJLabel("La tua email istituzionale");
+		lblEmail.setAlignmentX(LEFT_ALIGNMENT);
+		
+		MyJTextField usernameTextField = new MyJTextField(utenteLoggato.getUsername());
+		usernameTextField.setAlignmentX(LEFT_ALIGNMENT);
+		usernameTextField.setEnabled(false);
+		MyJLabel lblUsername = new MyJLabel("La tua username", iconaModifyScalata);
+		lblUsername.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblUsername.setAlignmentX(LEFT_ALIGNMENT);
+		
+		lblUsername.aggiungiEffettoCliccabilita();
+		lblUsername.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				usernameTextField.setEnabled(true);
+				usernameTextField.setBackground(Color.white);
+			}
+		});
+		
+		MyJTextField residenzaTextField = new MyJTextField(utenteLoggato.getResidenza());
+		residenzaTextField.setAlignmentX(LEFT_ALIGNMENT);
 		residenzaTextField.setEnabled(false);
-		
-		
-		
-		panelRiepilogoInfoUtente.aggiungiTextField(saldoTextField, lblSaldo, "Il tuo saldo attuale", String.valueOf(utenteLoggato.getSaldo()));
-		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextField(residenzaTextField, lblResidenza, "La tua residenza", utenteLoggato.getResidenza(), iconaModifyScalata);
+		MyJLabel lblResidenza = new MyJLabel("La tua residenza", iconaModifyScalata);
+		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblResidenza.setAlignmentX(LEFT_ALIGNMENT);
 		
 		lblResidenza.aggiungiEffettoCliccabilita();
+		lblResidenza.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				residenzaTextField.setEnabled(true);
+				residenzaTextField.setBackground(Color.white);
+			}
+		});
+		
+		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(emailTextField, lblEmail);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(usernameTextField, lblUsername);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(passwordTextField, lblPassword);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(residenzaTextField, lblResidenza);
+
+		
 
 		panelProfilo.add(panelRiepilogoInfoUtente);
 	}
