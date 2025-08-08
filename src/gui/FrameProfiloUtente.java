@@ -2,14 +2,18 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import controller.Controller;
 
 import dto.ProfiloUtente;
-
+import utilities.MyJLabel;
 import utilities.MyJPanel;
 
 public class FrameProfiloUtente extends JFrame {
@@ -96,22 +100,13 @@ public class FrameProfiloUtente extends JFrame {
 	
 	private void aggiungiOpzioneCambiaImmagine() {
 		
-		JLabel lblCambiaImmagine = new JLabel();
+		MyJLabel lblCambiaImmagine = new MyJLabel();
 		lblCambiaImmagine.setText("Cambia immagine di profilo");
 		lblCambiaImmagine.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
 		lblCambiaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
-		lblCambiaImmagine.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent me) {
-				lblCambiaImmagine.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent me) {
-				lblCambiaImmagine.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
-			}
-			
+		lblCambiaImmagine.aggiungiEffettoCliccabilita();
+		lblCambiaImmagine.addMouseListener(new MouseAdapter() { 
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				mainController.passaAFrameCambiaImmagine();
@@ -127,16 +122,27 @@ public class FrameProfiloUtente extends JFrame {
 		panelRiepilogoInfoUtente.setLayout(new BoxLayout(panelRiepilogoInfoUtente, BoxLayout.Y_AXIS));
 		panelRiepilogoInfoUtente.setAlignmentX(CENTER_ALIGNMENT);
 		
+		ImageIcon modifyIcon = new ImageIcon("images/iconModify.png");
+		Image resizedModifyIcon = modifyIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
+		
+		
 		JTextField saldoTextField = new JTextField();
+		JLabel lblSaldo = new JLabel();
 		saldoTextField.setEnabled(false);
 		
 		JTextField residenzaTextField = new JTextField();
+		MyJLabel lblResidenza = new MyJLabel();
 		residenzaTextField.setEnabled(false);
 		
-		panelRiepilogoInfoUtente.aggiungiTextField(saldoTextField, "Il tuo saldo attuale", String.valueOf(utenteLoggato.getSaldo()));
-		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextField(residenzaTextField, "La tua residenza", utenteLoggato.getResidenza());
 		
+		
+		panelRiepilogoInfoUtente.aggiungiTextField(saldoTextField, lblSaldo, "Il tuo saldo attuale", String.valueOf(utenteLoggato.getSaldo()));
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.aggiungiTextField(residenzaTextField, lblResidenza, "La tua residenza", utenteLoggato.getResidenza(), iconaModifyScalata);
+		
+		lblResidenza.aggiungiEffettoCliccabilita();
+
 		panelProfilo.add(panelRiepilogoInfoUtente);
 	}
 }
