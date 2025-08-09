@@ -21,6 +21,16 @@ public class MyJLabel extends JLabel {
 		this.setText(stringaDiDefault);
 	}
 	
+	public MyJLabel(boolean isLabelDiErrore) {
+		this();
+		
+		if(isLabelDiErrore) {
+			this.setForeground(Color.red);
+			this.setFont(new Font("Ubuntu Sans", Font.BOLD, 13));
+			this.setVisible(false);
+		}
+	}
+	
 	public MyJLabel(String stringaDiDefault, Icon immagineLabel) {
 		this(stringaDiDefault);
 		this.setIcon(immagineLabel);
