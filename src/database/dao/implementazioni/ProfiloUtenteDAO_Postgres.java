@@ -26,14 +26,15 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			try(ResultSet rs = ps.executeQuery()){
 			
 				isPasswordMatching(rs);
-			
+				
 				return new ProfiloUtente(
 						rs.getString("username"),
 						rs.getString("email"),
 						rs.getDouble("saldo"),
 						rs.getString("residenza"),
 						rs.getBytes("immagine_profilo"),
-						rs.getString("PW")
+						rs.getString("PW"),
+						rs.getBoolean("sospeso")
 				);
 			}
 		}
@@ -75,6 +76,25 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			throw new MatricolaNonTrovataException("Non è stata trovata alcuna matricola associata a questa email.");
 	}
 	
+	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException {
+		String sqlQuery = "SELECT motivo_segnalazione, data_segnalazione FROM SEGNALAZIONE WHERE Email_utente_segnalato = ? ORDER BY data_sospensione DESC LIMIT 3";
+		try(PreparedStatement ps = connessioneDB.prepareStatement(sqlQuery)){
+			ps.setString(1, emailIn);
+			try(ResultSet rs = ps.executeQuery()){
+				String[] motiviSegnalazione = new String[3];
+				
+				for(int i = 0; i < 3; i++) {
+					rs.next();
+					motiviSegnalazione[i] = rs.getString("motivo_segnalazione");
+				}
+				
+				return motiviSegnalazione;
+			}
+		}
+		
+	}
+	
+	
 	//Metodi di utilità non ereditati dall'interfaccia
 	private void isUtenteExisting(String emailOrUsername) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE (Email = ? OR Username = ?);")){
@@ -92,4 +112,11 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		if(!(rs.next()))
 			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
+	
+	public boolean isUtenteSospeso(ResultSet rs) throws SQLException {
+		if(rs.getBoolean("Sospeso")) 
+			return true;
+		return false;
+	}
+
 }

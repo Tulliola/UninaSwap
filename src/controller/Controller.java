@@ -29,6 +29,7 @@ public class Controller {
 	private FrameCambiaImmagine frameCambiaImmagine;
 	private FrameHomePage frameHomePage;
 	
+	
 	private ProfiloUtente utenteLoggato;
 
 	
@@ -37,18 +38,18 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 		
-		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		try {
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
-			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
-			frameProfiloUtente.setVisible(true);
-		}
-		catch(SQLException exc) {
-			
-		}
+//		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
+//		try {
+//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
+//			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
+//			frameProfiloUtente.setVisible(true);
+//		}
+//		catch(SQLException exc) {
+//			
+//		}
 
 	}
 
@@ -105,7 +106,10 @@ public class Controller {
 
 	public void onAccessoButtonClicked(String email, String password) throws SQLException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		ProfiloUtente profiloLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
+		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
+		if(utenteLoggato.getSospeso()) {
+			throw new UtenteSospesoException();
+		}
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
@@ -116,5 +120,21 @@ public class Controller {
 		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		caricamentoTornaALoginFrame.setVisible(true);
 		this.tornaALogin();
+	}
+
+
+	public void passaAHomePage() {
+		frameDiLogin.dispose();
+		frameHomePage = new FrameHomePage(this);
+		frameHomePage.setVisible(true);
+		
+	}
+
+
+	public void passaADialogDiComunicataSospensione(String emailUtente) throws SQLException {
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		String[] motiviSegnalazioni = profiloDAO.recuperaMotiviSegnalazioni(utenteLoggato.getEmail());
+		DialogDiComunicataSospensione comunicaSospensione = new DialogDiComunicataSospensione(frameDiLogin, utenteLoggato.getDataSospensione(), motiviSegnalazioni, true);
+		comunicaSospensione.setVisible(true);
 	}
 }

@@ -8,4 +8,5 @@ public interface ProfiloUtenteDAO {
 	public ProfiloUtente recuperaUtenteConEmailOUsername(String email, String password) throws SQLException;
 	public void inserisciNuovoUtente(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException;
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException;
+	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException;
 }

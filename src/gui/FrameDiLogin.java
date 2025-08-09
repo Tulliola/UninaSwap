@@ -350,6 +350,7 @@ public class FrameDiLogin extends JFrame {
 			checkDatiAccesso();
 			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
 			nascondiErrori();
+			mainController.passaAHomePage();
 		}
 		catch(EmailException e) {
 			erroreEmail.setText(e.getMessage());
@@ -370,6 +371,14 @@ public class FrameDiLogin extends JFrame {
 		catch(UtentePasswordMismatchException e) {
 			erroreComunicazioneDatabase.setText(e.getMessage());
 			erroreComunicazioneDatabase.setVisible(true);
+		}
+		catch(UtenteSospesoException e) {
+			try {
+				System.out.println("Sto qui");
+				mainController.passaADialogDiComunicataSospensione(emailField.getText());
+			} catch (SQLException e1) {
+				//TODO poi si vede con fulio
+			}
 		}
 		catch(SQLException e) {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");

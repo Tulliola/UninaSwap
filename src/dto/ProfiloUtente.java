@@ -1,5 +1,7 @@
 package dto;
 
+import java.sql.Date;
+
 public class ProfiloUtente {
 	private String username;
 	private String email;
@@ -7,14 +9,17 @@ public class ProfiloUtente {
 	private byte[] immagineProfilo;
 	private String residenza;
 	private String password;
+	private Date dataSospensione;
+	private boolean sospeso;
 	
-	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo, String password) {
+	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo, String password, boolean sospeso) {
 		this.username = username;
 		this.email = email;
 		this.saldo = saldo;
 		this.residenza = residenza;
 		this.immagineProfilo = immagine_profilo;
 		this.password = password;
+		this.sospeso = sospeso;
 	}
 	
 	@Override
@@ -71,5 +76,21 @@ public class ProfiloUtente {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Date getDataSospensione() {
+		return this.dataSospensione;
+	}
+	
+	public void setDataSospensione(Date dataSospensione) {
+		this.dataSospensione = dataSospensione;
+	}
+	
+	public boolean getSospeso() {
+		return this.sospeso;
+	}
+	
+	public void setSospeso(boolean sospeso) {
+		this.sospeso = sospeso;
 	}
 }
