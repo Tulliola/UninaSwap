@@ -39,8 +39,17 @@ public class Controller {
 		
 //		frameDiLogin = new FrameDiLogin(this);
 //		frameDiLogin.setVisible(true);		
-		frameHomePage = new FrameHomePage(this);
-		frameHomePage.setVisible(true);
+		
+		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		try {
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
+			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
+			frameProfiloUtente.setVisible(true);
+		}
+		catch(SQLException exc) {
+			
+		}
+
 	}
 
 	

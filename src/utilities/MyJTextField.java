@@ -2,8 +2,11 @@ package utilities;
 
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPasswordField;
@@ -20,6 +23,16 @@ public class MyJTextField extends JTextField {
 		this.setBorder(blackBorder);
 		this.setMaximumSize(new Dimension(300, 30));
 		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
+		
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent me) {
+				setCursor(new Cursor(Cursor.TEXT_CURSOR));
+			}
+			
+			public void mouseExited(MouseEvent me) {
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		});
 	}
 
 	public MyJTextField(String stringaDiDefault) {

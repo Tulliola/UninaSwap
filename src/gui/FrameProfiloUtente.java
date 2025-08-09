@@ -100,7 +100,7 @@ public class FrameProfiloUtente extends JFrame {
 		
 		this.aggiungiOpzioneCambiaImmagine();
 		
-		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelProfilo.add(Box.createRigidArea(new Dimension(0, 25)));
 		
 		this.aggiungiPanelRiepilogoInformazioni(utenteLoggato);
 		
@@ -149,7 +149,49 @@ public class FrameProfiloUtente extends JFrame {
 		Image resizedModifyIcon = modifyIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
 		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
 		
+		//Creazione delle icone di modifica con relativa logica
+		MyJLabel lblUsername = new MyJLabel(iconaModifyScalata, true);
+		lblUsername.setText("Il tuo username");
+		lblUsername.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblUsername.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				usernameTextField.cambiaStatoEnabled();
+				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
+				mostraBottoneSalvaModifiche();
+			}
+		});
+				
+		MyJLabel lblPassword = new MyJLabel(iconaModifyScalata, true);
+		lblPassword.setText("La tua password");
+		lblPassword.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblPassword.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				passwordTextField.cambiaStatoEnabled();
+				passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
+				mostraBottoneSalvaModifiche();
+			}
+		});
 		
+		MyJLabel lblResidenza = new MyJLabel(iconaModifyScalata, true);
+		lblResidenza.setText("La tua residenza");
+		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
+		lblResidenza.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				residenzaTextField.cambiaStatoEnabled();
+				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
+				mostraBottoneSalvaModifiche();
+			}
+		});
+		emailTextField = new MyJTextField(String.valueOf(utenteLoggato.getEmail()));
+		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
+		emailTextField.setEnabled(false);
+		MyJLabel lblEmail = new MyJLabel("La tua email istituzionale");
+		lblEmail.setAlignmentX(LEFT_ALIGNMENT);
+		
+		usernameTextField = new MyJTextField(utenteLoggato.getUsername());
+		usernameTextField.setAlignmentX(LEFT_ALIGNMENT);
+		usernameTextField.setEnabled(false);
+
 		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo()));
 		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
 		saldoTextField.setEnabled(false);
@@ -160,56 +202,10 @@ public class FrameProfiloUtente extends JFrame {
 		passwordTextField = new MyJTextField(utenteLoggato.getPassword());
 		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
 		passwordTextField.setEnabled(false);
-		MyJLabel lblPassword = new MyJLabel("La tua password", iconaModifyScalata);
-		lblPassword.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblPassword.setAlignmentX(LEFT_ALIGNMENT);
-		
-		lblPassword.aggiungiEffettoCliccabilita();
-		lblPassword.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent me) {
-				passwordTextField.cambiaStatoEnabled();
-				passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
-				mostraBottoneSalvaModifiche();
-			}
-		});
-
-		emailTextField = new MyJTextField(String.valueOf(utenteLoggato.getEmail()));
-		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
-		emailTextField.setEnabled(false);
-		MyJLabel lblEmail = new MyJLabel("La tua email istituzionale");
-		lblEmail.setAlignmentX(LEFT_ALIGNMENT);
-		
-		usernameTextField = new MyJTextField(utenteLoggato.getUsername());
-		usernameTextField.setAlignmentX(LEFT_ALIGNMENT);
-		usernameTextField.setEnabled(false);
-		MyJLabel lblUsername = new MyJLabel("Il tuo username", iconaModifyScalata);
-		lblUsername.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblUsername.setAlignmentX(LEFT_ALIGNMENT);
-		
-		lblUsername.aggiungiEffettoCliccabilita();
-		lblUsername.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent me) {
-				usernameTextField.cambiaStatoEnabled();
-				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
-				mostraBottoneSalvaModifiche();
-			}
-		});
 		
 		residenzaTextField = new MyJTextField(utenteLoggato.getResidenza());
 		residenzaTextField.setAlignmentX(LEFT_ALIGNMENT);
 		residenzaTextField.setEnabled(false);
-		MyJLabel lblResidenza = new MyJLabel("La tua residenza", iconaModifyScalata);
-		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblResidenza.setAlignmentX(LEFT_ALIGNMENT);
-		
-		lblResidenza.aggiungiEffettoCliccabilita();
-		lblResidenza.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent me) {
-				residenzaTextField.cambiaStatoEnabled();
-				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
-				mostraBottoneSalvaModifiche();
-			}
-		});
 		
 		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(emailTextField, lblEmail);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
