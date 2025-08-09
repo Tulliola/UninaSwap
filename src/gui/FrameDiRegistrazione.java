@@ -185,16 +185,12 @@ public class FrameDiRegistrazione extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_DOWN) {
-					if(nextComponent != null) {
-						nextComponent.setFocusable(true);
+					if(nextComponent != null)
 						nextComponent.requestFocus();
-					}
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_UP) {
-					if(previousComponent != null) {
-						previousComponent.setFocusable(true);
+					if(previousComponent != null)
 						previousComponent.requestFocus();
-					}
 				}
 			}
 
@@ -215,7 +211,6 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiBottoneDiRegistrazione() {
-//		bottoneDiRegistrazione = new JButton();
 		this.impostaSettingsBottone(bottoneDiRegistrazione, "Conferma registrazione");
 		
 		//Logica del bottone
@@ -242,7 +237,6 @@ public class FrameDiRegistrazione extends JFrame {
 					clickConfermaRegistrazione();
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-//					bottoneTornaALogin.setFocusable(true);
 					bottoneTornaALogin.requestFocus();
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_UP) {
@@ -262,7 +256,6 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void aggiungiBottoneTornaAlLogin() {
-//		bottoneTornaALogin = new JButton();
 		this.impostaSettingsBottone(bottoneTornaALogin, "Torna al login");
 		
 		//Logica del bottone
@@ -283,7 +276,6 @@ public class FrameDiRegistrazione extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_UP) {
-//					bottoneDiRegistrazione.setFocusable(true);
 					bottoneDiRegistrazione.requestFocus();
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -302,12 +294,10 @@ public class FrameDiRegistrazione extends JFrame {
 	}
 	
 	private void impostaSettingsBottone(JButton bottoneIn, String testoBottone) {
-
 		bottoneIn.setText(testoBottone);
 		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		bottoneIn.setBackground(new Color(65, 106, 144));
 		bottoneIn.setForeground(Color.white);
-//		bottoneIn.setFocusable(false);
 		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 

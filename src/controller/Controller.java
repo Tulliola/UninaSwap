@@ -27,6 +27,7 @@ public class Controller {
 	private FrameDiRegistrazione frameDiRegistrazione;
 	private FrameProfiloUtente frameProfiloUtente;
 	private FrameCambiaImmagine frameCambiaImmagine;
+	private FrameHomePage frameHomePage;
 	
 	private ProfiloUtente utenteLoggato;
 
@@ -36,19 +37,10 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
-	
-		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		
-		try {
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
-			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
-			frameProfiloUtente.setVisible(true);
-		}
-		catch(SQLException exc) {
-			
-		}
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
+//		frameHomePage = new FrameHomePage(this);
+//		frameHomePage.setVisible(true);
 	}
 
 	
@@ -114,5 +106,6 @@ public class Controller {
 				
 		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		caricamentoTornaALoginFrame.setVisible(true);
+		this.tornaALogin();
 	}
 }
