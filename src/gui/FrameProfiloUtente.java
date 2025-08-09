@@ -18,11 +18,13 @@ import eccezioni.PasswordException;
 import eccezioni.ResidenzaException;
 import eccezioni.UsernameException;
 import utilities.MyJButton;
+import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
+import utilities.MyJPasswordField;
 import utilities.MyJTextField;
 
-public class FrameProfiloUtente extends JFrame {
+public class FrameProfiloUtente extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -40,9 +42,22 @@ public class FrameProfiloUtente extends JFrame {
 	private MyJTextField residenzaTextField;
 	private MyJTextField usernameTextField;
 	private MyJTextField emailTextField;
-	private MyJTextField passwordTextField;
+	private MyJPasswordField passwordTextField;
+	private MyJTextField cambiaPWDField;
 	private MyJTextField saldoTextField;
 	
+	//Label di errore
+	MyJLabel lblErroreUsername = new MyJLabel(true);
+	MyJLabel lblErrorePWD = new MyJLabel(true);
+	MyJLabel lblErroreResidenza = new MyJLabel(true);
+	MyJLabel lblErroreDalDB = new MyJLabel(true);
+	
+	//RigidArea
+	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
+	
+	//Variabili per la manipolazione delle componenti
+	boolean mostraCambiaPWDField = false;
+
 	private Controller mainController;
 	
 	public FrameProfiloUtente(Controller controller, ProfiloUtente utenteLoggato) {
@@ -89,7 +104,7 @@ public class FrameProfiloUtente extends JFrame {
 	}
 	
 	private void settaBandaLaterale(JPanel bandaLaterale) {
-		bandaLaterale.setPreferredSize(new Dimension(75, contentPane.getHeight()));
+		bandaLaterale.setPreferredSize(new Dimension(30, contentPane.getHeight()));
 		bandaLaterale.setBackground(new Color(198, 210, 222));
 	}
 	
@@ -140,6 +155,8 @@ public class FrameProfiloUtente extends JFrame {
 	}
 	
 	private void aggiungiPanelRiepilogoInformazioni(ProfiloUtente utenteLoggato) {
+		rigidArea.setVisible(false);
+		
 		panelRiepilogoInfoUtente = new MyJPanel();
 		
 		panelRiepilogoInfoUtente.setLayout(new BoxLayout(panelRiepilogoInfoUtente, BoxLayout.Y_AXIS));
@@ -150,32 +167,35 @@ public class FrameProfiloUtente extends JFrame {
 		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
 		
 		//Creazione delle icone di modifica con relativa logica
-		MyJLabel lblUsername = new MyJLabel(iconaModifyScalata, true);
-		lblUsername.setText("Il tuo username");
-		lblUsername.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblUsername.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaUsername = new MyJLabel(iconaModifyScalata, true);
+		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
+				
+				if(!usernameTextField.isEnabled())
+					usernameTextField.setText(utenteLoggato.getUsername());
+				
 				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
 				mostraBottoneSalvaModifiche();
 			}
 		});
 				
-		MyJLabel lblPassword = new MyJLabel(iconaModifyScalata, true);
-		lblPassword.setText("La tua password");
-		lblPassword.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblPassword.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaPassword = new MyJLabel(iconaModifyScalata, true);
+		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				passwordTextField.cambiaStatoEnabled();
-				passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
+				
+				if(!passwordTextField.isEnabled())
+					passwordTextField.setText(utenteLoggato.getPassword());
+				
+				mostraCambiaPWDField = !mostraCambiaPWDField;
+				mostraONascondiCambiaPWDField();
 				mostraBottoneSalvaModifiche();
 			}
 		});
 		
-		MyJLabel lblResidenza = new MyJLabel(iconaModifyScalata, true);
-		lblResidenza.setText("La tua residenza");
-		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblResidenza.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaResidenza = new MyJLabel(iconaModifyScalata, true);
+		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
 				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
@@ -191,32 +211,84 @@ public class FrameProfiloUtente extends JFrame {
 		usernameTextField = new MyJTextField(utenteLoggato.getUsername());
 		usernameTextField.setAlignmentX(LEFT_ALIGNMENT);
 		usernameTextField.setEnabled(false);
+		usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 
-		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo()));
+		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo())+" $");
 		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
 		saldoTextField.setEnabled(false);
 		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
 		lblSaldo.setAlignmentX(LEFT_ALIGNMENT);
 		
-		//TODO aggiungere come MyJPasswordTextField
-		passwordTextField = new MyJTextField(utenteLoggato.getPassword());
+		passwordTextField = new MyJPasswordField(utenteLoggato.getPassword());
 		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
 		passwordTextField.setEnabled(false);
+		passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
+		
+		cambiaPWDField = new MyJTextField("Inserisci la nuova password");
+		cambiaPWDField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent fe) {
+				if(cambiaPWDField.getText().equals("Inserisci la nuova password"))
+					cambiaPWDField.setText("");
+			}
+			
+			@Override
+			public void focusLost(FocusEvent fe) {
+				if(cambiaPWDField.getText().isEmpty())
+					cambiaPWDField.setText("Inserisci la nuova password");
+			}
+		});
+		
+		cambiaPWDField.setAlignmentX(LEFT_ALIGNMENT);
+		cambiaPWDField.setForeground(Color.gray);
+		cambiaPWDField.setVisible(false);
 		
 		residenzaTextField = new MyJTextField(utenteLoggato.getResidenza());
 		residenzaTextField.setAlignmentX(LEFT_ALIGNMENT);
 		residenzaTextField.setEnabled(false);
+		residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY,Color.white);
 		
+		
+		MyJPanel panelUsername = new MyJPanel();
+		panelUsername.setLayout(new BoxLayout(panelUsername, BoxLayout.X_AXIS));
+		panelUsername.setAlignmentX(LEFT_ALIGNMENT);
+		panelUsername.add(new MyJLabel("Il tuo username"));
+		panelUsername.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelUsername.add(modificaUsername);
+		
+		MyJPanel panelPassword = new MyJPanel();
+		panelPassword.setLayout(new BoxLayout(panelPassword, BoxLayout.X_AXIS));
+		panelPassword.setAlignmentX(LEFT_ALIGNMENT);
+		panelPassword.add(new MyJLabel("La tua password"));
+		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelPassword.add(modificaPassword);
+		
+		MyJPanel panelResidenza = new MyJPanel();
+		panelResidenza.setLayout(new BoxLayout(panelResidenza, BoxLayout.X_AXIS));
+		panelResidenza.setAlignmentX(LEFT_ALIGNMENT);
+		panelResidenza.add(new MyJLabel("La tua residenza"));
+		panelResidenza.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelResidenza.add(modificaResidenza);
+		
+		//Organizzazione del panel
 		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(emailTextField, lblEmail);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(usernameTextField, lblUsername);
+		panelRiepilogoInfoUtente.add(panelUsername);
+		panelRiepilogoInfoUtente.add(usernameTextField);
+		panelRiepilogoInfoUtente.add(lblErroreUsername);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.add(panelPassword);
+		panelRiepilogoInfoUtente.add(passwordTextField);
+		panelRiepilogoInfoUtente.add(rigidArea);
+		panelRiepilogoInfoUtente.add(cambiaPWDField);
+		panelRiepilogoInfoUtente.add(lblErrorePWD);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(passwordTextField, lblPassword);
-		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(residenzaTextField, lblResidenza);
-
+		panelRiepilogoInfoUtente.add(panelResidenza);
+		panelRiepilogoInfoUtente.add(residenzaTextField);
+		panelRiepilogoInfoUtente.add(lblErroreResidenza);
+		
 		panelProfilo.add(panelRiepilogoInfoUtente);
 
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -241,25 +313,44 @@ public class FrameProfiloUtente extends JFrame {
 		
 		bottoneSalvaModifiche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainController.onSalvaModificheProfiloClicked();
+				clickSalvaModificheButton("a","b","c");
 			}
 		});
 		
-		panelBottoni.add(bottoneSalvaModifiche);
-		panelBottoni.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelBottoni.add(bottoneTornaIndietro);
+		panelBottoni.add(Box.createRigidArea(new Dimension(10, 0)));
+		panelBottoni.add(bottoneSalvaModifiche);
 		
 		panelProfilo.add(panelBottoni);
 	}
 	
-	//TODO aggiungere la logica di errore
-//	private void clickSalvaModificheButton() {
-//		try {
-//			
-//		}
-//	}
-//	
-	private void checkUsername(String usernameIn) {
+	private void clickSalvaModificheButton(String oldUsername, String oldPWD, String oldResidenza) {
+		try {
+			if(!(usernameTextField.getText().equals(oldUsername)))
+				checkNewUsername(usernameTextField.getText());
+			if(!(cambiaPWDField.getText().equals(oldPWD)))
+				checkNewPassword(cambiaPWDField.getText());
+			if(!(residenzaTextField.getText().equals(oldResidenza)))
+				checkNewResidenza(residenzaTextField.getText());
+		}
+		catch(UsernameException exc1) {
+			this.settaLabelETextFieldDiErrore(lblErroreUsername, exc1.getMessage(), usernameTextField);
+		}
+		catch(PasswordException exc2) {
+			lblErrorePWD.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
+			this.settaLabelETextFieldDiErrore(lblErrorePWD, exc2.getMessage(), passwordTextField);
+		}
+		catch(ResidenzaException exc3) {
+			this.settaLabelETextFieldDiErrore(lblErroreResidenza, exc3.getMessage(), residenzaTextField);
+		}
+	}
+	
+	public void mostraONascondiCambiaPWDField() {
+		cambiaPWDField.setVisible(mostraCambiaPWDField);
+		rigidArea.setVisible(mostraCambiaPWDField);
+	}
+	
+	private void checkNewUsername(String usernameIn) {
 		if(usernameIn == null || usernameIn.length() == 0)
 			throw new UsernameException("Inserire un username.");
 		
@@ -271,13 +362,19 @@ public class FrameProfiloUtente extends JFrame {
 	}
 	
 	
-	private void checkPassword(String passwordIn) {
+	private void checkNewPassword(String passwordIn) {
 		if(passwordIn == null || passwordIn.length() == 0)
 			throw new PasswordException("Inserire una password.");
+		
+		if(passwordIn.length() < 8)
+			throw new PasswordException("La nuova password deve essere di almeno 8 caratteri.");
+		
+		if(passwordIn.length() > 16)
+			throw new PasswordException("La nuova password deve essere di al massimo 16 caratteri.");
 	}
 	
 	
-	private void checkResidenza(String residenzaIn) {
+	private void checkNewResidenza(String residenzaIn) {
 		if(residenzaIn == null || residenzaIn.isBlank())
 			throw new ResidenzaException("Inserire una residenza.");
 		
