@@ -150,10 +150,8 @@ public class FrameProfiloUtente extends JFrame {
 		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
 		
 		//Creazione delle icone di modifica con relativa logica
-		MyJLabel lblUsername = new MyJLabel(iconaModifyScalata, true);
-		lblUsername.setText("Il tuo username");
-		lblUsername.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblUsername.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaUsername = new MyJLabel(iconaModifyScalata, true);
+		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
 				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
@@ -161,10 +159,8 @@ public class FrameProfiloUtente extends JFrame {
 			}
 		});
 				
-		MyJLabel lblPassword = new MyJLabel(iconaModifyScalata, true);
-		lblPassword.setText("La tua password");
-		lblPassword.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblPassword.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaPassword = new MyJLabel(iconaModifyScalata, true);
+		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				passwordTextField.cambiaStatoEnabled();
 				passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
@@ -172,10 +168,10 @@ public class FrameProfiloUtente extends JFrame {
 			}
 		});
 		
-		MyJLabel lblResidenza = new MyJLabel(iconaModifyScalata, true);
-		lblResidenza.setText("La tua residenza");
-		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
-		lblResidenza.addMouseListener(new MouseAdapter() {
+		MyJLabel modificaResidenza = new MyJLabel(iconaModifyScalata, true);
+//		lblResidenza.setText("La tua residenza");
+//		lblResidenza.setHorizontalTextPosition(SwingConstants.LEFT);
+		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
 				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
@@ -191,8 +187,9 @@ public class FrameProfiloUtente extends JFrame {
 		usernameTextField = new MyJTextField(utenteLoggato.getUsername());
 		usernameTextField.setAlignmentX(LEFT_ALIGNMENT);
 		usernameTextField.setEnabled(false);
+		usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 
-		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo()));
+		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo())+" $");
 		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
 		saldoTextField.setEnabled(false);
 		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
@@ -202,21 +199,48 @@ public class FrameProfiloUtente extends JFrame {
 		passwordTextField = new MyJTextField(utenteLoggato.getPassword());
 		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
 		passwordTextField.setEnabled(false);
+		passwordTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 		
 		residenzaTextField = new MyJTextField(utenteLoggato.getResidenza());
 		residenzaTextField.setAlignmentX(LEFT_ALIGNMENT);
 		residenzaTextField.setEnabled(false);
+		residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY,Color.white);
+		
+		
+		MyJPanel panelUsername = new MyJPanel();
+		panelUsername.setLayout(new BoxLayout(panelUsername, BoxLayout.X_AXIS));
+		panelUsername.setAlignmentX(LEFT_ALIGNMENT);
+		panelUsername.add(new MyJLabel("Il tuo username"));
+		panelUsername.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelUsername.add(modificaUsername);
+		
+		MyJPanel panelPassword = new MyJPanel();
+		panelPassword.setLayout(new BoxLayout(panelPassword, BoxLayout.X_AXIS));
+		panelPassword.setAlignmentX(LEFT_ALIGNMENT);
+		panelPassword.add(new MyJLabel("La tua password"));
+		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelPassword.add(modificaPassword);
+		
+		MyJPanel panelResidenza = new MyJPanel();
+		panelResidenza.setLayout(new BoxLayout(panelResidenza, BoxLayout.X_AXIS));
+		panelResidenza.setAlignmentX(LEFT_ALIGNMENT);
+		panelResidenza.add(new MyJLabel("La tua residenza"));
+		panelResidenza.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelResidenza.add(modificaResidenza);
 		
 		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(emailTextField, lblEmail);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(usernameTextField, lblUsername);
+		panelRiepilogoInfoUtente.add(panelUsername);
+		panelRiepilogoInfoUtente.add(usernameTextField);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.add(panelPassword);
+		panelRiepilogoInfoUtente.add(passwordTextField);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(passwordTextField, lblPassword);
-		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(residenzaTextField, lblResidenza);
-
+		panelRiepilogoInfoUtente.add(panelResidenza);
+		panelRiepilogoInfoUtente.add(residenzaTextField);
+		
 		panelProfilo.add(panelRiepilogoInfoUtente);
 
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
