@@ -1,6 +1,7 @@
 package utilities;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,6 +23,25 @@ public class MyJLabel extends JLabel {
 	public MyJLabel(String stringaDiDefault, Icon immagineLabel) {
 		this(stringaDiDefault);
 		this.setIcon(immagineLabel);
+	}
+	
+	public MyJLabel(ImageIcon immagine, boolean isCliccabile) {
+		this();
+		this.setIcon(immagine);
+		Font oldFont = this.getFont();
+		if(isCliccabile) {
+			this.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent me) {
+					setCursor(new Cursor(Cursor.HAND_CURSOR));
+					setFont(new Font("Ubuntu Sans", Font.BOLD, oldFont.getSize()+1));
+				}
+				
+				public void mouseExited(MouseEvent me) {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					setFont(oldFont);
+				}				
+			});
+		}
 	}
 	
 	public void aggiungiEffettoCliccabilita() {
