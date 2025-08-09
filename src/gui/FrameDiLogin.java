@@ -377,6 +377,7 @@ public class FrameDiLogin extends JFrame {
 				System.out.println("Sto qui");
 				mainController.passaADialogDiComunicataSospensione(emailField.getText());
 			} catch (SQLException e1) {
+				System.out.println(e1.getMessage());
 				//TODO poi si vede con fulio
 				System.out.println(e1.getSQLState());
 				System.out.println(e1.getMessage());

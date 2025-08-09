@@ -34,6 +34,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 						rs.getString("residenza"),
 						rs.getBytes("immagine_profilo"),
 						rs.getString("PW"),
+						rs.getDate("data_sospensione"),
 						rs.getBoolean("sospeso")
 				);
 			}
@@ -94,6 +95,23 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		
 	}
 	
+	public String[] recuperaUtentiSegnalanti(String emailSegnalato) throws SQLException {
+		String sqlQuery = "SELECT username FROM SEGNALAZIONE AS S JOIN PROFILO_UTENTE AS P ON S.email_utente_segnalante = P.Email WHERE email_utente_segnalato = ? ORDER BY data_segnalazione DESC LIMIT 3";
+		
+		try(PreparedStatement ps = connessioneDB.prepareStatement(sqlQuery)){
+			ps.setString(1, emailSegnalato);
+			try(ResultSet rs = ps.executeQuery()){
+				String[] utentiSegnalanti = new String[3];
+				
+				for(int i = 0; i < 3; i++) {
+					rs.next();
+					utentiSegnalanti[i] = rs.getString("username");
+				}
+				
+				return utentiSegnalanti;
+			}
+		}
+	}
 	
 	//Metodi di utilità non ereditati dall'interfaccia
 	private void isUtenteExisting(String emailOrUsername) throws SQLException{
@@ -112,11 +130,6 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		if(!(rs.next()))
 			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
-	
-	public boolean isUtenteSospeso(ResultSet rs) throws SQLException {
-		if(rs.getBoolean("Sospeso")) 
-			return true;
-		return false;
-	}
+
 
 }
