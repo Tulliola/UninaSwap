@@ -9,7 +9,8 @@ import javax.swing.border.EmptyBorder;
 
 public class MyJFrame extends JFrame {
 	
-	Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
+	public Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	public Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
 	
 	protected void settaLabelETextFieldDiErrore(MyJLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
 		labelInput.setText(messaggioDiErrore);

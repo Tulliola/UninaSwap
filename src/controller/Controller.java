@@ -38,18 +38,18 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
 		
-//		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
-//		try {
-//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
-//			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
-//			frameProfiloUtente.setVisible(true);
-//		}
-//		catch(SQLException exc) {
-//			
-//		}
+		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		try {
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "CaneBlu92!");
+			frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
+			frameProfiloUtente.setVisible(true);
+		}
+		catch(SQLException exc) {
+			
+		}
 
 	}
 

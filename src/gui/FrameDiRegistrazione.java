@@ -11,12 +11,13 @@ import controller.Controller;
 
 //Eccezioni
 import eccezioni.UsernameException;
+import utilities.MyJFrame;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
 import eccezioni.ResidenzaException;
 import eccezioni.MatricolaNonTrovataException;
 
-public class FrameDiRegistrazione extends JFrame {
+public class FrameDiRegistrazione extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -43,8 +44,6 @@ public class FrameDiRegistrazione extends JFrame {
 	private JLabel lblErroreDalDB =  new JLabel();
 
 	//Bordi
-	Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
-	Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
 	
 	//Controller
     private Controller mainController;

@@ -77,7 +77,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 	
 	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException {
-		String sqlQuery = "SELECT motivo_segnalazione, data_segnalazione FROM SEGNALAZIONE WHERE Email_utente_segnalato = ? ORDER BY data_sospensione DESC LIMIT 3";
+		String sqlQuery = "SELECT motivo_segnalazione, data_segnalazione FROM SEGNALAZIONE WHERE Email_utente_segnalato = ? ORDER BY data_segnalazione DESC LIMIT 3";
 		try(PreparedStatement ps = connessioneDB.prepareStatement(sqlQuery)){
 			ps.setString(1, emailIn);
 			try(ResultSet rs = ps.executeQuery()){
