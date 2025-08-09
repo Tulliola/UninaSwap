@@ -32,7 +32,8 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 						rs.getString("email"),
 						rs.getDouble("saldo"),
 						rs.getString("residenza"),
-						rs.getBytes("immagine_profilo")
+						rs.getBytes("immagine_profilo"),
+						rs.getString("PW")
 				);
 			}
 		}

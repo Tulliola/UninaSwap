@@ -2,6 +2,8 @@ package utilities;
 
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPasswordField;
@@ -10,10 +12,23 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-public class MyJTextField extends JPasswordField {
+public class MyJTextField extends JTextField {
+
+	Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	
+	public MyJTextField() {
+		this.setBorder(blackBorder);
+		this.setMaximumSize(new Dimension(300, 30));
+		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
+	}
+
+	public MyJTextField(String stringaDiDefault) {
+		this();
+		this.setText(stringaDiDefault);
+	}
 	
 	public void settaBordiTextField(Color chosenColor) {
-		Border chosenBorder;;
+		Border chosenBorder;
 		Border spacedBorder;
 		
 		if(chosenColor == Color.RED)
@@ -25,4 +40,22 @@ public class MyJTextField extends JPasswordField {
 		spacedBorder = new EmptyBorder(0, 5, 0, 0);
 		this.setBorder(new CompoundBorder(chosenBorder, spacedBorder));		
 	}
+	
+	public void modificaBGColorSeEnabled(Color coloreDaDisabilitato, Color coloreDaAbilitato) {
+		if(!(this.isEnabled())) {
+			this.setDisabledTextColor(Color.black);
+			this.setBackground(coloreDaDisabilitato);
+		}
+		else
+			this.setBackground(coloreDaAbilitato);
+
+	}
+	
+	public void cambiaStatoEnabled() {
+		if(!(this.isEnabled()))
+			this.setEnabled(true);
+		else
+			this.setEnabled(false);
+	}
+
 }

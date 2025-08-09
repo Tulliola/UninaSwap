@@ -329,10 +329,10 @@ public class FrameDiRegistrazione extends JFrame {
 				if(exc5.getMessage().contains("unic"))
 					lblErroreDalDB.setText("Questo username non è disponibile.");
 				else
-					lblErroreDalDB.setText("Esiste già un account associato a questa email");
+					lblErroreDalDB.setText("Esiste già un account associato a questa email.");
 			}
 			else if(statoDiErrore.equals("P0008")) {
-				lblErroreDalDB.setText("La password o l'email sono sbagliate");
+				lblErroreDalDB.setText("La password o l'email sono sbagliate.");
 			}
 			lblErroreDalDB.setVisible(true);
 		}

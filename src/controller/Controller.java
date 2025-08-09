@@ -37,10 +37,10 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
-//		frameHomePage = new FrameHomePage(this);
-//		frameHomePage.setVisible(true);
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+		frameHomePage = new FrameHomePage(this);
+		frameHomePage.setVisible(true);
 	}
 
 	
