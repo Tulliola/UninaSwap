@@ -14,10 +14,13 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class MyJButton extends JButton implements ActionListener, KeyListener{
+	public static final Color uninaColor = new Color(65, 106, 144);
+	public static final Color uninaLightColor = new Color(198, 210, 222);
 	
 	private Runnable defaultAction;
 	private Runnable upAction;
 	private Runnable downAction;
+	
 	private Component previousComponent;
 	private Component nextComponent;
 	

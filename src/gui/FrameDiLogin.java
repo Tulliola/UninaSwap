@@ -13,35 +13,33 @@ import controller.Controller;
 import eccezioni.*;
 import utilities.MyJButton;
 import utilities.MyJLabel;
+import utilities.MyJPanel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
 
 public class FrameDiLogin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
 	//Panel del frame
-	private JPanel contentPane;
-	private JPanel bluePane;
-	private JPanel fieldPane;
-	private JPanel buttonsPane;
+	private MyJPanel contentPane;
+	private MyJPanel bluePane;
+	private MyJPanel fieldPane;
+	private MyJPanel buttonsPane;
 	
 	//Field per l'accesso
-	private JTextField emailField;
-	private JTextField passwordField;
+	private MyJTextField emailField;
+	private MyJPasswordField passwordField;
 	
-	//Bottoni per accedere
+	//Bottoni per il frame Accesso
 	private MyJButton accediButton = new MyJButton("Accedi");
 	private MyJButton registratiButton = new MyJButton("Registrati");
 	
-	//Label di errore
-	private JLabel erroreEmail = new JLabel();
-	private JLabel errorePassword = new JLabel();
-	private JLabel erroreComunicazioneDatabase = new JLabel();
-	
-	//Border dei TextField
-	private Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
-	private Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
-	
+	//Label di errore per il frame Accesso
+	private MyJLabel erroreEmail = new MyJLabel(true);
+	private MyJLabel errorePassword = new MyJLabel(true);
+	private MyJLabel erroreComunicazioneDatabase = new MyJLabel(true);
+
 	//Controller con cui comunicare
 	private Controller mainController;
 	
@@ -63,7 +61,7 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(Box.createRigidArea(new Dimension(0, 30)));
 		settingBluePane();
 		
-		//Aggiunta delle Lable e dei TextField necessari per l'accesso
+		//Aggiunta delle Label e dei TextField necessari per l'accesso
 		settingFieldPane();
 		aggiungiFieldAccesso();
 		
@@ -75,12 +73,17 @@ public class FrameDiLogin extends JFrame {
 		
 	}
 
+	//Settaggio di base del frame
 	private void impostaSettingsPerFrame() {
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(new Dimension(500, 800));
 		
-		contentPane = new JPanel();
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage();
+		this.setIconImage(iconaFinestra);
+		
+		contentPane = new MyJPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -93,69 +96,88 @@ public class FrameDiLogin extends JFrame {
 	
 	}
 
+	//Aggiunta del logo dell'applicazione
 	private void aggiungiLogo(ImageIcon img) {
 		MyJLabel etichettaImmagine = new MyJLabel();
-		etichettaImmagine.aggiungiImmagineScalata("images/logo_uninaswap.png", 200, 200);
-		etichettaImmagine.setAlignmentX(CENTER_ALIGNMENT);
+		etichettaImmagine.aggiungiImmagineScalataX(200, 200, "images/logo_uninaswap.png", CENTER_ALIGNMENT);
 		
 		contentPane.add(etichettaImmagine);
 	}
 	
+	//Aggiunta dello slogan dell'applicativo
 	private void aggiungiMotto() {
-		JLabel nome = new JLabel("UninaSwap");
-		nome.setFont(new Font("Ubuntu Sans", Font.BOLD, 24));
-		settingMotto(nome);
+		MyJLabel nome = new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 24));
+		nome.setForeground(MyJLabel.uninaColor);
+		nome.setAlignmentX(CENTER_ALIGNMENT);
 		
-		JLabel motto = new JLabel("Il mercatino digitale federiciano");
-		motto.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
-		settingMotto(motto);
+		MyJLabel motto = new MyJLabel("Il mercatino digitale federiciano", new Font("Ubuntu Sans", Font.ITALIC, 16));
+		motto.setForeground(MyJLabel.uninaColor);
+		motto.setAlignmentX(CENTER_ALIGNMENT);
 		
 		contentPane.add(nome);
 		contentPane.add(motto);
 	}
 	
-	private void settingMotto(JLabel currLabel) {
-		currLabel.setForeground(new Color(65, 106, 144));
-		currLabel.setAlignmentX(CENTER_ALIGNMENT);
-	}
-	
+	//Settaggio del panel esterno a quello dei campi
 	private void settingBluePane() {
-		bluePane = new JPanel();
+		bluePane = new MyJPanel();
 		bluePane.setLayout(new BoxLayout(bluePane, BoxLayout.Y_AXIS));
-		bluePane.setBackground(new Color(198, 210, 222));
+		bluePane.setBackground(MyJPanel.uninaLightColor);
 		bluePane.setPreferredSize(new Dimension(400, 300));
 		bluePane.setMaximumSize(new Dimension(400, 300));
 		bluePane.setAlignmentX(CENTER_ALIGNMENT);
 		bluePane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 	}
 	
+	//Settaggio del panel dei campi
 	private void settingFieldPane() {
-		fieldPane = new JPanel();
+		fieldPane = new MyJPanel();
 		fieldPane.setBackground(new Color(198, 210, 222));
 		fieldPane.setLayout(new BoxLayout(fieldPane, BoxLayout.Y_AXIS));
 		fieldPane.add(Box.createRigidArea(new Dimension(25, 25)));
 	}
 	
+	//Aggiunta dei field di accesso e dei relativi comportamenti tramite lambda expressions
 	private void aggiungiFieldAccesso() {
 		
-		JLabel email = new JLabel("Email istituzionale o Username");
-		emailField = new JTextField();
+		MyJLabel email = new MyJLabel("Email istituzionale o Username", new Font("Ubuntu Sans", Font.BOLD, 15));
+		emailField = new MyJTextField(new Font("Ubuntu Sans", Font.PLAIN, 13));
+		emailField.setAlignmentX(LEFT_ALIGNMENT);
 		
-		JLabel password = new JLabel("Password");
-		passwordField = new JPasswordField();
-		
-		aggiungiFieldAccesso(email, emailField, erroreEmail, passwordField, null);
+		MyJLabel password = new MyJLabel("Password", new Font("Ubuntu Sans", Font.BOLD, 15));
+		passwordField = new MyJPasswordField();
+		passwordField.setAlignmentX(LEFT_ALIGNMENT);
 
+		emailField.setDefaultAction(() -> {
+			passwordField.requestFocus();
+		});
+		
+		emailField.setDownAction(() -> {
+			passwordField.requestFocus();
+		});
+		
+		emailField.setUpAction(()->{});
+		
+		passwordField.setDefaultAction(() -> {
+			accediButton.setFocusable(true);
+			accediButton.requestFocus();
+		});
+		
+		passwordField.setDownAction(() -> {
+			accediButton.setFocusable(true);
+			accediButton.requestFocus();
+		});
+		
+		passwordField.setUpAction(()->{
+			emailField.requestFocus();
+		});
 		
 		fieldPane.add(email);
 		fieldPane.add((JTextField)emailField);
 		fieldPane.add(erroreEmail);
 		
 		fieldPane.add(Box.createRigidArea(new Dimension(15, 15)));
-		
-		aggiungiFieldAccesso(password, passwordField, errorePassword, accediButton, emailField);
 
-		
 		fieldPane.add(password);
 		fieldPane.add(passwordField);
 		fieldPane.add(errorePassword);
@@ -174,65 +196,18 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(bluePane);
 	}
 	
-	private void aggiungiFieldAccesso(JLabel field, JTextField text, JLabel errore, JComponent nextComponent, JComponent previousComponent) {
-		errore.setForeground(Color.RED);
-		errore.setVisible(false);
-		
-		field.setForeground(Color.BLACK);
-		field.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		field.setAlignmentX(LEFT_ALIGNMENT);
-	
-		text.setMaximumSize(new Dimension(300, 30));
-		text.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		text.setAlignmentX(LEFT_ALIGNMENT);
-		text.setBorder(blackBorder);
-		text.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				nextComponent.requestFocus();
-			}
-			
-		});
-		
-		text.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//Non fa niente
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_UP) {
-					if(previousComponent != null)
-						previousComponent.requestFocus();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if(nextComponent != null) {
-						nextComponent.setFocusable(true);
-						nextComponent.requestFocus();
-					}
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				//Non fa niente
-			}
-			
-		});
-	}
-	
-
 	private void settingButtonsPane() {
-		buttonsPane = new JPanel();
+		buttonsPane = new MyJPanel();
 		buttonsPane.setLayout(new BoxLayout(buttonsPane, BoxLayout.Y_AXIS));
 		buttonsPane.setAlignmentX(CENTER_ALIGNMENT);
 		buttonsPane.setBackground(new Color(198, 210, 222));
 	}
 	
 	private void aggiungiBottoniLogin() {
+		accediButton.setAlignmentX(CENTER_ALIGNMENT);
+		accediButton.setForeground(Color.WHITE);
+		accediButton.setBackground(MyJButton.uninaColor);
+		
 		accediButton.setDefaultAction(() -> {
 			nascondiErrori();
 			clickAccedi();
@@ -241,7 +216,6 @@ public class FrameDiLogin extends JFrame {
 		accediButton.setPreviousComponent(passwordField);
 		
 		accediButton.setUpAction(() -> {
-			accediButton.setFocusable(false);
 			accediButton.getPreviousComponent().setFocusable(true);
 			accediButton.getPreviousComponent().requestFocus();
 		});
@@ -249,47 +223,28 @@ public class FrameDiLogin extends JFrame {
 		accediButton.setNextComponent(registratiButton);
 		
 		accediButton.setDownAction(() -> {
-			accediButton.setFocusable(false);
 			accediButton.getNextComponent().setFocusable(true);
 			accediButton.getNextComponent().requestFocus();
 		});
-		
-		aggiungiBottoniLogin(accediButton);
 		
 		JLabel oppureRegistrati = new JLabel ("Oppure, se non sei ancora registrato, fallo!");
 		oppureRegistrati.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
 		oppureRegistrati.setAlignmentX(CENTER_ALIGNMENT);
 		
+		registratiButton.setAlignmentX(CENTER_ALIGNMENT);
+		registratiButton.setForeground(Color.WHITE);
+		registratiButton.setBackground(MyJButton.uninaColor);
 		
 		registratiButton.setDefaultAction(() -> {
 			mainController.passaAFrameDiRegistrazione();
 		});
 		
-		
-		registratiButton.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//Non fa nulla
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER)
-					mainController.passaAFrameDiRegistrazione();
-				else if(e.getKeyCode() == KeyEvent.VK_UP)
-					accediButton.requestFocus();
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				//Non fa nulla
-			}
-			
+		registratiButton.setUpAction(() -> {
+			accediButton.setFocusable(true);
+			accediButton.requestFocus();
 		});
 		
-		aggiungiBottoniLogin(registratiButton);		
-
+		registratiButton.setDownAction(()->{});	
 		
 		buttonsPane.add(accediButton);
 		buttonsPane.add(Box.createRigidArea(new Dimension(20, 20)));
@@ -307,15 +262,8 @@ public class FrameDiLogin extends JFrame {
 		errorePassword.setVisible(false);
 		erroreComunicazioneDatabase.setVisible(false);
 		
-		emailField.setBorder(blackBorder);
-		passwordField.setBorder(blackBorder);
-	}
-	
-	private void aggiungiBottoniLogin(JButton button) {
-		button.setAlignmentX(CENTER_ALIGNMENT);
-		button.setBackground(new Color(65, 106, 144));
-		button.setForeground(Color.WHITE);
-		button.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
+		emailField.setBorder(MyJTextField.blackBorder);
+		passwordField.setBorder(MyJTextField.blackBorder);
 	}
 		
 	public void checkDatiAccesso() {
@@ -331,7 +279,6 @@ public class FrameDiLogin extends JFrame {
 	public void checkPassword(String password) {
 		if(password == null || password.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
-
 	}
 	
 	private void clickAccedi() {
@@ -344,13 +291,13 @@ public class FrameDiLogin extends JFrame {
 			erroreEmail.setText(e.getMessage());
 			erroreEmail.setVisible(true);
 			emailField.requestFocus();
-			emailField.setBorder(redBorder);
+			emailField.setBorder(MyJTextField.redBorder);
 		}
 		catch(PasswordException e) {
 			errorePassword.setText(e.getMessage());
 			errorePassword.setVisible(true);
 			passwordField.requestFocus();
-			passwordField.setBorder(redBorder);
+			passwordField.setBorder(MyJPasswordField.redBorder);
 		}
 		catch(UtenteNonTrovatoException e) {
 			erroreComunicazioneDatabase.setText(e.getMessage());

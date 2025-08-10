@@ -9,8 +9,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 public class MyJLabel extends JLabel {
+	
+	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
+	
+	public static final Color uninaColor = new Color(65, 106, 144);
+	public static final Color uninaLightColor = new Color(198, 210, 222);
 	
 	public MyJLabel() {
 		this.setForeground(Color.black);
@@ -54,6 +63,24 @@ public class MyJLabel extends JLabel {
 		}
 	}
 	
+	public MyJLabel(Font font) {
+		this.setFont(font);
+	}
+	
+	public MyJLabel(String stringaDiDefault, Font font) {
+		this.setText(stringaDiDefault);
+		this.setFont(font);
+	}
+	
+	public MyJLabel(String stringaDiDefault, Font font, boolean isLabelDiErrore) {
+		this.setText(stringaDiDefault);
+		this.setFont(font);
+		
+		if(isLabelDiErrore) {
+			this.setBorder(redBorder);
+		}
+	}
+	
 	public void aggiungiEffettoCliccabilita() {
 		Font oldFont = this.getFont();
 		this.addMouseListener(new MouseAdapter() {
@@ -69,10 +96,20 @@ public class MyJLabel extends JLabel {
 		});
 	}
 	
-	public void aggiungiImmagineScalata(String stringPath, int larghezza, int altezza) {
-		ImageIcon img = new ImageIcon(stringPath);
+	public void aggiungiImmagineScalata(int larghezza, int altezza, String stringPath) {
+		ImageIcon img = new ImageIcon(stringPath);	
 		Image resizedImage = img.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
 		ImageIcon resizeResult = new ImageIcon(resizedImage);
 		this.setIcon(resizeResult);
+	}
+	
+	public void aggiungiImmagineScalataX(int larghezza, int altezza, String stringPath, float alignment) {
+		aggiungiImmagineScalata(larghezza, altezza, stringPath);
+		this.setAlignmentX(alignment);
+	}
+	
+	public void aggiungiImmagineScalataY(int larghezza, int altezza, String stringPath, float alignment) {
+		aggiungiImmagineScalata(larghezza, altezza, stringPath);
+		this.setAlignmentY(alignment);
 	}
 }
