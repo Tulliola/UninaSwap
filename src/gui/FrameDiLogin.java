@@ -348,9 +348,8 @@ public class FrameDiLogin extends JFrame {
 	private void clickAccedi() {
 		try {
 			checkDatiAccesso();
-			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
 			nascondiErrori();
-			mainController.passaAHomePage();
+			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
 		}
 		catch(EmailException e) {
 			erroreEmail.setText(e.getMessage());
@@ -372,18 +371,13 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setText(e.getMessage());
 			erroreComunicazioneDatabase.setVisible(true);
 		}
-		catch(UtenteSospesoException e) {
-			try {
-				System.out.println("Sto qui");
-				mainController.passaADialogDiComunicataSospensione(emailField.getText());
-			} catch (SQLException e1) {
-				System.out.println(e1.getMessage());
-				//TODO poi si vede con fulio
-				System.out.println(e1.getSQLState());
-				System.out.println(e1.getMessage());
-				System.out.println("Sto nell'sql exc");
-			}
-		}
+//		catch(UtenteSospesoException e) {
+//			try {
+//				mainController.passaADialogDiComunicataSospensione(emailField.getText());
+//			} catch (SQLException e1) {
+//				System.out.println(e1.getMessage());
+//			}
+//		}
 		catch(SQLException e) {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
 			erroreComunicazioneDatabase.setVisible(true);

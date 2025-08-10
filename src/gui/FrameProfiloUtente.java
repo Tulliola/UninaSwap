@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -50,7 +51,6 @@ public class FrameProfiloUtente extends MyJFrame {
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
 	MyJLabel lblErroreResidenza = new MyJLabel(true);
-	MyJLabel lblErroreDalDB = new MyJLabel(true);
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
@@ -122,7 +122,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		this.aggiungiPanelBottoni(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza());
+		this.aggiungiPanelBottoni(utenteLoggato);
 	}
 	
 	private void aggiungiImmagineProfilo(byte[] immagineProfilo) {
@@ -351,7 +351,7 @@ public class FrameProfiloUtente extends MyJFrame {
 			bottoneSalvaModifiche.setVisible(true);
 	}
 	
-	private void aggiungiPanelBottoni(String oldUsername, String oldPWD, String oldResidenza) {
+	private void aggiungiPanelBottoni(ProfiloUtente utenteLoggato) {
 		panelBottoni = new MyJPanel();
 		
 		panelBottoni.setLayout(new BoxLayout(panelBottoni, BoxLayout.X_AXIS));
@@ -364,9 +364,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		bottoneSalvaModifiche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nascondiLabelErrore();
-				resettaBordiTextField();
-				clickSalvaModificheButton(oldUsername, oldPWD, oldResidenza);
+				nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
+				resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
+				clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza());
 			}
 		});
 		
@@ -379,12 +379,18 @@ public class FrameProfiloUtente extends MyJFrame {
 	
 	private void clickSalvaModificheButton(String oldUsername, String oldPWD, String oldResidenza) {
 		try {
-			if(usernameTextField.isEnabled())
+			if(usernameTextField.isEnabled()) {
 				checkNewUsername(usernameTextField.getText(), oldUsername);
-			if(cambiaPWDField.isVisible())
+				mainController.onSalvaModificheButtonClickedAggiornaUsername(usernameTextField.getText());
+			}
+			if(cambiaPWDField.isVisible()) {
 				checkNewPassword(cambiaPWDField.getText(), oldPWD);
-			if(residenzaTextField.isEnabled())
+				mainController.onSalvaModificheButtonClickedAggiornaPWD(cambiaPWDField.getText());
+			}
+			if(residenzaTextField.isEnabled()) {
 				checkNewResidenza(residenzaTextField.getText(), oldResidenza);
+				mainController.onSalvaModificheButtonClickedAggiornaResidenza(residenzaTextField.getText());
+			}
 		}
 		catch(UsernameException exc1) {
 			lblErroreUsername.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
@@ -397,6 +403,12 @@ public class FrameProfiloUtente extends MyJFrame {
 		catch(ResidenzaException exc3) {
 			lblErroreResidenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
 			this.settaLabelETextFieldDiErrore(lblErroreResidenza, exc3.getMessage(), residenzaTextField);
+		}
+		catch(SQLException exc4) {
+			System.out.println(exc4.getSQLState());
+			System.out.println(exc4.getMessage());
+			
+			this.settaLabelETextFieldDiErrore(lblErroreUsername, "Questo username non è disponibile.", usernameTextField);
 		}
 	}
 	
@@ -448,18 +460,5 @@ public class FrameProfiloUtente extends MyJFrame {
 		if(residenzaIn.equals(oldResidenza))
 			throw new ResidenzaException("La nuova residenza deve essere diversa dalla vecchia.");
 
-	}
-	
-	private void nascondiLabelErrore() {
-		lblErroreUsername.setVisible(false);
-		lblErrorePWD.setVisible(false);
-		lblErroreResidenza.setVisible(false);
-		lblErroreDalDB.setVisible(false);
-	}
-	
-	private void resettaBordiTextField() {
-		usernameTextField.setBorder(blackBorder);
-		passwordTextField.setBorder(blackBorder);
-		residenzaTextField.setBorder(blackBorder);
 	}
 }
