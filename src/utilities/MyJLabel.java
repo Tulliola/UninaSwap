@@ -12,6 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	
@@ -19,6 +22,12 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	private Runnable onMouseEnteredAction;
 	private Runnable onMouseExitedAction;
 	private Runnable onMouseClickedAction;
+	
+	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
+	
+	public static final Color uninaColor = new Color(65, 106, 144);
+	public static final Color uninaLightColor = new Color(198, 210, 222);
 	
 	public MyJLabel() {
 		this.setForeground(Color.black);
@@ -64,6 +73,24 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		this.addMouseListener(this);
 	}
 	
+	public MyJLabel(Font font) {
+		this.setFont(font);
+	}
+	
+	public MyJLabel(String stringaDiDefault, Font font) {
+		this.setText(stringaDiDefault);
+		this.setFont(font);
+	}
+	
+	public MyJLabel(String stringaDiDefault, Font font, boolean isLabelDiErrore) {
+		this.setText(stringaDiDefault);
+		this.setFont(font);
+		
+		if(isLabelDiErrore) {
+			this.setBorder(redBorder);
+		}
+	}
+	
 	public void aggiungiEffettoCliccabilitaPerTesto() {
 		Font oldFont = this.getFont();
 		this.addMouseListener(new MouseAdapter() {
@@ -96,7 +123,7 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	}
 	
 	public void aggiungiImmagineScalata(String stringPath, int larghezza, int altezza, boolean isCliccabile) {
-		ImageIcon img = new ImageIcon(stringPath);
+		ImageIcon img = new ImageIcon(stringPath);	
 		Image resizedImage = img.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
 		ImageIcon resizeResult = new ImageIcon(resizedImage);
 		
