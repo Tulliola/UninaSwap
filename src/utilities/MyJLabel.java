@@ -42,10 +42,12 @@ public class MyJLabel extends JLabel {
 
 		if(isCliccabile) {
 			this.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseEntered(MouseEvent me) {
 					setCursor(new Cursor(Cursor.HAND_CURSOR));
 				}
 				
+				@Override
 				public void mouseExited(MouseEvent me) {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}				
@@ -59,11 +61,13 @@ public class MyJLabel extends JLabel {
 			@Override
 			public void mouseEntered(MouseEvent me) {
 				setFont(new Font("Ubuntu Sans", Font.BOLD, oldFont.getSize()+1));
-			}
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}	
 			
-			
+			@Override
 			public void mouseExited(MouseEvent me) {
 				setFont(oldFont);
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 	}

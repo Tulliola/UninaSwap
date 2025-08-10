@@ -47,10 +47,13 @@ public class FrameProfiloUtente extends MyJFrame {
 	private MyJTextField cambiaPWDField;
 	private MyJTextField saldoTextField;
 	
-	//Label di errore
+	//Labels di errore
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
 	MyJLabel lblErroreResidenza = new MyJLabel(true);
+
+	//Labels generiche
+	MyJLabel lblModificheEffettuate = new MyJLabel("Modifiche effettuate con successo!");
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
@@ -148,6 +151,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		lblCambiaImmagine.addMouseListener(new MouseAdapter() { 
 			@Override
 			public void mouseClicked(MouseEvent me) {
+				if(lblModificheEffettuate.isVisible())
+					lblModificheEffettuate.setVisible(false);
+				
 				mainController.passaAFrameCambiaImmagine();
 			}
 		});
@@ -157,6 +163,10 @@ public class FrameProfiloUtente extends MyJFrame {
 	
 	private void aggiungiPanelRiepilogoInformazioni(ProfiloUtente utenteLoggato) {
 		rigidArea.setVisible(false);
+		lblModificheEffettuate.setVisible(false);
+		lblModificheEffettuate.setForeground(new Color(76, 175, 80));
+		lblModificheEffettuate.setFont(new Font("Ubuntu Sans", Font.BOLD, 12));
+		lblModificheEffettuate.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelRiepilogoInfoUtente = new MyJPanel();
 		
@@ -177,11 +187,14 @@ public class FrameProfiloUtente extends MyJFrame {
 				if(!usernameTextField.isEnabled()) {
 					usernameTextField.setText(utenteLoggato.getUsername());
 					lblErroreUsername.setVisible(false);
-					usernameTextField.setBorder(blackBorder);
+					usernameTextField.settaBordiTextFieldStandard();
 
 					if(!cambiaPWDField.isVisible() && !residenzaTextField.isEnabled())
 						bottoneSalvaModifiche.setVisible(false);
 				}					
+				
+				if(lblModificheEffettuate.isVisible())
+					lblModificheEffettuate.setVisible(false);
 				
 				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
 			}
@@ -196,13 +209,16 @@ public class FrameProfiloUtente extends MyJFrame {
 				if(!cambiaPWDField.isVisible()) {
 					passwordTextField.setText(utenteLoggato.getPassword());
 					lblErrorePWD.setVisible(false);
-					cambiaPWDField.setBorder(blackBorder);
+					cambiaPWDField.settaBordiTextFieldStandard();
 					cambiaPWDField.setText("Inserisci la nuova password");
 					
 					if(!residenzaTextField.isEnabled() && !usernameTextField.isEnabled())
 						bottoneSalvaModifiche.setVisible(false);
 
 				}
+				
+				if(lblModificheEffettuate.isVisible())
+					lblModificheEffettuate.setVisible(false);
 				
 				mostraCambiaPWDField = !mostraCambiaPWDField;
 				mostraONascondiCambiaPWDField();
@@ -218,11 +234,14 @@ public class FrameProfiloUtente extends MyJFrame {
 				if(!residenzaTextField.isEnabled()) {
 					residenzaTextField.setText(utenteLoggato.getResidenza());
 					lblErroreResidenza.setVisible(false);
-					residenzaTextField.setBorder(blackBorder);
+					residenzaTextField.settaBordiTextFieldStandard();
 					
 					if(!usernameTextField.isEnabled() && !cambiaPWDField.isVisible())
 						bottoneSalvaModifiche.setVisible(false);
 				}
+				
+				if(lblModificheEffettuate.isVisible())
+					lblModificheEffettuate.setVisible(false);
 				
 				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 			}
@@ -343,6 +362,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.add(panelRiepilogoInfoUtente);
 
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelProfilo.add(lblModificheEffettuate);
 		
 	}
 	
@@ -366,7 +386,7 @@ public class FrameProfiloUtente extends MyJFrame {
 			public void actionPerformed(ActionEvent e) {
 				nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
 				resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
-				clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza());
+				clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza(), utenteLoggato);
 			}
 		});
 		
@@ -377,19 +397,45 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.add(panelBottoni);
 	}
 	
-	private void clickSalvaModificheButton(String oldUsername, String oldPWD, String oldResidenza) {
+	private void clickSalvaModificheButton(String oldUsername, String oldPWD, String oldResidenza, ProfiloUtente utenteLoggato) {
 		try {
+			boolean almenoUnaModifica = false;
 			if(usernameTextField.isEnabled()) {
 				checkNewUsername(usernameTextField.getText(), oldUsername);
 				mainController.onSalvaModificheButtonClickedAggiornaUsername(usernameTextField.getText());
+				almenoUnaModifica = true;
+				
+				usernameTextField.settaBordiTextFieldStandard();
+				usernameTextField.setText(utenteLoggato.getUsername());
+				usernameTextField.setEnabled(false);
+				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 			}
 			if(cambiaPWDField.isVisible()) {
 				checkNewPassword(cambiaPWDField.getText(), oldPWD);
 				mainController.onSalvaModificheButtonClickedAggiornaPWD(cambiaPWDField.getText());
+				almenoUnaModifica = true;
+				
+				passwordTextField.settaBordiTextFieldStandard();
+				passwordTextField.setText(utenteLoggato.getPassword());
+				passwordTextField.setEnabled(false);
+				mostraCambiaPWDField = !mostraCambiaPWDField;
+				mostraONascondiCambiaPWDField();
+				rigidArea.setVisible(false);
+				cambiaPWDField.setText("Inserisci la nuova password");
 			}
 			if(residenzaTextField.isEnabled()) {
 				checkNewResidenza(residenzaTextField.getText(), oldResidenza);
 				mainController.onSalvaModificheButtonClickedAggiornaResidenza(residenzaTextField.getText());
+				almenoUnaModifica = true;
+				
+				residenzaTextField.settaBordiTextFieldStandard();
+				residenzaTextField.setText(utenteLoggato.getResidenza());
+				residenzaTextField.setEnabled(false);
+				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
+			}
+			if(almenoUnaModifica) {
+				lblModificheEffettuate.setVisible(true);
+				bottoneSalvaModifiche.setVisible(false);
 			}
 		}
 		catch(UsernameException exc1) {
@@ -410,6 +456,13 @@ public class FrameProfiloUtente extends MyJFrame {
 			
 			this.settaLabelETextFieldDiErrore(lblErroreUsername, "Questo username non è disponibile.", usernameTextField);
 		}
+	}
+	
+	public void resettaTextFieldsDopoModifiche(MyJTextField textFieldIn, String nuovoText) {
+		textFieldIn.settaBordiTextFieldStandard();
+		textFieldIn.setText(nuovoText);
+		textFieldIn.setEnabled(false);
+		textFieldIn.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 	}
 	
 	public void mostraONascondiCambiaPWDField() {

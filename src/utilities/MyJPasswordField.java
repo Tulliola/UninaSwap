@@ -15,7 +15,8 @@ import javax.swing.border.EmptyBorder;
 
 public class MyJPasswordField extends JPasswordField {
 	
-	Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
+	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
 
 	public MyJPasswordField() {
 		this.setBorder(blackBorder);
@@ -38,20 +39,16 @@ public class MyJPasswordField extends JPasswordField {
 		this.setText(password);
 	}
 	
-	public void settaBordiTextField(Color chosenColor) {
-		Border chosenBorder;;
-		Border spacedBorder;
-		
-		if(chosenColor == Color.RED)
-			chosenBorder = BorderFactory.createLineBorder(chosenColor, 2);
-		
-		else	
-			chosenBorder = BorderFactory.createLineBorder(chosenColor, 1);
-		
-		spacedBorder = new EmptyBorder(0, 5, 0, 0);
-		this.setBorder(new CompoundBorder(chosenBorder, spacedBorder));		
+	
+	public void settaBordiTextFieldStandard() {
+		this.setBorder(blackBorder);		
+	}
+	
+	public void settaBordiTextFieldErrore() {
+		this.setBorder(redBorder);
 	}
 
+	
 	public void modificaBGColorSeEnabled(Color coloreDaDisabilitato, Color coloreDaAbilitato) {
 		if(!(this.isEnabled())) {
 			this.setDisabledTextColor(Color.black);
@@ -59,7 +56,6 @@ public class MyJPasswordField extends JPasswordField {
 		}
 		else
 			this.setBackground(coloreDaAbilitato);
-
 	}
 	
 	public void cambiaStatoEnabled() {

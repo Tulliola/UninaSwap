@@ -11,10 +11,11 @@ import javax.swing.border.CompoundBorder;
 
 import controller.Controller;
 import eccezioni.*;
+import utilities.MyJFrame;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
 
-public class FrameDiLogin extends JFrame {
+public class FrameDiLogin extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	//Panel del frame
@@ -371,13 +372,6 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setText(e.getMessage());
 			erroreComunicazioneDatabase.setVisible(true);
 		}
-//		catch(UtenteSospesoException e) {
-//			try {
-//				mainController.passaADialogDiComunicataSospensione(emailField.getText());
-//			} catch (SQLException e1) {
-//				System.out.println(e1.getMessage());
-//			}
-//		}
 		catch(SQLException e) {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
 			erroreComunicazioneDatabase.setVisible(true);
