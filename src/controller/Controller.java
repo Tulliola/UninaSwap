@@ -37,9 +37,18 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
-
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+		
+		try {
+			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("Tulliola", "CaneBlu92!");
+		}
+		catch(SQLException exc) {
+			
+		}
+		frameHomePage = new FrameHomePage(this, utenteLoggato);
+		frameHomePage.setVisible(true);
 	}
 
 	
@@ -102,7 +111,7 @@ public class Controller {
 
 	public void passaAHomePage() {
 		frameDiLogin.dispose();
-		frameHomePage = new FrameHomePage(this);
+		frameHomePage = new FrameHomePage(this, utenteLoggato);
 		frameHomePage.setVisible(true);
 		
 	}
@@ -125,7 +134,7 @@ public class Controller {
 		if(utenteLoggato.getSospeso())
 			this.passaADialogDiComunicataSospensione(email);
 		else
-			this.passaAFrameProfiloUtente();
+			this.passaAHomePage();
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{
