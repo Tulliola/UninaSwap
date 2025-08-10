@@ -30,7 +30,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	private static final long serialVersionUID = 1L;
 	
 	//Panels
-	private JPanel contentPane;
+	private MyJPanel contentPane;
 	private JPanel panelProfilo;
 	private MyJPanel panelRiepilogoInfoUtente;
 	private MyJPanel panelBottoni;
@@ -75,20 +75,19 @@ public class FrameProfiloUtente extends MyJFrame {
 	private void impostaSettingsPerFrame() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Il tuo profilo utente");
-		this.setSize(500, 900);
+		this.setSize(1000, 900);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		
 	}
 	
 	private void impostaContentPane(ProfiloUtente utenteLoggato) {
-		contentPane = new JPanel();
+		contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		JPanel bandaLateraleSx = new JPanel();
-		settaBandaLaterale(bandaLateraleSx);
+		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane);
 		
 		JPanel bandaLateraleDx = new JPanel();
 		settaBandaLaterale(bandaLateraleDx);
@@ -101,7 +100,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 
 		contentPane.add(panelProfilo, BorderLayout.CENTER);
-		contentPane.add(bandaLateraleDx, BorderLayout.EAST);
+//		contentPane.add(bandaLateraleDx, BorderLayout.EAST);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
@@ -147,7 +146,7 @@ public class FrameProfiloUtente extends MyJFrame {
 
 		lblCambiaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
-		lblCambiaImmagine.aggiungiEffettoCliccabilita();
+		lblCambiaImmagine.aggiungiEffettoCliccabilitaPerTesto();
 		lblCambiaImmagine.addMouseListener(new MouseAdapter() { 
 			@Override
 			public void mouseClicked(MouseEvent me) {
@@ -173,12 +172,8 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.setLayout(new BoxLayout(panelRiepilogoInfoUtente, BoxLayout.Y_AXIS));
 		panelRiepilogoInfoUtente.setAlignmentX(CENTER_ALIGNMENT);
 		
-		ImageIcon modifyIcon = new ImageIcon("images/iconModify.png");
-		Image resizedModifyIcon = modifyIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-		ImageIcon iconaModifyScalata = new ImageIcon(resizedModifyIcon);
-		
-		//Creazione delle icone di modifica con relativa logica
-		MyJLabel modificaUsername = new MyJLabel(iconaModifyScalata, true);
+		MyJLabel modificaUsername = new MyJLabel();
+		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
@@ -200,7 +195,8 @@ public class FrameProfiloUtente extends MyJFrame {
 			}
 		});
 				
-		MyJLabel modificaPassword = new MyJLabel(iconaModifyScalata, true);
+		MyJLabel modificaPassword = new MyJLabel();
+		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				cambiaPWDField.cambiaStatoVisible();
@@ -225,7 +221,8 @@ public class FrameProfiloUtente extends MyJFrame {
 			}
 		});
 		
-		MyJLabel modificaResidenza = new MyJLabel(iconaModifyScalata, true);
+		MyJLabel modificaResidenza = new MyJLabel();
+		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
@@ -378,17 +375,18 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelBottoni.setAlignmentX(CENTER_ALIGNMENT);
 		
 		bottoneTornaIndietro = new MyJButton("Torna indietro");
+		bottoneTornaIndietro.setDefaultAction(() -> {
+			mainController.passaAHomePage(this);
+		});
 		
 		bottoneSalvaModifiche = new MyJButton("Salva modifiche");
 		bottoneSalvaModifiche.setVisible(false);
-		
-		bottoneSalvaModifiche.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
-				resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
-				clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza(), utenteLoggato);
-			}
+		bottoneSalvaModifiche.setDefaultAction(() -> {
+			nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
+			resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
+			clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza(), utenteLoggato);
 		});
+		
 		
 		panelBottoni.add(bottoneTornaIndietro);
 		panelBottoni.add(Box.createRigidArea(new Dimension(10, 0)));

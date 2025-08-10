@@ -10,7 +10,7 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
-
+import utilities.MyJFrame;
 //Import dal package DTO
 import dto.*;
 
@@ -97,7 +97,7 @@ public class Controller {
 	}
 
 	public void passaAFrameProfiloUtente() {
-		frameDiLogin.dispose();
+		frameHomePage.dispose();
 		frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
 	}
@@ -109,8 +109,8 @@ public class Controller {
 	}
 
 
-	public void passaAHomePage() {
-		frameDiLogin.dispose();
+	public void passaAHomePage(MyJFrame frameDiPartenza) {
+		frameDiPartenza.dispose();
 		frameHomePage = new FrameHomePage(this, utenteLoggato);
 		frameHomePage.setVisible(true);
 		
@@ -134,7 +134,7 @@ public class Controller {
 		if(utenteLoggato.getSospeso())
 			this.passaADialogDiComunicataSospensione(email);
 		else
-			this.passaAHomePage();
+			this.passaAHomePage(frameDiLogin);
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{

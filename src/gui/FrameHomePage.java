@@ -9,11 +9,12 @@ import javax.swing.border.EmptyBorder;
 import gui.PanelHomePageAnnunci;
 import gui.PanelHomePageLateraleSx;
 import gui.PanelHomePageSuperiore;
+import utilities.MyJFrame;
 import utilities.MyJPanel;
 import controller.Controller;
 import dto.ProfiloUtente;
 
-public class FrameHomePage extends JFrame {
+public class FrameHomePage extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	private MyJPanel contentPane;
@@ -21,10 +22,14 @@ public class FrameHomePage extends JFrame {
 	private PanelHomePageLateraleSx panelLateraleSx;
 	private PanelHomePageSuperiore panelSuperiore;
 	private Controller mainController;
-
+	
 	public FrameHomePage(Controller controller, ProfiloUtente utenteLoggato) {
 		mainController = controller;
 		settaContentPane(utenteLoggato);
+	}
+	
+	public Controller getController() {
+		return mainController;
 	}
 
 	private void settaContentPane(ProfiloUtente utenteLoggato) {
@@ -38,11 +43,12 @@ public class FrameHomePage extends JFrame {
 		
 		panelAnnunci = new PanelHomePageAnnunci();
 		panelLateraleSx = new PanelHomePageLateraleSx();
-		panelSuperiore = new PanelHomePageSuperiore(contentPane, utenteLoggato);
+		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		
 		contentPane.add(panelAnnunci, BorderLayout.CENTER);
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		contentPane.add(panelSuperiore, BorderLayout.NORTH);
+		
 		
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
