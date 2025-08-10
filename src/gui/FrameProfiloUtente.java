@@ -173,7 +173,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.setAlignmentX(CENTER_ALIGNMENT);
 		
 		MyJLabel modificaUsername = new MyJLabel();
-		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
+		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
 		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
@@ -196,7 +196,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 				
 		MyJLabel modificaPassword = new MyJLabel();
-		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
+		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
 		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				cambiaPWDField.cambiaStatoVisible();
@@ -222,7 +222,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		MyJLabel modificaResidenza = new MyJLabel();
-		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
+		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
 		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
@@ -247,6 +247,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
 		emailTextField.setEnabled(false);
 		MyJLabel lblEmail = new MyJLabel("La tua email istituzionale");
+		lblEmail.aggiungiImmagineScalata("images/iconaEmail.png", 30, 30, false);
 		lblEmail.setAlignmentX(LEFT_ALIGNMENT);
 		
 		usernameTextField = new MyJTextField(utenteLoggato.getUsername());
@@ -259,6 +260,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		saldoTextField.setEnabled(false);
 		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
 		lblSaldo.setAlignmentX(LEFT_ALIGNMENT);
+		lblSaldo.aggiungiImmagineScalata("images/iconaSaldo.png", 30, 30, false);
 		
 		passwordTextField = new MyJPasswordField(utenteLoggato.getPassword());
 		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
@@ -293,7 +295,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		MyJPanel panelUsername = new MyJPanel();
 		panelUsername.setLayout(new BoxLayout(panelUsername, BoxLayout.X_AXIS));
 		panelUsername.setAlignmentX(LEFT_ALIGNMENT);
-		panelUsername.add(new MyJLabel("Il tuo username"));
+		
+		MyJLabel lblUsername = new MyJLabel("Il tuo username");
+		lblUsername.aggiungiImmagineScalata("images/iconaNomeUtente.png", 30, 30, false);
+		panelUsername.add(lblUsername);
 		panelUsername.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelUsername.add(modificaUsername);
 		
@@ -301,7 +306,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		MyJPanel panelPassword = new MyJPanel();
 		panelPassword.setLayout(new BoxLayout(panelPassword, BoxLayout.X_AXIS));
 		panelPassword.setAlignmentX(LEFT_ALIGNMENT);
-		panelPassword.add(new MyJLabel("La tua password"));
+		
+		MyJLabel lblPassword = new MyJLabel("La tua password");
+		lblPassword.aggiungiImmagineScalata("images/iconaPassword.png", 30, 30, false);
+		panelPassword.add(lblPassword);
 		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelPassword.add(modificaPassword);
 		
@@ -333,7 +341,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		MyJPanel panelResidenza = new MyJPanel();
 		panelResidenza.setLayout(new BoxLayout(panelResidenza, BoxLayout.X_AXIS));
 		panelResidenza.setAlignmentX(LEFT_ALIGNMENT);
-		panelResidenza.add(new MyJLabel("La tua residenza"));
+		
+		MyJLabel lblResidenza = new MyJLabel("La tua residenza");
+		lblResidenza.aggiungiImmagineScalata("images/iconaResidenza.png", 30, 30, false);
+		panelResidenza.add(lblResidenza);
 		panelResidenza.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelResidenza.add(modificaResidenza);
 		
@@ -375,6 +386,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelBottoni.setAlignmentX(CENTER_ALIGNMENT);
 		
 		bottoneTornaIndietro = new MyJButton("Torna indietro");
+		bottoneTornaIndietro.setFocusable(false);
 		bottoneTornaIndietro.setDefaultAction(() -> {
 			mainController.passaAHomePage(this);
 		});

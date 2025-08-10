@@ -42,11 +42,11 @@ public class FrameDiRegistrazione extends MyJFrame {
 	private MyJPasswordField passwordTextField;
 	
 	//Label di errore
-	private MyJLabel lblErroreUsername = new MyJLabel();
-	private MyJLabel lblErroreEmail = new MyJLabel();
-	private MyJLabel lblErrorePassword = new MyJLabel();
-	private MyJLabel lblErroreResidenza = new MyJLabel();
-	private MyJLabel lblErroreDalDB =  new MyJLabel();
+	private MyJLabel lblErroreUsername = new MyJLabel(true);
+	private MyJLabel lblErroreEmail = new MyJLabel(true);
+	private MyJLabel lblErrorePassword = new MyJLabel(true);
+	private MyJLabel lblErroreResidenza = new MyJLabel(true);
+	private MyJLabel lblErroreDalDB =  new MyJLabel(true);
 	
 	//Controller
     private Controller mainController;
@@ -94,9 +94,6 @@ public class FrameDiRegistrazione extends MyJFrame {
 		//Crea spazio tra i textfields e il bottone
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		lblErroreDalDB = new MyJLabel();
-		lblErroreDalDB.setForeground(Color.red);
-		lblErroreDalDB.setVisible(false);
 		lblErroreDalDB.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelInserimentoDati.add(lblErroreDalDB);
@@ -116,10 +113,9 @@ public class FrameDiRegistrazione extends MyJFrame {
 		//Crea spazio tra il bordo superiore e il logo
 		contentPane.add(Box.createRigidArea(new Dimension(0, 25)));
 		
-		ImageIcon logo = new ImageIcon("images/logo_uninaswap.png");
-		ImageIcon logoScalato = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+		MyJLabel lblLogo = new MyJLabel();
+		lblLogo.aggiungiImmagineScalata("images/logo_uninaswap.png", 200, 200, false);
 		
-		MyJLabel lblLogo = new MyJLabel(logoScalato, false);
 		lblLogo.setAlignmentX(CENTER_ALIGNMENT);
 		
 		contentPane.add(lblLogo);
@@ -172,6 +168,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 		
 		panelTextELabel.add(lblPassword);
 		panelTextELabel.add(passwordTextField);
+		panelTextELabel.add(lblErrorePassword);
 		panelTextELabel.add(Box.createRigidArea(new Dimension(0, 15)));
 		
 		this.aggiungiTextField(panelTextELabel, residenzaTextField, lblErroreResidenza, "Inserisci la tua residenza", bottoneDiRegistrazione, passwordTextField);
@@ -225,8 +222,8 @@ public class FrameDiRegistrazione extends MyJFrame {
 		this.impostaSettingsBottone(bottoneDiRegistrazione);
 
 		bottoneDiRegistrazione.setDefaultAction(() -> {
-			nascondiLabelErrore();
-			resettaBordiTextField();
+			nascondiLabelErrore(lblErroreUsername, lblErroreEmail, lblErrorePassword, lblErroreResidenza, lblErroreDalDB);
+			resettaBordiTextField(usernameTextField, emailTextField, passwordTextField,residenzaTextField);
 			clickConfermaRegistrazione();
 		});
 		
@@ -358,29 +355,5 @@ public class FrameDiRegistrazione extends MyJFrame {
 		if(residenzaIn.endsWith(" "))
 			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
 
-	}
-	
-	//Nascondo le label di errore quando clicco conferma registrazione
-	private void nascondiLabelErrore() {
-		lblErroreUsername.setVisible(false);
-		lblErroreEmail.setVisible(false);
-		lblErrorePassword.setVisible(false);
-		lblErroreResidenza.setVisible(false);
-		lblErroreDalDB.setVisible(false);
-	}
-	
-	//Resetto i bordi del textfield quando clicco conferma registrazione
-	private void resettaBordiTextField() {
-		usernameTextField.setBorder(blackBorder);
-		emailTextField.setBorder(blackBorder);
-		passwordTextField.setBorder(blackBorder);
-		residenzaTextField.setBorder(blackBorder);
-	}
-	
-	//Setto il font delle label e dei textfield quando viene generato un errore
-	private void settaLabelETextFieldDiErrore(JLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
-		labelInput.setText(messaggioDiErrore);
-		textFieldInput.setBorder(MyJLabel.redBorder);
-		labelInput.setVisible(true);
 	}
 }
