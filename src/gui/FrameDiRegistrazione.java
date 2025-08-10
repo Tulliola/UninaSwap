@@ -11,7 +11,12 @@ import controller.Controller;
 
 //Eccezioni
 import eccezioni.UsernameException;
+import utilities.MyJButton;
 import utilities.MyJFrame;
+import utilities.MyJLabel;
+import utilities.MyJPanel;
+import utilities.MyJPasswordField;
+import utilities.MyJTextField;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
 import eccezioni.ResidenzaException;
@@ -22,28 +27,26 @@ public class FrameDiRegistrazione extends MyJFrame {
 	private static final long serialVersionUID = 1L;
 	
 	//Panels
-	private JPanel contentPane;
-	private JPanel panelInserimentoDati;
-	private JPanel panelTextELabel;
+	private MyJPanel contentPane;
+	private MyJPanel panelInserimentoDati;
+	private MyJPanel panelTextELabel;
 
 	//Buttons
-	private JButton bottoneDiRegistrazione = new JButton();
-	private JButton bottoneTornaALogin = new JButton();
+	private MyJButton bottoneDiRegistrazione = new MyJButton("Conferma registrazione");
+	private MyJButton bottoneTornaALogin = new MyJButton("Torna al Login");
 
 	//Textfields
-	private JTextField usernameTextField;
-	private JTextField emailTextField;
-	private JTextField residenzaTextField;
-	private JPasswordField passwordTextField;
+	private MyJTextField usernameTextField;
+	private MyJTextField emailTextField;
+	private MyJTextField residenzaTextField;
+	private MyJPasswordField passwordTextField;
 	
 	//Label di errore
-	private JLabel lblErroreUsername = new JLabel();
-	private JLabel lblErroreEmail = new JLabel();
-	private JLabel lblErrorePassword = new JLabel();
-	private JLabel lblErroreResidenza = new JLabel();
-	private JLabel lblErroreDalDB =  new JLabel();
-
-	//Bordi
+	private MyJLabel lblErroreUsername = new MyJLabel();
+	private MyJLabel lblErroreEmail = new MyJLabel();
+	private MyJLabel lblErrorePassword = new MyJLabel();
+	private MyJLabel lblErroreResidenza = new MyJLabel();
+	private MyJLabel lblErroreDalDB =  new MyJLabel();
 	
 	//Controller
     private Controller mainController;
@@ -60,6 +63,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 		
 	}
 	
+	//Settaggio del frame di registrazione
 	private void impostaSettingsPerFrame() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Registrazione - UninaSwap");
@@ -67,32 +71,30 @@ public class FrameDiRegistrazione extends MyJFrame {
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		
-		contentPane = new JPanel();
+		contentPane = new MyJPanel(Color.WHITE);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setContentPane(contentPane);
 	}
 	
+	//Settaggio del panel per compilare i field
 	private void impostaPanelInserimentoDati() {
-		panelInserimentoDati = new JPanel();
+		panelInserimentoDati = new MyJPanel(MyJPanel.uninaLightColor);
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
-		panelInserimentoDati.setBorder(BorderFactory.createLineBorder(Color.black, 2, false));
+		panelInserimentoDati.setBorder(MyJPanel.blackBorder);
 		panelInserimentoDati.setPreferredSize(new Dimension(400, 430));
-		panelInserimentoDati.setMaximumSize(new Dimension(400, 430));
-		panelInserimentoDati.setBackground(new Color(198, 210, 222));	
+		panelInserimentoDati.setMaximumSize(new Dimension(400, 430));	
 		
 		//Crea spazio tra il motto e i campi di testo
-		contentPane.add(Box.createRigidArea(new Dimension(0, 20)));
-		
-		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
+		contentPane.add(Box.createRigidArea(new Dimension(20, 20)));
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(20, 20)));
 		
 		this.aggiungiTextFields();
 		
 		//Crea spazio tra i textfields e il bottone
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		lblErroreDalDB = new JLabel();
+		lblErroreDalDB = new MyJLabel();
 		lblErroreDalDB.setForeground(Color.red);
 		lblErroreDalDB.setVisible(false);
 		lblErroreDalDB.setAlignmentX(CENTER_ALIGNMENT);
@@ -109,52 +111,69 @@ public class FrameDiRegistrazione extends MyJFrame {
 		contentPane.add(panelInserimentoDati);
 	}
 	
+	//Aggiungo il logo dell'applicativo
 	private void aggiungiLogoCentrale() {
 		//Crea spazio tra il bordo superiore e il logo
 		contentPane.add(Box.createRigidArea(new Dimension(0, 25)));
 		
 		ImageIcon logo = new ImageIcon("images/logo_uninaswap.png");
-		Image resizedLogo = logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		ImageIcon logoScalato = new ImageIcon(resizedLogo);
+		ImageIcon logoScalato = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
-		JLabel lblLogo = new JLabel();
-		lblLogo.setIcon(logoScalato);
+		MyJLabel lblLogo = new MyJLabel(logoScalato, false);
 		lblLogo.setAlignmentX(CENTER_ALIGNMENT);
 		
 		contentPane.add(lblLogo);
 	}
 	
+	//Aggiungo lo slogan dell'applicativo
 	private void aggiungiMottoSottoAlLogo() {
 		
-		JLabel nomeApplicativo = new JLabel();
-		nomeApplicativo.setText("UninaSwap");
-		nomeApplicativo.setFont(new Font("Ubuntu Sans", Font.BOLD, 24));
-		nomeApplicativo.setForeground(new Color(65, 106, 144));
+		MyJLabel nomeApplicativo = new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 24));
+		nomeApplicativo.setForeground(MyJLabel.uninaColor);
 		nomeApplicativo.setAlignmentX(CENTER_ALIGNMENT);
 		
-		JLabel mottoApplicativo = new JLabel();
-		mottoApplicativo.setText("Il mercatino digitale federiciano");
-		mottoApplicativo.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
-		mottoApplicativo.setForeground(new Color(65, 106, 144));
+		MyJLabel mottoApplicativo = new MyJLabel("Il mercatino digitale federiciano", new Font("Ubuntu Sans", Font.ITALIC, 16));
+		mottoApplicativo.setForeground(MyJLabel.uninaColor);
 		mottoApplicativo.setAlignmentX(CENTER_ALIGNMENT);
 
 		contentPane.add(nomeApplicativo);
 		contentPane.add(mottoApplicativo);
 	}
 	
+	//Aggiungo i textfield al panel dei textfield e dei bottoni
 	private void aggiungiTextFields() {
-		panelTextELabel = new JPanel();
+		panelTextELabel = new MyJPanel();
 		panelTextELabel.setLayout(new BoxLayout(panelTextELabel, BoxLayout.Y_AXIS));
 		panelTextELabel.setOpaque(false);
 		
-		usernameTextField = new JTextField();
-		emailTextField = new JTextField();
-		passwordTextField = new JPasswordField();
-		residenzaTextField = new JTextField();
+		usernameTextField = new MyJTextField();
+		emailTextField = new MyJTextField();
+		passwordTextField = new MyJPasswordField();
+		residenzaTextField = new MyJTextField();
 		
 		this.aggiungiTextField(panelTextELabel, usernameTextField, lblErroreUsername, "Inserisci il tuo username", emailTextField, null);
-		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale", passwordTextField, usernameTextField);	
-		this.aggiungiTextField(panelTextELabel, passwordTextField, lblErrorePassword, "Inserisci la tua password istituzionale", residenzaTextField, emailTextField);
+		
+		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale", passwordTextField, usernameTextField);
+		
+		passwordTextField.setDefaultAction(() -> {
+			residenzaTextField.requestFocus();
+		});
+		
+		passwordTextField.setDownAction(() -> {
+			residenzaTextField.requestFocus();
+		});
+		
+		passwordTextField.setUpAction(() -> {
+			emailTextField.requestFocus();
+		});
+		
+		MyJLabel lblPassword = new MyJLabel("Inserisci la tua password istituzionale");
+		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);
+		
+		panelTextELabel.add(lblPassword);
+		panelTextELabel.add(passwordTextField);
+		panelTextELabel.add(Box.createRigidArea(new Dimension(0, 15)));
+		
 		this.aggiungiTextField(panelTextELabel, residenzaTextField, lblErroreResidenza, "Inserisci la tua residenza", bottoneDiRegistrazione, passwordTextField);
 		
 		panelTextELabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -162,40 +181,32 @@ public class FrameDiRegistrazione extends MyJFrame {
 		panelInserimentoDati.add(panelTextELabel);
 	}
 	
-	private void aggiungiTextField(JPanel panelInput, JTextField textFieldInput, JLabel labelDiErrore, String stringaPerLabel, JComponent nextComponent, JComponent	previousComponent) {
-		JLabel label = new JLabel();
-		label.setText(stringaPerLabel);
+	private void aggiungiTextField(MyJPanel panelInput, MyJTextField textFieldInput, MyJLabel labelDiErrore, String stringaPerLabel, JComponent nextComponent, JComponent	previousComponent) {
+		MyJLabel label = new MyJLabel(stringaPerLabel, new Font("Ubuntu Sans", Font.BOLD, 15));
 		label.setForeground(Color.black);
-		label.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		label.setAlignmentX(LEFT_ALIGNMENT);
 		
-		textFieldInput.setMaximumSize(new Dimension(300, 30));
-		textFieldInput.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		textFieldInput.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
-		textFieldInput.setBorder(blackBorder);
-		textFieldInput.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//Non fa niente
+		textFieldInput.setBorder(MyJTextField.blackBorder);
+			
+		textFieldInput.setDefaultAction(() -> {
+			if(nextComponent != null) {
+				nextComponent.setFocusable(true);
+				nextComponent.requestFocus();
 			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_DOWN) {
-					if(nextComponent != null)
-						nextComponent.requestFocus();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_UP) {
-					if(previousComponent != null)
-						previousComponent.requestFocus();
-				}
+		});
+		
+		textFieldInput.setDownAction(() -> {
+			if(nextComponent != null) {
+				nextComponent.setFocusable(true);
+				nextComponent.requestFocus();
 			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				//Non fa niente
+		});
+		
+		textFieldInput.setUpAction(() -> {
+			if(previousComponent != null) {
+				previousComponent.setFocusable(true);
+				previousComponent.requestFocus();
 			}
 		});
 
@@ -209,97 +220,56 @@ public class FrameDiRegistrazione extends MyJFrame {
 		panelInput.add(Box.createRigidArea(new Dimension(0, 15)));
 	}
 	
+	//Aggiungo il bottone al panel di inserimento dei textfield e dei bottoni
 	private void aggiungiBottoneDiRegistrazione() {
-		this.impostaSettingsBottone(bottoneDiRegistrazione, "Conferma registrazione");
-		
-		//Logica del bottone
-		bottoneDiRegistrazione.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nascondiLabelErrore();
-				resettaBordiTextField();
-				clickConfermaRegistrazione();
-			}
+		this.impostaSettingsBottone(bottoneDiRegistrazione);
+
+		bottoneDiRegistrazione.setDefaultAction(() -> {
+			nascondiLabelErrore();
+			resettaBordiTextField();
+			clickConfermaRegistrazione();
 		});
 		
-		bottoneDiRegistrazione.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//Non fa niente
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					nascondiLabelErrore();
-					resettaBordiTextField();
-					clickConfermaRegistrazione();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-					bottoneTornaALogin.requestFocus();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_UP) {
-					residenzaTextField.requestFocus();
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				//Non fa niente
-			}
-			
+		bottoneDiRegistrazione.setUpAction(() -> {
+			residenzaTextField.requestFocus();
+		});
+		
+		bottoneDiRegistrazione.setDownAction(()->{
+			bottoneTornaALogin.setFocusable(true);
+			bottoneTornaALogin.requestFocus();
 		});
 		
 		
 		panelInserimentoDati.add(bottoneDiRegistrazione);
 	}
 	
+	//Aggiungo il bottone al panel di inserimento dei textfield e dei bottoni
 	private void aggiungiBottoneTornaAlLogin() {
-		this.impostaSettingsBottone(bottoneTornaALogin, "Torna al login");
+		this.impostaSettingsBottone(bottoneTornaALogin);
 		
-		//Logica del bottone
-		bottoneTornaALogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mainController.tornaALogin();
-			}
-
+		bottoneTornaALogin.setDefaultAction(() -> {
+			mainController.tornaALogin();
 		});
 		
-		bottoneTornaALogin.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//Non fa niente
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_UP) {
-					bottoneDiRegistrazione.requestFocus();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					mainController.tornaALogin();
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				//Non fa niente
-			}
-			
+		bottoneTornaALogin.setUpAction(() -> {
+			bottoneDiRegistrazione.setFocusable(true);
+			bottoneDiRegistrazione.requestFocus();
 		});
+		
+		bottoneTornaALogin.setDownAction(()->{});
 		
 		panelInserimentoDati.add(bottoneTornaALogin);
 	}
 	
-	private void impostaSettingsBottone(JButton bottoneIn, String testoBottone) {
-		bottoneIn.setText(testoBottone);
+	//Setting dei bottoni
+	private void impostaSettingsBottone(JButton bottoneIn) {
 		bottoneIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneIn.setBackground(new Color(65, 106, 144));
+		bottoneIn.setBackground(MyJButton.uninaColor);
 		bottoneIn.setForeground(Color.white);
 		bottoneIn.setAlignmentX(CENTER_ALIGNMENT);
 	}
 
+	//Istruzioni da eseguire quando si clicca il bottone conferma registrazione
 	private void clickConfermaRegistrazione() {
 		try {
 			checkDatiRegistrazione();
@@ -341,6 +311,8 @@ public class FrameDiRegistrazione extends MyJFrame {
 		}
 		
 	}
+	
+	//Controllo dei valori inseriti nei field
 	private void checkDatiRegistrazione() throws UsernameException, EmailException, PasswordException, ResidenzaException{
 	
 		checkUsername(usernameTextField.getText());
@@ -388,6 +360,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 
 	}
 	
+	//Nascondo le label di errore quando clicco conferma registrazione
 	private void nascondiLabelErrore() {
 		lblErroreUsername.setVisible(false);
 		lblErroreEmail.setVisible(false);
@@ -396,6 +369,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 		lblErroreDalDB.setVisible(false);
 	}
 	
+	//Resetto i bordi del textfield quando clicco conferma registrazione
 	private void resettaBordiTextField() {
 		usernameTextField.setBorder(blackBorder);
 		emailTextField.setBorder(blackBorder);
@@ -403,9 +377,10 @@ public class FrameDiRegistrazione extends MyJFrame {
 		residenzaTextField.setBorder(blackBorder);
 	}
 	
+	//Setto il font delle label e dei textfield quando viene generato un errore
 	private void settaLabelETextFieldDiErrore(JLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
 		labelInput.setText(messaggioDiErrore);
-		textFieldInput.setBorder(redBorder);
+		textFieldInput.setBorder(MyJLabel.redBorder);
 		labelInput.setVisible(true);
 	}
 }

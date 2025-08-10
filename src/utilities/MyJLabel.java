@@ -45,6 +45,7 @@ public class MyJLabel extends JLabel {
 		this(stringaDiDefault);
 		this.setIcon(immagineLabel);
 	}
+
 	
 	public MyJLabel(ImageIcon immagine, boolean isCliccabile) {
 		this();

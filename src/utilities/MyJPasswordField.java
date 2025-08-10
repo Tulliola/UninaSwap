@@ -31,7 +31,7 @@ public class MyJPasswordField extends JPasswordField implements ActionListener, 
 		this.setBorder(blackBorder);
 		this.setMaximumSize(new Dimension(300, 30));
 		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-
+		
 		this.addMouseListener(this);
 		this.addActionListener(this);
 		this.addKeyListener(this);

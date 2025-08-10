@@ -33,7 +33,6 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 		this.setBorder(blackBorder);
 		this.setMaximumSize(new Dimension(300, 30));
 		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addActionListener(this);
@@ -94,9 +93,9 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 			defaultAction.run();
-		if(e.getKeyCode() == KeyEvent.VK_UP)
+		else if(e.getKeyCode() == KeyEvent.VK_UP)
 			upAction.run();
-		if(e.getKeyCode() == KeyEvent.VK_DOWN)
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 			downAction.run();
 	}
 
@@ -134,5 +133,4 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	public void mouseExited(MouseEvent e) {
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
-
 }
