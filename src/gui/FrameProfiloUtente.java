@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -50,13 +51,13 @@ public class FrameProfiloUtente extends MyJFrame {
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
 	MyJLabel lblErroreResidenza = new MyJLabel(true);
-	MyJLabel lblErroreDalDB = new MyJLabel(true);
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
 	
 	//Variabili per la manipolazione delle componenti
 	boolean mostraCambiaPWDField = false;
+	boolean isPasswordVisibile = false;
 
 	private Controller mainController;
 	
@@ -121,7 +122,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		this.aggiungiPanelBottoni();
+		this.aggiungiPanelBottoni(utenteLoggato);
 	}
 	
 	private void aggiungiImmagineProfilo(byte[] immagineProfilo) {
@@ -171,26 +172,40 @@ public class FrameProfiloUtente extends MyJFrame {
 		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
+				mostraBottoneSalvaModifiche();
 				
-				if(!usernameTextField.isEnabled())
+				if(!usernameTextField.isEnabled()) {
 					usernameTextField.setText(utenteLoggato.getUsername());
+					lblErroreUsername.setVisible(false);
+					usernameTextField.setBorder(blackBorder);
+
+					if(!cambiaPWDField.isVisible() && !residenzaTextField.isEnabled())
+						bottoneSalvaModifiche.setVisible(false);
+				}					
 				
 				usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
-				mostraBottoneSalvaModifiche();
 			}
 		});
 				
 		MyJLabel modificaPassword = new MyJLabel(iconaModifyScalata, true);
 		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
-				passwordTextField.cambiaStatoEnabled();
+				cambiaPWDField.cambiaStatoVisible();
+				mostraBottoneSalvaModifiche();
 				
-				if(!passwordTextField.isEnabled())
+				if(!cambiaPWDField.isVisible()) {
 					passwordTextField.setText(utenteLoggato.getPassword());
+					lblErrorePWD.setVisible(false);
+					cambiaPWDField.setBorder(blackBorder);
+					cambiaPWDField.setText("Inserisci la nuova password");
+					
+					if(!residenzaTextField.isEnabled() && !usernameTextField.isEnabled())
+						bottoneSalvaModifiche.setVisible(false);
+
+				}
 				
 				mostraCambiaPWDField = !mostraCambiaPWDField;
 				mostraONascondiCambiaPWDField();
-				mostraBottoneSalvaModifiche();
 			}
 		});
 		
@@ -198,8 +213,18 @@ public class FrameProfiloUtente extends MyJFrame {
 		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
-				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.WHITE);
 				mostraBottoneSalvaModifiche();
+				
+				if(!residenzaTextField.isEnabled()) {
+					residenzaTextField.setText(utenteLoggato.getResidenza());
+					lblErroreResidenza.setVisible(false);
+					residenzaTextField.setBorder(blackBorder);
+					
+					if(!usernameTextField.isEnabled() && !cambiaPWDField.isVisible())
+						bottoneSalvaModifiche.setVisible(false);
+				}
+				
+				residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 			}
 		});
 		emailTextField = new MyJTextField(String.valueOf(utenteLoggato.getEmail()));
@@ -248,7 +273,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		residenzaTextField.setEnabled(false);
 		residenzaTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY,Color.white);
 		
-		
+		//Settaggio di un panel orizzontale per mettere l'icona di modifica
 		MyJPanel panelUsername = new MyJPanel();
 		panelUsername.setLayout(new BoxLayout(panelUsername, BoxLayout.X_AXIS));
 		panelUsername.setAlignmentX(LEFT_ALIGNMENT);
@@ -256,6 +281,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelUsername.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelUsername.add(modificaUsername);
 		
+		//Settaggio di un panel orizzontale per mettere l'icona di modifica e di nascondi/mostra password
 		MyJPanel panelPassword = new MyJPanel();
 		panelPassword.setLayout(new BoxLayout(panelPassword, BoxLayout.X_AXIS));
 		panelPassword.setAlignmentX(LEFT_ALIGNMENT);
@@ -263,6 +289,31 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelPassword.add(modificaPassword);
 		
+		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
+		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
+
+		MyJLabel mostraNascondiPassword = new MyJLabel(hidePWDIcon, true);
+		
+		mostraNascondiPassword.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+				isPasswordVisibile = !isPasswordVisibile;
+				
+				if(!isPasswordVisibile) {
+					passwordTextField.setEchoChar('*');
+					mostraNascondiPassword.setIcon(hidePWDIcon);
+				}
+				else {
+					passwordTextField.setEchoChar((char) 0);
+					mostraNascondiPassword.setIcon(showPWDIcon);
+				}
+			}
+		});
+		
+		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
+		panelPassword.add(mostraNascondiPassword);
+		
+		
+		//Settaggio di un panel orizzontale per mettere l'icona di modifica
 		MyJPanel panelResidenza = new MyJPanel();
 		panelResidenza.setLayout(new BoxLayout(panelResidenza, BoxLayout.X_AXIS));
 		panelResidenza.setAlignmentX(LEFT_ALIGNMENT);
@@ -300,7 +351,7 @@ public class FrameProfiloUtente extends MyJFrame {
 			bottoneSalvaModifiche.setVisible(true);
 	}
 	
-	private void aggiungiPanelBottoni() {
+	private void aggiungiPanelBottoni(ProfiloUtente utenteLoggato) {
 		panelBottoni = new MyJPanel();
 		
 		panelBottoni.setLayout(new BoxLayout(panelBottoni, BoxLayout.X_AXIS));
@@ -313,7 +364,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		bottoneSalvaModifiche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				clickSalvaModificheButton("a","b","c");
+				nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
+				resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
+				clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza());
 			}
 		});
 		
@@ -326,22 +379,36 @@ public class FrameProfiloUtente extends MyJFrame {
 	
 	private void clickSalvaModificheButton(String oldUsername, String oldPWD, String oldResidenza) {
 		try {
-			if(!(usernameTextField.getText().equals(oldUsername)))
-				checkNewUsername(usernameTextField.getText());
-			if(!(cambiaPWDField.getText().equals(oldPWD)))
-				checkNewPassword(cambiaPWDField.getText());
-			if(!(residenzaTextField.getText().equals(oldResidenza)))
-				checkNewResidenza(residenzaTextField.getText());
+			if(usernameTextField.isEnabled()) {
+				checkNewUsername(usernameTextField.getText(), oldUsername);
+				mainController.onSalvaModificheButtonClickedAggiornaUsername(usernameTextField.getText());
+			}
+			if(cambiaPWDField.isVisible()) {
+				checkNewPassword(cambiaPWDField.getText(), oldPWD);
+				mainController.onSalvaModificheButtonClickedAggiornaPWD(cambiaPWDField.getText());
+			}
+			if(residenzaTextField.isEnabled()) {
+				checkNewResidenza(residenzaTextField.getText(), oldResidenza);
+				mainController.onSalvaModificheButtonClickedAggiornaResidenza(residenzaTextField.getText());
+			}
 		}
 		catch(UsernameException exc1) {
+			lblErroreUsername.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
 			this.settaLabelETextFieldDiErrore(lblErroreUsername, exc1.getMessage(), usernameTextField);
 		}
 		catch(PasswordException exc2) {
 			lblErrorePWD.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
-			this.settaLabelETextFieldDiErrore(lblErrorePWD, exc2.getMessage(), passwordTextField);
+			this.settaLabelETextFieldDiErrore(lblErrorePWD, exc2.getMessage(), cambiaPWDField);
 		}
 		catch(ResidenzaException exc3) {
+			lblErroreResidenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 10));
 			this.settaLabelETextFieldDiErrore(lblErroreResidenza, exc3.getMessage(), residenzaTextField);
+		}
+		catch(SQLException exc4) {
+			System.out.println(exc4.getSQLState());
+			System.out.println(exc4.getMessage());
+			
+			this.settaLabelETextFieldDiErrore(lblErroreUsername, "Questo username non è disponibile.", usernameTextField);
 		}
 	}
 	
@@ -350,7 +417,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		rigidArea.setVisible(mostraCambiaPWDField);
 	}
 	
-	private void checkNewUsername(String usernameIn) {
+	private void checkNewUsername(String usernameIn, String oldUsername) {
 		if(usernameIn == null || usernameIn.length() == 0)
 			throw new UsernameException("Inserire un username.");
 		
@@ -359,10 +426,13 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		if(usernameIn.contains(" "))
 			throw new UsernameException("L'username non deve contenere spazi vuoti.");
+		
+		if(usernameIn.equals(oldUsername))
+			throw new UsernameException("Il nuovo username deve essere diverso da quello vecchio.");
 	}
 	
 	
-	private void checkNewPassword(String passwordIn) {
+	private void checkNewPassword(String passwordIn, String oldPassword) {
 		if(passwordIn == null || passwordIn.length() == 0)
 			throw new PasswordException("Inserire una password.");
 		
@@ -371,18 +441,24 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		if(passwordIn.length() > 16)
 			throw new PasswordException("La nuova password deve essere di al massimo 16 caratteri.");
+		
+		if(passwordIn.equals(oldPassword))
+			throw new PasswordException("La nuova password deve essere diversa dalla vecchia.");
 	}
 	
 	
-	private void checkNewResidenza(String residenzaIn) {
+	private void checkNewResidenza(String residenzaIn, String oldResidenza) {
 		if(residenzaIn == null || residenzaIn.isBlank())
 			throw new ResidenzaException("Inserire una residenza.");
 		
 		if(residenzaIn.startsWith(" "))
-			throw new ResidenzaException("La residenza non può iniziare con uno spazio vuoto.");
+			throw new ResidenzaException("La residenza non può iniziare con uno spazio.");
 		
 		if(residenzaIn.endsWith(" "))
-			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
+			throw new ResidenzaException("La residenza non può terminare con uno spazio.");
+		
+		if(residenzaIn.equals(oldResidenza))
+			throw new ResidenzaException("La nuova residenza deve essere diversa dalla vecchia.");
 
 	}
 }

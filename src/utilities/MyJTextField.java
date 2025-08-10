@@ -70,5 +70,12 @@ public class MyJTextField extends JTextField {
 		else
 			this.setEnabled(false);
 	}
+	
+	public void cambiaStatoVisible() {
+		if(!(this.isVisible()))
+			this.setVisible(true);
+		else
+			this.setVisible(false);
+	}
 
 }
