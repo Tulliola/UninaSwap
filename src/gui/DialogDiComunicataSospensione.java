@@ -84,7 +84,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 	}
 	
 	private Date calcolaDataDesospensione(Date dataSospensione) {
-		return Date.valueOf(dataSospensione.toLocalDate().plusMonths(1));
+		return Date.valueOf(dataSospensione.toLocalDate().plusDays(31));
 	}
 	
 	private void settaIcona(JPanel panel, JLabel labelImmagine, ImageIcon img) {

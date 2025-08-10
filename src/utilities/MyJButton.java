@@ -28,7 +28,7 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
 		this.setBackground(new Color(65, 106, 144));
 		this.setForeground(Color.WHITE);
 		this.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		this.setFocusable(false);
+//		this.setFocusable(false);
 
 		this.addActionListener(this);
 		this.addKeyListener(this);
