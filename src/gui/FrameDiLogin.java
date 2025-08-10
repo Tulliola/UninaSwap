@@ -196,6 +196,7 @@ public class FrameDiLogin extends JFrame {
 		contentPane.add(bluePane);
 	}
 	
+	//Settaggio del panel dei bottoni
 	private void settingButtonsPane() {
 		buttonsPane = new MyJPanel();
 		buttonsPane.setLayout(new BoxLayout(buttonsPane, BoxLayout.Y_AXIS));
@@ -203,6 +204,7 @@ public class FrameDiLogin extends JFrame {
 		buttonsPane.setBackground(new Color(198, 210, 222));
 	}
 	
+	//Aggiunta dei bottoni al relativo panel e con relativi comportamenti tramite lambda expressions
 	private void aggiungiBottoniLogin() {
 		accediButton.setAlignmentX(CENTER_ALIGNMENT);
 		accediButton.setForeground(Color.WHITE);
@@ -255,8 +257,7 @@ public class FrameDiLogin extends JFrame {
 		bluePane.add(buttonsPane);
 	}
 	
-	
-	
+	//Nascondo gli errori quando l'utente clicca accedi
 	public void nascondiErrori() {
 		erroreEmail.setVisible(false);
 		errorePassword.setVisible(false);
@@ -266,6 +267,7 @@ public class FrameDiLogin extends JFrame {
 		passwordField.setBorder(MyJTextField.blackBorder);
 	}
 		
+	//Verifica che l'utente riempia i campi
 	public void checkDatiAccesso() {
 		checkEmail(emailField.getText());
 		checkPassword(passwordField.getText());
@@ -281,6 +283,7 @@ public class FrameDiLogin extends JFrame {
 			throw new PasswordException("Il campo password è obbligatorio.");
 	}
 	
+	//Istruzioni da eseguire quando l'utente clicca "Accedi"
 	private void clickAccedi() {
 		try {
 			checkDatiAccesso();
