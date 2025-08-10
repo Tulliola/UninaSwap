@@ -42,6 +42,15 @@ public class MyJPasswordField extends JPasswordField implements ActionListener, 
 		this.setText(password);
 	}
 
+	public void settaBordiTextFieldStandard() {
+		this.setBorder(blackBorder);		
+	}
+	
+	public void settaBordiTextFieldErrore() {
+		this.setBorder(redBorder);
+	}
+
+	
 	public void modificaBGColorSeEnabled(Color coloreDaDisabilitato, Color coloreDaAbilitato) {
 		if(!(this.isEnabled())) {
 			this.setDisabledTextColor(Color.black);
@@ -49,7 +58,6 @@ public class MyJPasswordField extends JPasswordField implements ActionListener, 
 		}
 		else
 			this.setBackground(coloreDaAbilitato);
-
 	}
 	
 	public void cambiaStatoEnabled() {

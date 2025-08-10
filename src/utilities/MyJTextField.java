@@ -24,7 +24,7 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 
 	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
 	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
-	
+
 	private Runnable defaultAction;
 	private Runnable upAction;
 	private Runnable downAction;
@@ -43,7 +43,15 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 		this.setText(stringaDiDefault);
 	}
 	
-	public MyJTextField(Font font) {
+	public void settaBordiTextFieldStandard() {
+		this.setBorder(blackBorder);		
+	}
+	
+	public void settaBordiTextFieldErrore() {
+		this.setBorder(redBorder);
+	}
+
+		public MyJTextField(Font font) {
 		this();
 		this.setFont(font);
 	}

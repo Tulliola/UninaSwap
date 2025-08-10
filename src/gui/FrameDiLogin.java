@@ -11,13 +11,16 @@ import javax.swing.border.CompoundBorder;
 
 import controller.Controller;
 import eccezioni.*;
+
+import utilities.MyJFrame;
 import utilities.MyJButton;
 import utilities.MyJLabel;
+
 import utilities.MyJPanel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
 
-public class FrameDiLogin extends JFrame {
+public class FrameDiLogin extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -99,7 +102,8 @@ public class FrameDiLogin extends JFrame {
 	//Aggiunta del logo dell'applicazione
 	private void aggiungiLogo(ImageIcon img) {
 		MyJLabel etichettaImmagine = new MyJLabel();
-		etichettaImmagine.aggiungiImmagineScalataX(200, 200, "images/logo_uninaswap.png", CENTER_ALIGNMENT);
+		etichettaImmagine.aggiungiImmagineScalata("images/logo_uninaswap.png", 200, 200, false);
+		etichettaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
 		contentPane.add(etichettaImmagine);
 	}
