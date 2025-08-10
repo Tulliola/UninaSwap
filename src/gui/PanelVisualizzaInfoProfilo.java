@@ -56,7 +56,7 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
 		
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
-		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaSearchBar.png");
+		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaDisponibile.png");
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaCheck.png");
 		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaCronometro.png");
 		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCross.png");

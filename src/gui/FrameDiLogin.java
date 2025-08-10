@@ -31,17 +31,17 @@ public class FrameDiLogin extends MyJFrame {
 	private MyJPanel buttonsPane;
 	
 	//Field per l'accesso
-	private MyJTextField emailField;
+	private MyJTextField emailTextField;
 	private MyJPasswordField passwordField;
-	
+
 	//Bottoni per il frame Accesso
 	private MyJButton accediButton = new MyJButton("Accedi");
 	private MyJButton registratiButton = new MyJButton("Registrati");
 	
 	//Label di errore per il frame Accesso
-	private MyJLabel erroreEmail = new MyJLabel(true);
-	private MyJLabel errorePassword = new MyJLabel(true);
-	private MyJLabel erroreComunicazioneDatabase = new MyJLabel(true);
+	private MyJLabel lblErroreEmail = new MyJLabel(true);
+	private MyJLabel lblErrorePassword = new MyJLabel(true);
+	private MyJLabel lblErroreComunicazioneColDB = new MyJLabel(true);
 
 	//Controller con cui comunicare
 	private Controller mainController;
@@ -110,16 +110,16 @@ public class FrameDiLogin extends MyJFrame {
 	
 	//Aggiunta dello slogan dell'applicativo
 	private void aggiungiMotto() {
-		MyJLabel nome = new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 24));
-		nome.setForeground(MyJLabel.uninaColor);
-		nome.setAlignmentX(CENTER_ALIGNMENT);
+		MyJLabel lblNomeApplicativo = new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 24));
+		lblNomeApplicativo.setForeground(MyJLabel.uninaColor);
+		lblNomeApplicativo.setAlignmentX(CENTER_ALIGNMENT);
 		
-		MyJLabel motto = new MyJLabel("Il mercatino digitale federiciano", new Font("Ubuntu Sans", Font.ITALIC, 16));
-		motto.setForeground(MyJLabel.uninaColor);
-		motto.setAlignmentX(CENTER_ALIGNMENT);
+		MyJLabel lblMottoApplicativo = new MyJLabel("Il mercatino digitale federiciano", new Font("Ubuntu Sans", Font.ITALIC, 16));
+		lblMottoApplicativo.setForeground(MyJLabel.uninaColor);
+		lblMottoApplicativo.setAlignmentX(CENTER_ALIGNMENT);
 		
-		contentPane.add(nome);
-		contentPane.add(motto);
+		contentPane.add(lblNomeApplicativo);
+		contentPane.add(lblMottoApplicativo);
 	}
 	
 	//Settaggio del panel esterno a quello dei campi
@@ -144,23 +144,23 @@ public class FrameDiLogin extends MyJFrame {
 	//Aggiunta dei field di accesso e dei relativi comportamenti tramite lambda expressions
 	private void aggiungiFieldAccesso() {
 		
-		MyJLabel email = new MyJLabel("Email istituzionale o Username", new Font("Ubuntu Sans", Font.BOLD, 15));
-		emailField = new MyJTextField(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		emailField.setAlignmentX(LEFT_ALIGNMENT);
+		MyJLabel lblEmail = new MyJLabel("Email istituzionale o Username", new Font("Ubuntu Sans", Font.BOLD, 15));
+		emailTextField = new MyJTextField(new Font("Ubuntu Sans", Font.PLAIN, 13));
+		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
 		
-		MyJLabel password = new MyJLabel("Password", new Font("Ubuntu Sans", Font.BOLD, 15));
+		MyJLabel lblPassword = new MyJLabel("Password", new Font("Ubuntu Sans", Font.BOLD, 15));
 		passwordField = new MyJPasswordField();
 		passwordField.setAlignmentX(LEFT_ALIGNMENT);
 
-		emailField.setDefaultAction(() -> {
+		emailTextField.setDefaultAction(() -> {
 			passwordField.requestFocus();
 		});
 		
-		emailField.setDownAction(() -> {
+		emailTextField.setDownAction(() -> {
 			passwordField.requestFocus();
 		});
 		
-		emailField.setUpAction(()->{});
+		emailTextField.setUpAction(()->{});
 		
 		passwordField.setDefaultAction(() -> {
 			accediButton.setFocusable(true);
@@ -173,28 +173,27 @@ public class FrameDiLogin extends MyJFrame {
 		});
 		
 		passwordField.setUpAction(()->{
-			emailField.requestFocus();
+			emailTextField.requestFocus();
 		});
 		
-		fieldPane.add(email);
-		fieldPane.add((JTextField)emailField);
-		fieldPane.add(erroreEmail);
+		fieldPane.add(lblEmail);
+		fieldPane.add((JTextField)emailTextField);
+		fieldPane.add(lblErroreEmail);
 		
 		fieldPane.add(Box.createRigidArea(new Dimension(15, 15)));
 
-		fieldPane.add(password);
+		fieldPane.add(lblPassword);
 		fieldPane.add(passwordField);
-		fieldPane.add(errorePassword);
+		fieldPane.add(lblErrorePassword);
 		
 		fieldPane.setAlignmentX(CENTER_ALIGNMENT);
 		
 		bluePane.add(fieldPane);
 		bluePane.add(Box.createVerticalStrut(20));
 		
-		erroreComunicazioneDatabase.setForeground(Color.RED);
-		erroreComunicazioneDatabase.setAlignmentX(CENTER_ALIGNMENT);
-		erroreComunicazioneDatabase.setVisible(false);
-		bluePane.add(erroreComunicazioneDatabase);
+		lblErroreComunicazioneColDB.setAlignmentX(CENTER_ALIGNMENT);
+
+		bluePane.add(lblErroreComunicazioneColDB);
 		bluePane.add(Box.createVerticalStrut(10));
 		
 		contentPane.add(bluePane);
@@ -215,7 +214,9 @@ public class FrameDiLogin extends MyJFrame {
 		accediButton.setBackground(MyJButton.uninaColor);
 		
 		accediButton.setDefaultAction(() -> {
-			nascondiErrori();
+			registratiButton.setFocusable(true);
+			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
+			resettaBordiTextField(emailTextField, passwordField);
 			clickAccedi();
 		});
 		
@@ -233,9 +234,9 @@ public class FrameDiLogin extends MyJFrame {
 			accediButton.getNextComponent().requestFocus();
 		});
 		
-		JLabel oppureRegistrati = new JLabel ("Oppure, se non sei ancora registrato, fallo!");
-		oppureRegistrati.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
-		oppureRegistrati.setAlignmentX(CENTER_ALIGNMENT);
+		JLabel lblOppureRegistrati = new JLabel ("Oppure, se non sei ancora registrato, fallo!");
+		lblOppureRegistrati.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
+		lblOppureRegistrati.setAlignmentX(CENTER_ALIGNMENT);
 		
 		registratiButton.setAlignmentX(CENTER_ALIGNMENT);
 		registratiButton.setForeground(Color.WHITE);
@@ -254,26 +255,16 @@ public class FrameDiLogin extends MyJFrame {
 		
 		buttonsPane.add(accediButton);
 		buttonsPane.add(Box.createRigidArea(new Dimension(20, 20)));
-		buttonsPane.add(oppureRegistrati);
+		buttonsPane.add(lblOppureRegistrati);
 		buttonsPane.add(Box.createRigidArea(new Dimension(10, 10)));
 		buttonsPane.add(registratiButton);
 		
 		bluePane.add(buttonsPane);
 	}
 	
-	//Nascondo gli errori quando l'utente clicca accedi
-	public void nascondiErrori() {
-		erroreEmail.setVisible(false);
-		errorePassword.setVisible(false);
-		erroreComunicazioneDatabase.setVisible(false);
-		
-		emailField.setBorder(MyJTextField.blackBorder);
-		passwordField.setBorder(MyJTextField.blackBorder);
-	}
-		
 	//Verifica che l'utente riempia i campi
 	public void checkDatiAccesso() {
-		checkEmail(emailField.getText());
+		checkEmail(emailTextField.getText());
 		checkPassword(passwordField.getText());
 	}
 	
@@ -291,32 +282,33 @@ public class FrameDiLogin extends MyJFrame {
 	private void clickAccedi() {
 		try {
 			checkDatiAccesso();
-			nascondiErrori();
-			mainController.onAccessoButtonClicked(emailField.getText(), passwordField.getText());
+			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
+			resettaBordiTextField(emailTextField, passwordField);
+			mainController.onAccessoButtonClicked(emailTextField.getText(), passwordField.getText());
 		}
 		catch(EmailException e) {
-			erroreEmail.setText(e.getMessage());
-			erroreEmail.setVisible(true);
-			emailField.requestFocus();
-			emailField.setBorder(MyJTextField.redBorder);
+			lblErroreEmail.setText(e.getMessage());
+			lblErroreEmail.setVisible(true);
+			emailTextField.requestFocus();
+			emailTextField.setBorder(MyJTextField.redBorder);
 		}
 		catch(PasswordException e) {
-			errorePassword.setText(e.getMessage());
-			errorePassword.setVisible(true);
+			lblErrorePassword.setText(e.getMessage());
+			lblErrorePassword.setVisible(true);
 			passwordField.requestFocus();
 			passwordField.setBorder(MyJPasswordField.redBorder);
 		}
 		catch(UtenteNonTrovatoException e) {
-			erroreComunicazioneDatabase.setText(e.getMessage());
-			erroreComunicazioneDatabase.setVisible(true);
+			lblErroreComunicazioneColDB.setText(e.getMessage());
+			lblErroreComunicazioneColDB.setVisible(true);
 		}
 		catch(UtentePasswordMismatchException e) {
-			erroreComunicazioneDatabase.setText(e.getMessage());
-			erroreComunicazioneDatabase.setVisible(true);
+			lblErroreComunicazioneColDB.setText(e.getMessage());
+			lblErroreComunicazioneColDB.setVisible(true);
 		}
 		catch(SQLException e) {
-			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
-			erroreComunicazioneDatabase.setVisible(true);
+			lblErroreComunicazioneColDB.setText("Errore nella comunicazione col database");
+			lblErroreComunicazioneColDB.setVisible(true);
 		}
 	}
 }

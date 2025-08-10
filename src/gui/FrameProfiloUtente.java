@@ -386,6 +386,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelBottoni.setAlignmentX(CENTER_ALIGNMENT);
 		
 		bottoneTornaIndietro = new MyJButton("Torna indietro");
+		bottoneTornaIndietro.setFocusable(false);
 		bottoneTornaIndietro.setDefaultAction(() -> {
 			mainController.passaAHomePage(this);
 		});
