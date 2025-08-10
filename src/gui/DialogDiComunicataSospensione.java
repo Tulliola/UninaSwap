@@ -92,7 +92,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 		labelImmagine.setIcon(iconaDaAggiungere);
 		labelImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
-		panelInterno.add(Box.createVerticalStrut(20));
+		panelInterno.add(Box.createVerticalStrut(20));	
 		panelInterno.add(labelImmagine);
 	}
 	

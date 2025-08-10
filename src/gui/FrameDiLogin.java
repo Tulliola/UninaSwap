@@ -11,6 +11,8 @@ import javax.swing.border.CompoundBorder;
 
 import controller.Controller;
 import eccezioni.*;
+import utilities.MyJButton;
+import utilities.MyJLabel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
 
@@ -28,8 +30,8 @@ public class FrameDiLogin extends JFrame {
 	private JTextField passwordField;
 	
 	//Bottoni per accedere
-	private JButton accediButton = new JButton("Accedi");
-	private JButton registratiButton = new JButton("Registrati");
+	private MyJButton accediButton = new MyJButton("Accedi");
+	private MyJButton registratiButton = new MyJButton("Registrati");
 	
 	//Label di errore
 	private JLabel erroreEmail = new JLabel();
@@ -92,10 +94,8 @@ public class FrameDiLogin extends JFrame {
 	}
 
 	private void aggiungiLogo(ImageIcon img) {
-		JLabel etichettaImmagine = new JLabel();
-		Image resizedImg = img.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		ImageIcon logo = new ImageIcon(resizedImg);
-		etichettaImmagine.setIcon(logo);
+		MyJLabel etichettaImmagine = new MyJLabel();
+		etichettaImmagine.aggiungiImmagineScalata("images/logo_uninaswap.png", 200, 200);
 		etichettaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
 		contentPane.add(etichettaImmagine);
@@ -209,8 +209,10 @@ public class FrameDiLogin extends JFrame {
 						previousComponent.requestFocus();
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if(nextComponent != null)
+					if(nextComponent != null) {
+						nextComponent.setFocusable(true);
 						nextComponent.requestFocus();
+					}
 				}
 			}
 
@@ -231,35 +233,25 @@ public class FrameDiLogin extends JFrame {
 	}
 	
 	private void aggiungiBottoniLogin() {
-		accediButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e){
-				nascondiErrori();
-				clickAccedi();
-			}
+		accediButton.setDefaultAction(() -> {
+			nascondiErrori();
+			clickAccedi();
 		});
 		
-		accediButton.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					nascondiErrori();
-					clickAccedi(); 
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_UP) {
-					passwordField.requestFocus();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-					registratiButton.requestFocus();
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {}
-			
+		accediButton.setPreviousComponent(passwordField);
+		
+		accediButton.setUpAction(() -> {
+			accediButton.setFocusable(false);
+			accediButton.getPreviousComponent().setFocusable(true);
+			accediButton.getPreviousComponent().requestFocus();
+		});
+		
+		accediButton.setNextComponent(registratiButton);
+		
+		accediButton.setDownAction(() -> {
+			accediButton.setFocusable(false);
+			accediButton.getNextComponent().setFocusable(true);
+			accediButton.getNextComponent().requestFocus();
 		});
 		
 		aggiungiBottoniLogin(accediButton);
@@ -268,14 +260,11 @@ public class FrameDiLogin extends JFrame {
 		oppureRegistrati.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
 		oppureRegistrati.setAlignmentX(CENTER_ALIGNMENT);
 		
-		registratiButton.addActionListener(new ActionListener() {
-	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainController.passaAFrameDiRegistrazione();
-			}
-			
+		
+		registratiButton.setDefaultAction(() -> {
+			mainController.passaAFrameDiRegistrazione();
 		});
+		
 		
 		registratiButton.addKeyListener(new KeyListener() {
 
@@ -371,13 +360,6 @@ public class FrameDiLogin extends JFrame {
 			erroreComunicazioneDatabase.setText(e.getMessage());
 			erroreComunicazioneDatabase.setVisible(true);
 		}
-//		catch(UtenteSospesoException e) {
-//			try {
-//				mainController.passaADialogDiComunicataSospensione(emailField.getText());
-//			} catch (SQLException e1) {
-//				System.out.println(e1.getMessage());
-//			}
-//		}
 		catch(SQLException e) {
 			erroreComunicazioneDatabase.setText("Errore nella comunicazione col database");
 			erroreComunicazioneDatabase.setVisible(true);

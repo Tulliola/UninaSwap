@@ -15,6 +15,6 @@ public class MyImageIcon extends ImageIcon {
 //
 //		ImageIcon immagine = new ImageIcon(path);
 //		Image immagineScalata = immagine.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
-//		
+//		this = 
 //	}
 }
