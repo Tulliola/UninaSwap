@@ -262,7 +262,7 @@ public class FrameDiLogin extends MyJFrame {
 	}
 	
 	//Nascondo gli errori quando l'utente clicca accedi
-	public void nascondiErrori() {
+	private void nascondiErrori() {
 		erroreEmail.setVisible(false);
 		errorePassword.setVisible(false);
 		erroreComunicazioneDatabase.setVisible(false);
@@ -272,17 +272,17 @@ public class FrameDiLogin extends MyJFrame {
 	}
 		
 	//Verifica che l'utente riempia i campi
-	public void checkDatiAccesso() {
+	private void checkDatiAccesso() {
 		checkEmail(emailField.getText());
 		checkPassword(passwordField.getText());
 	}
 	
-	public void checkEmail(String email) {
+	private void checkEmail(String email) {
 		if(email == null || email.length() == 0)
 			throw new EmailException("Il campo email è obbligatorio.");
 	}
 	
-	public void checkPassword(String password) {
+	private void checkPassword(String password) {
 		if(password == null || password.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
 	}
