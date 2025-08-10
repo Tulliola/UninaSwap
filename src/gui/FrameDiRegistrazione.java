@@ -63,7 +63,7 @@ public class FrameDiRegistrazione extends JFrame {
 	
 	private void impostaSettingsPerFrame() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Registrati ora!");
+		this.setTitle("Registrazione - UninaSwap");
 		this.setSize(500, 800);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);

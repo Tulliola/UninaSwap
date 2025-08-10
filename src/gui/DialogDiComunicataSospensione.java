@@ -2,9 +2,12 @@ package gui;
 
 import java.awt.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.sql.Date;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -16,6 +19,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	private JPanel panelInterno = new JPanel();
 	
 	
 	public DialogDiComunicataSospensione(Frame framePadre, Date dataSospensione, String[] motiviSegnalazioni, boolean isModale, String[] utentiSegnalanti) {
@@ -24,7 +28,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 	}
 
 	private void settaDialog(Frame framePadre, Date dataSospensione, String[] motiviSegnalazioni, String utentiSegnalanti[]) {
-		this.setSize(400, 200);
+		this.setSize(800, 400);
 		this.setResizable(false);
 		this.setLocationRelativeTo(framePadre);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -34,8 +38,13 @@ public class DialogDiComunicataSospensione extends JDialog {
 		
 		this.setContentPane(contentPanel);
 		
+		panelInterno.setPreferredSize(new Dimension(700, 400));
+		panelInterno.setMaximumSize(new Dimension(700, 400));
+		panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+		panelInterno.setBackground(Color.WHITE);
+		
 		JTextArea comunicaSegnalazione = new JTextArea();
-		comunicaSegnalazione.setText("Sembra che tu sia sospeso fino alla data: "+ calcolaDataDesospensione(dataSospensione)+ ", a causa delle segeunti segnalazioni:");
+		comunicaSegnalazione.setText("Sembra che tu sia sospeso fino alla data "+ settaFormatoData(calcolaDataDesospensione(dataSospensione))+ ", a causa delle segeunti segnalazioni:");
 		comunicaSegnalazione.setFont(new Font("Ubuntu Sans", Font.BOLD, 16));
 		settaJTextArea(comunicaSegnalazione);
 		
@@ -50,10 +59,18 @@ public class DialogDiComunicataSospensione extends JDialog {
 		settaJTextArea(motivoSegnalazione2);
 		settaJTextArea(motivoSegnalazione3);
 		
-		contentPanel.add(comunicaSegnalazione);
-		contentPanel.add(motivoSegnalazione1);
-		contentPanel.add(motivoSegnalazione2);
-		contentPanel.add(motivoSegnalazione3);
+		JLabel immagine = new JLabel();
+		ImageIcon logo = new ImageIcon("images/logo_uninaswap.png");
+		
+		panelInterno.setAlignmentX(CENTER_ALIGNMENT);
+		panelInterno.add(comunicaSegnalazione);
+		panelInterno.add(motivoSegnalazione1);
+		panelInterno.add(motivoSegnalazione2);
+		panelInterno.add(motivoSegnalazione3);
+		
+		settaIcona(panelInterno, immagine, logo);
+
+		contentPanel.add(panelInterno);
 	}
 	
 	private void settaJTextArea(JTextArea textIn) {
@@ -61,12 +78,31 @@ public class DialogDiComunicataSospensione extends JDialog {
 		textIn.setLineWrap(true);
 		textIn.setWrapStyleWord(true);
 		textIn.getCaret().setVisible(false);
+		textIn.setFocusable(false);
 		textIn.setEditable(false);
 		textIn.setOpaque(false);
 	}
 	
 	private Date calcolaDataDesospensione(Date dataSospensione) {
-		LocalDate dataDiDesospensione = dataSospensione.toLocalDate().plusMonths(1);
-		 return Date.valueOf(dataDiDesospensione);
+		return Date.valueOf(dataSospensione.toLocalDate().plusMonths(1));
+	}
+	
+	private void settaIcona(JPanel panel, JLabel labelImmagine, ImageIcon img) {
+		ImageIcon iconaDaAggiungere = ridimensionaIcona(img);
+		labelImmagine.setIcon(iconaDaAggiungere);
+		labelImmagine.setAlignmentX(CENTER_ALIGNMENT);
+		
+		panelInterno.add(Box.createVerticalStrut(20));
+		panelInterno.add(labelImmagine);
+	}
+	
+	private ImageIcon ridimensionaIcona(ImageIcon img) {
+		Image resizedImg = img.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		return new ImageIcon(resizedImg);
+	}
+	
+	private String settaFormatoData(Date data) {
+		LocalDate localD = data.toLocalDate();
+		return localD.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 	}
 }
