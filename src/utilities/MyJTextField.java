@@ -134,7 +134,7 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		setCursor(new Cursor(Cursor.HAND_CURSOR));
+		setCursor(new Cursor(Cursor.TEXT_CURSOR));
 	}
 
 	@Override
