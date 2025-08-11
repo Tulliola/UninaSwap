@@ -36,7 +36,6 @@ public class FrameProfiloUtente extends MyJFrame {
 	private MyJPanel panelBottoni;
 
 	//Buttons
-	private MyJButton bottoneTornaIndietro;
 	private MyJButton bottoneSalvaModifiche;
 	
 	//TextFields
@@ -88,7 +87,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, sezioneScelta);
+		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
 		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
@@ -393,11 +392,6 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelBottoni.setLayout(new BoxLayout(panelBottoni, BoxLayout.X_AXIS));
 		panelBottoni.setAlignmentX(CENTER_ALIGNMENT);
 		
-		bottoneTornaIndietro = new MyJButton("Torna indietro");
-		bottoneTornaIndietro.setFocusable(false);
-		bottoneTornaIndietro.setDefaultAction(() -> {
-			mainController.passaAHomePage(this);
-		});
 		
 		bottoneSalvaModifiche = new MyJButton("Salva modifiche");
 		bottoneSalvaModifiche.setVisible(false);
@@ -407,9 +401,6 @@ public class FrameProfiloUtente extends MyJFrame {
 			clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza(), utenteLoggato);
 		});
 		
-		
-		panelBottoni.add(bottoneTornaIndietro);
-		panelBottoni.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelBottoni.add(bottoneSalvaModifiche);
 		
 		panelProfilo.add(panelBottoni);

@@ -17,11 +17,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import controller.Controller;
 import utilities.*;
 
 public class PanelVisualizzaInfoProfilo extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
+	
+	private MyJFrame frameChiamante;
 	
 	private MyJPanel panelChiamante;
 	
@@ -33,10 +36,13 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 	private ArrayList<MyJLabel> sezioniOfferte = new ArrayList<MyJLabel>();
 	private ArrayList<MyJLabel> sezioniAnnunci = new ArrayList<MyJLabel>();
 	
+	private Controller mainController;
 	
-	public PanelVisualizzaInfoProfilo(MyJPanel parentPanel, String sezioneScelta) {
+	public PanelVisualizzaInfoProfilo(MyJPanel parentPanel, MyJFrame parentFrame, String sezioneScelta, Controller controller) {
 		panelChiamante = parentPanel;
-	
+		frameChiamante = parentFrame;
+		mainController = controller;
+		
 		this.setPreferredSize(new Dimension(300, panelChiamante.getHeight()));
 		this.setBackground(uninaColorClicked);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -45,8 +51,8 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblTornaAllaHome = new MyJLabel("   Torna alla home page");
 		lblIlTuoProfiloUtente = new MyJLabel("    Il mio profilo");
 		
-		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHomePage.png");
-		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png");
+		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHomePage.png", () -> {mainController.passaAHomePage(parentFrame);});
+		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png", null);
 
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();
@@ -61,11 +67,11 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblAnnunciScaduti = new MyJLabel("        Annunci scaduti");
 		MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
 		
-		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
-		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png");
-		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
-		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaScaduto.png");
-		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCestino.png");
+		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null, null);
+		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png", null);
+		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png", null);
+		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaScaduto.png", null);
+		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCestino.png", null);
 
 		sezioniAnnunci.add(lblIMieiAnnunci);
 		sezioniAnnunci.add(lblAnnunciDisponibili);
@@ -82,12 +88,12 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblOfferteRitirate = new MyJLabel("        Offerte ritirate");
 		MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
 			
-		aggiungiRigaNelPanel(lblLeMieOfferte, false, null);
-		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png");
-		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconaInAttesa.png");
-		aggiungiRigaNelPanel(lblOfferteRifiutate, true, "images/iconaCross.png");
-		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaCancellato.png");
-		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaReport.png");
+		aggiungiRigaNelPanel(lblLeMieOfferte, false, null, null);
+		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png", null);
+		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconaInAttesa.png", null);
+		aggiungiRigaNelPanel(lblOfferteRifiutate, true, "images/iconaCross.png", null);
+		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaCancellato.png", null);
+		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaReport.png", null);
 
 		sezioniOfferte.add(lblLeMieOfferte);
 		sezioniOfferte.add(lblOfferteAccettate);
@@ -97,7 +103,7 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		sezioniOfferte.add(lblReportOfferte);
 	}
 	
-	private void aggiungiRigaNelPanel(MyJLabel labelIn, boolean isInteragibile, String pathImage) {
+	private void aggiungiRigaNelPanel(MyJLabel labelIn, boolean isInteragibile, String pathImage, Runnable azioneOnClick) {
 		labelIn.setBackground(uninaColorClicked);
 		labelIn.setPreferredSize(new Dimension(300, 50));
 		labelIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
@@ -131,6 +137,9 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 			sezionePrecedente = sezioneAttuale;
 			sezioneAttuale = labelIn;
 			cambiaSezioneGraficamente(sezionePrecedente, sezioneAttuale);
+			
+			if(azioneOnClick != null)
+				azioneOnClick.run();
 		});
 		
 		this.add(labelIn);

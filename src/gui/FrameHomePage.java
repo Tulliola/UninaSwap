@@ -46,12 +46,12 @@ public class FrameHomePage extends MyJFrame {
 		panelLateraleSx = new PanelHomePageLateraleSx(contentPane, mainController);
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		
-		contentPane.add(panelAnnunci, BorderLayout.CENTER);
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
+		contentPane.add(panelAnnunci, BorderLayout.CENTER);
 		contentPane.add(panelSuperiore, BorderLayout.NORTH);
 		
 		
-		contentPane.setBackground(Color.WHITE);
+		contentPane.setBackground(Color.black);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
 		setContentPane(contentPane);
