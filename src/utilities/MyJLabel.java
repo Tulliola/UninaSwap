@@ -83,6 +83,12 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		this.setFont(font);
 	}
 	
+	public MyJLabel(String stringaDiDefault, Font font, Color color) {
+		this.setText(stringaDiDefault);
+		this.setFont(font);
+		this.setForeground(color);
+	}
+	
 	public MyJLabel(String stringaDiDefault, Font font, boolean isLabelDiErrore) {
 		this.setText(stringaDiDefault);
 		this.setFont(font);

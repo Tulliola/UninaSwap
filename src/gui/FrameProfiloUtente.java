@@ -65,11 +65,11 @@ public class FrameProfiloUtente extends MyJFrame {
 
 	private Controller mainController;
 	
-	public FrameProfiloUtente(Controller controller, ProfiloUtente utenteLoggato) {
+	public FrameProfiloUtente(Controller controller, String sezioneScelta, ProfiloUtente utenteLoggato) {
 		mainController = controller;
 		
 		this.impostaSettingsPerFrame();
-		this.impostaContentPane(utenteLoggato);
+		this.impostaContentPane(utenteLoggato, sezioneScelta);
 
 	}
 	
@@ -82,13 +82,13 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 	}
 	
-	private void impostaContentPane(ProfiloUtente utenteLoggato) {
+	private void impostaContentPane(ProfiloUtente utenteLoggato, String sezioneScelta) {
 		contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane);
+		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, sezioneScelta);
 		
 		panelProfilo = new JPanel();
 		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));

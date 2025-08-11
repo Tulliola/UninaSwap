@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -27,25 +28,30 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 	private MyJLabel sezioneAttuale;
 	private MyJLabel sezionePrecedente;
 	
-	public PanelVisualizzaInfoProfilo(MyJPanel parentPanel) {
+	private MyJLabel lblIlTuoProfiloUtente;
+	
+	private ArrayList<MyJLabel> sezioniOfferte = new ArrayList<MyJLabel>();
+	private ArrayList<MyJLabel> sezioniAnnunci = new ArrayList<MyJLabel>();
+	
+	
+	public PanelVisualizzaInfoProfilo(MyJPanel parentPanel, String sezioneScelta) {
 		panelChiamante = parentPanel;
 	
 		this.setPreferredSize(new Dimension(300, panelChiamante.getHeight()));
-		this.setBackground(new Color(85, 126, 164));
+		this.setBackground(uninaColorClicked);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJLabel lblTornaAllaHome = new MyJLabel("   Torna alla home page");
-		MyJLabel lblIlTuoProfiloUtente = new MyJLabel("    Il tuo profilo utente");
+		lblIlTuoProfiloUtente = new MyJLabel("    Il tuo profilo utente");
 		
 		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHome.png");
 		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaVediProfiloUtente.png");
-		lblIlTuoProfiloUtente.setBackground(uninaColor);
-		sezioneAttuale = lblIlTuoProfiloUtente;
-		sezionePrecedente = null;
-		
+
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();
+		
+		settaSezioneScelta(sezioneScelta);
 	}
 	
 	private void aggiungiRigheAnnunciNelPanel() {
@@ -60,6 +66,12 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaCheck.png");
 		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaCronometro.png");
 		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCross.png");
+		
+		sezioniAnnunci.add(lblIMieiAnnunci);
+		sezioniAnnunci.add(lblAnnunciDisponibili);
+		sezioniAnnunci.add(lblAnnunciUltimati);
+		sezioniAnnunci.add(lblAnnunciScaduti);
+		sezioniAnnunci.add(lblAnnunciRimossi);
 	}
 	
 	private void aggiungiRigheOfferteNelPanel() {
@@ -76,10 +88,17 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		aggiungiRigaNelPanel(lblOfferteRifiutate, true, "images/iconaCross.png");
 		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaRitirata.png");
 		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaGrafico.png");
+		
+		sezioniOfferte.add(lblLeMieOfferte);
+		sezioniOfferte.add(lblOfferteAccettate);
+		sezioniOfferte.add(lblOfferteInAttesa);
+		sezioniOfferte.add(lblOfferteRifiutate);
+		sezioniOfferte.add(lblOfferteRitirate);
+		sezioniOfferte.add(lblReportOfferte);
 	}
 	
 	private void aggiungiRigaNelPanel(MyJLabel labelIn, boolean isInteragibile, String pathImage) {
-		labelIn.setBackground(new Color(85, 126, 164));
+		labelIn.setBackground(uninaColorClicked);
 		labelIn.setPreferredSize(new Dimension(300, 50));
 		labelIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		labelIn.setMaximumSize(new Dimension(300, 50));
@@ -103,7 +122,7 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		
 		labelIn.setOnMouseExitedAction(() -> {
 			if(labelIn != sezioneAttuale) {
-				labelIn.setBackground(new Color(85, 126, 164));
+				labelIn.setBackground(uninaColorClicked);
 				labelIn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
@@ -115,6 +134,32 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		});
 		
 		this.add(labelIn);
+	}
+	
+	private void settaSezioneScelta(String sezioneScelta) {
+		sezionePrecedente = null;
+		
+		if(lblIlTuoProfiloUtente.getText().equals(sezioneScelta)) {
+			sezioneAttuale = lblIlTuoProfiloUtente;
+			sezioneAttuale.setBackground(uninaColorClicked);
+			return;
+		}
+		
+		for(MyJLabel lblOffertaCorrente: sezioniOfferte) {
+			if(lblOffertaCorrente.getText().equals(sezioneScelta)) {
+				sezioneAttuale = lblOffertaCorrente;
+				sezioneAttuale.setBackground(uninaColor);
+				return;
+			}
+		}
+		
+		for(MyJLabel lblAnnuncioCorrente: sezioniAnnunci) {
+			if(lblAnnuncioCorrente.getText().equals(sezioneScelta)) {
+				sezioneAttuale = lblAnnuncioCorrente;
+				sezioneAttuale.setBackground(uninaColor);
+				return;
+			}
+		}
 	}
 	
 	private void cambiaSezioneGraficamente(MyJLabel prevSezione, MyJLabel currSezione) {

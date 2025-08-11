@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import gui.PanelHomePageAnnunci;
@@ -34,7 +35,7 @@ public class FrameHomePage extends MyJFrame {
 
 	private void settaContentPane(ProfiloUtente utenteLoggato) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(new Rectangle(800, 800));
+		this.setBounds(new Rectangle(1200, 1000));
 		this.setLocationRelativeTo(null);
 		this.setTitle("Il mercatino digitale federiciano");
 		
@@ -42,7 +43,7 @@ public class FrameHomePage extends MyJFrame {
 		contentPane.setLayout(new BorderLayout());
 		
 		panelAnnunci = new PanelHomePageAnnunci();
-		panelLateraleSx = new PanelHomePageLateraleSx();
+		panelLateraleSx = new PanelHomePageLateraleSx(contentPane, mainController);
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		
 		contentPane.add(panelAnnunci, BorderLayout.CENTER);
@@ -55,4 +56,6 @@ public class FrameHomePage extends MyJFrame {
 		
 		setContentPane(contentPane);
 	}
+	
+	
 }

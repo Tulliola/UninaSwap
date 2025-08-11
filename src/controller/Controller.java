@@ -11,6 +11,7 @@ import database.dao.interfacce.*;
 //Import dal package GUI
 import gui.*;
 import utilities.MyJFrame;
+import utilities.MyJLabel;
 //Import dal package DTO
 import dto.*;
 
@@ -37,18 +38,18 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
-		
-//		try {
-//			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("Tulliola", "CaneBlu92!");
-//		}
-//		catch(SQLException exc) {
-//			
-//		}
-//		frameHomePage = new FrameHomePage(this, utenteLoggato);
-//		frameHomePage.setVisible(true);
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+	
+		try {
+			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "tullioTheKing");
+		}
+		catch(SQLException exc) {
+			
+		}
+		frameHomePage = new FrameHomePage(this, utenteLoggato);
+		frameHomePage.setVisible(true);
 	}
 
 	
@@ -96,19 +97,18 @@ public class Controller {
 		frameDiRegistrazione.setVisible(true);
 	}
 
-	public void passaAFrameProfiloUtente() {
-		frameHomePage.dispose();
-		frameProfiloUtente = new FrameProfiloUtente(this, utenteLoggato);
-		frameProfiloUtente.setVisible(true);
-	}
-	
 	public void passaAFrameCambiaImmagine() {
 		frameProfiloUtente.setVisible(false);
 		frameCambiaImmagine = new FrameCambiaImmagine(this);
 		frameCambiaImmagine.setVisible(true);
 	}
 
-
+	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
+		frameHomePage.dispose();
+		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
+		frameProfiloUtente.setVisible(true);
+	}
+		
 	public void passaAHomePage(MyJFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
 		frameHomePage = new FrameHomePage(this, utenteLoggato);
