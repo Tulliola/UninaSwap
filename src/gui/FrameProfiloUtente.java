@@ -77,7 +77,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		this.setTitle("Il tuo profilo utente");
 		this.setSize(1000, 900);
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 	}
 	
@@ -93,14 +93,17 @@ public class FrameProfiloUtente extends MyJFrame {
 		settaBandaLaterale(bandaLateraleDx);
 		
 		panelProfilo = new JPanel();
+		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
+
+		panelProfilo.setMaximumSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));
 		panelProfilo.setBorder(new EmptyBorder(20, 0, 0, 0));
 		impostaPanelProfilo(utenteLoggato);
 		
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
+		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
 		contentPane.add(panelProfilo, BorderLayout.CENTER);
-//		contentPane.add(bandaLateraleDx, BorderLayout.EAST);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
@@ -136,6 +139,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		lblBioPic.setIcon(bioPicScalata);
 		lblBioPic.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		lblBioPic.setAlignmentX(CENTER_ALIGNMENT);
+		lblBioPic.setAlignmentY(CENTER_ALIGNMENT);
 		
 		panelProfilo.add(lblBioPic);
 	}
@@ -260,7 +264,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		saldoTextField.setEnabled(false);
 		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
 		lblSaldo.setAlignmentX(LEFT_ALIGNMENT);
-		lblSaldo.aggiungiImmagineScalata("images/iconaSaldo.png", 30, 30, false);
+		lblSaldo.aggiungiImmagineScalata("images/iconaPortafoglio.png", 30, 30, false);
 		
 		passwordTextField = new MyJPasswordField(utenteLoggato.getPassword());
 		passwordTextField.setAlignmentX(LEFT_ALIGNMENT);

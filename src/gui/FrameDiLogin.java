@@ -172,7 +172,7 @@ public class FrameDiLogin extends MyJFrame {
 			accediButton.requestFocus();
 		});
 		
-		passwordField.setUpAction(()->{
+		passwordField.setUpAction(() -> {
 			emailTextField.requestFocus();
 		});
 		
