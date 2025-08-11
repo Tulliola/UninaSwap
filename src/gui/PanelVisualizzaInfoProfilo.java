@@ -43,10 +43,10 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		this.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJLabel lblTornaAllaHome = new MyJLabel("   Torna alla home page");
-		lblIlTuoProfiloUtente = new MyJLabel("    Il tuo profilo utente");
+		lblIlTuoProfiloUtente = new MyJLabel("    Il mio profilo");
 		
-		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHome.png");
-		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaVediProfiloUtente.png");
+		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHomePage.png");
+		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png");
 
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();

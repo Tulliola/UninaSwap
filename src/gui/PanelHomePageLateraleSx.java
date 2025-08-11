@@ -33,7 +33,7 @@ private static final long serialVersionUID = 1L;
 		
 		MyJLabel lblIlTuoProfiloUtente = new MyJLabel("    Il mio profilo");
 		
-		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaVediProfiloUtente.png", () -> {});
+		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblIlTuoProfiloUtente.getText());});
 		
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();
@@ -47,10 +47,10 @@ private static final long serialVersionUID = 1L;
 		MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
 		
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null, null);
-		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaDisponibile.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciDisponibili.getText());});
-		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaCheck.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciUltimati.getText());});
-		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaCronometro.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciScaduti.getText());});
-		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCross.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciRimossi.getText());});
+		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciDisponibili.getText());});
+		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciUltimati.getText());});
+		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaScaduto.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciScaduti.getText());});
+		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCestino.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblAnnunciRimossi.getText());});
 		
 	}
 	
@@ -63,11 +63,11 @@ private static final long serialVersionUID = 1L;
 		MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
 			
 		aggiungiRigaNelPanel(lblLeMieOfferte, false, null, null);
-		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaCheck.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteAccettate.getText());});
-		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconInAttesa.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteInAttesa.getText());});
+		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteAccettate.getText());});
+		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconaInAttesa.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteInAttesa.getText());});
 		aggiungiRigaNelPanel(lblOfferteRifiutate, true, "images/iconaCross.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteRifiutate.getText());});
-		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaRitirata.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteRitirate.getText());});
-		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaGrafico.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblReportOfferte.getText());});
+		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaCancellato.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblOfferteRitirate.getText());});
+		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaReport.png", () -> {mainController.passaASezioneInFrameProfiloUtente(lblReportOfferte.getText());});
 	}
 	
 	private void aggiungiRigaNelPanel(MyJLabel labelIn, boolean isInteragibile, String pathImage, Runnable azioneSeCliccato) {
