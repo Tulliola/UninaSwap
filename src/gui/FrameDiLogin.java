@@ -307,6 +307,7 @@ public class FrameDiLogin extends MyJFrame {
 			lblErroreComunicazioneColDB.setVisible(true);
 		}
 		catch(SQLException e) {
+			System.out.print(e.getMessage());
 			lblErroreComunicazioneColDB.setText("Errore nella comunicazione col database");
 			lblErroreComunicazioneColDB.setVisible(true);
 		}

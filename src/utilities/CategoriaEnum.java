@@ -3,12 +3,12 @@ package utilities;
 public enum CategoriaEnum {
 	Libri_di_testo("Libri di testo"),
 	Appunti("Appunti"),
-	Elettronica_e_informatica("Elettronica e informatica"),
+	Elettronica_e_Informatica("Elettronica e Informatica"),
 	Libri("Libri"),
 	Per_la_casa("Per la casa"),
 	Cura_della_persona("Cura della persona"),
 	Abbigliamento("Abbigliamento"),
-	Sport_e_tempo_libero("Sport e tempo libero"),
+	Sport_e_Tempo_libero("Sport e Tempo libero"),
 	Musica("Musica"),
 	Film("Film"),
 	Collezionismo("Collezionismo");
@@ -17,6 +17,14 @@ public enum CategoriaEnum {
 	
 	private CategoriaEnum(String categoria) {
 		this.categoria = categoria;
+	}
+	
+	public static CategoriaEnum confrontaConDB(String valoreCategoriaDB){
+		for(CategoriaEnum c : values()) {
+			if(c.categoria.equals(valoreCategoriaDB))
+				return c;
+		}
+		throw new IllegalArgumentException("Valore non presente nel database");
 	}
 	
 	 @Override

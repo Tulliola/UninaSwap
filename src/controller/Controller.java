@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.event.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -32,24 +33,24 @@ public class Controller {
 	
 	private static Connection connessioneDB;
 	
-	private static ProfiloUtente utenteLoggato;	
-	
+	private ProfiloUtente utenteLoggato;
+	private ArrayList<Annuncio> annunciDisponibiliNonDiUtente;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 	
-		try {
-			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "tullioTheKing");
-		}
-		catch(SQLException exc) {
-			
-		}
-		frameHomePage = new FrameHomePage(this, utenteLoggato);
-		frameHomePage.setVisible(true);
+//		try {
+//			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
+//		}
+//		catch(SQLException exc) {
+//			
+//		}
+//		frameHomePage = new FrameHomePage(this, utenteLoggato);
+//		frameHomePage.setVisible(true);
 	}
 
 	
@@ -111,7 +112,7 @@ public class Controller {
 		
 	public void passaAHomePage(MyJFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
-		frameHomePage = new FrameHomePage(this, utenteLoggato);
+		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciDisponibiliNonDiUtente);
 		frameHomePage.setVisible(true);
 		
 	}
@@ -133,8 +134,11 @@ public class Controller {
 		
 		if(utenteLoggato.getSospeso())
 			this.passaADialogDiComunicataSospensione(email);
-		else
+		else {
+			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
+			this.annunciDisponibiliNonDiUtente = annunciDAO.recuperaAnnunciDisponibiliNonDiUtente(utenteLoggato);
 			this.passaAHomePage(frameDiLogin);
+		}
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{

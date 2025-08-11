@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -10,6 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
+import dto.Annuncio;
+import dto.AnnuncioRegalo;
+import dto.AnnuncioScambio;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
@@ -18,7 +22,7 @@ public class PanelHomePageAnnunci extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 
-	public PanelHomePageAnnunci() {
+	public PanelHomePageAnnunci(ArrayList<Annuncio> annunci) {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBackground(Color.LIGHT_GRAY);
 		this.setPreferredSize(new Dimension(300, 300));
@@ -29,8 +33,10 @@ public class PanelHomePageAnnunci extends JPanel{
 		MyJTextField prova2 = new MyJTextField();
 		prova.add(prova2);
 		
-		for(int i = 0; i < 200; i++) {
-			MyJLabel label = new MyJLabel("Annuncio "+i);
+		for(int i = 0; i < annunci.size(); i++) {
+			System.out.println(annunci.get(i));
+			
+			MyJLabel label = new MyJLabel(annunci.get(i).getNome());
 			label.setAlignmentX(CENTER_ALIGNMENT);
 			prova.add(label);
 		}

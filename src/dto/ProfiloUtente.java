@@ -1,6 +1,7 @@
 package dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class ProfiloUtente {
 	private String username;
@@ -11,6 +12,9 @@ public class ProfiloUtente {
 	private String password;
 	private Date dataSospensione;
 	private boolean sospeso;
+	private ArrayList<AnnuncioVendita> annunciVenditaUtente;
+	private ArrayList<AnnuncioScambio> annunciScambioUtente;
+	private ArrayList<AnnuncioRegalo> annunciRegaloUtente;
 	
 	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo, String password, Date dataSospensione, boolean sospeso) {
 		this.username = username;
@@ -21,6 +25,18 @@ public class ProfiloUtente {
 		this.password = password;
 		this.dataSospensione = dataSospensione;
 		this.sospeso = sospeso;
+	}
+	
+	public void addAnnuncioVendita(AnnuncioVendita annuncio) {
+		this.annunciVenditaUtente.add(annuncio);
+	}
+	
+	public void addAnnuncioScambio(AnnuncioScambio annuncio) {
+		this.annunciScambioUtente.add(annuncio);
+	}
+	
+	public void addAnnuncioRegalo(AnnuncioRegalo annuncio) {
+		this.annunciRegaloUtente.add(annuncio);
 	}
 	
 	@Override
