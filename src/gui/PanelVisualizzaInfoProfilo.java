@@ -62,11 +62,11 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
 		
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
-		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaDisponibile.png");
-		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaCheck.png");
-		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaCronometro.png");
-		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCross.png");
-		
+		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png");
+		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
+		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaScaduto.png");
+		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCestino.png");
+
 		sezioniAnnunci.add(lblIMieiAnnunci);
 		sezioniAnnunci.add(lblAnnunciDisponibili);
 		sezioniAnnunci.add(lblAnnunciUltimati);
@@ -83,12 +83,12 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
 			
 		aggiungiRigaNelPanel(lblLeMieOfferte, false, null);
-		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaCheck.png");
-		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconInAttesa.png");
+		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png");
+		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconaInAttesa.png");
 		aggiungiRigaNelPanel(lblOfferteRifiutate, true, "images/iconaCross.png");
-		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaRitirata.png");
-		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaGrafico.png");
-		
+		aggiungiRigaNelPanel(lblOfferteRitirate, true, "images/iconaCancellato.png");
+		aggiungiRigaNelPanel(lblReportOfferte, true, "images/iconaReport.png");
+
 		sezioniOfferte.add(lblLeMieOfferte);
 		sezioniOfferte.add(lblOfferteAccettate);
 		sezioniOfferte.add(lblOfferteInAttesa);

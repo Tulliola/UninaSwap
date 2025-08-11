@@ -172,7 +172,7 @@ public class FrameDiLogin extends MyJFrame {
 			accediButton.requestFocus();
 		});
 		
-		passwordField.setUpAction(()->{
+		passwordField.setUpAction(() -> {
 			emailTextField.requestFocus();
 		});
 		
@@ -261,19 +261,19 @@ public class FrameDiLogin extends MyJFrame {
 		
 		bluePane.add(buttonsPane);
 	}
-	
+
 	//Verifica che l'utente riempia i campi
-	public void checkDatiAccesso() {
+	private void checkDatiAccesso() {
 		checkEmail(emailTextField.getText());
 		checkPassword(passwordField.getText());
 	}
 	
-	public void checkEmail(String email) {
+	private void checkEmail(String email) {
 		if(email == null || email.length() == 0)
 			throw new EmailException("Il campo email è obbligatorio.");
 	}
 	
-	public void checkPassword(String password) {
+	private void checkPassword(String password) {
 		if(password == null || password.length() == 0)
 			throw new PasswordException("Il campo password è obbligatorio.");
 	}
