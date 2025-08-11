@@ -47,6 +47,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	private MyJTextField cambiaPWDField;
 	private MyJTextField saldoTextField;
 	
+	
 	//Labels di errore
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
@@ -77,7 +78,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		this.setTitle("Il tuo profilo utente");
 		this.setSize(1000, 900);
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 	}
 	
@@ -89,9 +90,6 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane);
 		
-		JPanel bandaLateraleDx = new JPanel();
-		settaBandaLaterale(bandaLateraleDx);
-		
 		panelProfilo = new JPanel();
 		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));
 		panelProfilo.setBorder(new EmptyBorder(20, 0, 0, 0));
@@ -100,7 +98,6 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 
 		contentPane.add(panelProfilo, BorderLayout.CENTER);
-//		contentPane.add(bandaLateraleDx, BorderLayout.EAST);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
@@ -111,7 +108,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		bandaLaterale.setBackground(new Color(198, 210, 222));
 	}
 	
-	private void impostaPanelProfilo(ProfiloUtente utenteLoggato) {
+	private void impostaPanelProfilo(ProfiloUtente utenteLoggato) {		
 		this.aggiungiImmagineProfilo(utenteLoggato.getImmagineProfilo());
 		
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -156,7 +153,7 @@ public class FrameProfiloUtente extends MyJFrame {
 				mainController.passaAFrameCambiaImmagine();
 			}
 		});
-		
+	
 		panelProfilo.add(lblCambiaImmagine);
 	}
 	
@@ -368,7 +365,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.add(lblErroreResidenza);
 		
 		panelProfilo.add(panelRiepilogoInfoUtente);
-
+		
 		panelProfilo.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelProfilo.add(lblModificheEffettuate);
 		

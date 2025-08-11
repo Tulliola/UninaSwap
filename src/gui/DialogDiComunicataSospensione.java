@@ -34,6 +34,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+		contentPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 		contentPanel.setBackground(Color.WHITE);
 		
 		this.setContentPane(contentPanel);
@@ -44,7 +45,7 @@ public class DialogDiComunicataSospensione extends JDialog {
 		panelInterno.setBackground(Color.WHITE);
 		
 		JTextArea comunicaSegnalazione = new JTextArea();
-		comunicaSegnalazione.setText("Sembra che tu sia sospeso fino alla data "+ settaFormatoData(calcolaDataDesospensione(dataSospensione))+ ", a causa delle segeunti segnalazioni:");
+		comunicaSegnalazione.setText("Sembra che tu sia sospeso fino alla data "+ settaFormatoData(calcolaDataDesospensione(dataSospensione))+ ", a causa delle seguenti segnalazioni:");
 		comunicaSegnalazione.setFont(new Font("Ubuntu Sans", Font.BOLD, 16));
 		settaJTextArea(comunicaSegnalazione);
 		
