@@ -3,6 +3,8 @@ package utilities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.LayoutManager;
 
 import javax.swing.*;
@@ -18,11 +20,24 @@ public class MyJPanel extends JPanel {
 	public static final Border blackBorder = BorderFactory.createLineBorder(Color.BLACK,  1);
 	public static final Border redBorder = BorderFactory.createLineBorder(Color.RED,  2);
 
+	private Image immagine;
 	
-	public MyJPanel() {}
+	public MyJPanel() {
+		super();
+	}
 
 	public MyJPanel(Color backgroundColor) {
+		this();
 		this.setBackground(backgroundColor);
+	}
+	
+	public MyJPanel(Image immagine) {
+		this.immagine = immagine;
+	}
+	
+	public MyJPanel(Color backgroundColor, Dimension dimensionePanel) {
+		this(backgroundColor);
+		this.setPreferredSize(dimensionePanel);
 	}
 	
 	public void aggiungiTextFieldConLabel(MyJTextField textFieldInput, JLabel labelIn) {
@@ -32,4 +47,12 @@ public class MyJPanel extends JPanel {
 		this.add(textFieldInput);
 	}
 	
+	
+	@Override
+	protected void paintComponent(Graphics immagineDaAdattare) {
+		super.paintComponent(immagineDaAdattare);
+		
+		if(immagineDaAdattare != null)
+			immagineDaAdattare.drawImage(immagine, 0, 0, getWidth(), getHeight(), this);
+	}
 }
