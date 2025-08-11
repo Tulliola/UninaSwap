@@ -177,7 +177,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.setAlignmentX(CENTER_ALIGNMENT);
 		
 		MyJLabel modificaUsername = new MyJLabel();
-		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
+		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
@@ -200,7 +200,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 				
 		MyJLabel modificaPassword = new MyJLabel();
-		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
+		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				cambiaPWDField.cambiaStatoVisible();
@@ -226,7 +226,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		MyJLabel modificaResidenza = new MyJLabel();
-		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 35, 35, true);
+		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				residenzaTextField.cambiaStatoEnabled();
@@ -317,8 +317,14 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelPassword.add(modificaPassword);
 		
-		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
-		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
+//		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
+//		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
+		
+		Image resizedShowPWD = new ImageIcon("images/iconShowPWD.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+		Image resizedHidePWD = new ImageIcon("images/iconHidePWD.png").getImage().getScaledInstance(25,  25, Image.SCALE_SMOOTH);
+		
+		ImageIcon showPWDIcon = new ImageIcon(resizedShowPWD);
+		ImageIcon hidePWDIcon = new ImageIcon(resizedHidePWD);
 
 		MyJLabel mostraNascondiPassword = new MyJLabel(hidePWDIcon, true);
 		
