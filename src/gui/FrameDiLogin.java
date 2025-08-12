@@ -148,12 +148,19 @@ public class FrameDiLogin extends MyJFrame {
 		
 		MyJLabel lblEmail = new MyJLabel("Email istituzionale o Username", new Font("Ubuntu Sans", Font.BOLD, 15));
 		emailTextField = new MyJTextField(new Font("Ubuntu Sans", Font.PLAIN, 13));
+		emailTextField.rendiTextFieldKeyListenable();
+		emailTextField.rendiTextFieldMouseListenable();
+		emailTextField.rendiTextFieldFocusable();
 		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJLabel lblPassword = new MyJLabel("Password", new Font("Ubuntu Sans", Font.BOLD, 15));
 		passwordField = new MyJPasswordField();
 		passwordField.setAlignmentX(LEFT_ALIGNMENT);
 
+		emailTextField.setFocusGainedAction(() -> {});
+		
+		emailTextField.setFocusLostAction(() -> {});
+		
 		emailTextField.setDefaultAction(() -> {
 			passwordField.requestFocus();
 		});

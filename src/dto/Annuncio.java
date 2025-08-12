@@ -21,17 +21,16 @@ public abstract class Annuncio {
 	private Timestamp momentoPubblicazione;
 	private String nome;
 	private Date dataScadenza;
-	
+
 	//Attributi derivati da relazioni
 	private ArrayList<Offerta> offerteRicevute;
 	private ProfiloUtente utenteProprietario;
 	private Oggetto oggettoInAnnuncio;
 	private ArrayList<SedeUniversita> sedeIncontroProposte;
 	
-	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta, boolean incontro,
-			StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario,
-			Oggetto oggettoInAnnuncio) {
-		
+	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
+			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
+
 		this.idAnnuncio = idAnnuncio;
 		this.spedizione = spedizione;
 		this.ritiroInPosta = ritiroInPosta;

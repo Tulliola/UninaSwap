@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -20,7 +22,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-public class MyJTextField extends JTextField implements ActionListener, KeyListener, MouseListener{
+public class MyJTextField extends JTextField implements ActionListener, KeyListener, MouseListener, FocusListener{
 
 	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
 	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
@@ -28,19 +30,24 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	private Runnable defaultAction;
 	private Runnable upAction;
 	private Runnable downAction;
+	private Runnable focusGainedAction;
+	private Runnable focusLostAction;
+	private Runnable keyTypedAction;
 	
 	public MyJTextField() {
 		this.setBorder(blackBorder);
 		this.setMaximumSize(new Dimension(300, 30));
 		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		this.addMouseListener(this);
-		this.addKeyListener(this);
-		this.addActionListener(this);
-	}
+		}
 
 	public MyJTextField(String stringaDiDefault) {
 		this();
 		this.setText(stringaDiDefault);
+	}
+	
+	public MyJTextField(String stringaDiDefault, int limiteDiColonne) {
+		this(stringaDiDefault);
+		this.setColumns(limiteDiColonne);
 	}
 	
 	public void settaBordiTextFieldStandard() {
@@ -80,6 +87,22 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 			this.setVisible(false);
 	}
 	
+	public void rendiTextFieldFocusable() {
+		this.addFocusListener(this);
+	}
+	
+	public void rendiTextFieldMouseListenable() {
+		this.addMouseListener(this);
+	}
+	
+	public void rendiTextFieldKeyListenable() {
+		this.addKeyListener(this);
+	}
+	
+	public void rendiTextFieldActionListenable() {
+		this.addActionListener(this);
+	}
+	
 	public void setDefaultAction(Runnable defaultAction) {
 		this.defaultAction = defaultAction;
 	}
@@ -91,7 +114,18 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	public void setDownAction(Runnable downAction) {
 		this.downAction = downAction;
 	}
+	
+	public void setFocusGainedAction(Runnable focusGainedAction) {
+		this.focusGainedAction = focusGainedAction;
+	}
+	
+	public void setFocusLostAction(Runnable focusLostAction) {
+		this.focusLostAction = focusLostAction;
+	}
 
+	public void setKeyTypedAction(Runnable keyTypedAction) {
+		this.keyTypedAction = keyTypedAction;
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		//Non fa nulla
@@ -140,5 +174,15 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	@Override
 	public void mouseExited(MouseEvent e) {
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		focusGainedAction.run();
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		focusLostAction.run();
 	}
 }
