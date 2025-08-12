@@ -70,15 +70,13 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		}
 	}
 	
-	public void rendiLabelInteragibile() {
-		this.addMouseListener(this);
-	}
 	
 	public MyJLabel(Font font) {
 		this.setFont(font);
 	}
 	
 	public MyJLabel(String stringaDiDefault, Font font) {
+		this();
 		this.setText(stringaDiDefault);
 		this.setFont(font);
 	}
@@ -149,6 +147,10 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 			this.aggiungiEffettoCliccabilitaPerImmagine();
 		
 		this.setIcon(resizeResult);
+	}
+
+	public void rendiLabelInteragibile() {
+		this.addMouseListener(this);
 	}
 	
 	public void setDefaultAction(Runnable defaultAction) {

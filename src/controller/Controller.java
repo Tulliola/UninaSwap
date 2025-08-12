@@ -40,11 +40,11 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 	
-		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
-		framePubblicaAnnuncio.setVisible(true);
+//		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
+//		framePubblicaAnnuncio.setVisible(true);
 		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
@@ -121,6 +121,11 @@ public class Controller {
 		
 	}
 
+	public void passaAFramePubblicaAnnuncio() {
+		frameHomePage.dispose();
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
+		framePubblicaAnnuncio.setVisible(true);
+	}
 
 	public void passaADialogDiComunicataSospensione(String emailUtente) throws SQLException {
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, null);

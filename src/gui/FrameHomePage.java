@@ -46,7 +46,7 @@ public class FrameHomePage extends MyJFrame {
 		contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());
 		
-		panelAnnunci = new PanelHomePageAnnunci(annunci);
+		panelAnnunci = new PanelHomePageAnnunci(mainController, annunci);
 		panelLateraleSx = new PanelHomePageLateraleSx(contentPane, mainController);
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		

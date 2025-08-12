@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-
+import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
@@ -41,7 +41,10 @@ public class PanelHomePageAnnunci extends JPanel{
 	private MyJPanel barraDiRicerca = new MyJPanel();
 	private MyJPanel bordoInferiore = new MyJPanel();
 	
-	public PanelHomePageAnnunci(ArrayList<Annuncio> annunci) {
+	private Controller mainController;
+	
+	public PanelHomePageAnnunci(Controller controller, ArrayList<Annuncio> annunci) {
+		mainController = controller;
 		this.setLayout(new BorderLayout());
 		
 		this.settaBordoSuperiore();
@@ -149,7 +152,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bottonePubblicaAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
 		bottonePubblicaAnnuncio.setPreferredSize(new Dimension(300, 50));
 		
-		bottonePubblicaAnnuncio.setDefaultAction(() -> {});
+		bottonePubblicaAnnuncio.setDefaultAction(() -> {mainController.passaAFramePubblicaAnnuncio();});
 		bottonePubblicaAnnuncio.setUpAction(() -> {});
 		bottonePubblicaAnnuncio.setDownAction(() -> {});
 		
