@@ -30,6 +30,7 @@ public class Controller {
 	private FrameProfiloUtente frameProfiloUtente;
 	private FrameCambiaImmagine frameCambiaImmagine;
 	private FrameHomePage frameHomePage;
+	private FramePubblicaAnnuncio framePubblicaAnnuncio;
 	
 	private static Connection connessioneDB;
 	
@@ -39,9 +40,12 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
 	
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
+		framePubblicaAnnuncio.setVisible(true);
+		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
 //			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");

@@ -18,7 +18,8 @@ public abstract class Annuncio {
 	private String nome;
 	private Date dataScadenza;
 	
-	public Annuncio(int idAnnuncio, String emailProprietario, Oggetto oggettoInAnnuncio, boolean spedizione, boolean ritiroInPosta, boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, Date dataScadenza) {
+	public Annuncio(int idAnnuncio, String emailProprietario, Oggetto oggettoInAnnuncio, boolean spedizione, boolean ritiroInPosta,
+			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, Date dataScadenza) {
 		this.idAnnuncio = idAnnuncio;
 		this.emailProprietario = emailProprietario;
 		this.oggettoInAnnuncio = oggettoInAnnuncio;
