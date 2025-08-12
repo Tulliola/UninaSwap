@@ -2,31 +2,23 @@ package dto;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import utilities.StatoAnnuncioEnum;
 
-public class AnnuncioScambio extends Annuncio{
-
+public class AnnuncioScambio extends Annuncio {
 	private String notaScambio;
-
-	public AnnuncioScambio(int idAnnuncio, String emailProprietario, Oggetto oggettoInAnnuncio, boolean spedizione,
-			boolean ritiroInPosta, boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione,
-			String nome, Date dataScadenza, String notaScambio) {
-		super(idAnnuncio, emailProprietario, oggettoInAnnuncio, spedizione, ritiroInPosta, incontro, stato,
-				momentoPubblicazione, nome, dataScadenza);
-		this.notaScambio = notaScambio;
-	}
 	
-	public String getNotaScambio() {
-		return notaScambio;
-	}
-
-	public void setNotaScambio(String notaScambio) {
+	public AnnuncioScambio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta, boolean incontro,
+			StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario,
+			Oggetto oggettoInAnnuncio, String notaScambio) {
+		super(idAnnuncio, spedizione, ritiroInPosta, incontro, stato, momentoPubblicazione, nome, utenteProprietario,
+				oggettoInAnnuncio);
 		this.notaScambio = notaScambio;
 	}
 
 	@Override
-	public double getPrezzo() {
-		return -1;
+	public String getNotaScambio() {
+		return notaScambio;
 	}
 }

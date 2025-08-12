@@ -1,9 +1,15 @@
 package database.dao.implementazioni;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import database.dao.interfacce.AnnuncioDAO;
@@ -11,6 +17,8 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import dto.Offerta;
+import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
 import utilities.CategoriaEnum;
@@ -25,40 +33,30 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAannuncio = ?")){
-			Oggetto oggettoInAnnuncio;
+	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException, IOException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ? AND Stato = 'Disponibile'")){
 			ps.setInt(1, idAnnuncio);
 			
 			try(ResultSet rs = ps.executeQuery()){
-				if(rs.next()) {
-					if(rs.getString("Tipo_annuncio").equals("Vendita"))
-						return creaAnnuncioVendita(rs);
-					else if(rs.getString("Tipo_annuncio").equals("Scambio"))
-						return creaAnnuncioScambio(rs);
-					else if(rs.getString("Tipo_annuncio").equals("Regalo"))
-						return creaAnnuncioRegalo(rs);
-				}
+				rs.next();
+				return annuncioCorrenteRecuperato(rs);
 			}
 		}
-		return null;
 	}
 
+
+
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
+	public ArrayList<Annuncio> recuperaAnnunciDisponibiliDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
-			ps.setString(1,  utenteLoggato.getEmail());
+			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
+				System.out.println(rs.next());
 				while(rs.next()) {
-					if(rs.getString("Tipo_annuncio").equals("Vendita"))
-						toReturn.add(creaAnnuncioVendita(rs));
-					else if (rs.getString("Tipo_annuncio").equals("Scambio"))
-						toReturn.add(creaAnnuncioScambio(rs));
-					else if (rs.getString("Tipo_annuncio").equals("Regalo"))
-						toReturn.add(creaAnnuncioRegalo(rs));
+					toReturn.add(annuncioCorrenteRecuperato(rs));
 				}
 				return toReturn;
 			}
@@ -66,119 +64,97 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
+	public ArrayList<Annuncio> recuperaAnnunciDisponibiliNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
-			ps.setString(1,  utenteLoggato.getEmail());
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione")){
+			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
 				while(rs.next()) {
-					if(rs.getString("Tipo_annuncio").equals("Vendita"))
-						toReturn.add(creaAnnuncioVendita(rs));
-					else if (rs.getString("Tipo_annuncio").equals("Scambio"))
-						toReturn.add(creaAnnuncioScambio(rs));
-					else if (rs.getString("Tipo_annuncio").equals("Regalo"))
-						toReturn.add(creaAnnuncioRegalo(rs));
+					toReturn.add(annuncioCorrenteRecuperato(rs));
 				}
 				return toReturn;
 			}
 		}
 	}
 	
-	
-	//metodi ausiliari
-	private AnnuncioRegalo creaAnnuncioRegalo(ResultSet rs) throws SQLException {
-		Oggetto oggettoInAnnuncio;
-		
+	private Oggetto recuperaOggettoInAnnuncio(ResultSet rs) throws SQLException, IOException{
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
 			psOggetto.setInt(1, rs.getInt("idOggetto"));
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
-				//Non c'è bisogno di mettere questo next in un if perché idOggetto è foreign key unique not null, quindi sempre valorizzata e al massimo una
+	            Path imagePath = Paths.get("images", "iconaCestino.png"); 
+	            byte[] imageBytes = Files.readAllBytes(imagePath);
 				rsOggetto.next();
-				oggettoInAnnuncio = this.creaOggetto(rsOggetto);
+				return new Oggetto(
+						rsOggetto.getInt("idOggetto"),
+						CategoriaEnum.confrontaConDB(rsOggetto.getString("Categoria")),
+						CondizioneEnum.confrontaConDB(rsOggetto.getString("Condizioni")),
+						imageBytes,
+						isOggettoDisponibile(rsOggetto)
+					);
 			}
 		}
-						
-		return new AnnuncioRegalo(
-				rs.getInt("idAnnuncio"),
-				rs.getString("Email"),
-				oggettoInAnnuncio,
-				rs.getBoolean("Spedizione"),
-				rs.getBoolean("Ritiro_in_posta"),
-				rs.getBoolean("Incontro"),
-				StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato")),
-				rs.getTimestamp("Momento_pubblicazione"),
-				rs.getString("Nome"),
-				rs.getDate("Data_scadenza")
-		);
 	}
-	
-	private AnnuncioVendita creaAnnuncioVendita(ResultSet rs) throws SQLException {
-		Oggetto oggettoInAnnuncio;
-		
-		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
-			psOggetto.setInt(1, rs.getInt("idOggetto"));
+
+	private boolean isOggettoDisponibile(ResultSet rsOggetto) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND (NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile'))")){
+			ps.setInt(1, rsOggetto.getInt("idOggetto"));
 			
-			try(ResultSet rsOggetto = psOggetto.executeQuery()){
-				//Non c'è bisogno di mettere questo next in un if perché idOggetto è foreign key unique not null, quindi sempre valorizzata e al massimo una
-				rsOggetto.next();
-				oggettoInAnnuncio = this.creaOggetto(rsOggetto);
+			try(ResultSet rs = ps.executeQuery()){
+				return rs.next();
 			}
 		}
-						
-		return new AnnuncioVendita(
-				rs.getInt("idAnnuncio"),
-				rs.getString("Email"),
-				oggettoInAnnuncio,
-				rs.getBoolean("Spedizione"),
-				rs.getBoolean("Ritiro_in_posta"),
-				rs.getBoolean("Incontro"),
-				StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato")),
-				rs.getTimestamp("Momento_pubblicazione"),
-				rs.getString("Nome"),
-				rs.getDate("Data_scadenza"),
-				rs.getDouble("Prezzo_iniziale")
-		);
 	}
 	
-	private AnnuncioScambio creaAnnuncioScambio(ResultSet rs) throws SQLException {
-		Oggetto oggettoInAnnuncio;
-		
-		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
-			psOggetto.setInt(1, rs.getInt("idOggetto"));
+	private ProfiloUtente recuperaUtenteProprietario(ResultSet rs) throws SQLException {
+		try(PreparedStatement psUtente = connessioneDB.prepareStatement("SELECT * FROM PROFILO_UTENTE WHERE Email = ?")){
+			psUtente.setString(1, rs.getString("Email"));
 			
-			try(ResultSet rsOggetto = psOggetto.executeQuery()){
-				//Non c'è bisogno di mettere questo next in un if perché idOggetto è foreign key unique not null, quindi sempre valorizzata e al massimo una
-				rsOggetto.next();
-				oggettoInAnnuncio = this.creaOggetto(rsOggetto);
+			try(ResultSet rsUtente = psUtente.executeQuery()){
+				rsUtente.next();
+				
+				return new ProfiloUtente(
+						rsUtente.getString("Username"),
+						rsUtente.getString("Email"),
+						rsUtente.getDouble("Saldo"),
+						rsUtente.getBytes("Immagine_profilo"),
+						rsUtente.getString("Residenza"),
+						rsUtente.getString("PW"),
+						rsUtente.getBoolean("Sospeso"));
+						
 			}
 		}
-						
-		return new AnnuncioScambio(
-				rs.getInt("idAnnuncio"),
-				rs.getString("Email"),
-				oggettoInAnnuncio,
-				rs.getBoolean("Spedizione"),
-				rs.getBoolean("Ritiro_in_posta"),
-				rs.getBoolean("Incontro"),
-				StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato")),
-				rs.getTimestamp("Momento_pubblicazione"),
-				rs.getString("Nome"),
-				rs.getDate("Data_scadenza"),
-				rs.getString("Nota_scambio")
-		);
 	}
 	
-	private Oggetto creaOggetto(ResultSet rs) throws SQLException {
-		return new Oggetto(
-				rs.getInt("idOggetto"),
-				rs.getString("Email"),
-				rs.getString("Descrizione"),
-				CategoriaEnum.confrontaConDB(rs.getString("Categoria")),
-				CondizioneEnum.confrontaConDB(rs.getString("Condizioni"))
-		);
+	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException, IOException{
+		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs);
+		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs);
+		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");
+		boolean spedizione = rs.getBoolean("Spedizione");
+		boolean ritiroInPosta = rs.getBoolean("Ritiro_in_posta");
+		boolean incontro = rs.getBoolean("Incontro");
+		StatoAnnuncioEnum stato = StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato"));
+		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
+		String nome = rs.getString("Nome");
+		if(rs.getString("Tipo_annuncio") == "Vendita") {
+			return new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
+				stato, momentoPubblicazione, nome, utenteProprietario, 
+				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
+		}
+		else if(rs.getString("Tipo_annuncio") == "Scambio") {
+			return new AnnuncioScambio(
+				idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
+				stato, momentoPubblicazione, nome, utenteProprietario, 
+				oggettoInAnnuncio, rs.getString("Nota_scambio")	
+			);
+		}
+		else {
+			return new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
+				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
+				utenteProprietario, oggettoInAnnuncio
+			);
+		}
 	}
-		
 }

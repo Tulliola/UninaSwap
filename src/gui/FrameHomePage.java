@@ -15,8 +15,8 @@ import utilities.MyJFrame;
 import utilities.MyJPanel;
 import controller.Controller;
 import dto.Annuncio;
-import dto.AnnuncioRegalo;
-import dto.AnnuncioScambio;
+//import dto.AnnuncioRegalo;
+//import dto.AnnuncioScambio;
 import dto.ProfiloUtente;
 
 public class FrameHomePage extends MyJFrame {
