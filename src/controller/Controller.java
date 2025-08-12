@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.event.*;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -128,11 +129,11 @@ public class Controller {
 		frameDiLogin.dispose();
 	}
 
-	public void onAccessoButtonClicked(String email, String password) throws SQLException{
+	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
 		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
 		
-		if(utenteLoggato.getSospeso())
+		if(utenteLoggato.isSospeso())
 			this.passaADialogDiComunicataSospensione(email);
 		else {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);

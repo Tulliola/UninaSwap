@@ -2,33 +2,23 @@ package dto;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import utilities.StatoAnnuncioEnum;
 
-public class AnnuncioVendita extends Annuncio{
+public class AnnuncioVendita extends Annuncio {
 	private double prezzoIniziale;
-
-	public AnnuncioVendita(int idAnnuncio, String emailProprietario, Oggetto oggettoInAnnuncio, boolean spedizione,
-			boolean ritiroInPosta, boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione,
-			String nome, Date dataScadenza, double prezzoIniziale) {
-		super(idAnnuncio, emailProprietario, oggettoInAnnuncio, spedizione, ritiroInPosta, incontro, stato,
-				momentoPubblicazione, nome, dataScadenza);
-		this.prezzoIniziale = prezzoIniziale;
-	}
-
-
-	public void setPrezzoIniziale(double prezzoIniziale) {
+	
+	public AnnuncioVendita(int idAnnuncio, boolean spedizione, boolean ritiroInPosta, boolean incontro,
+			StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario,
+			Oggetto oggettoInAnnuncio, double prezzoIniziale) {
+		super(idAnnuncio, spedizione, ritiroInPosta, incontro, stato, momentoPubblicazione, nome, utenteProprietario,
+				oggettoInAnnuncio);
 		this.prezzoIniziale = prezzoIniziale;
 	}
 
 	@Override
-	public double getPrezzo() {
-		return this.prezzoIniziale;
+	public double getPrezzoIniziale() {
+		return prezzoIniziale;
 	}
-
-	@Override
-	public String getNotaScambio() {
-		return null;
-	}
-
 }

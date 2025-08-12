@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public class ProfiloUtente {
+	//Attributi propri
 	private String username;
 	private String email;
 	private double saldo;
@@ -12,49 +13,38 @@ public class ProfiloUtente {
 	private String password;
 	private Date dataSospensione;
 	private boolean sospeso;
-	private ArrayList<AnnuncioVendita> annunciVenditaUtente;
-	private ArrayList<AnnuncioScambio> annunciScambioUtente;
-	private ArrayList<AnnuncioRegalo> annunciRegaloUtente;
 	
-	public ProfiloUtente(String username, String email, double saldo, String residenza, byte[] immagine_profilo, String password, Date dataSospensione, boolean sospeso) {
+	//Attributi derivati da relazioni
+	private ArrayList<Annuncio> annunciUtente;
+	private ArrayList<Offerta> offerteUtente;
+	
+	public ProfiloUtente(String username, String email, double saldo, byte[] immagineProfilo, String residenza,
+			String password, boolean sospeso) {
 		this.username = username;
 		this.email = email;
 		this.saldo = saldo;
+		this.immagineProfilo = immagineProfilo;
 		this.residenza = residenza;
-		this.immagineProfilo = immagine_profilo;
 		this.password = password;
-		this.dataSospensione = dataSospensione;
 		this.sospeso = sospeso;
 	}
 	
-	public void addAnnuncioVendita(AnnuncioVendita annuncio) {
-		this.annunciVenditaUtente.add(annuncio);
+	public void aggiungiAnnuncio(Annuncio annuncioAggiunto) {
+		this.annunciUtente.add(annuncioAggiunto);
 	}
 	
-	public void addAnnuncioScambio(AnnuncioScambio annuncio) {
-		this.annunciScambioUtente.add(annuncio);
-	}
-	
-	public void addAnnuncioRegalo(AnnuncioRegalo annuncio) {
-		this.annunciRegaloUtente.add(annuncio);
-	}
-	
-	@Override
-	public String toString() {
-		return username;
+	public void aggiungiOfferta(Offerta offertaAggiunta) {
+		this.offerteUtente.add(offertaAggiunta);
 	}
 
-
-	//Getter e Setter per username
 	public String getUsername() {
 		return username;
 	}
-	
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	//Getter e Setter per email
+
 	public String getEmail() {
 		return email;
 	}
@@ -62,52 +52,68 @@ public class ProfiloUtente {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public double getSaldo() {
 		return saldo;
 	}
-	
+
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
-	
+
 	public byte[] getImmagineProfilo() {
 		return immagineProfilo;
 	}
-	
+
 	public void setImmagineProfilo(byte[] immagineProfilo) {
 		this.immagineProfilo = immagineProfilo;
 	}
-	
+
 	public String getResidenza() {
 		return residenza;
 	}
-	
+
 	public void setResidenza(String residenza) {
 		this.residenza = residenza;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public Date getDataSospensione() {
-		return this.dataSospensione;
+		return dataSospensione;
 	}
-	
+
 	public void setDataSospensione(Date dataSospensione) {
 		this.dataSospensione = dataSospensione;
 	}
-	
-	public boolean getSospeso() {
-		return this.sospeso;
+
+	public boolean isSospeso() {
+		return sospeso;
 	}
-	
+
 	public void setSospeso(boolean sospeso) {
 		this.sospeso = sospeso;
+	}
+
+	public ArrayList<Annuncio> getAnnunciUtente() {
+		return annunciUtente;
+	}
+
+	public void setAnnunciUtente(ArrayList<Annuncio> annunciUtente) {
+		this.annunciUtente = annunciUtente;
+	}
+
+	public ArrayList<Offerta> getOfferteUtente() {
+		return offerteUtente;
+	}
+
+	public void setOfferteUtente(ArrayList<Offerta> offerteUtente) {
+		this.offerteUtente = offerteUtente;
 	}
 }

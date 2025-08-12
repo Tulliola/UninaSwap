@@ -94,10 +94,9 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 						rs.getString("username"),
 						rs.getString("email"),
 						rs.getDouble("saldo"),
-						rs.getString("residenza"),
 						rs.getBytes("immagine_profilo"),
+						rs.getString("residenza"),
 						rs.getString("PW"),
-						rs.getDate("data_sospensione"),
 						rs.getBoolean("sospeso")
 				);
 			}

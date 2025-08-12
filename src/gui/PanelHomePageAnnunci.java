@@ -25,8 +25,8 @@ import javax.swing.border.EmptyBorder;
 
 
 import dto.Annuncio;
-import dto.AnnuncioRegalo;
-import dto.AnnuncioScambio;
+//import dto.AnnuncioRegalo;
+//import dto.AnnuncioScambio;
 import utilities.MyJButton;
 
 import utilities.MyJLabel;
@@ -51,12 +51,13 @@ public class PanelHomePageAnnunci extends JPanel{
 //		prova.setLayout(new BoxLayout(prova, BoxLayout.Y_AXIS));
 		prova.setLayout(new FlowLayout());
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < annunci.size(); i++) {
 //			MyJLabel label = new MyJLabel("Annuncio "+i);
 //			label.setAlignmentX(LEFT_ALIGNMENT);
 //			label.setPreferredSize(new Dimension(100, 300));
 //			label.setMaximumSize(new Dimension(100, 300));
-			MyJPanel annuncioCorrente = creaPanelAnnuncio();
+			System.out.println(annunci.get(i).getNome());
+			MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
 			
 			prova.add(annuncioCorrente);
 
@@ -158,27 +159,27 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.add(Box.createVerticalGlue());
 	}
 	
-	private MyJPanel creaPanelAnnuncio() {
-		MyJPanel annuncio = new MyJPanel();
-		annuncio.setLayout(new BorderLayout());
-		annuncio.setPreferredSize(new Dimension(800, 600));
-		annuncio.setMaximumSize(new Dimension(800, 600));
+	private MyJPanel creaPanelAnnuncio(Annuncio annuncio) {
+		MyJPanel annuncioPanel = new MyJPanel();
+		annuncioPanel.setLayout(new BorderLayout());
+		annuncioPanel.setPreferredSize(new Dimension(800, 600));
+		annuncioPanel.setMaximumSize(new Dimension(800, 600));
 		
 		MyJPanel panelInfoEFotoOggetto = new MyJPanel();
 		panelInfoEFotoOggetto.setLayout(new BorderLayout());
 		panelInfoEFotoOggetto.add(this.creaPanelFotoOggetto(), BorderLayout.NORTH);
 		panelInfoEFotoOggetto.add(this.creaPanelInfoOggetto(), BorderLayout.CENTER);
 		
-		annuncio.add(panelInfoEFotoOggetto, BorderLayout.WEST);
+		annuncioPanel.add(panelInfoEFotoOggetto, BorderLayout.WEST);
 		
 		MyJPanel panelInfoAnnuncio = new MyJPanel();
 		panelInfoAnnuncio.setLayout(new BorderLayout());
-		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(), BorderLayout.NORTH);
-		panelInfoAnnuncio.add(this.creaPanelTipoAnnuncio(), BorderLayout.CENTER);
+		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(annuncio), BorderLayout.NORTH);
+		panelInfoAnnuncio.add(this.creaPanelTipoAnnuncio(annuncio), BorderLayout.CENTER);
 
-		annuncio.add(panelInfoAnnuncio, BorderLayout.CENTER);
+		annuncioPanel.add(panelInfoAnnuncio, BorderLayout.CENTER);
 		
-		return annuncio;
+		return annuncioPanel;
 	}
 	
 	private MyJPanel creaPanelFotoOggetto() {
@@ -213,7 +214,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelInfoOggetto;
 	}
 	
-	private MyJPanel creaPanelUsernamePubblicante() {
+	private MyJPanel creaPanelUsernamePubblicante(Annuncio annuncio) {
 		MyJPanel panelUsernamePubblicante = new MyJPanel();
 		panelUsernamePubblicante.setLayout(new BoxLayout(panelUsernamePubblicante, BoxLayout.Y_AXIS));
 		panelUsernamePubblicante.setPreferredSize(new Dimension(550, 75));
@@ -221,7 +222,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelUsernamePubblicante.setAlignmentX(CENTER_ALIGNMENT);
 		
 		
-		MyJLabel lblUsername = new MyJLabel("Username");
+		MyJLabel lblUsername = new MyJLabel(annuncio.getUtenteProprietario().getUsername());
 		lblUsername.setAlignmentX(RIGHT_ALIGNMENT);
 		
 		panelUsernamePubblicante.add(Box.createVerticalGlue());
@@ -233,27 +234,28 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelUsernamePubblicante;
 	}
 	
-	private MyJPanel creaPanelTipoAnnuncio() {
+	private MyJPanel creaPanelTipoAnnuncio(Annuncio annuncio) {
 		MyJPanel panelTipoAnnuncio = new MyJPanel();
 		panelTipoAnnuncio.setLayout(new BoxLayout(panelTipoAnnuncio, BoxLayout.Y_AXIS));
 		panelTipoAnnuncio.setPreferredSize(new Dimension(550, 570));
 		panelTipoAnnuncio.setMaximumSize(new Dimension(550, 570));
 		panelTipoAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
 		
-		MyJLabel lblNomeAnnuncio = new MyJLabel("Nome annuncio");
+		MyJLabel lblNomeAnnuncio = new MyJLabel(annuncio.getNome());
 		lblNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
 		
-		MyJLabel lblTipoAnnuncio = new MyJLabel("Tipo annuncio");
-		lblTipoAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+//		MyJLabel lblTipoAnnuncio = new MyJLabel();
+//		lblTipoAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		MyJLabel lblNotaScambio = new MyJLabel(annuncio.getNotaScambio());
+		if(annuncio.getNotaScambio() != null) {
+			lblNotaScambio.setAlignmentX(LEFT_ALIGNMENT);
+		}
 		
-		MyJLabel lblNotaScambio = new MyJLabel("Nota scambio");
-		lblNotaScambio.setAlignmentX(LEFT_ALIGNMENT);
-		
-		MyJLabel lblDescrizione = new MyJLabel("Descrizione oggetto");
+		MyJLabel lblDescrizione = new MyJLabel(annuncio.getOggettoInAnnuncio().getDescrizione());
 		lblDescrizione.setAlignmentX(LEFT_ALIGNMENT);
 		
 		panelTipoAnnuncio.add(lblNomeAnnuncio);
-		panelTipoAnnuncio.add(lblTipoAnnuncio);
+//		panelTipoAnnuncio.add(lblTipoAnnuncio);
 		panelTipoAnnuncio.add(lblDescrizione);
 		panelTipoAnnuncio.add(lblNotaScambio);
 		

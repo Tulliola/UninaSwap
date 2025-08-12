@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import javax.swing.*;
@@ -217,7 +219,11 @@ public class FrameDiLogin extends MyJFrame {
 			registratiButton.setFocusable(true);
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
 			resettaBordiTextField(emailTextField, passwordField);
-			clickAccedi();
+			try {
+				clickAccedi();
+			} catch (IOException e) {
+				
+			}
 		});
 		
 		accediButton.setPreviousComponent(passwordField);
@@ -279,7 +285,7 @@ public class FrameDiLogin extends MyJFrame {
 	}
 	
 	//Istruzioni da eseguire quando l'utente clicca "Accedi"
-	private void clickAccedi() {
+	private void clickAccedi() throws IOException {
 		try {
 			checkDatiAccesso();
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
@@ -307,7 +313,7 @@ public class FrameDiLogin extends MyJFrame {
 			lblErroreComunicazioneColDB.setVisible(true);
 		}
 		catch(SQLException e) {
-			System.out.print(e.getMessage());
+            e.printStackTrace();
 			lblErroreComunicazioneColDB.setText("Errore nella comunicazione col database");
 			lblErroreComunicazioneColDB.setVisible(true);
 		}
