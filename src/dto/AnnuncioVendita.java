@@ -16,6 +16,14 @@ public class AnnuncioVendita extends Annuncio {
 				oggettoInAnnuncio);
 		this.prezzoIniziale = prezzoIniziale;
 	}
+	
+	public AnnuncioVendita(boolean spedizione, boolean ritiroInPosta, boolean incontro,
+			StatoAnnuncioEnum stato, String nome, ProfiloUtente utenteProprietario,
+			Oggetto oggettoInAnnuncio, double prezzoIniziale) {
+		super(spedizione, ritiroInPosta, incontro, stato, nome, utenteProprietario,
+				oggettoInAnnuncio);
+		this.prezzoIniziale = prezzoIniziale;
+	}
 
 	@Override
 	public double getPrezzoIniziale() {

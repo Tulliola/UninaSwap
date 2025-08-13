@@ -19,9 +19,9 @@ public enum CategoriaEnum {
 		this.categoria = categoria;
 	}
 	
-	public static CategoriaEnum confrontaConDB(String valoreCategoriaDB){
+	public static CategoriaEnum confrontaConStringa(String valoreCategoria){
 		for(CategoriaEnum c : values()) {
-			if(c.categoria.equals(valoreCategoriaDB))
+			if(c.categoria.equals(valoreCategoria))
 				return c;
 		}
 		throw new IllegalArgumentException("Valore non presente nel database");

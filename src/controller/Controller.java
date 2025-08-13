@@ -41,11 +41,11 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
-	
-//		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
-//		framePubblicaAnnuncio.setVisible(true);
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
+
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "vendita");
+		framePubblicaAnnuncio.setVisible(true);
 		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
@@ -122,9 +122,9 @@ public class Controller {
 		
 	}
 
-	public void passaAFramePubblicaAnnuncio() {
+	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
 		frameHomePage.dispose();
-		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this);
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare);
 		framePubblicaAnnuncio.setVisible(true);
 	}
 
@@ -175,5 +175,15 @@ public class Controller {
 	public void onSalvaModificheButtonClickedAggiornaResidenza(String newResidenza) throws SQLException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, utenteLoggato);
 		profiloDAO.aggiornaResidenzaUtente(utenteLoggato.getEmail(), newResidenza);
+	}
+	
+	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
+		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+		
+		
+	}
+	
+	public ProfiloUtente getUtenteLoggato() {
+		return utenteLoggato;
 	}
 }

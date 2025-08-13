@@ -15,7 +15,7 @@ public enum CondizioneEnum {
 		this.condizioni = condizioni;
 	}
 	
-	public static CondizioneEnum confrontaConDB(String condizioni) {
+	public static CondizioneEnum confrontaConStringa(String condizioni) {
 		for(CondizioneEnum c : values()) {
 			if(c.condizioni.equals(condizioni)) {
 				return c;

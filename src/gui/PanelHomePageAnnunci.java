@@ -45,6 +45,7 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	public PanelHomePageAnnunci(Controller controller, ArrayList<Annuncio> annunci) {
 		mainController = controller;
+		
 		this.setLayout(new BorderLayout());
 		
 		this.settaBordoSuperiore();
@@ -144,21 +145,44 @@ public class PanelHomePageAnnunci extends JPanel{
 	}
 	
 	private void settaBordoInferiore() {
-		bordoInferiore.setLayout(new BoxLayout(bordoInferiore, BoxLayout.Y_AXIS));
+		bordoInferiore.setLayout(new BoxLayout(bordoInferiore, BoxLayout.X_AXIS));
 		bordoInferiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoInferiore.setPreferredSize(new Dimension(500, 100));
 		bordoInferiore.setBackground(new Color(220, 220, 220));	
 		
-		MyJButton bottonePubblicaAnnuncio = new MyJButton("Pubblica un nuovo annuncio");
-		bottonePubblicaAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
-		bottonePubblicaAnnuncio.setPreferredSize(new Dimension(300, 50));
+		MyJButton bottonePubblicaAnnuncioVendita = new MyJButton("Pubblica un nuovo annuncio di vendita");
+		bottonePubblicaAnnuncioVendita.setAlignmentX(CENTER_ALIGNMENT);
+		bottonePubblicaAnnuncioVendita.setPreferredSize(new Dimension(400, 75));
+		bottonePubblicaAnnuncioVendita.setMaximumSize(new Dimension(400, 75));
+		bottonePubblicaAnnuncioVendita.setDefaultAction(() -> {mainController.passaAFramePubblicaAnnuncio("Vendita");});
+		bottonePubblicaAnnuncioVendita.setUpAction(() -> {});
+		bottonePubblicaAnnuncioVendita.setDownAction(() -> {});
 		
-		bottonePubblicaAnnuncio.setDefaultAction(() -> {mainController.passaAFramePubblicaAnnuncio();});
-		bottonePubblicaAnnuncio.setUpAction(() -> {});
-		bottonePubblicaAnnuncio.setDownAction(() -> {});
+		MyJButton bottonePubblicaAnnuncioScambio = new MyJButton("Pubblica un nuovo annuncio di scambio");
+		bottonePubblicaAnnuncioScambio.setAlignmentX(CENTER_ALIGNMENT);
+		bottonePubblicaAnnuncioScambio.setPreferredSize(new Dimension(400, 75));
+		bottonePubblicaAnnuncioScambio.setMaximumSize(new Dimension(400, 75));
+		bottonePubblicaAnnuncioScambio.setDefaultAction(() -> {mainController.passaAFramePubblicaAnnuncio("Scambio");});
+		bottonePubblicaAnnuncioScambio.setUpAction(() -> {});
+		bottonePubblicaAnnuncioScambio.setDownAction(() -> {});
+		
+		MyJButton bottonePubblicaAnnuncioRegalo = new MyJButton("Pubblica un nuovo annuncio di regalo");
+		bottonePubblicaAnnuncioRegalo.setAlignmentX(CENTER_ALIGNMENT);
+		bottonePubblicaAnnuncioRegalo.setPreferredSize(new Dimension(400, 75));
+		bottonePubblicaAnnuncioRegalo.setMaximumSize(new Dimension(400, 75));
+
+		bottonePubblicaAnnuncioRegalo.setDefaultAction(() -> {mainController.passaAFramePubblicaAnnuncio("Regalo");});
+		bottonePubblicaAnnuncioRegalo.setUpAction(() -> {});
+		bottonePubblicaAnnuncioRegalo.setDownAction(() -> {});
 		
 		bordoInferiore.add(Box.createVerticalGlue());
-		bordoInferiore.add(bottonePubblicaAnnuncio);
+		bordoInferiore.add(Box.createHorizontalGlue());
+		bordoInferiore.add(bottonePubblicaAnnuncioVendita);
+		bordoInferiore.add(Box.createHorizontalGlue());
+		bordoInferiore.add(bottonePubblicaAnnuncioScambio);
+		bordoInferiore.add(Box.createHorizontalGlue());
+		bordoInferiore.add(bottonePubblicaAnnuncioRegalo);
+		bordoInferiore.add(Box.createHorizontalGlue());
 		bordoInferiore.add(Box.createVerticalGlue());
 	}
 	

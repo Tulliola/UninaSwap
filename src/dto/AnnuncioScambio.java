@@ -16,6 +16,14 @@ public class AnnuncioScambio extends Annuncio {
 				oggettoInAnnuncio);
 		this.notaScambio = notaScambio;
 	}
+	
+	public AnnuncioScambio(boolean spedizione, boolean ritiroInPosta, boolean incontro,
+			StatoAnnuncioEnum stato, String nome, ProfiloUtente utenteProprietario,
+			Oggetto oggettoInAnnuncio, String notaScambio) {
+		super(spedizione, ritiroInPosta, incontro, stato, nome, utenteProprietario,
+				oggettoInAnnuncio);
+		this.notaScambio = notaScambio;
+	}
 
 	@Override
 	public String getNotaScambio() {

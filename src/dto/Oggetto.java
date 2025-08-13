@@ -25,6 +25,14 @@ public class Oggetto {
 		this.immagini[0] = immagine;
 		this.disponibile = disponibile;
 	}
+	
+	public Oggetto(CategoriaEnum cateogria, CondizioneEnum condizioni, byte[] immagine,
+			boolean disponibile) {
+		this.cateogria = cateogria;
+		this.condizioni = condizioni;
+		this.immagini[0] = immagine;
+		this.disponibile = disponibile;
+	}
 
 	public void aggiungiImmagine(int index, byte[] immagine) {
 		this.immagini[index] = immagine;

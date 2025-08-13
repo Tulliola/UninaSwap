@@ -10,11 +10,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	
@@ -22,6 +26,8 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	private Runnable onMouseEnteredAction;
 	private Runnable onMouseExitedAction;
 	private Runnable onMouseClickedAction;
+	
+	private byte[] immagineInByte;
 	
 	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
 	public static final Border redBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.RED, 2), new EmptyBorder(0, 5, 0, 0));
@@ -148,7 +154,47 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		
 		this.setIcon(resizeResult);
 	}
+	
+	public void aggiungiImmagineScalata(ImageIcon immagine, int larghezza, int altezza, boolean isCliccabile) {
+		Image resizedImage = immagine.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
+		ImageIcon resizeResult = new ImageIcon(resizedImage);
+		
+		if(isCliccabile)
+			this.aggiungiEffettoCliccabilitaPerImmagine();
+		
+		this.setIcon(resizeResult);
+	}
 
+	public boolean aggiungiImmagineDaFileSystem() {
+		JFileChooser scelta = new JFileChooser();
+	    FileNameExtensionFilter filtro = new FileNameExtensionFilter(
+	        "JPG & PNG", "jpg", "png");
+	    scelta.setFileFilter(filtro);
+	    int returnVal = scelta.showOpenDialog(this.getParent());
+	    if(returnVal == JFileChooser.APPROVE_OPTION) {
+	    	File fileSelezionato = scelta.getSelectedFile();
+	    	
+	    	try {
+	    		byte[] fileInByte = this.trasformaImmagineInArrayDiByte(fileSelezionato.getAbsolutePath());
+	    		this.aggiungiImmagineScalata(fileInByte, 375, 500, false);
+	    		immagineInByte = fileInByte;
+	    		return true;
+	    	}
+	    	catch(IOException exc) {
+	    		exc.printStackTrace();
+	    	}
+	    }
+	    return false;
+	}
+	
+	public byte[] trasformaImmagineInArrayDiByte(String filePath) throws IOException {
+        return Files.readAllBytes(new File(filePath).toPath());
+    }
+	
+	public byte[] getImmagineInByte() {
+		return immagineInByte;
+	}
+	
 	public void rendiLabelInteragibile() {
 		this.addMouseListener(this);
 	}

@@ -133,12 +133,18 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+		int tastoDigitato = e.getKeyCode();
+		
+		if(tastoDigitato == KeyEvent.VK_ENTER)
 			defaultAction.run();
-		else if(e.getKeyCode() == KeyEvent.VK_UP)
+		else if(tastoDigitato == KeyEvent.VK_UP)
 			upAction.run();
-		else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+		else if(tastoDigitato == KeyEvent.VK_DOWN)
 			downAction.run();
+		else if(tastoDigitato != KeyEvent.VK_0 || tastoDigitato != KeyEvent.VK_1 || tastoDigitato != KeyEvent.VK_2 || tastoDigitato != KeyEvent.VK_3 || 
+				tastoDigitato != KeyEvent.VK_4 || tastoDigitato != KeyEvent.VK_5 || tastoDigitato != KeyEvent.VK_6 || tastoDigitato != KeyEvent.VK_7 || 
+				tastoDigitato != KeyEvent.VK_8 || tastoDigitato != KeyEvent.VK_9 || tastoDigitato != KeyEvent.VK_PERIOD)
+			keyTypedAction.run();
 	}
 
 	@Override

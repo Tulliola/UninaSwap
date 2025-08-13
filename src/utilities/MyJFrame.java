@@ -18,13 +18,30 @@ public class MyJFrame extends JFrame {
 		labelInput.setVisible(true);
 	}
 	
+	public void settaLabelETextAreaDiErrore(MyJLabel labelInput, String messaggioDiErrore, JTextArea textAInput) {
+		labelInput.setText(messaggioDiErrore);
+		textAInput.setBorder(redBorder);
+		labelInput.setVisible(true);
+	}
+	
 	public void nascondiLabelErrore(JLabel... labelsDiErrore) {
 		for(JLabel labelAttuale: labelsDiErrore)
 			labelAttuale.setVisible(false);
 	}
 	
+	public void nascondiPanelErrore(JPanel... panelsDiErrore) {
+		for(JPanel panelAttuale: panelsDiErrore)
+			panelAttuale.setVisible(false);
+	}
+
 	public void resettaBordiTextField(JTextField... textFields) {
 		for(JTextField textFieldAttuale: textFields)
 			textFieldAttuale.setBorder(blackBorder);
 	}
+	
+	public void resettaBordiTextA(JTextArea... textAreas) {
+		for(JTextArea textAreaAttuale: textAreas)
+			textAreaAttuale.setBorder(blackBorder);
+	}
+	
 }

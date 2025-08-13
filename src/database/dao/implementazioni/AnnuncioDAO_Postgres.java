@@ -89,8 +89,8 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				rsOggetto.next();
 				return new Oggetto(
 						rsOggetto.getInt("idOggetto"),
-						CategoriaEnum.confrontaConDB(rsOggetto.getString("Categoria")),
-						CondizioneEnum.confrontaConDB(rsOggetto.getString("Condizioni")),
+						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
+						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
 						imageBytes,
 						isOggettoDisponibile(rsOggetto)
 					);

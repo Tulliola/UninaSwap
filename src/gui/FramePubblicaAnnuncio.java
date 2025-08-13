@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -18,6 +19,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -26,34 +28,101 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
+import dto.ProfiloUtente;
+import eccezioni.DescrizioneException;
+import eccezioni.FotoException;
+import eccezioni.ModalitaDiConsegnaException;
+import eccezioni.NomeAnnuncioException;
+import eccezioni.NotaScambioException;
+import utilities.CategoriaEnum;
+import utilities.CondizioneEnum;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
+import utilities.StatoAnnuncioEnum;
+import dto.Oggetto;
+import dto.Annuncio;
+import dto.AnnuncioRegalo;
+import dto.AnnuncioScambio;
+import dto.AnnuncioVendita;
 
 public class FramePubblicaAnnuncio extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	private Controller mainController;
+	private String tipoAnnuncio;
 	
 	private MyJPanel contentPane = new MyJPanel();
 	private MyJPanel panelAggiungiFoto = new MyJPanel();
 	private MyJPanel panelDettagliIncontri;
+	private MyJPanel panelNomeAnnuncio;
+	private MyJPanel panelCentrale;
+	private MyJPanel panelInserimentoDati;
 	
-	private JComboBox sediUniversita = new JComboBox();
+	//Panels di errore
+	private MyJPanel panelErroreNomeAnnuncio = new MyJPanel();
+	private MyJPanel panelErroreDescrizione = new MyJPanel();
+	private MyJPanel panelErroreNotaScambio = new MyJPanel();
+	private MyJPanel panelErrorePrezzoIniziale = new MyJPanel();
+	private MyJPanel panelErroreModalitaDiConsegna = new MyJPanel();
+	private MyJPanel panelErroreFoto = new MyJPanel();
 	
 	private int numeroIncontri = 1;
+	private MyJButton bottoneTornaIndietro;
+	private MyJButton bottonePubblicaAnnuncio;
 	
-	public FramePubblicaAnnuncio(Controller controller) {
+	//CheckBoxes
+	private JCheckBox spedizioneCheckBox;
+	private JCheckBox ritiroInPostaCheckBox;
+	private JCheckBox incontroCheckBox;
+	
+	//ComboBoxes
+	private JComboBox sediUniversita = new JComboBox();
+	private JComboBox categorieOggetto;
+	private JComboBox condizioniOggetto;
+	
+	//TextFields
+	private MyJTextField nomeAnnuncioTextField;
+	private MyJTextField prezzoInizialeTextField;
+	
+	//TextAreas
+	private JTextArea inserisciDescrizioneTextA;
+	private JTextArea inserisciNotaScambioTextA;
+	
+	
+	//Labels di errore
+	private MyJLabel lblErroreDescrizione;
+	private MyJLabel lblErroreNotaScambio;
+	private MyJLabel lblErroreNomeAnnuncio;
+	private MyJLabel lblErroreModalitaConsegna;
+	private MyJLabel lblErroreFoto;
+	
+	//Flag per immagini
+	private boolean foto1Caricata;
+	private boolean foto2Caricata;
+	private boolean foto3Caricata;
+	
+	//Labels per le immagini
+	private MyJLabel aggiungiFoto1;
+	private MyJLabel aggiungiFoto2;
+	private MyJLabel aggiungiFoto3;
+	
+	public FramePubblicaAnnuncio(Controller controller, String tipoAnnuncioDaPubblicare) {
+		tipoAnnuncio = tipoAnnuncioDaPubblicare;
 		mainController = controller;
 		
 		this.settaContentPane();
@@ -62,19 +131,25 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private void settaContentPane() {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
-		this.setTitle("Pubblica il tuo annuncio");
+		this.setTitle("Pubblica ora il tuo nuovo annuncio di "+tipoAnnuncio.toLowerCase()+"!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		contentPane.setLayout(new BorderLayout());
+		
+		MyJPanel scrittaUninaSwap = new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(Integer.MAX_VALUE, 50));
+		scrittaUninaSwap.add(new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 25), Color.white));
+		
+		contentPane.add(scrittaUninaSwap, BorderLayout.NORTH);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.WEST);
 		contentPane.add(this.creaPanelCentrale(), BorderLayout.CENTER);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.EAST);
+		contentPane.add(new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(Integer.MAX_VALUE, 25)), BorderLayout.SOUTH);
 
 		this.setContentPane(contentPane);
 	}
 	
 	private JScrollPane creaPanelCentrale() {
-		MyJPanel panelCentrale = new MyJPanel();
+		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
 		panelCentrale.setPreferredSize(new Dimension(375, 4000));
@@ -82,7 +157,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		this.creaPanelAggiungiFoto();
 		
-		MyJTextField nomeAnnuncioTextField = new MyJTextField("Dai un nome al tuo annuncio!");
+		nomeAnnuncioTextField = new MyJTextField("Dai un nome al tuo annuncio!");
 		nomeAnnuncioTextField.rendiTextFieldFocusable();
 		
 		nomeAnnuncioTextField.setFocusGainedAction(() -> {
@@ -107,12 +182,39 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		nomeAnnuncioTextField.setForeground(Color.black);
 		nomeAnnuncioTextField.setPreferredSize(new Dimension(1225, 40));
 		nomeAnnuncioTextField.setOpaque(true);
-		nomeAnnuncioTextField.setBackground(Color.LIGHT_GRAY);
+		nomeAnnuncioTextField.setBackground(Color.white);
 		nomeAnnuncioTextField.setMaximumSize(new Dimension(1225, 40));
-		nomeAnnuncioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
+		nomeAnnuncioTextField.setBorder(blackBorder);
+		
+		lblErroreNomeAnnuncio = new MyJLabel(true);
+		lblErroreNomeAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErroreNomeAnnuncio.setText("VAMOOOOOOOS");
+		lblErroreNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
+		lblErroreNomeAnnuncio.setVisible(true);
+		lblErroreNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		
+		MyJPanel panelNomeAnnuncio = new MyJPanel();
+		panelNomeAnnuncio.setPreferredSize(new Dimension(1225, 60));
+		panelNomeAnnuncio.setMaximumSize(new Dimension(1225, 60));
+		panelNomeAnnuncio.setLayout(new BorderLayout());
+		panelNomeAnnuncio.setBackground(Color.white);
+		
+		MyJPanel panelSuperiore = new MyJPanel();
+		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
+		panelSuperiore.setBackground(Color.white);
+		panelSuperiore.add(nomeAnnuncioTextField);
+		
+		panelErroreNomeAnnuncio = new MyJPanel();
+		panelErroreNomeAnnuncio.setLayout(new BoxLayout(panelErroreNomeAnnuncio, BoxLayout.X_AXIS));
+		panelErroreNomeAnnuncio.add(lblErroreNomeAnnuncio);
+		panelErroreNomeAnnuncio.setBackground(Color.white);
+		panelErroreNomeAnnuncio.setVisible(false);
+		
+		panelNomeAnnuncio.add(panelSuperiore, BorderLayout.NORTH);
+		panelNomeAnnuncio.add(panelErroreNomeAnnuncio, BorderLayout.CENTER);
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelCentrale.add(nomeAnnuncioTextField);
+		panelCentrale.add(panelNomeAnnuncio);
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(panelAggiungiFoto);
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -121,65 +223,155 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		
 		JScrollPane scrollPane = new JScrollPane(panelCentrale);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 
 		return scrollPane;
 	}
-	
+
 	private MyJPanel creaPanelAggiungiFoto() {
 		panelAggiungiFoto = new MyJPanel();
-		panelAggiungiFoto.setLayout(new FlowLayout());
-		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 500));
-		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 500));
+		panelAggiungiFoto.setLayout(new BorderLayout());
+		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 600));
+		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 600));
 		
-		MyJPanel panelFoto1 = new MyJPanel(Color.red, new Dimension(375, 500));
+		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
+		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
+		MyJLabel lblAggiungiFoto = new MyJLabel("Carica fino ad un massimo di 3 foto! (Si consiglia la risoluzione 3:4)");
+		lblAggiungiFoto.setFont(new Font("Ubuntu Sans", Font.BOLD, 30));
+		lblAggiungiFoto.setForeground(Color.white);
+		lblAggiungiFoto.setAlignmentX(LEFT_ALIGNMENT);
+		lblAggiungiFoto.setBorder(new EmptyBorder(0, 10, 0, 0));
+		panelSuperiore.add(lblAggiungiFoto);
+		panelSuperiore.setAlignmentX(LEFT_ALIGNMENT);
+		
+		MyJPanel panelContieniFoto = new MyJPanel();
+		panelContieniFoto.setLayout(new FlowLayout());
+		panelContieniFoto.setBackground(MyJPanel.uninaLightColor);
+		
+		
+		MyJPanel panelFoto1 = new MyJPanel(Color.white, new Dimension(375, 500));
 		panelFoto1.setMaximumSize(new Dimension(375, 500));
+		panelFoto1.setLayout(new BoxLayout(panelFoto1, BoxLayout.Y_AXIS));
+		panelFoto1.setAlignmentX(CENTER_ALIGNMENT);
+		aggiungiFoto1 = new MyJLabel();
+		aggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		aggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
+		panelFoto1.add(Box.createVerticalGlue());
+		panelFoto1.add(Box.createHorizontalGlue());
+		panelFoto1.add(aggiungiFoto1);
+		panelFoto1.add(Box.createHorizontalGlue());
+		panelFoto1.add(Box.createVerticalGlue());
 		
-		MyJPanel panelFoto2 = new MyJPanel(Color.green, new Dimension(375, 500));
+		aggiungiFoto1.rendiLabelInteragibile();
+		aggiungiFoto1.setOnMouseClickedAction(() -> {foto1Caricata = aggiungiFoto1.aggiungiImmagineDaFileSystem();});
+		aggiungiFoto1.setOnMouseEnteredAction(() -> {});
+		aggiungiFoto1.setOnMouseExitedAction(() -> {});
+
+		MyJPanel panelFoto2 = new MyJPanel(Color.white, new Dimension(375, 500));
+		panelFoto2.setLayout(new BoxLayout(panelFoto2, BoxLayout.Y_AXIS));
+		panelFoto2.setAlignmentX(CENTER_ALIGNMENT);
+		aggiungiFoto2 = new MyJLabel();
+		aggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		aggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
+		panelFoto2.add(Box.createVerticalGlue());
+		panelFoto2.add(Box.createHorizontalGlue());
+		panelFoto2.add(aggiungiFoto2);
+		panelFoto2.add(Box.createHorizontalGlue());
+		panelFoto2.add(Box.createVerticalGlue());
 		panelFoto2.setMaximumSize(new Dimension(375, 500));
 		
-		MyJPanel panelFoto3 = new MyJPanel(Color.blue, new Dimension(375, 500));
+		aggiungiFoto2.rendiLabelInteragibile();
+		aggiungiFoto2.setOnMouseClickedAction(() -> {foto2Caricata = aggiungiFoto2.aggiungiImmagineDaFileSystem();});
+		aggiungiFoto2.setOnMouseEnteredAction(() -> {});
+		aggiungiFoto2.setOnMouseExitedAction(() -> {});
+		
+		MyJPanel panelFoto3 = new MyJPanel(Color.white, new Dimension(375, 500));
+		panelFoto3.setLayout(new BoxLayout(panelFoto3, BoxLayout.Y_AXIS));
+		panelFoto3.setAlignmentX(CENTER_ALIGNMENT);
+		aggiungiFoto3 = new MyJLabel();
+		aggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		aggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
+		panelFoto3.add(Box.createVerticalGlue());
+		panelFoto3.add(Box.createHorizontalGlue());
+		panelFoto3.add(aggiungiFoto3);
+		panelFoto3.add(Box.createHorizontalGlue());
+		panelFoto3.add(Box.createVerticalGlue());
 		panelFoto3.setMaximumSize(new Dimension(375, 500));
 		
-		panelAggiungiFoto.add(panelFoto1);
-		panelAggiungiFoto.add(panelFoto2);
-		panelAggiungiFoto.add(panelFoto3);
+		aggiungiFoto3.rendiLabelInteragibile();
+		aggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = aggiungiFoto3.aggiungiImmagineDaFileSystem();});
+		aggiungiFoto3.setOnMouseEnteredAction(() -> {});
+		aggiungiFoto3.setOnMouseExitedAction(() -> {});
+		
+		panelContieniFoto.add(panelFoto1);
+		panelContieniFoto.add(panelFoto2);
+		panelContieniFoto.add(panelFoto3);
+		
+		panelErroreFoto.setPreferredSize(new Dimension(1225, 30));
+		panelErroreFoto.setMaximumSize(new Dimension(1225, 30));
+		panelErroreFoto.setBackground(MyJPanel.uninaLightColor);
+		panelErroreFoto.setLayout(new BoxLayout(panelErroreFoto, BoxLayout.X_AXIS));
+		panelErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
+		panelErroreFoto.setVisible(false);
+
+		lblErroreFoto = new MyJLabel(true);
+		lblErroreFoto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErroreFoto.setVisible(true);
+		lblErroreFoto.setBorder(new EmptyBorder(0, 10, 0, 0));
+		lblErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
+		panelErroreFoto.add(lblErroreFoto);
+		
+		panelAggiungiFoto.add(panelSuperiore, BorderLayout.NORTH);
+		panelAggiungiFoto.add(panelContieniFoto, BorderLayout.CENTER);
+		panelAggiungiFoto.add(panelErroreFoto, BorderLayout.SOUTH);
 		
 		return panelAggiungiFoto;
 	}
 	
 	private MyJPanel creaPanelInserimentoDati() {
-		MyJPanel panelInserimentoDati = new MyJPanel();
+		panelInserimentoDati = new MyJPanel();
 		panelInserimentoDati.setBackground(Color.white);
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
 		panelInserimentoDati.setPreferredSize(new Dimension(1225, 4000));
 		panelInserimentoDati.setMaximumSize(new Dimension(1225, 4000));
 
-		JTextArea inserisciDescrizioneTextA = new JTextArea();
+		inserisciDescrizioneTextA = new JTextArea();
 		this.settaTextArea(inserisciDescrizioneTextA);
 		String stringaDiDefaultPerDescrizione = "Dai una descrizione accurata dell'oggetto che stai vendendo. L'acquirente deve avere ben chiaro cosa starà acquistando!";
+		lblErroreDescrizione = new MyJLabel(true);
 		
-		JTextArea inserisciNotaScambioTextA = new JTextArea();
+		inserisciNotaScambioTextA = new JTextArea();
 		this.settaTextArea(inserisciNotaScambioTextA);
 		String stringaDiDefaultPerNotaScambio = "Sii preciso in quello che richiedi!";
+		lblErroreNotaScambio = new MyJLabel(true);
 		
-		MyJTextField prezzoInizialeTextField = new MyJTextField();
+		prezzoInizialeTextField = new MyJTextField();
 		prezzoInizialeTextField.setPreferredSize(new Dimension(300, 30));
 		prezzoInizialeTextField.setMaximumSize(new Dimension(300, 30));
 		
-		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", inserisciDescrizioneTextA.getPreferredSize(), inserisciDescrizioneTextA, stringaDiDefaultPerDescrizione));
+		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
+				lblErroreDescrizione, panelErroreDescrizione));
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelCategoria());
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelCondizioni());
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
-		panelInserimentoDati.add(this.creaPanelTextArea("Indica gli oggetti con cui scambieresti il tuo articolo!", inserisciNotaScambioTextA.getPreferredSize(), 
-				inserisciNotaScambioTextA, stringaDiDefaultPerNotaScambio));
-		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
-		panelInserimentoDati.add(this.creaPanelPrezzoIniziale("Indica un prezzo iniziale per il tuo articolo in vendita!", prezzoInizialeTextField));
-		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
+		
+		if(this.tipoAnnuncio.equals("Scambio")) {
+			panelInserimentoDati.add(this.creaPanelTextArea("Indica gli oggetti con cui scambieresti il tuo articolo!", stringaDiDefaultPerNotaScambio, 
+				inserisciNotaScambioTextA, lblErroreNotaScambio, panelErroreNotaScambio));
+			panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
+		}
+		
+		
+		if(this.tipoAnnuncio.equals("Vendita")) {
+			panelInserimentoDati.add(this.creaPanelPrezzoIniziale("Indica un prezzo iniziale per il tuo articolo in vendita!", prezzoInizialeTextField));
+			panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
+		}
+		
 		panelInserimentoDati.add(this.creaPanelDataScadenza());
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelModalitaConsegna());
@@ -191,7 +383,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		return panelInserimentoDati;
 	}
 	
-	private MyJPanel creaPanelTextArea(String stringaPerLabel, Dimension dimensionePrefissata, JTextArea componentToAdd, String stringaDiDefaultPerTextA) {
+	private MyJPanel creaPanelTextArea(String stringaPerLabel, String stringaDiDefaultPerTextA, JTextArea componentToAdd, MyJLabel lblDiErrore, MyJPanel panelDiErrore) {
 		MyJPanel panelGenerico = new MyJPanel();
 		panelGenerico.setLayout(new BorderLayout());
 		panelGenerico.setPreferredSize(new Dimension(1225, 400));
@@ -203,11 +395,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		lblGenerico.setAlignmentX(LEFT_ALIGNMENT);
 		lblGenerico.setBorder(new EmptyBorder(0, 10, 0, 0));
 		
-		MyJLabel lblDiErrore = new MyJLabel(true);
 		lblDiErrore.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblDiErrore.setVisible(true);
 		lblDiErrore.setBorder(new EmptyBorder(0, 10, 0, 0));
-		lblDiErrore.setText("Prova");
 		lblDiErrore.setAlignmentX(LEFT_ALIGNMENT);
 	
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
@@ -242,14 +432,17 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		scrollPaneTesto.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		panelCentrale.add(scrollPaneTesto, BorderLayout.CENTER);
 		
-		MyJPanel panelInferiore = new MyJPanel(new Color(220, 220, 220));
-		panelInferiore.setLayout(new BoxLayout(panelInferiore, BoxLayout.X_AXIS));
-		panelInferiore.add(lblDiErrore);
-		panelInferiore.setAlignmentX(LEFT_ALIGNMENT);
+		panelDiErrore.setPreferredSize(new Dimension(1225, 30));
+		panelDiErrore.setMaximumSize(new Dimension(1225, 30));
+		panelDiErrore.setBackground(MyJPanel.uninaLightColor);
+		panelDiErrore.setLayout(new BoxLayout(panelDiErrore, BoxLayout.X_AXIS));
+		panelDiErrore.add(lblDiErrore);
+		panelDiErrore.setAlignmentX(LEFT_ALIGNMENT);
+		panelDiErrore.setVisible(false);
 		
 		panelGenerico.add(panelSuperiore, BorderLayout.NORTH);
 		panelGenerico.add(panelCentrale, BorderLayout.CENTER);
-		panelGenerico.add(panelInferiore, BorderLayout.SOUTH);
+		panelGenerico.add(panelDiErrore, BorderLayout.SOUTH);
 		
 		return panelGenerico;
 	}
@@ -298,7 +491,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		JComboBox categorieOggetto = this.creaCBCategorieOggetto();
+		categorieOggetto = this.creaCBCategorieOggetto();
 		categorieOggetto.setSelectedIndex(0);
 		categorieOggetto.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(categorieOggetto);
@@ -338,7 +531,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		JComboBox condizioniOggetto = this.creaCBCondizioniOggetto();
+		condizioniOggetto = this.creaCBCondizioniOggetto();
 		condizioniOggetto.setSelectedIndex(0);
 		condizioniOggetto.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(condizioniOggetto);
@@ -380,19 +573,54 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerTextField.setBackground(MyJPanel.uninaLightColor);
 		textFieldIn.setAlignmentX(LEFT_ALIGNMENT);
 		textFieldIn.setFont(new Font("Ubuntu Sans", Font.BOLD, 25));
-		panelPerTextField.add(textFieldIn);
 		
 		panelCentrale.add(panelPerTextField);
 		
 		MyJPanel panelInferiore = new MyJPanel(new Color(220, 220, 220));
 		panelInferiore.setLayout(new BoxLayout(panelInferiore, BoxLayout.X_AXIS));
 		panelInferiore.setAlignmentX(LEFT_ALIGNMENT);
+		panelInferiore.setBackground(MyJPanel.uninaLightColor);
+		panelInferiore.setVisible(false);
 		MyJLabel lblDiErrore = new MyJLabel(true);
-		lblDiErrore.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblDiErrore.setVisible(true);
+		lblDiErrore.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblDiErrore.setBorder(new EmptyBorder(0, 10, 0, 0));
-		lblDiErrore.setText("Errore 3");
 		lblDiErrore.setAlignmentX(LEFT_ALIGNMENT);
+		
+		textFieldIn.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char carattereDigitato = e.getKeyChar();
+				
+				if(Character.isDigit(carattereDigitato)) {
+					int posizioneDiUnPunto = textFieldIn.getText().indexOf('.');
+					
+					if(posizioneDiUnPunto != -1 && textFieldIn.getText().length() - posizioneDiUnPunto > 2)
+						e.consume();
+					else {
+						panelInferiore.setVisible(false);
+						textFieldIn.settaBordiTextFieldStandard();
+					}
+				}
+				else if(carattereDigitato != '.'){
+					e.consume();
+					textFieldIn.settaBordiTextFieldErrore();
+					panelInferiore.setVisible(true);
+					lblDiErrore.setText("Formato non valido.");
+				}
+				else if(textFieldIn.getText().contains(".") || textFieldIn.getText().startsWith(".")) {
+					e.consume();
+					textFieldIn.settaBordiTextFieldErrore();
+					panelInferiore.setVisible(true);
+					lblDiErrore.setText("Formato non valido.");
+				}
+				else {
+					textFieldIn.settaBordiTextFieldStandard();
+					panelInferiore.setVisible(false);
+				}
+			}
+		});
+		panelPerTextField.add(textFieldIn);
 		panelInferiore.add(lblDiErrore);
 		
 		panelPrezzoIniziale.add(panelSuperiore, BorderLayout.NORTH);
@@ -480,13 +708,13 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerCheckBoxes.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerCheckBoxes.setBackground(MyJPanel.uninaLightColor);
 	
-		JCheckBox spedizioneCheckBox = new JCheckBox("Spedizione");
+		spedizioneCheckBox = new JCheckBox("Spedizione");
 		this.settaCheckBox(spedizioneCheckBox);
 		
-		JCheckBox ritiroInPostaCheckBox = new JCheckBox("Ritiro in posta");
+		ritiroInPostaCheckBox = new JCheckBox("Ritiro in posta");
 		this.settaCheckBox(ritiroInPostaCheckBox);
 		
-		JCheckBox incontroCheckBox = new JCheckBox("Incontro");
+		incontroCheckBox = new JCheckBox("Incontro");
 		this.settaCheckBox(incontroCheckBox);
 		incontroCheckBox.addActionListener(new ActionListener() {
 			@Override
@@ -505,20 +733,21 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	
 		panelCentrale.add(panelPerCheckBoxes, BorderLayout.CENTER);
 		
-		MyJPanel panelInferiore = new MyJPanel(new Color(220, 220, 220));
-		panelInferiore.setLayout(new BoxLayout(panelInferiore, BoxLayout.X_AXIS));
-		panelInferiore.setAlignmentX(LEFT_ALIGNMENT);
-		MyJLabel lblDiErrore = new MyJLabel(true);
-		lblDiErrore.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		lblDiErrore.setVisible(true);
-		lblDiErrore.setBorder(new EmptyBorder(0, 10, 0, 0));
-		lblDiErrore.setText("Errore 3");
-		lblDiErrore.setAlignmentX(LEFT_ALIGNMENT);
-		panelInferiore.add(lblDiErrore);
+		panelErroreModalitaDiConsegna.setLayout(new BoxLayout(panelErroreModalitaDiConsegna, BoxLayout.X_AXIS));
+		panelErroreModalitaDiConsegna.setBackground(MyJPanel.uninaLightColor);
+		panelErroreModalitaDiConsegna.setAlignmentX(LEFT_ALIGNMENT);
+		lblErroreModalitaConsegna = new MyJLabel(true);
+		lblErroreModalitaConsegna.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErroreModalitaConsegna.setVisible(true);
+		lblErroreModalitaConsegna.setBorder(new EmptyBorder(0, 10, 0, 0));
+		lblErroreModalitaConsegna.setText("Errore 3");
+		lblErroreModalitaConsegna.setAlignmentX(LEFT_ALIGNMENT);
+		panelErroreModalitaDiConsegna.add(lblErroreModalitaConsegna);
+		panelErroreModalitaDiConsegna.setVisible(false);
 			
 		panelModalitaConsegna.add(panelSuperiore, BorderLayout.NORTH);
 		panelModalitaConsegna.add(panelCentrale, BorderLayout.CENTER);
-		panelModalitaConsegna.add(panelInferiore, BorderLayout.SOUTH);
+		panelModalitaConsegna.add(panelErroreModalitaDiConsegna, BorderLayout.SOUTH);
 		
 		return panelModalitaConsegna;
 	}
@@ -538,6 +767,11 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			@Override
 			public void mouseExited(MouseEvent me) {
 				checkBoxIn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				panelErroreModalitaDiConsegna.setVisible(false);
 			}
 		});
 	}
@@ -849,19 +1083,148 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
-		MyJButton bottoneTornaIndietro = new MyJButton("Torna alla home page");
+		bottoneTornaIndietro = new MyJButton("Torna alla home page");
 		bottoneTornaIndietro.setPreferredSize(new Dimension(300, 100));
 		bottoneTornaIndietro.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		bottoneTornaIndietro.setDefaultAction(() -> {mainController.passaAHomePage(this);});
 		
-		MyJButton bottonePubblicaAnnuncio = new MyJButton("Pubblica annuncio");
+		bottonePubblicaAnnuncio = new MyJButton("Pubblica annuncio");
 		bottonePubblicaAnnuncio.setPreferredSize(new Dimension(300, 100));
 		bottonePubblicaAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		bottonePubblicaAnnuncio.setDefaultAction(() -> {});
+		bottonePubblicaAnnuncio.setDefaultAction(() -> {this.clickBottonePubblicaAnnuncio();});
 
 		panelBottoni.add(bottoneTornaIndietro);
 		panelBottoni.add(bottonePubblicaAnnuncio);
 		
 		return panelBottoni;
+	}
+	
+	private void clickBottonePubblicaAnnuncio() {
+		try {
+			resettaBordiTextField(this.nomeAnnuncioTextField);
+			resettaBordiTextA(this.inserisciDescrizioneTextA);	
+			nascondiPanelErrore(this.panelErroreNomeAnnuncio, this.panelErroreFoto, this.panelErroreDescrizione, this.panelErroreModalitaDiConsegna);
+			
+			if(tipoAnnuncio == "Vendita") {
+				resettaBordiTextField(this.prezzoInizialeTextField);
+				nascondiPanelErrore(this.panelErrorePrezzoIniziale);
+			}
+			else if(tipoAnnuncio == "Scambio") {
+				resettaBordiTextA(this.inserisciNotaScambioTextA);
+				nascondiPanelErrore(this.panelErroreNotaScambio);
+			}
+
+			checkDatiInseriti();
+			
+			CategoriaEnum categoriaSelezionata = CategoriaEnum.confrontaConStringa(this.categorieOggetto.getSelectedItem().toString());
+			CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggetto.getSelectedItem().toString());
+			
+			Oggetto oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
+					this.aggiungiFoto1.getImmagineInByte(), true);
+			oggettoDaPassare.aggiungiImmagine(1, this.aggiungiFoto2.getImmagineInByte());
+			oggettoDaPassare.aggiungiImmagine(2, this.aggiungiFoto3.getImmagineInByte());
+
+			Annuncio annuncioDaPassare;
+			if(tipoAnnuncio == "Vendita") {	
+				double prezzoIniziale = Double.valueOf(this.prezzoInizialeTextField.getText());
+				annuncioDaPassare = new AnnuncioVendita(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+					StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, prezzoIniziale);
+			}
+			else if(tipoAnnuncio == "Scambio") {
+				annuncioDaPassare = new AnnuncioScambio(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+						StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, this.inserisciNotaScambioTextA.getText());
+			}
+			else {
+				annuncioDaPassare = new AnnuncioRegalo(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+						StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare);					
+			}
+			
+			mainController.onPubblicaAnnuncioButtonClicked(annuncioDaPassare);
+		}
+		catch(NomeAnnuncioException exc1) {
+			this.settaLabelETextFieldDiErrore(lblErroreNomeAnnuncio, exc1.getMessage(), this.nomeAnnuncioTextField);
+			SwingUtilities.invokeLater(() -> {
+				this.nomeAnnuncioTextField.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(nomeAnnuncioTextField.getBounds());				
+			});
+			panelErroreNomeAnnuncio.setVisible(true);
+		}
+		catch(FotoException exc2) {
+			SwingUtilities.invokeLater(() -> {
+				this.nomeAnnuncioTextField.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(nomeAnnuncioTextField.getBounds());				
+			});
+			lblErroreFoto.setText(exc2.getMessage());
+			panelErroreFoto.setVisible(true);
+		}
+		catch(DescrizioneException exc3) {
+			this.settaLabelETextAreaDiErrore(lblErroreDescrizione, exc3.getMessage(), this.inserisciDescrizioneTextA);
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciDescrizioneTextA.getBounds());				
+			});
+			panelErroreDescrizione.setVisible(true);
+		}
+		catch(NotaScambioException exc4) {
+			this.settaLabelETextAreaDiErrore(lblErroreNotaScambio, exc4.getMessage(), this.inserisciNotaScambioTextA);
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
+			});	
+			panelErroreNotaScambio.setVisible(true);
+		}
+		catch(ModalitaDiConsegnaException exc5) {
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
+			});	
+			lblErroreModalitaConsegna.setText(exc5.getMessage());
+			panelErroreModalitaDiConsegna.setVisible(true);
+		}
+		catch(SQLException exc6) {
+			
+		}
+	}
+	
+	private void checkDatiInseriti() {
+		checkNomeAnnuncio();
+		checkFoto();
+		checkDescrizioneAnnuncio();
+		checkNotaScambio();
+		checkModalitaConsegna();
+	}
+	
+	private void checkNomeAnnuncio() throws NomeAnnuncioException{
+		if(this.nomeAnnuncioTextField.getText().isEmpty() || 
+		   this.nomeAnnuncioTextField.getText().equals("Dai un nome al tuo annuncio!"))
+		{
+			throw new NomeAnnuncioException("Inserisci un nome per il tuo annuncio.");
+		}
+	}
+	
+	private void checkDescrizioneAnnuncio() throws DescrizioneException{
+		if(this.inserisciDescrizioneTextA.getText().isEmpty() ||
+		   this.inserisciDescrizioneTextA.getText().equals("Dai una descrizione accurata dell'oggetto che stai vendendo. L'acquirente deve avere ben chiaro cosa starà acquistando!")) 
+		{
+			throw new DescrizioneException("Inserisci una descrizione per il tuo articolo.");
+		}
+	}
+	
+	private void checkNotaScambio() throws NotaScambioException{
+		if(this.inserisciNotaScambioTextA.getText().isEmpty() ||
+		   this.inserisciNotaScambioTextA.getText().equals("Sii preciso in quello che richiedi!")) 
+		{
+			throw new NotaScambioException("Inserisci una lista di oggetti con cui scambieresti il tuo articolo.");
+		}
+	}
+	
+	private void checkModalitaConsegna() throws ModalitaDiConsegnaException{
+		if(!this.spedizioneCheckBox.isSelected() && !this.ritiroInPostaCheckBox.isSelected() && !this.incontroCheckBox.isSelected())
+			throw new ModalitaDiConsegnaException("Seleziona almeno una modalità di consegna.");
+	}
+	
+	private void checkFoto() throws FotoException{
+		if(!foto1Caricata && !foto2Caricata && !foto3Caricata)
+			throw new FotoException("Devi caricare almeno una foto.");
 	}
 }
