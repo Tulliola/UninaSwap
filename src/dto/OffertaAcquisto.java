@@ -9,9 +9,9 @@ import utilities.StatoOffertaEnum;
 public class OffertaAcquisto extends Offerta{
 	private double prezzoOfferto;
 
-	public OffertaAcquisto(int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
-			StatoOffertaEnum stato, double prezzoOfferto) {
-		super(idOfferta, momentoProposta, modalitaConsegnaScelta, stato);
+	public OffertaAcquisto(Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
+			StatoOffertaEnum stato, Annuncio annuncioRiferito, double prezzoOfferto) {
+		super(momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
 		this.prezzoOfferto = prezzoOfferto;
 	}
 

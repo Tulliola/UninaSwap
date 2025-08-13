@@ -47,10 +47,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? ORDER BY Momento_pubblicazione DESC")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -64,10 +64,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? ORDER BY Momento_pubblicazione")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -92,15 +92,19 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 						CategoriaEnum.confrontaConDB(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConDB(rsOggetto.getString("Condizioni")),
 						imageBytes,
-						isOggettoDisponibile(rsOggetto)
+						isOggettoDisponibile(rs.getInt("idOggetto"))
 					);
 			}
 		}
 	}
 
-	private boolean isOggettoDisponibile(ResultSet rsOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND (NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile'))")){
-			ps.setInt(1, rsOggetto.getInt("idOggetto"));
+	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND "
+				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
+				+ "INTERSECT (SELECT * FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
+				+ "(NOT(Stato = 'Accettata')))")){
+			ps.setInt(1, idOggetto);
+			ps.setInt(2, idOggetto);
 			
 			try(ResultSet rs = ps.executeQuery()){
 				return rs.next();

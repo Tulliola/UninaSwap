@@ -11,6 +11,15 @@ public enum StatoOffertaEnum {
 	StatoOffertaEnum(String statoOfferta) {
 		this.statoOfferta = statoOfferta;
 	}
+	
+	public static StatoOffertaEnum confrontaConDB(String statoOfferta) {
+		for(StatoOffertaEnum sO : values()) {
+			if(sO.statoOfferta.equals(statoOfferta)) {
+				return sO;
+			}
+		}
+		throw new IllegalArgumentException("Valore non presente nel database");
+	}
 		
 	@Override
 	public String toString() {

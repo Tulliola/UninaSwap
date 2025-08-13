@@ -36,7 +36,7 @@ public class Controller {
 	private static Connection connessioneDB;
 	
 	private ProfiloUtente utenteLoggato;
-	private ArrayList<Annuncio> annunciDisponibiliNonDiUtente;
+	private ArrayList<Annuncio> annunciNonDiUtente;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
@@ -117,7 +117,7 @@ public class Controller {
 		
 	public void passaAHomePage(MyJFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
-		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciDisponibiliNonDiUtente);
+		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciNonDiUtente);
 		frameHomePage.setVisible(true);
 		
 	}
@@ -146,7 +146,10 @@ public class Controller {
 			this.passaADialogDiComunicataSospensione(email);
 		else {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
-			this.annunciDisponibiliNonDiUtente = annunciDAO.recuperaAnnunciDisponibiliNonDiUtente(utenteLoggato);
+			OffertaScambioDAO_Postgres offerteDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+			this.annunciNonDiUtente = annunciDAO.recuperaAnnunciNonDiUtente(utenteLoggato);
+			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
+			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteScambioDiUtente(utenteLoggato));
 			this.passaAHomePage(frameDiLogin);
 		}
 	}
