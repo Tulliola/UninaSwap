@@ -17,7 +17,7 @@ public abstract class Offerta {
 	private String oraFineIncontro;
 	private GiornoEnum giornoIncontro;
 	private ModConsegnaEnum modalitaConsegnaScelta;
-	private StatoOffertaEnum stato;
+	private StatoOffertaEnum stato = StatoOffertaEnum.In_attesa;
 	
 	//Attributi derivati da relazioni
 	private ProfiloUtente utenteProprietario;
@@ -28,6 +28,11 @@ public abstract class Offerta {
 		this.momentoProposta = momentoProposta;
 		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
 		this.stato = stato;
+		this.annuncioRiferito = annuncioRiferito;
+	}
+	
+	public Offerta(ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {
+		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
 		this.annuncioRiferito = annuncioRiferito;
 	}
 	

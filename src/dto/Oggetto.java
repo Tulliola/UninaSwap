@@ -10,7 +10,7 @@ public class Oggetto {
 	private CategoriaEnum cateogria;
 	private CondizioneEnum condizioni;
 	private byte[][] immagini = new byte[3][];
-	private boolean disponibile;
+	private boolean disponibile = true;
 	
 	//Attributi derivati da relazioni
 	private Annuncio annuncioContenente;
@@ -26,11 +26,19 @@ public class Oggetto {
 		this.disponibile = disponibile;
 	}
 
-	public void aggiungiImmagine(int index, byte[] immagine) {
-		this.immagini[index] = immagine;
+	public Oggetto(CategoriaEnum cateogria, CondizioneEnum condizioni, byte[] immagine,
+			boolean disponibile) {
+		this.cateogria = cateogria;
+		this.condizioni = condizioni;
+		this.immagini[0] = immagine;
 	}
 	
-	public void aggiungiImmagini(byte[][] immagini) {
+	public void aggiungiImmagine(int index, byte[] immagine) {
+		if(immagine.length != 0)
+			this.immagini[index] = immagine;
+	}
+	
+	public void aggiungiImmagini(byte[][] immagini, int numeroImmaginiDaInserire, int numeroImmaginiGiaPresenti) {
 		for(int i = 0; i < 3; i++) {
 			this.immagini[i] = immagini[i];
 		}
@@ -56,16 +64,16 @@ public class Oggetto {
 		this.descrizione = descrizione;
 	}
 
-	public CategoriaEnum getCateogria() {
-		return cateogria;
+	public String getCateogria() {
+		return cateogria.toString();
 	}
 
 	public void setCateogria(CategoriaEnum cateogria) {
 		this.cateogria = cateogria;
 	}
 
-	public CondizioneEnum getCondizioni() {
-		return condizioni;
+	public String getCondizioni() {
+		return condizioni.toString();
 	}
 
 	public void setCondizioni(CondizioneEnum condizioni) {

@@ -11,4 +11,5 @@ public interface AnnuncioDAO {
 	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException, IOException;
 	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException;
 	public ArrayList<Annuncio> recuperaAnnunciNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException;
+	public void inserisciAnnuncio(Annuncio annuncioDaInserire) throws SQLException;
 }
