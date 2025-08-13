@@ -1148,6 +1148,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(nomeAnnuncioTextField.getBounds());				
 			});
 			panelErroreNomeAnnuncio.setVisible(true);
+			exc1.printStackTrace();
 		}
 		catch(FotoException exc2) {
 			SwingUtilities.invokeLater(() -> {
@@ -1156,6 +1157,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			});
 			lblErroreFoto.setText(exc2.getMessage());
 			panelErroreFoto.setVisible(true);
+			exc2.printStackTrace();
+
 		}
 		catch(DescrizioneException exc3) {
 			this.settaLabelETextAreaDiErrore(lblErroreDescrizione, exc3.getMessage(), this.inserisciDescrizioneTextA);
@@ -1164,6 +1167,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(inserisciDescrizioneTextA.getBounds());				
 			});
 			panelErroreDescrizione.setVisible(true);
+			exc3.printStackTrace();
+
 		}
 		catch(NotaScambioException exc4) {
 			this.settaLabelETextAreaDiErrore(lblErroreNotaScambio, exc4.getMessage(), this.inserisciNotaScambioTextA);
@@ -1172,6 +1177,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
 			});	
 			panelErroreNotaScambio.setVisible(true);
+			exc4.printStackTrace();
+
 		}
 		catch(ModalitaDiConsegnaException exc5) {
 			SwingUtilities.invokeLater(() -> {
@@ -1180,9 +1187,11 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			});	
 			lblErroreModalitaConsegna.setText(exc5.getMessage());
 			panelErroreModalitaDiConsegna.setVisible(true);
+			exc5.printStackTrace();
+
 		}
 		catch(SQLException exc6) {
-			
+			exc6.printStackTrace();
 		}
 	}
 	
@@ -1190,7 +1199,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		checkNomeAnnuncio();
 		checkFoto();
 		checkDescrizioneAnnuncio();
-		checkNotaScambio();
+		
+		if(tipoAnnuncio == "Scambio")
+			checkNotaScambio();
+		
 		checkModalitaConsegna();
 	}
 	

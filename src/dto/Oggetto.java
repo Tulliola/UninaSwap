@@ -35,7 +35,7 @@ public class Oggetto {
 	}
 
 	public void aggiungiImmagine(int index, byte[] immagine) {
-		if(immagine.length != 0)
+		if(immagine != null)
 			this.immagini[index] = immagine;
 	}
 	
@@ -83,6 +83,13 @@ public class Oggetto {
 
 	public byte[][] getImmagini() {
 		return immagini;
+	}
+	
+	public byte[] getImmagine(int indiceImmagine) {
+		if(indiceImmagine >= 0 && indiceImmagine <= 2)
+			return immagini[indiceImmagine];
+		else
+			throw new IllegalArgumentException("Indice non valido");
 	}
 
 	public void setImmagini(byte[][] immagini) {

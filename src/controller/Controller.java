@@ -41,11 +41,11 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 
-		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "vendita");
-		framePubblicaAnnuncio.setVisible(true);
+//		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "vendita");
+//		framePubblicaAnnuncio.setVisible(true);
 		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
@@ -182,8 +182,17 @@ public class Controller {
 	
 	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+		annuncioDAO.inserisciAnnuncio(newAnnuncio);
 		
-		
+//		try {	
+//			Annuncio annuncioInserito = annuncioDAO.recuperaAnnuncioDaID(newAnnuncio.getIdAnnuncio());
+//			
+//			System.out.println(annuncioInserito.getNome()+"\n"+annuncioInserito.getOggettoInAnnuncio().getDescrizione());
+//			utenteLoggato.aggiungiAnnuncio(newAnnuncio);
+//		}
+//		catch(SQLException | IOException throwables) {
+//			throwables.printStackTrace();
+//		}
 	}
 	
 	public ProfiloUtente getUtenteLoggato() {

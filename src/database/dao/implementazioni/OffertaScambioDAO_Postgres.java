@@ -35,10 +35,12 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	
 	@Override
 	public OffertaScambio recuperaOffertaScambioDaId(int idOfferta) throws SQLException, IOException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO WHERE idOfferta = ?")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO NATURAL JOIN OGGETTO_OFFERTO WHERE idOfferta = ?")){
 			ps.setInt(1, idOfferta);
 			
 			try(ResultSet rs = ps.executeQuery()){
+				rs.next();
+				
 				int idOffertaOttenuta = rs.getInt("idOfferta");
 				Timestamp momentoProposta = rs.getTimestamp("momento_proposta");
 				ModConsegnaEnum modConsegna = ModConsegnaEnum.confrontaConDB(rs.getString("modalita_consegna_scelta"));
@@ -113,9 +115,9 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	}
 
 	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND"
+		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT idOggetto FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND"
 				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
-				+ "INTERSECT (SELECT * FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
+				+ "INTERSECT (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
 				+ "(NOT(Stato = 'Accettata')))")){
 			ps.setInt(1, idOggetto);
 			ps.setInt(2, idOggetto);
