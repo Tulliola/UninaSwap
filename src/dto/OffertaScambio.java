@@ -9,14 +9,16 @@ import utilities.StatoOffertaEnum;
 
 public class OffertaScambio extends Offerta {
 	//Attributi propri
+	int idOfferta;
 	
 	//Attributi derivati da relazioni
 	private ArrayList<Oggetto> oggettiOfferti;
 
 	public OffertaScambio(int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
-			StatoOffertaEnum stato, Oggetto oggettoOfferto) {
-		super(idOfferta, momentoProposta, modalitaConsegnaScelta, stato);
-		this.oggettiOfferti.add(oggettoOfferto);
+			StatoOffertaEnum stato, Annuncio annuncioRiferito, ArrayList<Oggetto> oggettiOfferti) {
+		super( momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
+		this.idOfferta = idOfferta;
+		this.oggettiOfferti.addAll(oggettiOfferti);
 	}
 	
 	public void aggiungiOggettoAllOfferta(Oggetto oggettoOfferto) {

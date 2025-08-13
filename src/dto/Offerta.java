@@ -9,7 +9,6 @@ import utilities.StatoOffertaEnum;
 
 public abstract class Offerta {
 	//Attributi propri
-	private int idOfferta;
 	private Timestamp momentoProposta;
 	private String nota;
 	private String sedeIncontro;
@@ -18,19 +17,23 @@ public abstract class Offerta {
 	private String oraFineIncontro;
 	private GiornoEnum giornoIncontro;
 	private ModConsegnaEnum modalitaConsegnaScelta;
-	private StatoOffertaEnum stato;
+	private StatoOffertaEnum stato = StatoOffertaEnum.In_attesa;
 	
 	//Attributi derivati da relazioni
-	private UfficioPostale ufficioDiRitiro;
 	private ProfiloUtente utenteProprietario;
 	private ArrayList<UfficioPostale> ufficiRitiro;
 	private Annuncio annuncioRiferito;
-	public Offerta(int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
-			StatoOffertaEnum stato) {
-		this.idOfferta = idOfferta;
+	public Offerta(Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
+			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
 		this.momentoProposta = momentoProposta;
 		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
 		this.stato = stato;
+		this.annuncioRiferito = annuncioRiferito;
+	}
+	
+	public Offerta(ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {
+		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
+		this.annuncioRiferito = annuncioRiferito;
 	}
 	
 	public double getPrezzoOfferto() {

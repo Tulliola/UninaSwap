@@ -47,10 +47,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? ORDER BY Momento_pubblicazione DESC")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -64,10 +64,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDisponibiliNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? ORDER BY Momento_pubblicazione")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -78,6 +78,52 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			}
 		}
 	}
+	
+	@Override
+	public void inserisciAnnuncio(Annuncio annuncioDaInserire) throws SQLException {
+		String transactionInserimento = "DO $$ DECLARE oggetto Oggetto.idOggetto%TYPE;"
+				+ "BEGIN INSERT INTO Oggetto(email, descrizione, categoria, condizioni) VALUES"
+				+ "?, ?, ?, ? RETURNING idOggetto INTO oggetto; ";
+		for(byte[] immagine: annuncioDaInserire.getOggettoInAnnuncio().getImmagini()) {
+			transactionInserimento += "INSERT INTO IMMAGINE(File, idOggetto) VALUES(?, oggetto); ";
+		}
+		transactionInserimento += "INSERT INTO ANNUNCIO(email, idOggetto, spedizione, incontro, ritiro_in_posta,"
+				+ "nome, tipo_annuncio, nota_scambio, prezzo_iniziale"
+				+ "VALUES (?, oggetto, ?, ?, ?, ?, ?, ?, ?); "
+				+ "END; $$ LANGUAGE plpgsql;";
+		
+		try(PreparedStatement inserimentoAnnuncio = connessioneDB.prepareStatement(transactionInserimento)){
+			inserimentoAnnuncio.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
+			inserimentoAnnuncio.setString(2, annuncioDaInserire.getOggettoInAnnuncio().getDescrizione());
+			inserimentoAnnuncio.setString(3, annuncioDaInserire.getOggettoInAnnuncio().getCateogria());
+			inserimentoAnnuncio.setString(4, annuncioDaInserire.getOggettoInAnnuncio().getCondizioni());
+			
+			int i;
+			for(i = 1; i <= annuncioDaInserire.getOggettoInAnnuncio().getImmagini().length; i++) {
+				inserimentoAnnuncio.setBytes(4 + i, annuncioDaInserire.getOggettoInAnnuncio().getImmagini()[i]);
+			}
+			
+			inserimentoAnnuncio.setString(4 + i, annuncioDaInserire.getUtenteProprietario().getEmail());
+			inserimentoAnnuncio.setBoolean(	4 + i + 1, annuncioDaInserire.isSpedizione());
+			inserimentoAnnuncio.setBoolean(4 + i + 2, annuncioDaInserire.isIncontro());
+			inserimentoAnnuncio.setBoolean(4 + i + 3, annuncioDaInserire.isRitiroInPosta());
+			inserimentoAnnuncio.setString(4 + i + 4, annuncioDaInserire.getNome());
+			
+			if(annuncioDaInserire.getNotaScambio() != null)
+				inserimentoAnnuncio.setString(4 + i + 5, "Scambio");
+			else if(annuncioDaInserire.getPrezzoIniziale() == 0)
+				inserimentoAnnuncio.setString(4 + i + 5, "Regalo");
+			else
+				inserimentoAnnuncio.setString(4 + i + 6, "Vendita");
+			
+			inserimentoAnnuncio.setString(4 + i + 6, annuncioDaInserire.getNotaScambio());
+			inserimentoAnnuncio.setDouble(4 + i + 7, annuncioDaInserire.getPrezzoIniziale());
+
+			inserimentoAnnuncio.executeUpdate();
+		}
+		
+	}
+	
 	
 	private Oggetto recuperaOggettoInAnnuncio(ResultSet rs) throws SQLException, IOException{
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
@@ -92,15 +138,19 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
 						imageBytes,
-						isOggettoDisponibile(rsOggetto)
+						isOggettoDisponibile(rs.getInt("idOggetto"))
 					);
 			}
 		}
 	}
 
-	private boolean isOggettoDisponibile(ResultSet rsOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND (NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile'))")){
-			ps.setInt(1, rsOggetto.getInt("idOggetto"));
+	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND "
+				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
+				+ "INTERSECT (SELECT * FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
+				+ "(NOT(Stato = 'Accettata')))")){
+			ps.setInt(1, idOggetto);
+			ps.setInt(2, idOggetto);
 			
 			try(ResultSet rs = ps.executeQuery()){
 				return rs.next();
@@ -157,4 +207,5 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			);
 		}
 	}
+
 }

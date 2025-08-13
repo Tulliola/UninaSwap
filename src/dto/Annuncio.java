@@ -30,8 +30,6 @@ public abstract class Annuncio {
 	
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
-
-		this.idAnnuncio = idAnnuncio;
 		this.spedizione = spedizione;
 		this.ritiroInPosta = ritiroInPosta;
 		this.incontro = incontro;
@@ -52,7 +50,7 @@ public abstract class Annuncio {
 		this.utenteProprietario = utenteProprietario;
 		this.oggettoInAnnuncio = oggettoInAnnuncio;	
 	}
-	
+
 	public void aggiungiOffertaRicevuta(Offerta offertaRicevuta) {
 		this.offerteRicevute.add(offertaRicevuta);
 	}

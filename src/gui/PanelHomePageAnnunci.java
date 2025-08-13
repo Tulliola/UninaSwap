@@ -32,6 +32,7 @@ import utilities.MyJButton;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
+import utilities.StatoAnnuncioEnum;
 
 public class PanelHomePageAnnunci extends JPanel{
 
@@ -52,18 +53,13 @@ public class PanelHomePageAnnunci extends JPanel{
 		this.settaBordoInferiore();
 
 		MyJPanel prova = new MyJPanel();
-//		prova.setLayout(new BoxLayout(prova, BoxLayout.Y_AXIS));
 		prova.setLayout(new FlowLayout());
 		
 		for(int i = 0; i < annunci.size(); i++) {
-//			MyJLabel label = new MyJLabel("Annuncio "+i);
-//			label.setAlignmentX(LEFT_ALIGNMENT);
-//			label.setPreferredSize(new Dimension(100, 300));
-//			label.setMaximumSize(new Dimension(100, 300));
-			System.out.println(annunci.get(i).getNome());
-			MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
-			
-			prova.add(annuncioCorrente);
+			if(annunci.get(i).getStato() == StatoAnnuncioEnum.Disponibile) {
+				MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
+				prova.add(annuncioCorrente);
+			}
 
 		}
 		

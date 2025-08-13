@@ -14,9 +14,9 @@ public class OffertaRegalo extends Offerta {
 	//Attributi derivati da relazioni
 	private ArrayList<Oggetto> oggettiOfferti;
 
-	public OffertaRegalo(int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
-			StatoOffertaEnum stato) {
-		super(idOfferta, momentoProposta, modalitaConsegnaScelta, stato);
+	public OffertaRegalo(Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
+			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
+		super(momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
 	}
 
 	public void aggiungiOggettoAllOfferta(Oggetto oggettoOfferto) {

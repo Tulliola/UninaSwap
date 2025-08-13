@@ -13,6 +13,15 @@ public enum GiornoEnum {
 		this.giorno = giorno;
 	}
 	
+	public static GiornoEnum confrontaConDB(String giorno) {
+		for(GiornoEnum g : values()) {
+			if(g.giorno.equals(giorno)) {
+				return g;
+			}
+		}
+		throw new IllegalArgumentException("Valore non presente nel database");
+	}
+	
 	public String toString() {
 		return giorno;
 	}
