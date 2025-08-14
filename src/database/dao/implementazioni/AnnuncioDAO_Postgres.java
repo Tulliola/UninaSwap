@@ -122,57 +122,76 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				}
 			}
 			
-			String inserimentoannuncioDaInserire = "INSERT INTO annuncioDaInserire (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_annuncioDaInserire,"
+			String inserimentoAnnuncio = "INSERT INTO Annuncio (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_annuncio,"
 					+ "Nota_scambio, Prezzo_iniziale, Data_scadenza)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idAnnuncio";
 			
-			try(PreparedStatement psInserimentoannuncioDaInserire = connessioneDB.prepareStatement(inserimentoannuncioDaInserire)){
-				psInserimentoannuncioDaInserire.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
-				psInserimentoannuncioDaInserire.setInt(2, idOggettoInserito);
-				psInserimentoannuncioDaInserire.setBoolean(3, annuncioDaInserire.isSpedizione());
-				psInserimentoannuncioDaInserire.setBoolean(4, annuncioDaInserire.isIncontro());
-				psInserimentoannuncioDaInserire.setBoolean(5, annuncioDaInserire.isRitiroInPosta());
-				psInserimentoannuncioDaInserire.setString(6, annuncioDaInserire.getNome());
+			try(PreparedStatement psInserimentoAnnuncio = connessioneDB.prepareStatement(inserimentoAnnuncio)){
+				psInserimentoAnnuncio.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
+				psInserimentoAnnuncio.setInt(2, idOggettoInserito);
+				psInserimentoAnnuncio.setBoolean(3, annuncioDaInserire.isSpedizione());
+				psInserimentoAnnuncio.setBoolean(4, annuncioDaInserire.isIncontro());
+				psInserimentoAnnuncio.setBoolean(5, annuncioDaInserire.isRitiroInPosta());
+				psInserimentoAnnuncio.setString(6, annuncioDaInserire.getNome());
 								
 				if(annuncioDaInserire.getNotaScambio() != null) {
-					psInserimentoannuncioDaInserire.setString(7, "Scambio");
-					psInserimentoannuncioDaInserire.setString(8, annuncioDaInserire.getNotaScambio());
-					psInserimentoannuncioDaInserire.setNull(9, Types.REAL);
+					psInserimentoAnnuncio.setString(7, "Scambio");
+					psInserimentoAnnuncio.setString(8, annuncioDaInserire.getNotaScambio());
+					psInserimentoAnnuncio.setNull(9, Types.REAL);
 				}
 				else if(annuncioDaInserire.getPrezzoIniziale() == null) {
-					psInserimentoannuncioDaInserire.setString(7, "Regalo");
-					psInserimentoannuncioDaInserire.setNull(8, Types.VARCHAR);
-					psInserimentoannuncioDaInserire.setNull(9, Types.REAL);
+					psInserimentoAnnuncio.setString(7, "Regalo");
+					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentoAnnuncio.setNull(9, Types.REAL);
 				}
 				else {
-					psInserimentoannuncioDaInserire.setString(7, "Vendita");
-					psInserimentoannuncioDaInserire.setNull(8, Types.VARCHAR);
-					psInserimentoannuncioDaInserire.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
+					psInserimentoAnnuncio.setString(7, "Vendita");
+					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentoAnnuncio.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
 				}
 				
 				if(annuncioDaInserire.getDataScadenza() != null)
-					psInserimentoannuncioDaInserire.setDate(10,  annuncioDaInserire.getDataScadenza());
+					psInserimentoAnnuncio.setDate(10,  annuncioDaInserire.getDataScadenza());
 				else
-					psInserimentoannuncioDaInserire.setNull(10, Types.DATE);
+					psInserimentoAnnuncio.setNull(10, Types.DATE);
 				
-				psInserimentoannuncioDaInserire.executeUpdate();
-				
-			}
-			
-			for(SedeUniversita sede: annuncioDaInserire.getSedeIncontroProposte()) {
-				String recuperaSedi = "SELECT * FROM SEDE_UNIVERSITA WHERE nome = ?";
-				
-				try(PreparedStatement psRecuperaSedi = connessioneDB.prepareStatement(inserimentoannuncioDaInserire)){
-					psRecuperaSedi.setString(1, sede.getNome());
+				int idAnnuncioInserito;
+								
+				try(ResultSet rsInserimentoAnnuncio = psInserimentoAnnuncio.executeQuery()){
+					rsInserimentoAnnuncio.next();
+					idAnnuncioInserito = rsInserimentoAnnuncio.getInt("idAnnuncio");
 				}
-			}
+			
+				System.out.println(idAnnuncioInserito);
+
+				if(annuncioDaInserire.isIncontro())
+					for(int i = 0; i < annuncioDaInserire.getSedeIncontroProposte().size(); i++) {					
+						String inserimentoIncontri = "INSERT INTO Incontro (idSede, idAnnuncio, Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro) VALUES (?, ?, ?, ?, ?)";
+						
+						try(PreparedStatement psInserimentoIncontri = connessioneDB.prepareStatement(inserimentoIncontri)){
+							psInserimentoIncontri.setInt(1, annuncioDaInserire.getSedeIncontroProposte().get(i).getIdSede());
+							psInserimentoIncontri.setInt(2, idAnnuncioInserito);
+							psInserimentoIncontri.setString(3, annuncioDaInserire.getOraInizioIncontro().get(i));
+							psInserimentoIncontri.setString(4, annuncioDaInserire.getOraFineIncontro().get(i));
+							psInserimentoIncontri.setString(5, annuncioDaInserire.getGiornoIncontro().get(i).toString());
+							
+							psInserimentoIncontri.executeUpdate();
+							
+						}
+						
+
+					}
 				
+				System.out.println("Sono quo");
+
+			}
+
 			connessioneDB.commit();
 
 		}
 		catch (SQLException exc) {
 		    connessioneDB.rollback();
-		    System.out.println(exc.getMessage());
+		    throw exc;
 		} 
 		finally {
 		    connessioneDB.setAutoCommit(true);

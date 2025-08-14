@@ -2,15 +2,17 @@ package utilities;
 
 import javax.swing.JComboBox;
 
+import dto.SedeUniversita;
+
 public class RigaIncontro {
-	private JComboBox sedeDiIncontro;
+	private JComboBox<SedeUniversita> sedeDiIncontro;
 	private JComboBox oraInizioIncontro;
 	private JComboBox minutoInizioIncontro;
 	private JComboBox oraFineIncontro;
 	private JComboBox minutoFineIncontro;
 	private JComboBox giornoIncontro;
 	
-	public RigaIncontro(JComboBox sedeDiIncontro, JComboBox oraInizioIncontro, JComboBox minutoInizioIncontro, JComboBox oraFineIncontro, 
+	public RigaIncontro(JComboBox<SedeUniversita> sedeDiIncontro, JComboBox oraInizioIncontro, JComboBox minutoInizioIncontro, JComboBox oraFineIncontro, 
 					    JComboBox minutoFineIncontro, JComboBox giornoIncontro) 
 	{
 		this.sedeDiIncontro = sedeDiIncontro;
@@ -21,8 +23,8 @@ public class RigaIncontro {
 		this.giornoIncontro = giornoIncontro;
 	}
 	
-	public String getSedeDiIncontro() {
-		return sedeDiIncontro.getSelectedItem().toString();
+	public SedeUniversita getSedeDiIncontro() {
+		return ((SedeUniversita)sedeDiIncontro.getSelectedItem());
 	}
 
 	public String getOraInizioIncontro() {

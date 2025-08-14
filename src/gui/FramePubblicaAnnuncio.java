@@ -279,8 +279,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private void creaPanelAggiungiFoto() {
 		panelAggiungiFoto = new MyJPanel();
 		panelAggiungiFoto.setLayout(new BorderLayout());
-		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 640));
-		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 640));
+		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 660));
+		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 660));
 		
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
 		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
@@ -296,8 +296,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		MyJPanel panelContieniFoto = new MyJPanel();
 		panelContieniFoto.setLayout(new BorderLayout());
-		panelContieniFoto.setPreferredSize(new Dimension(1225, 520));
-		panelContieniFoto.setMaximumSize(new Dimension(1225, 520));
+		panelContieniFoto.setPreferredSize(new Dimension(1225, 500));
+		panelContieniFoto.setMaximumSize(new Dimension(1225, 500));
 		panelContieniFoto.setBackground(MyJPanel.uninaLightColor);
 		
 		MyJPanel panelDelleFoto = new MyJPanel();
@@ -844,8 +844,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelDettagliIncontri.setVisible(false);
 		panelDettagliIncontri.setLayout(new BorderLayout());
 		panelDettagliIncontri.setBackground(MyJPanel.uninaColorClicked);
-		panelDettagliIncontri.setPreferredSize(new Dimension(1225, 135));
-		panelDettagliIncontri.setMaximumSize(new Dimension(1225, 135));
+		panelDettagliIncontri.setPreferredSize(new Dimension(1225, 150));
+		panelDettagliIncontri.setMaximumSize(new Dimension(1225, 150));
 		
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
 		panelSuperiore.setPreferredSize(new Dimension(1225, 35));
@@ -861,9 +861,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelSuperiore.add(lblDettagliIncontri);
 		
 		MyJPanel panelCentrale = new MyJPanel();
-		panelCentrale.setPreferredSize(new Dimension(1225, 100));
-		panelCentrale.setMaximumSize(new Dimension(1225, 100));
-		
+		panelCentrale.setPreferredSize(new Dimension(1225, 150));
+		panelCentrale.setMaximumSize(new Dimension(1225, 250));
 		panelCentrale.setLayout(new BorderLayout());
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 		panelCentrale.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.NORTH);
@@ -878,9 +877,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		MyJPanel rigaIncontro = new MyJPanel();
 		rigaIncontro.setBackground(MyJPanel.uninaLightColor);
-		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
-		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
-		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
+//		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
+		rigaIncontro.setLayout(new FlowLayout());
+		rigaIncontro.setPreferredSize(new Dimension(1225, 250));
+		rigaIncontro.setMaximumSize(new Dimension(1225, 300));
 		
 		JComboBox sediUniversitaCB = this.creaCBSediUniversita(sediPresenti);
 		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
@@ -892,25 +892,17 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.add(Box.createRigidArea(new Dimension(50, 0)));
 		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel("Incontriamoci a ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(sediUniversitaCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" dalle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(oraInizioIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(minutoInizioIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" alle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(oraFineIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(minutoFineIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" di ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(giornoIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		
 		MyJLabel lblAggiungiIncontro = new MyJLabel();
 		lblAggiungiIncontro.aggiungiImmagineScalata("images/iconaAggiungiIncontro.png", 50, 50, true);
@@ -930,7 +922,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				panelPerIncontri.revalidate();
 				panelPerIncontri.repaint();
 				
-				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri));
+				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri, sediPresenti));
 				
 				numeroIncontri++;
 			}
@@ -955,14 +947,15 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		return panelDettagliIncontri;
 	}
 	
-	private MyJPanel aggiungiNuovaRigaIncontro(MyJPanel panelPerIncontri) {
+	private MyJPanel aggiungiNuovaRigaIncontro(MyJPanel panelPerIncontri, ArrayList<SedeUniversita> sediPresenti) {
 		MyJPanel rigaIncontro = new MyJPanel();
 		rigaIncontro.setBackground(MyJPanel.uninaLightColor);
-		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
-		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
-		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
+//		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
+		rigaIncontro.setLayout(new FlowLayout());
+		rigaIncontro.setPreferredSize(new Dimension(1225, 250));
+		rigaIncontro.setMaximumSize(new Dimension(1225, 250));
 		
-		JComboBox sediUniversitaCB = this.creaCBSediUniversita();
+		JComboBox<SedeUniversita> sediUniversitaCB = this.creaCBSediUniversita(sediPresenti);
 		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
 		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
 		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();
@@ -970,27 +963,18 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		JComboBox giornoIncontroCB = this.creaCBGiornoIncontro();
 		
 		rigaIncontro.add(Box.createRigidArea(new Dimension(50, 0)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel("Incontriamoci a ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(sediUniversitaCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" dalle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(oraInizioIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(minutoInizioIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" alle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(oraFineIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(minutoFineIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" di ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(giornoIncontroCB);
-		rigaIncontro.add(Box.createHorizontalGlue());
 		
 		RigaIncontro nuovoIncontro = new RigaIncontro(
 				sediUniversitaCB, 
@@ -1049,7 +1033,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				panelPerIncontri.revalidate();
 				panelPerIncontri.repaint();
 					
-				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri));
+				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri, sediPresenti));
 				
 				numeroIncontri++;
 			}
@@ -1066,11 +1050,12 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	
 	private JComboBox creaCBOraIncontro() {
 		JComboBox oraIncontro = new JComboBox();
-		oraIncontro.setPreferredSize(new Dimension(100, 30));
-		oraIncontro.setMaximumSize(new Dimension(100, 30));
+		oraIncontro.setPreferredSize(new Dimension(50, 30));
+		oraIncontro.setMaximumSize(new Dimension(50, 30));
 		oraIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 		oraIncontro.setBackground(Color.white);
 		
+		oraIncontro.addItem("08");
 		oraIncontro.addItem("09");
 		oraIncontro.addItem("10");
 		oraIncontro.addItem("11");
@@ -1090,8 +1075,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private JComboBox creaCBMinutoIncontro() {
 		JComboBox minutoIncontro = new JComboBox();
 		minutoIncontro.setBackground(Color.white);
-		minutoIncontro.setPreferredSize(new Dimension(100, 30));
-		minutoIncontro.setMaximumSize(new Dimension(100, 30));
+		minutoIncontro.setPreferredSize(new Dimension(50, 30));
+		minutoIncontro.setMaximumSize(new Dimension(50, 30));
 		minutoIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 		
 		minutoIncontro.addItem("00");
@@ -1121,14 +1106,13 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private JComboBox creaCBSediUniversita(ArrayList<SedeUniversita> sediPresenti) {
 		JComboBox<SedeUniversita> sediUniversita = new JComboBox();
 		sediUniversita.setBackground(Color.white);
-		sediUniversita.setPreferredSize(new Dimension(100, 30));
-		sediUniversita.setMaximumSize(new Dimension(100, 30));
+		sediUniversita.setPreferredSize(new Dimension(950, 30));
+		sediUniversita.setMaximumSize(new Dimension(950, 30));
 		sediUniversita.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 		
 		for(SedeUniversita sedeCorrente : sediPresenti)
 			sediUniversita.addItem(sedeCorrente);
 		
-		(SedeUniversita)(sediUniversita.getSelectedItem())
 		return sediUniversita;
 	}
 	
@@ -1208,10 +1192,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				nascondiPanelErrore(this.panelErroreNotaScambio);
 			}
 
-//			checkDatiInseriti();
-//			Annuncio annuncioDaPassare = organizzaDatiDaPassareAlController();
-//			
-//			mainController.onPubblicaAnnuncioButtonClicked(annuncioDaPassare);
+			checkDatiInseriti();
+			Annuncio annuncioDaPassare = organizzaDatiDaPassareAlController();
+
+			mainController.onPubblicaAnnuncioButtonClicked(annuncioDaPassare);
 		}
 		catch(NomeAnnuncioException exc1) {
 			this.settaLabelETextFieldDiErrore(lblErroreNomeAnnuncio, exc1.getMessage(), this.nomeAnnuncioTextField);
@@ -1261,11 +1245,25 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			lblErroreModalitaConsegna.setText(exc6.getMessage());
 			panelErroreModalitaDiConsegna.setVisible(true);
 		}
-//		catch(SQLException exc7) {
-//			System.out.println(exc7.getErrorCode());
-//			System.out.println(exc7.getMessage());
-//			System.out.println(exc7.getSQLState());	
-//		}
+		catch(SQLException exc7) {
+			String statoDiErrore = exc7.getSQLState();
+			String messaggioDiErrore = exc7.getMessage();
+			System.out.println(statoDiErrore);
+			System.out.println(messaggioDiErrore);
+			System.out.println(exc7.getErrorCode());	
+			
+			if(statoDiErrore.equals("23505"))
+				lblErroreModalitaConsegna.setText("Non puoi inserire due incontri identici.");
+			else if(exc7.getMessage().contains("check_inizio_minore_fine"))
+				lblErroreModalitaConsegna.setText("L'ora di inizio dell'incontro deve essere minore dell'ora di fine incontro");
+			
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
+			});
+			
+			panelErroreModalitaDiConsegna.setVisible(true);
+		}
 	}
 	
 	private void checkDatiInseriti() {
@@ -1366,12 +1364,24 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	
 	private void aggiungiIncontriAdAnnuncio(Annuncio annuncioDaPassare) {
 		for(RigaIncontro incontroAttuale : this.incontriSpecificati) {
+			SedeUniversita sedeScelta = incontroAttuale.getSedeDiIncontro();
 			String inizioIncontro = incontroAttuale.getOraInizioIncontro()+":"+incontroAttuale.getMinutoInizioIncontro();
 			String fineIncontro = incontroAttuale.getOraFineIncontro()+":"+incontroAttuale.getMinutoFineIncontro();
 			String giornoIncontro = incontroAttuale.getGiornoIncontro();
 
-			annuncioDaPassare.aggiungiPropostaIncontro(new SedeUniversita(incontroAttuale.getSedeDiIncontro()), inizioIncontro, 
+			annuncioDaPassare.aggiungiPropostaIncontro(sedeScelta, inizioIncontro, 
 													   fineIncontro, GiornoEnum.confrontaConDB(giornoIncontro));
 		}
+		
+		for(RigaIncontro incontroAttuale : this.incontriSpecificati) {
+			SedeUniversita sedeScelta = incontroAttuale.getSedeDiIncontro();
+			String inizioIncontro = incontroAttuale.getOraInizioIncontro()+":"+incontroAttuale.getMinutoInizioIncontro();
+			String fineIncontro = incontroAttuale.getOraFineIncontro()+":"+incontroAttuale.getMinutoFineIncontro();
+			String giornoIncontro = incontroAttuale.getGiornoIncontro();
+
+			System.out.println(sedeScelta.getIdSede()+","+inizioIncontro+","+ 
+													   fineIncontro+","+GiornoEnum.confrontaConDB(giornoIncontro));
+		}
 	}
+	
 }
