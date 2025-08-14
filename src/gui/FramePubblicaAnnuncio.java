@@ -137,16 +137,17 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private MyJLabel lblAggiungiFoto3;
 	
 	//ArrayList per tenere traccia di tutti gli eventuali incontri specificati
-	private ArrayList<RigaIncontro> incontriSpecificati = new ArrayList<>(); 
+	private ArrayList<RigaIncontro> incontriSpecificati = new ArrayList<>();
 	
-	public FramePubblicaAnnuncio(Controller controller, String tipoAnnuncioDaPubblicare) {
+	
+	public FramePubblicaAnnuncio(Controller controller, String tipoAnnuncioDaPubblicare, ArrayList<SedeUniversita> sediPresenti) {
 		tipoAnnuncio = tipoAnnuncioDaPubblicare;
 		mainController = controller;
 		
-		this.settaContentPane();
+		this.settaContentPane(sediPresenti);
 	}
 
-	private void settaContentPane() {
+	private void settaContentPane(ArrayList<SedeUniversita> sediPresenti) {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setTitle("Pubblica ora il tuo nuovo annuncio di "+tipoAnnuncio.toLowerCase()+"!");
@@ -159,14 +160,14 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		contentPane.add(scrittaUninaSwap, BorderLayout.NORTH);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.WEST);
-		contentPane.add(this.creaPanelCentrale(), BorderLayout.CENTER);
+		contentPane.add(this.creaPanelCentrale(sediPresenti), BorderLayout.CENTER);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.EAST);
 		contentPane.add(new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(Integer.MAX_VALUE, 25)), BorderLayout.SOUTH);
 
 		this.setContentPane(contentPane);
 	}
 	
-	private JScrollPane creaPanelCentrale() {
+	private JScrollPane creaPanelCentrale(ArrayList<SedeUniversita> sediPresenti) {
 		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
@@ -181,7 +182,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(panelAggiungiFoto);
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelCentrale.add(creaPanelInserimentoDati());
+		panelCentrale.add(creaPanelInserimentoDati(sediPresenti));
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		
@@ -392,7 +393,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 	}
 	
-	private MyJPanel creaPanelInserimentoDati() {
+	private MyJPanel creaPanelInserimentoDati(ArrayList<SedeUniversita> sediPresenti) {
 		panelInserimentoDati = new MyJPanel();
 		panelInserimentoDati.setBackground(Color.white);
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
@@ -438,7 +439,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelModalitaConsegna());
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
-		panelInserimentoDati.add(this.creaPanelDettagliIncontri());
+		panelInserimentoDati.add(this.creaPanelDettagliIncontri(sediPresenti));
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelBottoni());
 		
@@ -838,7 +839,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		});
 	}
 	
-	private MyJPanel creaPanelDettagliIncontri() {
+	private MyJPanel creaPanelDettagliIncontri(ArrayList<SedeUniversita> sediPresenti) {
 		panelDettagliIncontri = new MyJPanel();
 		panelDettagliIncontri.setVisible(false);
 		panelDettagliIncontri.setLayout(new BorderLayout());
@@ -881,7 +882,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
 		
-		JComboBox sediUniversitaCB = this.creaCBSediUniversita();
+		JComboBox sediUniversitaCB = this.creaCBSediUniversita(sediPresenti);
 		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
 		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
 		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();
@@ -1117,17 +1118,17 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		return giornoIncontro;
 	}
 	
-	private JComboBox creaCBSediUniversita(/*SedeUniversita sedi*/) {
-		JComboBox sediUniversita = new JComboBox();
+	private JComboBox creaCBSediUniversita(ArrayList<SedeUniversita> sediPresenti) {
+		JComboBox<SedeUniversita> sediUniversita = new JComboBox();
 		sediUniversita.setBackground(Color.white);
 		sediUniversita.setPreferredSize(new Dimension(100, 30));
 		sediUniversita.setMaximumSize(new Dimension(100, 30));
 		sediUniversita.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 		
-//		for(SedeUniversita sedeCorrente : sedi)
-//			sediUniversita.addItem(sedeCorrente.getNome());
-//		
+		for(SedeUniversita sedeCorrente : sediPresenti)
+			sediUniversita.addItem(sedeCorrente);
 		
+		(SedeUniversita)(sediUniversita.getSelectedItem())
 		return sediUniversita;
 	}
 	

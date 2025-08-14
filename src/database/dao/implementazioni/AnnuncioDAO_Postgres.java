@@ -22,6 +22,7 @@ import dto.Offerta;
 import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
+import dto.SedeUniversita;
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
 import utilities.StatoAnnuncioEnum;
@@ -156,6 +157,14 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				
 				psInserimentoannuncioDaInserire.executeUpdate();
 				
+			}
+			
+			for(SedeUniversita sede: annuncioDaInserire.getSedeIncontroProposte()) {
+				String recuperaSedi = "SELECT * FROM SEDE_UNIVERSITA WHERE nome = ?";
+				
+				try(PreparedStatement psRecuperaSedi = connessioneDB.prepareStatement(inserimentoannuncioDaInserire)){
+					psRecuperaSedi.setString(1, sede.getNome());
+				}
 			}
 				
 			connessioneDB.commit();

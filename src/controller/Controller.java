@@ -37,6 +37,7 @@ public class Controller {
 	
 	private ProfiloUtente utenteLoggato;
 	private ArrayList<Annuncio> annunciNonDiUtente;
+	private ArrayList<SedeUniversita> sediPresenti;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
@@ -44,7 +45,7 @@ public class Controller {
 //		frameDiLogin = new FrameDiLogin(this);
 //		frameDiLogin.setVisible(true);		
 
-		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita");
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 		framePubblicaAnnuncio.setVisible(true);
 		
 //		try {
@@ -124,7 +125,7 @@ public class Controller {
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
 		frameHomePage.dispose();
-		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare);
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare, sediPresenti);
 		framePubblicaAnnuncio.setVisible(true);
 	}
 
@@ -147,8 +148,10 @@ public class Controller {
 		else {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
 			OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
+			SedeUniversitaDAO_Postgres sediDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
+			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.annunciNonDiUtente = annunciDAO.recuperaAnnunciNonDiUtente(utenteLoggato);
 			this.passaAHomePage(frameDiLogin);
 		}
@@ -181,10 +184,8 @@ public class Controller {
 	}
 	
 	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
-		System.out.println("è gia premuto");
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
-		System.out.println("che posizione giochi? calcio");
 		
 //		try {	
 //			Annuncio annuncioInserito = annuncioDAO.recuperaAnnuncioDaID(newAnnuncio.getIdAnnuncio());

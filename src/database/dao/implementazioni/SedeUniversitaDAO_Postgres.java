@@ -24,31 +24,17 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 
 	@Override
 	public ArrayList<SedeUniversita> recuperaSediPresenti() throws SQLException {
-		String recuperaSedi = "SELECT * FROM Sede_universita";
+		String recuperaSedi = "SELECT idSede, nome FROM Sede_universita";
 		ArrayList<SedeUniversita> sediRitornate = new ArrayList();
 		
 		try(PreparedStatement psRecuperaSedi = connessioneDB.prepareStatement(recuperaSedi)){
 			try(ResultSet rsRecuperaSedi = psRecuperaSedi.executeQuery()){
 				while(rsRecuperaSedi.next()) {
-					sediRitornate.add(recuperaSedeCorrente(rsRecuperaSedi.getInt("idSede")));
+					sediRitornate.add(new SedeUniversita(rsRecuperaSedi.getInt("idSede"), rsRecuperaSedi.getString("Nome")));
 				}
 				
 				return sediRitornate;
 			}
 		}
 	}
-
-	private SedeUniversita recuperaSedeCorrente(int idSede) throws SQLException {
-		String sedeCorrente = "SELECT * FROM SEDE_UNIVERSITA WHERE idSede = ?";
-		
-		try(PreparedStatement psSedeCorrente = connessioneDB.prepareStatement(sedeCorrente)){
-			psSedeCorrente.setInt(1, idSede);
-			
-			try(ResultSet rsSedeCorrente = psSedeCorrente.executeQuery()){
-				rsSedeCorrente.next();
-				return new SedeUniversita(rsSedeCorrente.getString("nome"));
-			}
-		}
-	}
-
 }

@@ -57,10 +57,12 @@ public abstract class Annuncio {
 	
 	public void aggiungiPropostaIncontro(SedeUniversita sedeIncontroProposta, String oraInizioIncontro,
 			String oraFineIncontro, GiornoEnum giornoIncontro) {
-		this.sedeIncontroProposte.add(sedeIncontroProposta);
-		this.oraInizioIncontro.add(oraInizioIncontro);
-		this.oraFineIncontro.add(oraFineIncontro);
-		this.giornoIncontro.add(giornoIncontro);
+		if(incontro) {
+			this.sedeIncontroProposte.add(sedeIncontroProposta);
+			this.oraInizioIncontro.add(oraInizioIncontro);
+			this.oraFineIncontro.add(oraFineIncontro);
+			this.giornoIncontro.add(giornoIncontro);
+		}
 	}
 	
 	public void impostaDataScadenza(Date dataScadenza) {
