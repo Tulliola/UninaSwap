@@ -9,7 +9,7 @@ import utilities.StatoOffertaEnum;
 
 public class OffertaScambio extends Offerta {
 	//Attributi propri
-	int idOfferta;
+	Integer idOfferta;
 	
 	//Attributi derivati da relazioni
 	private ArrayList<Oggetto> oggettiOfferti = new ArrayList()	;
@@ -32,5 +32,10 @@ public class OffertaScambio extends Offerta {
 	@Override
 	public ArrayList<Oggetto> getOggettiOfferti() {
 		return this.oggettiOfferti;
+	}
+	
+	@Override
+	public Integer getIdOfferta() {
+		return this.idOfferta;
 	}
 }

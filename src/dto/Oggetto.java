@@ -7,7 +7,7 @@ public class Oggetto {
 	//Attributi propri
 	private int idOggetto;
 	private String descrizione;
-	private CategoriaEnum cateogria;
+	private CategoriaEnum categoria;
 	private CondizioneEnum condizioni;
 	private byte[][] immagini = new byte[3][];
 	private boolean disponibile = true;
@@ -17,18 +17,18 @@ public class Oggetto {
 
 	
 	
-	public Oggetto(int idOggetto, CategoriaEnum cateogria, CondizioneEnum condizioni, byte[] immagine,
+	public Oggetto(int idOggetto, CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine,
 			boolean disponibile) {
 		this.idOggetto = idOggetto;
-		this.cateogria = cateogria;
+		this.categoria = categoria;
 		this.condizioni = condizioni;
 		this.immagini[0] = immagine;
 		this.disponibile = disponibile;
 	}
 	
-	public Oggetto(CategoriaEnum cateogria, CondizioneEnum condizioni, byte[] immagine,
+	public Oggetto(CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine,
 			boolean disponibile) {
-		this.cateogria = cateogria;
+		this.categoria = categoria;
 		this.condizioni = condizioni;
 		this.immagini[0] = immagine;
 		this.disponibile = disponibile;
@@ -65,12 +65,12 @@ public class Oggetto {
 		this.descrizione = descrizione;
 	}
 
-	public String getCateogria() {
-		return cateogria.toString();
+	public String getCategoria() {
+		return categoria.toString();
 	}
 
-	public void setCateogria(CategoriaEnum cateogria) {
-		this.cateogria = cateogria;
+	public void setCategoria(CategoriaEnum cateogria) {
+		this.categoria = cateogria;
 	}
 
 	public String getCondizioni() {

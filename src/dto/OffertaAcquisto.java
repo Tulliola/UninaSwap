@@ -7,7 +7,7 @@ import utilities.ModConsegnaEnum;
 import utilities.StatoOffertaEnum;
 
 public class OffertaAcquisto extends Offerta{
-	private double prezzoOfferto;
+	private Double prezzoOfferto;
 
 	public OffertaAcquisto(Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito, double prezzoOfferto) {
@@ -16,7 +16,7 @@ public class OffertaAcquisto extends Offerta{
 	}
 
 	@Override
-	public double getPrezzoOfferto() {
+	public Double getPrezzoOfferto() {
 		return prezzoOfferto;
 	}
 }
