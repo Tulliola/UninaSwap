@@ -181,8 +181,10 @@ public class Controller {
 	}
 	
 	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
-		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+		System.out.println("è gia premuto");
+		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
+		System.out.println("che posizione giochi? calcio");
 		
 //		try {	
 //			Annuncio annuncioInserito = annuncioDAO.recuperaAnnuncioDaID(newAnnuncio.getIdAnnuncio());

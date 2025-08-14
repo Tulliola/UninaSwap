@@ -229,8 +229,8 @@ public abstract class Annuncio {
 		this.sedeIncontroProposte = sedeIncontroProposte;
 	}
 	
-	public double getPrezzoIniziale() {
-		return -1.0;
+	public Double getPrezzoIniziale() {
+		return null;
 	}
 	
 	public String getNotaScambio() {

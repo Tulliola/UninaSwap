@@ -26,7 +26,7 @@ public class AnnuncioVendita extends Annuncio {
 	}
 
 	@Override
-	public double getPrezzoIniziale() {
+	public Double getPrezzoIniziale() {
 		return prezzoIniziale;
 	}
 }
