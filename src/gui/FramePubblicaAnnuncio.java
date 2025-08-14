@@ -1333,6 +1333,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.lblAggiungiFoto1.getImmagineInByte(), true);
 		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
 		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
+		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
 
 		Annuncio annuncioDaPassare;
 		if(tipoAnnuncio == "Vendita") {	

@@ -161,8 +161,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 					rsInserimentoAnnuncio.next();
 					idAnnuncioInserito = rsInserimentoAnnuncio.getInt("idAnnuncio");
 				}
-			
-				System.out.println(idAnnuncioInserito);
 
 				if(annuncioDaInserire.isIncontro())
 					for(int i = 0; i < annuncioDaInserire.getSedeIncontroProposte().size(); i++) {					
@@ -181,8 +179,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 						
 
 					}
-				
-				System.out.println("Sono quo");
 
 			}
 
@@ -205,13 +201,18 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
 				rsOggetto.next();
-				return new Oggetto(
+				Oggetto oggettoInAnnuncio = new Oggetto(
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
 						this.recuperaPrimaImmagineDiOggetto(rsOggetto.getInt("idOggetto")),
 						isOggettoDisponibile(idOggetto)
 				);
+				
+				if(rsOggetto.getString("Descrizione") != null)
+					oggettoInAnnuncio.setDescrizione(rsOggetto.getString("Descrizione"));
+				
+				return oggettoInAnnuncio;
 			}
 		}
 	}
@@ -258,15 +259,15 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		StatoAnnuncioEnum stato = StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato"));
 		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
 		String nome = rs.getString("Nome");
-		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs.getInt("IdOggetto"));
+		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs.getInt("idOggetto"));
 		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs.getString("Email"));
 		
-		if(rs.getString("Tipo_annuncio") == "Vendita") {
+		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
 			return new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
 		}
-		else if(rs.getString("Tipo_annuncio") == "Scambio") {
+		else if(rs.getString("Tipo_annuncio").equals("Scambio")) {
 			return new AnnuncioScambio(
 				idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 

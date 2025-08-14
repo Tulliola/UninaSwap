@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
@@ -59,6 +61,10 @@ public class Controller {
 //		frameHomePage.setVisible(true);
 	}
 
+	static {
+		UIManager.put("ToolTip.font", new Font("Ubuntu Sans", Font.BOLD, 16));
+		UIManager.put("ToolTip.background", Color.white);
+	}
 	
 	public static void main(String[] args) {
 		Controller mainController = new Controller();

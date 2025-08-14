@@ -13,6 +13,7 @@ import java.awt.event.FocusListener;
 
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -26,6 +27,9 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
+import dto.AnnuncioRegalo;
+import dto.AnnuncioScambio;
+import dto.AnnuncioVendita;
 //import dto.AnnuncioRegalo;
 //import dto.AnnuncioScambio;
 import utilities.MyJButton;
@@ -188,11 +192,12 @@ public class PanelHomePageAnnunci extends JPanel{
 		annuncioPanel.setLayout(new BorderLayout());
 		annuncioPanel.setPreferredSize(new Dimension(800, 600));
 		annuncioPanel.setMaximumSize(new Dimension(800, 600));
+		annuncioPanel.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
 		
 		MyJPanel panelInfoEFotoOggetto = new MyJPanel();
 		panelInfoEFotoOggetto.setLayout(new BorderLayout());
 		panelInfoEFotoOggetto.add(this.creaPanelFotoOggetto(annuncioToAdd), BorderLayout.NORTH);
-		panelInfoEFotoOggetto.add(this.creaPanelInfoOggetto(), BorderLayout.CENTER);
+		panelInfoEFotoOggetto.add(this.creaPanelInfoOggetto(annuncioToAdd), BorderLayout.CENTER);
 		
 		annuncioPanel.add(panelInfoEFotoOggetto, BorderLayout.WEST);
 		
@@ -211,6 +216,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelFotoOggetto.setLayout(new BorderLayout());
 		panelFotoOggetto.setPreferredSize(new Dimension(375, 500));
 		panelFotoOggetto.setMaximumSize(new Dimension(375, 500));
+		panelFotoOggetto.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
 				
 		ImageIcon fotoToAdd;
 		MyJPanel panelInterno;
@@ -228,34 +234,86 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelFotoOggetto;
 	}
 	
-	private MyJPanel creaPanelInfoOggetto() {
+	private MyJPanel creaPanelInfoOggetto(Annuncio annuncioToAdd) {
 		MyJPanel panelInfoOggetto = new MyJPanel();
-		panelInfoOggetto.setLayout(new BoxLayout(panelInfoOggetto, BoxLayout.X_AXIS));
-		panelInfoOggetto.setPreferredSize(new Dimension(350, 200));
-		panelInfoOggetto.setMaximumSize(new Dimension(350, 200));
+		panelInfoOggetto.setLayout(new BorderLayout());
+		panelInfoOggetto.setPreferredSize(new Dimension(375, 100));
+		panelInfoOggetto.setMaximumSize(new Dimension(375, 100));
 		panelInfoOggetto.setAlignmentX(CENTER_ALIGNMENT);
 		
-		panelInfoOggetto.setBackground(Color.green);
+		MyJPanel panelCategoria = new MyJPanel();
+		panelCategoria.setPreferredSize(new Dimension(375, 50));
+		panelCategoria.setMaximumSize(new Dimension(375, 50));
+		panelCategoria.setBackground(Color.white);
+		panelCategoria.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+		panelCategoria.setLayout(new FlowLayout());
+		panelCategoria.setAlignmentX(CENTER_ALIGNMENT);
+		
+		MyJPanel panelCondizioni = new MyJPanel();
+		panelCondizioni.setPreferredSize(new Dimension(375, 50));
+		panelCondizioni.setMaximumSize(new Dimension(375, 50));
+		panelCondizioni.setBackground(Color.white);
+		panelCondizioni.setLayout(new FlowLayout());
+		panelCondizioni.setAlignmentX(CENTER_ALIGNMENT);
+		panelCondizioni.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+
+		MyJLabel lblCategoria = new MyJLabel();
+		lblCategoria.setAlignmentX(CENTER_ALIGNMENT);
+		lblCategoria.setBorder(new EmptyBorder(10, 0, 0, 0));
+		lblCategoria.setText(lblCategoria.getText()+annuncioToAdd.getOggettoInAnnuncio().getCategoria());
+		panelCategoria.add(Box.createVerticalGlue());
+		panelCategoria.add(lblCategoria);
+		panelCategoria.add(Box.createVerticalGlue());
+		
+		MyJLabel lblCondizioni = new MyJLabel();
+		lblCondizioni.setAlignmentX(CENTER_ALIGNMENT);
+		lblCondizioni.setBorder(new EmptyBorder(10, 0, 0, 0));
+		lblCondizioni.setText(lblCondizioni.getText()+annuncioToAdd.getOggettoInAnnuncio().getCondizioni());
+		panelCondizioni.add(Box.createVerticalGlue());
+		panelCondizioni.add(lblCondizioni);
+		panelCondizioni.add(Box.createVerticalGlue());
+		
+		panelInfoOggetto.add(panelCategoria, BorderLayout.NORTH);
+		panelInfoOggetto.add(panelCondizioni, BorderLayout.CENTER);
+		
+		panelInfoOggetto.setBackground(Color.red);
 		
 		return panelInfoOggetto;
 	}
 	
 	private MyJPanel creaPanelUsernamePubblicante(Annuncio annuncio) {
 		MyJPanel panelUsernamePubblicante = new MyJPanel();
-		panelUsernamePubblicante.setLayout(new BoxLayout(panelUsernamePubblicante, BoxLayout.Y_AXIS));
-		panelUsernamePubblicante.setPreferredSize(new Dimension(550, 75));
-		panelUsernamePubblicante.setMaximumSize(new Dimension(550, 75));
-		panelUsernamePubblicante.setAlignmentX(CENTER_ALIGNMENT);
-		
+		panelUsernamePubblicante.setLayout(new BoxLayout(panelUsernamePubblicante, BoxLayout.X_AXIS));
+		panelUsernamePubblicante.setPreferredSize(new Dimension(425, 75));
+		panelUsernamePubblicante.setMaximumSize(new Dimension(425, 75));
+		panelUsernamePubblicante.setAlignmentX(CENTER_ALIGNMENT);		
+		panelUsernamePubblicante.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
 		
 		MyJLabel lblUsername = new MyJLabel(annuncio.getUtenteProprietario().getUsername());
+		lblUsername.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblUsername.setAlignmentX(RIGHT_ALIGNMENT);
+		MyJLabel lblIconaTipoAnnuncio = new MyJLabel();
 		
+		if(annuncio instanceof AnnuncioVendita) {
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVendita.png", 50, 50, false);
+			lblIconaTipoAnnuncio.setToolTipText("Prezzo iniziale - "+annuncio.getPrezzoIniziale()+"€");
+		}
+		else if(annuncio instanceof AnnuncioScambio) {
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambio.png", 50, 50, false);
+			lblIconaTipoAnnuncio.setToolTipText(annuncio.getNotaScambio());
+		}
+		else if(annuncio instanceof AnnuncioRegalo)
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioRegalo.png", 50, 50, false);
+
 		panelUsernamePubblicante.add(Box.createVerticalGlue());
+		panelUsernamePubblicante.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelUsernamePubblicante.add(lblUsername);
+		panelUsernamePubblicante.add(Box.createHorizontalGlue());
+		panelUsernamePubblicante.add(lblIconaTipoAnnuncio);
+		panelUsernamePubblicante.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelUsernamePubblicante.add(Box.createVerticalGlue());
 		
-		panelUsernamePubblicante.setBackground(Color.yellow);
+		panelUsernamePubblicante.setBackground(MyJPanel.uninaColorClicked);
 
 		return panelUsernamePubblicante;
 	}
@@ -266,12 +324,11 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelTipoAnnuncio.setPreferredSize(new Dimension(550, 570));
 		panelTipoAnnuncio.setMaximumSize(new Dimension(550, 570));
 		panelTipoAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
+		panelTipoAnnuncio.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
 		
 		MyJLabel lblNomeAnnuncio = new MyJLabel(annuncio.getNome());
 		lblNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
 		
-//		MyJLabel lblTipoAnnuncio = new MyJLabel();
-//		lblTipoAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
 		MyJLabel lblNotaScambio = new MyJLabel(annuncio.getNotaScambio());
 		if(annuncio.getNotaScambio() != null) {
 			lblNotaScambio.setAlignmentX(LEFT_ALIGNMENT);
@@ -281,11 +338,10 @@ public class PanelHomePageAnnunci extends JPanel{
 		lblDescrizione.setAlignmentX(LEFT_ALIGNMENT);
 		
 		panelTipoAnnuncio.add(lblNomeAnnuncio);
-//		panelTipoAnnuncio.add(lblTipoAnnuncio);
 		panelTipoAnnuncio.add(lblDescrizione);
 		panelTipoAnnuncio.add(lblNotaScambio);
 		
-		panelTipoAnnuncio.setBackground(Color.orange);
+		panelTipoAnnuncio.setBackground(Color.white);
 		
 		return panelTipoAnnuncio;
 	}
