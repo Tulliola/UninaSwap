@@ -3,16 +3,15 @@ package dto;
 public class UfficioPostale {
 	private int idUfficio;
 	private String nome;
-	private String Via;
+	private String via;
 	private String civico;
 	private String comune;
 	private String cap;
 	
 	public UfficioPostale(int idUfficio, String nome, String via, String civico, String comune, String cap) {
-		super();
 		this.idUfficio = idUfficio;
 		this.nome = nome;
-		Via = via;
+		this.via = via;
 		this.civico = civico;
 		this.comune = comune;
 		this.cap = cap;
@@ -35,11 +34,11 @@ public class UfficioPostale {
 	}
 
 	public String getVia() {
-		return Via;
+		return via;
 	}
 
 	public void setVia(String via) {
-		Via = via;
+		this.via = via;
 	}
 
 	public String getCivico() {

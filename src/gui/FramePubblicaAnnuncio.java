@@ -930,7 +930,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				panelPerIncontri.revalidate();
 				panelPerIncontri.repaint();
 				
-				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri));
+				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri, sediPresenti));
 				
 				numeroIncontri++;
 			}
@@ -955,14 +955,14 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		return panelDettagliIncontri;
 	}
 	
-	private MyJPanel aggiungiNuovaRigaIncontro(MyJPanel panelPerIncontri) {
+	private MyJPanel aggiungiNuovaRigaIncontro(MyJPanel panelPerIncontri, ArrayList<SedeUniversita> sediPresenti) {
 		MyJPanel rigaIncontro = new MyJPanel();
 		rigaIncontro.setBackground(MyJPanel.uninaLightColor);
 		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
 		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
 		
-		JComboBox sediUniversitaCB = this.creaCBSediUniversita();
+		JComboBox sediUniversitaCB = this.creaCBSediUniversita(sediPresenti);
 		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
 		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
 		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();
@@ -1049,7 +1049,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				panelPerIncontri.revalidate();
 				panelPerIncontri.repaint();
 					
-				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri));
+				panelPerIncontri.add(aggiungiNuovaRigaIncontro(panelPerIncontri, sediPresenti));
 				
 				numeroIncontri++;
 			}
@@ -1128,7 +1128,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		for(SedeUniversita sedeCorrente : sediPresenti)
 			sediUniversita.addItem(sedeCorrente);
 		
-		(SedeUniversita)(sediUniversita.getSelectedItem())
+		((SedeUniversita)sediUniversita.getSelectedItem()).getIdSede();
 		return sediUniversita;
 	}
 	

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import database.dao.interfacce.SedeUniversitaDAO;
+import dto.Annuncio;
 import dto.SedeUniversita;
 
 public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
