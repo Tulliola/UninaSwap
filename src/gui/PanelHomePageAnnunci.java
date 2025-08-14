@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -182,7 +183,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.add(Box.createVerticalGlue());
 	}
 	
-	private MyJPanel creaPanelAnnuncio(Annuncio annuncio) {
+	private MyJPanel creaPanelAnnuncio(Annuncio annuncioToAdd) {
 		MyJPanel annuncioPanel = new MyJPanel();
 		annuncioPanel.setLayout(new BorderLayout());
 		annuncioPanel.setPreferredSize(new Dimension(800, 600));
@@ -190,35 +191,37 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		MyJPanel panelInfoEFotoOggetto = new MyJPanel();
 		panelInfoEFotoOggetto.setLayout(new BorderLayout());
-		panelInfoEFotoOggetto.add(this.creaPanelFotoOggetto(), BorderLayout.NORTH);
+		panelInfoEFotoOggetto.add(this.creaPanelFotoOggetto(annuncioToAdd), BorderLayout.NORTH);
 		panelInfoEFotoOggetto.add(this.creaPanelInfoOggetto(), BorderLayout.CENTER);
 		
 		annuncioPanel.add(panelInfoEFotoOggetto, BorderLayout.WEST);
 		
 		MyJPanel panelInfoAnnuncio = new MyJPanel();
 		panelInfoAnnuncio.setLayout(new BorderLayout());
-		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(annuncio), BorderLayout.NORTH);
-		panelInfoAnnuncio.add(this.creaPanelTipoAnnuncio(annuncio), BorderLayout.CENTER);
+		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(annuncioToAdd), BorderLayout.NORTH);
+		panelInfoAnnuncio.add(this.creaPanelTipoAnnuncio(annuncioToAdd), BorderLayout.CENTER);
 
 		annuncioPanel.add(panelInfoAnnuncio, BorderLayout.CENTER);
 		
 		return annuncioPanel;
 	}
 	
-	private MyJPanel creaPanelFotoOggetto() {
+	private MyJPanel creaPanelFotoOggetto(Annuncio annuncioToAdd) {
 		MyJPanel panelFotoOggetto = new MyJPanel();
 		panelFotoOggetto.setLayout(new BorderLayout());
 		panelFotoOggetto.setPreferredSize(new Dimension(375, 500));
 		panelFotoOggetto.setMaximumSize(new Dimension(375, 500));
 				
-		MyJLabel lblVaiIndietro = new MyJLabel();
-		lblVaiIndietro.aggiungiImmagineScalata("images/iconaTornaIndietroFoto.png", 50, 50, true);
-		
-		MyJLabel lblVaiAvanti = new MyJLabel();
-		lblVaiAvanti.aggiungiImmagineScalata("images/iconaVaiAvantiFoto.png", 50, 50, true);
-		
-		ImageIcon foto = new ImageIcon("images/logo_uninaswap.png");
-		MyJPanel panelInterno = new MyJPanel(foto.getImage());
+		ImageIcon fotoToAdd;
+		MyJPanel panelInterno;
+		if(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0) != null) {
+			fotoToAdd = new ImageIcon(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0));
+			panelInterno = new MyJPanel(fotoToAdd.getImage());
+		}
+		else {
+			fotoToAdd = new ImageIcon("images/logo_uninaswap.png");
+			panelInterno = new MyJPanel(fotoToAdd.getImage());
+		}
 		
 		panelFotoOggetto.add(panelInterno, BorderLayout.CENTER);
 		

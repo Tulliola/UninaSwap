@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 
 import database.dao.interfacce.AnnuncioDAO;
@@ -26,10 +27,18 @@ import utilities.CondizioneEnum;
 import utilities.StatoAnnuncioEnum;
 
 public class AnnuncioDAO_Postgres implements AnnuncioDAO{
-	Connection connessioneDB;
+	private Connection connessioneDB;
+	private Annuncio annuncio;
 	
+	//Costruttore per il retrieve
 	public AnnuncioDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
+	}
+	
+	//Costruttore per INSERT, UPDATE e DELETE
+	public AnnuncioDAO_Postgres(Connection connessioneDB, Annuncio annuncio) {
+		this.connessioneDB = connessioneDB;
+		this.annuncio = annuncio;
 	}
 
 	@Override
@@ -54,7 +63,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
-				System.out.println(rs.next());
 				while(rs.next()) {
 					toReturn.add(annuncioCorrenteRecuperato(rs));
 				}
@@ -67,7 +75,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	public ArrayList<Annuncio> recuperaAnnunciNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? ORDER BY Momento_pubblicazione")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -98,8 +106,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				rsInserimentoOggetto.next();
 				idOggettoInserito = rsInserimentoOggetto.getInt("idOggetto");
 			}
+			
+			System.out.println(idOggettoInserito);
 
-			for(int i = 0; i < 2; i++) {
+			for(int i = 0; i < 3; i++) {
 				if(annuncioDaInserire.getOggettoInAnnuncio().getImmagine(i) != null) {
 					String inserimentoImmagini = "INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)";
 					
@@ -122,26 +132,33 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				psInserimentoAnnuncio.setBoolean(4, annuncioDaInserire.isIncontro());
 				psInserimentoAnnuncio.setBoolean(5, annuncioDaInserire.isRitiroInPosta());
 				psInserimentoAnnuncio.setString(6, annuncioDaInserire.getNome());
-				
-				if(annuncioDaInserire.getNotaScambio() != null)
+								
+				if(annuncioDaInserire.getNotaScambio() != null) {
 					psInserimentoAnnuncio.setString(7, "Scambio");
-				else if(annuncioDaInserire.getPrezzoIniziale() == 0)
+					psInserimentoAnnuncio.setString(8, annuncioDaInserire.getNotaScambio());
+					psInserimentoAnnuncio.setNull(9, Types.REAL);
+				}
+				else if(annuncioDaInserire.getPrezzoIniziale() == null) {
 					psInserimentoAnnuncio.setString(7, "Regalo");
-				else
+					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentoAnnuncio.setNull(9, Types.REAL);
+				}
+				else {
 					psInserimentoAnnuncio.setString(7, "Vendita");
-
-				psInserimentoAnnuncio.setString(8, annuncioDaInserire.getNotaScambio());
-				psInserimentoAnnuncio.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
+					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentoAnnuncio.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
+				}
 				
 				psInserimentoAnnuncio.executeUpdate();
+				
 			}
-					
+				
 			connessioneDB.commit();
+
 		}
 		catch (SQLException exc) {
 		    connessioneDB.rollback();
-		    exc.getMessage();
-//		    throw exc;
+		    System.out.println(exc.getMessage());
 		} 
 		finally {
 		    connessioneDB.setAutoCommit(true);
@@ -154,14 +171,12 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			psOggetto.setInt(1, rs.getInt("idOggetto"));
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
-	            Path imagePath = Paths.get("images", "iconaCestino.png"); 
-	            byte[] imageBytes = Files.readAllBytes(imagePath);
 				rsOggetto.next();
 				return new Oggetto(
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
-						imageBytes,
+						this.recuperaPrimaImmagineDiOggetto(rsOggetto.getInt("idOggetto")),
 						isOggettoDisponibile(rs.getInt("idOggetto"))
 					);
 			}
@@ -212,6 +227,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		StatoAnnuncioEnum stato = StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato"));
 		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
 		String nome = rs.getString("Nome");
+		
 		if(rs.getString("Tipo_annuncio") == "Vendita") {
 			return new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
@@ -229,6 +245,21 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utenteProprietario, oggettoInAnnuncio
 			);
+		}
+	}
+	
+	private byte[] recuperaPrimaImmagineDiOggetto(int idOggetto) throws SQLException{
+		String recuperaImmagine = "SELECT File_immagine FROM Immagine WHERE idOggetto = ?";
+		
+		try(PreparedStatement psRecuperaImmagine = connessioneDB.prepareStatement(recuperaImmagine)){
+			psRecuperaImmagine.setInt(1, idOggetto);
+			
+			try(ResultSet rsRecuperaImmagine = psRecuperaImmagine.executeQuery()){
+				if(rsRecuperaImmagine.next())
+					return rsRecuperaImmagine.getBytes("File_immagine");
+				else
+					return null;
+			}
 		}
 	}
 
