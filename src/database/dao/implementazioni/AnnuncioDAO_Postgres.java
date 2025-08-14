@@ -89,7 +89,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		try (PreparedStatement psInserimentoOggetto = connessioneDB.prepareStatement(inserimentoOggetto)){
 			psInserimentoOggetto.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
 			psInserimentoOggetto.setString(2, annuncioDaInserire.getOggettoInAnnuncio().getDescrizione());
-			psInserimentoOggetto.setString(3, annuncioDaInserire.getOggettoInAnnuncio().getCateogria());
+			psInserimentoOggetto.setString(3, annuncioDaInserire.getOggettoInAnnuncio().getCategoria());
 			psInserimentoOggetto.setString(4, annuncioDaInserire.getOggettoInAnnuncio().getCondizioni());
 
 			int idOggettoInserito; 
