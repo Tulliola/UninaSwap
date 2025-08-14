@@ -64,4 +64,9 @@ public class UfficioPostale {
 	public void setCap(String cap) {
 		this.cap = cap;
 	}
+	
+	@Override
+	public String toString() {
+		return nome+"\n"+via+", "+civico+", "+comune+", "+cap+"\n";
+	}
 }

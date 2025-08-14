@@ -88,6 +88,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}
 	
+
 	@Override
 	public void inserisciAnnuncio(Annuncio annuncioDaInserire) throws SQLException {
 		connessioneDB.setAutoCommit(false);
@@ -196,22 +197,28 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		finally {
 		    connessioneDB.setAutoCommit(true);
 		}
-	}
-	
+	}	
 	
 	private Oggetto recuperaOggettoInAnnuncio(int idOggetto) throws SQLException, IOException{
+		
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
 			psOggetto.setInt(1, idOggetto);
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
 				rsOggetto.next();
-				return new Oggetto(
+				Oggetto oggettoInAnnuncio = new Oggetto(
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
 						this.recuperaPrimaImmagineDiOggetto(rsOggetto.getInt("idOggetto")),
 						isOggettoDisponibile(idOggetto)
 				);
+				
+				if(rsOggetto.getString("Descrizione") != null) {
+					oggettoInAnnuncio.setDescrizione(rsOggetto.getString("Descrizione"));
+				}
+				
+				return oggettoInAnnuncio;
 			}
 		}
 	}

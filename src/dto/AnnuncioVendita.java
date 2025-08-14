@@ -29,4 +29,12 @@ public class AnnuncioVendita extends Annuncio {
 	public Double getPrezzoIniziale() {
 		return prezzoIniziale;
 	}
+	
+	@Override
+	public String toString() {
+		String toReturn = super.toString();
+		toReturn += "\nPrezzo iniziale annuncio = "+prezzoIniziale+"\n";
+		
+		return toReturn;
+	}
 }

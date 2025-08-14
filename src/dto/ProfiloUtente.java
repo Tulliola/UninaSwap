@@ -116,4 +116,18 @@ public class ProfiloUtente {
 	public void setOfferteUtente(ArrayList<Offerta> offerteUtente) {
 		this.offerteUtente = offerteUtente;
 	}
+	
+	@Override 
+	public String toString() {
+		String toReturn = "PROFILO UTENTE\n---------------------------------\n";
+		
+		toReturn += "Username = "+username+"\n";
+		toReturn += "Email = "+email+"\n";
+		toReturn += "Saldo = "+saldo+"\n";
+		toReturn += "Residenza = "+residenza+"\n";
+		toReturn += "Eventuale data sospensione = "+dataSospensione+"\n";
+		toReturn += "Utente sospeso? = "+sospeso+"\n";
+		
+		return toReturn;
+	}
 }

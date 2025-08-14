@@ -29,4 +29,12 @@ public class AnnuncioScambio extends Annuncio {
 	public String getNotaScambio() {
 		return notaScambio;
 	}
+	
+	@Override
+	public String toString() {
+		String toReturn = super.toString();
+		toReturn += "\nNota Scambio"+notaScambio+"\n";
+		
+		return toReturn;
+	}
 }

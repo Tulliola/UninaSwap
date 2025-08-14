@@ -226,4 +226,35 @@ public abstract class Annuncio {
 	public String getNotaScambio() {
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		String toReturn = "ANNUNCIO\n-----------------------------------------\n";
+		toReturn += "Id Annuncio = "+idAnnuncio+"\n";
+		toReturn += "Spedizione = "+spedizione+"\n";
+		toReturn += "Ritiro in posta = "+ritiroInPosta+"\n";
+		toReturn += "Incontro = "+incontro+"\n";
+		toReturn += "Stato = "+stato+"\n";
+		toReturn += "Momento pubblicazione = "+momentoPubblicazione+"\n";
+		toReturn += "Nome = "+nome+"\n";
+		toReturn += "Data scadenza = "+dataScadenza+"\n";
+		
+		toReturn += "Offerte a questo annuncio= \n";
+		for(Offerta offerta: offerteRicevute)
+			toReturn += offerta;
+		
+		toReturn += "Utente proprietario dell'annuncio = \n" + utenteProprietario;
+		toReturn += "Oggetto riguardante: \n" + oggettoInAnnuncio;
+		
+		toReturn += "Sedi proposte = \n";
+		for(SedeUniversita sede: sedeIncontroProposte) {
+			toReturn += sede;
+			toReturn += "Ora inizio incontro = "+oraInizioIncontro+"\n";
+			toReturn += "Ora fine incontro = "+oraFineIncontro+"\n";
+			toReturn += "Giorno incontro = "+giornoIncontro+"\n";
+		}
+				
+		return toReturn;
+	}
+
 }
