@@ -223,7 +223,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 
 		bottoneDiRegistrazione.setDefaultAction(() -> {
 			nascondiLabelErrore(lblErroreUsername, lblErroreEmail, lblErrorePassword, lblErroreResidenza, lblErroreDalDB);
-			resettaBordiTextField(usernameTextField, emailTextField, passwordTextField,residenzaTextField);
+			resettaBordiTextField(blackBorder, usernameTextField, emailTextField, passwordTextField,residenzaTextField);
 			clickConfermaRegistrazione();
 		});
 		

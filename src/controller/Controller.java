@@ -41,11 +41,11 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
 
-//		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "vendita");
-//		framePubblicaAnnuncio.setVisible(true);
+		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita");
+		framePubblicaAnnuncio.setVisible(true);
 		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);

@@ -46,7 +46,7 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 			
 			try(ResultSet rsSedeCorrente = psSedeCorrente.executeQuery()){
 				rsSedeCorrente.next();
-				return new SedeUniversita(idSede, rsSedeCorrente.getString("nome"), rsSedeCorrente.getString("indirizzo"));
+				return new SedeUniversita(rsSedeCorrente.getString("nome"));
 			}
 		}
 	}
