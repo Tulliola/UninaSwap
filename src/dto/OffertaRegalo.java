@@ -9,7 +9,7 @@ import utilities.StatoOffertaEnum;
 
 public class OffertaRegalo extends Offerta {
 	//Attributi propri
-	private double prezzoOfferto;
+	private Double prezzoOfferto = null;
 	
 	//Attributi derivati da relazioni
 	private ArrayList<Oggetto> oggettiOfferti;
@@ -27,13 +27,17 @@ public class OffertaRegalo extends Offerta {
 		this.oggettiOfferti.addAll(oggettiOfferti);
 	}
 	
+	public void aggiuntiOffertaMonetaria(double offerta) {
+		this.prezzoOfferto = offerta;
+	}
+	
 	@Override
 	public ArrayList<Oggetto> getOggettiOfferti() {
 		return this.oggettiOfferti;
 	}
 
 	@Override
-	public double getPrezzoOfferto() {
+	public Double getPrezzoOfferto() {
 		return prezzoOfferto;
 	}
 }

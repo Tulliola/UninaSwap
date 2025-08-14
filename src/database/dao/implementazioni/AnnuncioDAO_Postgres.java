@@ -88,17 +88,17 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 	
 	@Override
-	public void inserisciAnnuncio(Annuncio annuncioDaInserire) throws SQLException {
+	public void inserisciAnnuncio() throws SQLException {
 		connessioneDB.setAutoCommit(false);
 		
 
 		String inserimentoOggetto = "INSERT INTO Oggetto (Email, Descrizione, Categoria, Condizioni) VALUES (?, ?, ?, ?) RETURNING idOggetto";
 		
 		try (PreparedStatement psInserimentoOggetto = connessioneDB.prepareStatement(inserimentoOggetto)){
-			psInserimentoOggetto.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
-			psInserimentoOggetto.setString(2, annuncioDaInserire.getOggettoInAnnuncio().getDescrizione());
-			psInserimentoOggetto.setString(3, annuncioDaInserire.getOggettoInAnnuncio().getCategoria());
-			psInserimentoOggetto.setString(4, annuncioDaInserire.getOggettoInAnnuncio().getCondizioni());
+			psInserimentoOggetto.setString(1, annuncio.getUtenteProprietario().getEmail());
+			psInserimentoOggetto.setString(2, annuncio.getOggettoInAnnuncio().getDescrizione());
+			psInserimentoOggetto.setString(3, annuncio.getOggettoInAnnuncio().getCategoria());
+			psInserimentoOggetto.setString(4, annuncio.getOggettoInAnnuncio().getCondizioni());
 
 			int idOggettoInserito; 
 			
@@ -107,14 +107,13 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				idOggettoInserito = rsInserimentoOggetto.getInt("idOggetto");
 			}
 			
-			System.out.println(idOggettoInserito);
 
 			for(int i = 0; i < 3; i++) {
-				if(annuncioDaInserire.getOggettoInAnnuncio().getImmagine(i) != null) {
+				if(annuncio.getOggettoInAnnuncio().getImmagine(i) != null) {
 					String inserimentoImmagini = "INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)";
 					
 					try(PreparedStatement psInserimentoImmagini = connessioneDB.prepareStatement(inserimentoImmagini)){
-						psInserimentoImmagini.setBytes(1, annuncioDaInserire.getOggettoInAnnuncio().getImmagine(i));
+						psInserimentoImmagini.setBytes(1, annuncio.getOggettoInAnnuncio().getImmagine(i));
 						psInserimentoImmagini.setInt(2, idOggettoInserito);
 						
 						psInserimentoImmagini.executeUpdate();
@@ -126,19 +125,19 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			try(PreparedStatement psInserimentoAnnuncio = connessioneDB.prepareStatement(inserimentoAnnuncio)){
-				psInserimentoAnnuncio.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
+				psInserimentoAnnuncio.setString(1, annuncio.getUtenteProprietario().getEmail());
 				psInserimentoAnnuncio.setInt(2, idOggettoInserito);
-				psInserimentoAnnuncio.setBoolean(3, annuncioDaInserire.isSpedizione());
-				psInserimentoAnnuncio.setBoolean(4, annuncioDaInserire.isIncontro());
-				psInserimentoAnnuncio.setBoolean(5, annuncioDaInserire.isRitiroInPosta());
-				psInserimentoAnnuncio.setString(6, annuncioDaInserire.getNome());
+				psInserimentoAnnuncio.setBoolean(3, annuncio.isSpedizione());
+				psInserimentoAnnuncio.setBoolean(4, annuncio.isIncontro());
+				psInserimentoAnnuncio.setBoolean(5, annuncio.isRitiroInPosta());
+				psInserimentoAnnuncio.setString(6, annuncio.getNome());
 								
-				if(annuncioDaInserire.getNotaScambio() != null) {
+				if(annuncio.getNotaScambio() != null) {
 					psInserimentoAnnuncio.setString(7, "Scambio");
-					psInserimentoAnnuncio.setString(8, annuncioDaInserire.getNotaScambio());
+					psInserimentoAnnuncio.setString(8, annuncio.getNotaScambio());
 					psInserimentoAnnuncio.setNull(9, Types.REAL);
 				}
-				else if(annuncioDaInserire.getPrezzoIniziale() == null) {
+				else if(annuncio.getPrezzoIniziale() == null) {
 					psInserimentoAnnuncio.setString(7, "Regalo");
 					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
 					psInserimentoAnnuncio.setNull(9, Types.REAL);
@@ -146,7 +145,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				else {
 					psInserimentoAnnuncio.setString(7, "Vendita");
 					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
-					psInserimentoAnnuncio.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
+					psInserimentoAnnuncio.setDouble(9, annuncio.getPrezzoIniziale());
 				}
 				
 				psInserimentoAnnuncio.executeUpdate();
@@ -166,9 +165,9 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 	
 	
-	private Oggetto recuperaOggettoInAnnuncio(ResultSet rs) throws SQLException, IOException{
+	private Oggetto recuperaOggettoInAnnuncio(int idOggetto) throws SQLException, IOException{
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
-			psOggetto.setInt(1, rs.getInt("idOggetto"));
+			psOggetto.setInt(1, idOggetto);
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
 				rsOggetto.next();
@@ -177,8 +176,8 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
 						this.recuperaPrimaImmagineDiOggetto(rsOggetto.getInt("idOggetto")),
-						isOggettoDisponibile(rs.getInt("idOggetto"))
-					);
+						isOggettoDisponibile(idOggetto)
+				);
 			}
 		}
 	}
@@ -197,9 +196,9 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}
 	
-	private ProfiloUtente recuperaUtenteProprietario(ResultSet rs) throws SQLException {
+	private ProfiloUtente recuperaUtenteProprietario(String email) throws SQLException {
 		try(PreparedStatement psUtente = connessioneDB.prepareStatement("SELECT * FROM PROFILO_UTENTE WHERE Email = ?")){
-			psUtente.setString(1, rs.getString("Email"));
+			psUtente.setString(1, email);
 			
 			try(ResultSet rsUtente = psUtente.executeQuery()){
 				rsUtente.next();
@@ -218,8 +217,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 	
 	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException, IOException{
-		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs);
-		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs);
 		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");
 		boolean spedizione = rs.getBoolean("Spedizione");
 		boolean ritiroInPosta = rs.getBoolean("Ritiro_in_posta");
@@ -227,6 +224,8 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		StatoAnnuncioEnum stato = StatoAnnuncioEnum.confrontaConDB(rs.getString("Stato"));
 		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
 		String nome = rs.getString("Nome");
+		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs.getInt("IdOggetto"));
+		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs.getString("Email"));
 		
 		if(rs.getString("Tipo_annuncio") == "Vendita") {
 			return new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 

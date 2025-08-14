@@ -22,6 +22,7 @@ import dto.OffertaRegalo;
 import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
+import dto.SedeUniversita;
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
 import utilities.ModConsegnaEnum;
@@ -32,12 +33,19 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	
 	private Connection connessioneDB = null;
 	
+	private Offerta offerta;
+	
 	public OffertaDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
 	}
 
+	public OffertaDAO_Postgres(Connection connessioneDB, Offerta offerta) {
+		this.connessioneDB = connessioneDB;
+		this.offerta = offerta;
+	}
+	
 	@Override
-	public ArrayList<Offerta> offerteDiUtente(String email) throws SQLException, IOException {
+	public ArrayList<Offerta> recuperaOfferteDiUtente(String email) throws SQLException, IOException {
 		ArrayList<Offerta> offerteUtente = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT "
@@ -96,7 +104,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	@Override
-	public ArrayList<Offerta> offerteDiAnnuncio(int idAnnuncio) throws SQLException, IOException {
+	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(int idAnnuncio) throws SQLException, IOException {
 		ArrayList<Offerta> offerteAnnuncio = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT"
@@ -158,6 +166,23 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 		}
 	}
 
+	@Override
+	public void inserisciOfferta() throws SQLException{
+		String emailOfferente = this.offerta.getUtenteProprietario().getEmail();
+		int idAnnuncioRiferito = this.offerta.getAnnuncioRiferito().getIdAnnuncio();
+		Timestamp momentoProposta = this.offerta.getMomentoProposta();
+		String nota = this.offerta.getNota();
+		String indirizzoSpedizione = this.offerta.getIndirizzoSpedizione();
+		String oraInizioIncontro = this.offerta.getOraInizioIncontro();
+		String oraFineIncontro = this.offerta.getOraFineIncontro();
+		String giornoIncontro = this.offerta.getGiornoIncontro();
+		SedeUniversita sede = this.offerta.getSedeDIncontroScelta();
+		
+		if(this.offerta instanceof OffertaAcquisto) {
+			String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(";
+		}
+	}
+	
 	//Metodi ausiliari
 	private ArrayList<Oggetto> recuperaOggettiOfferti(int idOfferta) throws SQLException, IOException {
 		ArrayList<Oggetto> oggettiOfferti = new ArrayList();

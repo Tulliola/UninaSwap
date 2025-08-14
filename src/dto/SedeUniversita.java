@@ -5,6 +5,12 @@ public class SedeUniversita {
 	private String nome;
 	private String Indirizzo;
 	
+	public SedeUniversita(String nome, String indirizzo) {
+		this.idSede = idSede;
+		this.nome = nome;
+		Indirizzo = indirizzo;
+	}
+	
 	public SedeUniversita(int idSede, String nome, String indirizzo) {
 		this.idSede = idSede;
 		this.nome = nome;
