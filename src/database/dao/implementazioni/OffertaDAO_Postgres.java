@@ -51,11 +51,11 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT "
 				+ "email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ "ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO"
-				+ "WHERE email = ?) UNION (SELECT"
+				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO "
+				+ "WHERE email = ?) UNION (SELECT "
 				+ "email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ "ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO"
+				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO "
 				+ "WHERE email = ?) ORDER BY momento_proposta DESC)")){
 			
 			ps.setString(1, email);
@@ -68,18 +68,18 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
 					Annuncio annuncioRiferito = recuperaAnnuncio(rs.getInt("idAnnuncio"));
 					
-					if(recuperaTipoAnnuncio(annuncioRiferito.getIdAnnuncio()) == "Vendita") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Vendita") {
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getInt("idOfferta"));
 						offerteUtente.add(new OffertaAcquisto(momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 					}
 					
-					if(recuperaTipoAnnuncio(annuncioRiferito.getIdAnnuncio()) == "Scambio") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Scambio") {
 						int idOfferta = recuperaIdOfferta(momentoProposta, email);
 						ArrayList<Oggetto> oggettiOfferti = recuperaOggettiOfferti(idOfferta);
 						
 						offerteUtente.add(new OffertaScambio(idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 					}
-					if(rs.getString("tipo_annuncio") == "Regalo") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Regalo") {
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getInt("idOfferta"));
 						
 						int idOfferta = recuperaIdOfferta(momentoProposta, email);
@@ -127,12 +127,12 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
 					Annuncio annuncioRiferito = recuperaAnnuncio(rs.getInt("idAnnuncio"));
 					
-					if(recuperaTipoAnnuncio(annuncioRiferito.getIdAnnuncio()) == "Vendita") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Vendita") {
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getInt("idOfferta"));
 						offerteAnnuncio.add(new OffertaAcquisto(momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 					}
 					
-					if(recuperaTipoAnnuncio(annuncioRiferito.getIdAnnuncio()) == "Scambio") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Scambio") {
 						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, idAnnuncio);
 						ArrayList<Oggetto> oggettiOfferti = new ArrayList();
 						for(int i = 0; i < idOfferte.size(); i++) {
@@ -140,7 +140,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 							offerteAnnuncio.add(new OffertaScambio(idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 						}
 					}
-					if(rs.getString("tipo_annuncio") == "Regalo") {
+					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")) == "Regalo") {
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getInt("idOfferta"));
 						
 						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, idAnnuncio);
@@ -310,9 +310,9 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT * FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND"
+		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT idOggetto FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND"
 				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
-				+ "INTERSECT (SELECT * FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
+				+ "INTERSECT (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
 				+ "(NOT(Stato = 'Accettata')))")){
 			ps.setInt(1, idOggetto);
 			ps.setInt(2, idOggetto);

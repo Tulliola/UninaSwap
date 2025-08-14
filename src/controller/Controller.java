@@ -146,10 +146,10 @@ public class Controller {
 			this.passaADialogDiComunicataSospensione(email);
 		else {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
-			OffertaScambioDAO_Postgres offerteDAO = new OffertaScambioDAO_Postgres(connessioneDB);
-			this.annunciNonDiUtente = annunciDAO.recuperaAnnunciNonDiUtente(utenteLoggato);
+			OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
+			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
-			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteScambioDiUtente(utenteLoggato));
+			this.annunciNonDiUtente = annunciDAO.recuperaAnnunciNonDiUtente(utenteLoggato);
 			this.passaAHomePage(frameDiLogin);
 		}
 	}

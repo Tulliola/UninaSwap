@@ -88,17 +88,17 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 	
 	@Override
-	public void inserisciAnnuncio() throws SQLException {
+	public void inserisciAnnuncio(Annuncio newAnnuncio) throws SQLException {
 		connessioneDB.setAutoCommit(false);
 		
 
 		String inserimentoOggetto = "INSERT INTO Oggetto (Email, Descrizione, Categoria, Condizioni) VALUES (?, ?, ?, ?) RETURNING idOggetto";
 		
 		try (PreparedStatement psInserimentoOggetto = connessioneDB.prepareStatement(inserimentoOggetto)){
-			psInserimentoOggetto.setString(1, annuncio.getUtenteProprietario().getEmail());
-			psInserimentoOggetto.setString(2, annuncio.getOggettoInAnnuncio().getDescrizione());
-			psInserimentoOggetto.setString(3, annuncio.getOggettoInAnnuncio().getCategoria());
-			psInserimentoOggetto.setString(4, annuncio.getOggettoInAnnuncio().getCondizioni());
+			psInserimentoOggetto.setString(1, newAnnuncio.getUtenteProprietario().getEmail());
+			psInserimentoOggetto.setString(2, newAnnuncio.getOggettoInAnnuncio().getDescrizione());
+			psInserimentoOggetto.setString(3, newAnnuncio.getOggettoInAnnuncio().getCategoria());
+			psInserimentoOggetto.setString(4, newAnnuncio.getOggettoInAnnuncio().getCondizioni());
 
 			int idOggettoInserito; 
 			
@@ -109,11 +109,11 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			
 
 			for(int i = 0; i < 3; i++) {
-				if(annuncio.getOggettoInAnnuncio().getImmagine(i) != null) {
+				if(newAnnuncio.getOggettoInAnnuncio().getImmagine(i) != null) {
 					String inserimentoImmagini = "INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)";
 					
 					try(PreparedStatement psInserimentoImmagini = connessioneDB.prepareStatement(inserimentoImmagini)){
-						psInserimentoImmagini.setBytes(1, annuncio.getOggettoInAnnuncio().getImmagine(i));
+						psInserimentoImmagini.setBytes(1, newAnnuncio.getOggettoInAnnuncio().getImmagine(i));
 						psInserimentoImmagini.setInt(2, idOggettoInserito);
 						
 						psInserimentoImmagini.executeUpdate();
@@ -121,34 +121,34 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				}
 			}
 			
-			String inserimentoAnnuncio = "INSERT INTO Annuncio (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_annuncio, Nota_scambio, Prezzo_iniziale)"
+			String inserimentonewAnnuncio = "INSERT INTO newAnnuncio (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_newAnnuncio, Nota_scambio, Prezzo_iniziale)"
 					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
-			try(PreparedStatement psInserimentoAnnuncio = connessioneDB.prepareStatement(inserimentoAnnuncio)){
-				psInserimentoAnnuncio.setString(1, annuncio.getUtenteProprietario().getEmail());
-				psInserimentoAnnuncio.setInt(2, idOggettoInserito);
-				psInserimentoAnnuncio.setBoolean(3, annuncio.isSpedizione());
-				psInserimentoAnnuncio.setBoolean(4, annuncio.isIncontro());
-				psInserimentoAnnuncio.setBoolean(5, annuncio.isRitiroInPosta());
-				psInserimentoAnnuncio.setString(6, annuncio.getNome());
+			try(PreparedStatement psInserimentonewAnnuncio = connessioneDB.prepareStatement(inserimentonewAnnuncio)){
+				psInserimentonewAnnuncio.setString(1, newAnnuncio.getUtenteProprietario().getEmail());
+				psInserimentonewAnnuncio.setInt(2, idOggettoInserito);
+				psInserimentonewAnnuncio.setBoolean(3, newAnnuncio.isSpedizione());
+				psInserimentonewAnnuncio.setBoolean(4, newAnnuncio.isIncontro());
+				psInserimentonewAnnuncio.setBoolean(5, newAnnuncio.isRitiroInPosta());
+				psInserimentonewAnnuncio.setString(6, newAnnuncio.getNome());
 								
-				if(annuncio.getNotaScambio() != null) {
-					psInserimentoAnnuncio.setString(7, "Scambio");
-					psInserimentoAnnuncio.setString(8, annuncio.getNotaScambio());
-					psInserimentoAnnuncio.setNull(9, Types.REAL);
+				if(newAnnuncio.getNotaScambio() != null) {
+					psInserimentonewAnnuncio.setString(7, "Scambio");
+					psInserimentonewAnnuncio.setString(8, newAnnuncio.getNotaScambio());
+					psInserimentonewAnnuncio.setNull(9, Types.REAL);
 				}
-				else if(annuncio.getPrezzoIniziale() == null) {
-					psInserimentoAnnuncio.setString(7, "Regalo");
-					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
-					psInserimentoAnnuncio.setNull(9, Types.REAL);
+				else if(newAnnuncio.getPrezzoIniziale() == null) {
+					psInserimentonewAnnuncio.setString(7, "Regalo");
+					psInserimentonewAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentonewAnnuncio.setNull(9, Types.REAL);
 				}
 				else {
-					psInserimentoAnnuncio.setString(7, "Vendita");
-					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
-					psInserimentoAnnuncio.setDouble(9, annuncio.getPrezzoIniziale());
+					psInserimentonewAnnuncio.setString(7, "Vendita");
+					psInserimentonewAnnuncio.setNull(8, Types.VARCHAR);
+					psInserimentonewAnnuncio.setDouble(9, newAnnuncio.getPrezzoIniziale());
 				}
 				
-				psInserimentoAnnuncio.executeUpdate();
+				psInserimentonewAnnuncio.executeUpdate();
 				
 			}
 				
@@ -261,5 +261,4 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			}
 		}
 	}
-
 }

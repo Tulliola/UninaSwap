@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dto.Offerta;
+import dto.ProfiloUtente;
 
 public interface OffertaDAO {
 	public ArrayList<Offerta> recuperaOfferteDiUtente(String email) throws SQLException, IOException;
