@@ -19,4 +19,13 @@ public class OffertaAcquisto extends Offerta{
 	public Double getPrezzoOfferto() {
 		return prezzoOfferto;
 	}
+	
+	@Override 
+	public String toString() {
+		String toReturn = super.toString();
+		
+		toReturn += "\nPrezzo offerto = "+prezzoOfferto;
+		
+		return toReturn;
+	}
 }

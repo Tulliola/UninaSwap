@@ -40,4 +40,17 @@ public class OffertaRegalo extends Offerta {
 	public Double getPrezzoOfferto() {
 		return prezzoOfferto;
 	}
+	
+	@Override
+	public String toString() {
+		String toReturn = super.toString();
+		
+		toReturn += "\nPrezzo offerto = "+prezzoOfferto+"\n";
+		toReturn += "Oggetti offerti = \n";
+		for(Oggetto oggetto: oggettiOfferti) {
+			toReturn += oggetto+"\n";
+		}
+		
+		return toReturn;
+	}
 }

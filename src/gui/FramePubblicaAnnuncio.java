@@ -956,6 +956,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.setMaximumSize(new Dimension(1225, 250));
 		
 		JComboBox<SedeUniversita> sediUniversitaCB = this.creaCBSediUniversita(sediPresenti);
+
 		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
 		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
 		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();

@@ -112,4 +112,17 @@ public class Oggetto {
 		this.annuncioContenente = annuncioContenente;
 	}
 	
+	@Override
+	public String toString() {
+		String toReturn = "OGGETTO\n--------------------------------\n";
+		
+		toReturn += "id Oggetto = "+idOggetto+"\n";
+		toReturn += "Descrizione = "+descrizione+"\n";
+		toReturn += "Categoria = "+categoria+"\n";
+		toReturn += "Condizioni = "+condizioni+"\n";
+		toReturn += "Disponibile? = "+disponibile+"\n";
+		toReturn += "Annuncio in cui è eventualmente contenuto = "+annuncioContenente+"\n";
+		
+		return toReturn;
+	}
 }

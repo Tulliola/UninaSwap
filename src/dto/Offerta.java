@@ -156,4 +156,30 @@ public abstract class Offerta {
 		this.annuncioRiferito = annuncioRiferito;
 	}
 
+	
+	@Override
+	public String toString() {
+		String toReturn = "OFFERTA\n--------------------------------------\n";
+		
+		toReturn += "Momento proposta = "+momentoProposta+"\n";
+		toReturn += "Nota = "+nota+"\n";
+		toReturn += "Sede Incontro = "+sedeIncontro+"\n";
+		toReturn += "Indirizzo spedizione = "+indirizzoSpedizione+"\n";
+		toReturn += "Ora inizio incontro scelta = "+oraInizioIncontro+"\n";
+		toReturn += "Ora fine incontro scelta = "+oraFineIncontro+"\n";
+		toReturn += "Giorno incontro scelto = "+giornoIncontro+"\n";
+		toReturn += "Modalita consegna scelta = "+modalitaConsegnaScelta+"\n";
+		toReturn += "Stato = "+stato+"\n";
+		toReturn += "Utente offerente = "+utenteProprietario+"\n";
+		
+		toReturn += "Uffici scelti = \n";
+		
+		for(UfficioPostale ufficio: ufficiRitiro) {
+			toReturn += ufficio;
+		}
+		
+		toReturn += "Sede incontro scelta = "+sedeDIncontroScelta+"\n";
+		
+		return toReturn;
+	}
 }

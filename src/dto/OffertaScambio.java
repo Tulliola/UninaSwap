@@ -38,4 +38,16 @@ public class OffertaScambio extends Offerta {
 	public Integer getIdOfferta() {
 		return this.idOfferta;
 	}
+	
+	@Override
+	public String toString() {
+		String toReturn = super.toString();
+		
+		toReturn += "Oggetti offerti = \n";
+		for(Oggetto oggetto: oggettiOfferti) {
+			toReturn += oggetto;
+		}
+		
+		return toReturn;
+	}
 }
