@@ -161,7 +161,6 @@ public class FrameDiLogin extends MyJFrame {
 
 		//Focus
 		emailTextField.setFocusGainedAction(() -> {});
-		
 		emailTextField.setFocusLostAction(() -> {});
 		
 		//ActionListener
@@ -173,9 +172,7 @@ public class FrameDiLogin extends MyJFrame {
 		emailTextField.setDownAction(() -> {
 			passwordField.requestFocus();
 		});
-		
 		emailTextField.setUpAction(()->{});
-		
 		emailTextField.setKeyTypedAction(() -> {});
 		
 		
@@ -234,7 +231,7 @@ public class FrameDiLogin extends MyJFrame {
 		accediButton.setDefaultAction(() -> {
 			registratiButton.setFocusable(true);
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
-			resettaBordiTextField(emailTextField, passwordField);
+			resettaBordiTextField(blackBorder, emailTextField, passwordField);
 			try {
 				clickAccedi();
 			} catch (IOException e) {
@@ -305,7 +302,7 @@ public class FrameDiLogin extends MyJFrame {
 		try {
 			checkDatiAccesso();
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
-			resettaBordiTextField(emailTextField, passwordField);
+			resettaBordiTextField(blackBorder, emailTextField, passwordField);
 			mainController.onAccessoButtonClicked(emailTextField.getText(), passwordField.getText());
 		}
 		catch(EmailException e) {

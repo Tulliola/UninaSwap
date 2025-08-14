@@ -34,14 +34,14 @@ public class MyJFrame extends JFrame {
 			panelAttuale.setVisible(false);
 	}
 
-	public void resettaBordiTextField(JTextField... textFields) {
+	public void resettaBordiTextField(Border borderDaSettare, JTextField... textFields) {
 		for(JTextField textFieldAttuale: textFields)
-			textFieldAttuale.setBorder(blackBorder);
+			textFieldAttuale.setBorder(borderDaSettare);
 	}
 	
-	public void resettaBordiTextA(JTextArea... textAreas) {
+	public void resettaBordiTextA(Border borderDaSettare, JTextArea... textAreas) {
 		for(JTextArea textAreaAttuale: textAreas)
-			textAreaAttuale.setBorder(blackBorder);
+			textAreaAttuale.setBorder(borderDaSettare);
 	}
 	
 }

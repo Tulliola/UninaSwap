@@ -168,7 +168,7 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	public boolean aggiungiImmagineDaFileSystem() {
 		JFileChooser scelta = new JFileChooser();
 	    FileNameExtensionFilter filtro = new FileNameExtensionFilter(
-	        "JPG & PNG", "jpg", "png");
+	        "JPG & PNG", "jpeg", "png");
 	    scelta.setFileFilter(filtro);
 	    int returnVal = scelta.showOpenDialog(this.getParent());
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {

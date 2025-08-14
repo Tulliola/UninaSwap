@@ -397,7 +397,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		bottoneSalvaModifiche.setVisible(false);
 		bottoneSalvaModifiche.setDefaultAction(() -> {
 			nascondiLabelErrore(lblErroreUsername, lblErrorePWD, lblErroreResidenza);
-			resettaBordiTextField(usernameTextField, passwordTextField, residenzaTextField);
+			resettaBordiTextField(blackBorder, usernameTextField, passwordTextField, residenzaTextField);
 			clickSalvaModificheButton(utenteLoggato.getUsername(), utenteLoggato.getPassword(), utenteLoggato.getResidenza(), utenteLoggato);
 		});
 		

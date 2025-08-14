@@ -122,8 +122,9 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				}
 			}
 			
-			String inserimentoAnnuncio = "INSERT INTO Annuncio (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_annuncio, Nota_scambio, Prezzo_iniziale)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String inserimentoAnnuncio = "INSERT INTO Annuncio (Email, idOggetto, Spedizione, Incontro, Ritiro_in_posta, Nome, Tipo_annuncio,"
+					+ "Nota_scambio, Prezzo_iniziale, Data_scadenza)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			try(PreparedStatement psInserimentoAnnuncio = connessioneDB.prepareStatement(inserimentoAnnuncio)){
 				psInserimentoAnnuncio.setString(1, annuncioDaInserire.getUtenteProprietario().getEmail());
@@ -148,6 +149,11 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 					psInserimentoAnnuncio.setNull(8, Types.VARCHAR);
 					psInserimentoAnnuncio.setDouble(9, annuncioDaInserire.getPrezzoIniziale());
 				}
+				
+				if(annuncioDaInserire.getDataScadenza() != null)
+					psInserimentoAnnuncio.setDate(10,  annuncioDaInserire.getDataScadenza());
+				else
+					psInserimentoAnnuncio.setNull(10, Types.DATE);
 				
 				psInserimentoAnnuncio.executeUpdate();
 				

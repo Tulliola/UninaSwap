@@ -14,19 +14,19 @@ public abstract class Annuncio {
 	private boolean spedizione;
 	private boolean ritiroInPosta;
 	private boolean incontro;
-	private ArrayList<String> oraInizioIncontro;
-	private ArrayList<String> oraFineIncontro;
-	private ArrayList<GiornoEnum> giornoIncontro;
 	private StatoAnnuncioEnum stato = StatoAnnuncioEnum.Disponibile;
 	private Timestamp momentoPubblicazione;
 	private String nome;
 	private Date dataScadenza;
 
 	//Attributi derivati da relazioni
-	private ArrayList<Offerta> offerteRicevute;
+	private ArrayList<Offerta> offerteRicevute = new ArrayList();
 	private ProfiloUtente utenteProprietario;
 	private Oggetto oggettoInAnnuncio;
-	private ArrayList<SedeUniversita> sedeIncontroProposte;
+	private ArrayList<SedeUniversita> sedeIncontroProposte = new ArrayList();
+	private ArrayList<String> oraInizioIncontro = new ArrayList();
+	private ArrayList<String> oraFineIncontro = new ArrayList();
+	private ArrayList<GiornoEnum> giornoIncontro = new ArrayList();
 	
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
@@ -57,28 +57,16 @@ public abstract class Annuncio {
 	
 	public void aggiungiPropostaIncontro(SedeUniversita sedeIncontroProposta, String oraInizioIncontro,
 			String oraFineIncontro, GiornoEnum giornoIncontro) {
-		if(!(isIncontroGiaProposto(sedeIncontroProposta, oraInizioIncontro, oraFineIncontro, giornoIncontro))){
-			this.sedeIncontroProposte.add(sedeIncontroProposta);
-			this.oraInizioIncontro.add(oraInizioIncontro);
-			this.oraFineIncontro.add(oraFineIncontro);
-			this.giornoIncontro.add(giornoIncontro);
-		}
+		this.sedeIncontroProposte.add(sedeIncontroProposta);
+		this.oraInizioIncontro.add(oraInizioIncontro);
+		this.oraFineIncontro.add(oraFineIncontro);
+		this.giornoIncontro.add(giornoIncontro);
 	}
 	
 	public void impostaDataScadenza(Date dataScadenza) {
 		if(this.dataScadenza == null)
 			this.dataScadenza = dataScadenza;
 	}
-	
-	public boolean isIncontroGiaProposto(SedeUniversita sedeIncontroProposta, String oraInizioIncontro,
-			String oraFineIncontro, GiornoEnum giornoIncontro) {
-		if(this.sedeIncontroProposte.contains(sedeIncontroProposta) && this.oraInizioIncontro.contains(oraInizioIncontro) &&
-				this.oraFineIncontro.contains(oraFineIncontro) && this.giornoIncontro.contains(giornoIncontro))
-			return true;
-		else
-			return false;
-	}
-
 
 	public int getIdAnnuncio() {
 		return idAnnuncio;

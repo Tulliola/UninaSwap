@@ -1,5 +1,6 @@
 package gui;
 
+//Import dalle librerie standard
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,7 +20,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -40,25 +44,35 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
-import dto.ProfiloUtente;
+
+//Import da eccezioni
 import eccezioni.DescrizioneException;
 import eccezioni.FotoException;
 import eccezioni.ModalitaDiConsegnaException;
 import eccezioni.NomeAnnuncioException;
 import eccezioni.NotaScambioException;
+import eccezioni.PrezzoInizialeException;
+
+//Import da utilities
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
+import utilities.GiornoEnum;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 import utilities.StatoAnnuncioEnum;
+import utilities.RigaIncontro;
+
+//Import da DTO
 import dto.Oggetto;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import dto.ProfiloUtente;
+import dto.SedeUniversita;
 
 public class FramePubblicaAnnuncio extends MyJFrame {
 
@@ -67,9 +81,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private String tipoAnnuncio;
 	
 	private MyJPanel contentPane = new MyJPanel();
-	private MyJPanel panelAggiungiFoto = new MyJPanel();
-	private MyJPanel panelDettagliIncontri;
 	private MyJPanel panelNomeAnnuncio;
+	private MyJPanel panelAggiungiFoto;
+	private MyJPanel panelDettagliIncontri;
 	private MyJPanel panelCentrale;
 	private MyJPanel panelInserimentoDati;
 	
@@ -91,9 +105,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private JCheckBox incontroCheckBox;
 	
 	//ComboBoxes
-	private JComboBox sediUniversita = new JComboBox();
-	private JComboBox categorieOggetto;
-	private JComboBox condizioniOggetto;
+	private JComboBox sediUniversitaComboBox = new JComboBox();
+	private JComboBox categorieOggettoComboBox;
+	private JComboBox condizioniOggettoComboBox;
+	private JComboBox dataScadenzaComboBox;
 	
 	//TextFields
 	private MyJTextField nomeAnnuncioTextField;
@@ -103,13 +118,13 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private JTextArea inserisciDescrizioneTextA;
 	private JTextArea inserisciNotaScambioTextA;
 	
-	
 	//Labels di errore
 	private MyJLabel lblErroreDescrizione;
 	private MyJLabel lblErroreNotaScambio;
 	private MyJLabel lblErroreNomeAnnuncio;
 	private MyJLabel lblErroreModalitaConsegna;
 	private MyJLabel lblErroreFoto;
+	private MyJLabel lblErrorePrezzoIniziale;
 	
 	//Flag per immagini
 	private boolean foto1Caricata;
@@ -117,9 +132,12 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private boolean foto3Caricata;
 	
 	//Labels per le immagini
-	private MyJLabel aggiungiFoto1;
-	private MyJLabel aggiungiFoto2;
-	private MyJLabel aggiungiFoto3;
+	private MyJLabel lblAggiungiFoto1;
+	private MyJLabel lblAggiungiFoto2;
+	private MyJLabel lblAggiungiFoto3;
+	
+	//ArrayList per tenere traccia di tutti gli eventuali incontri specificati
+	private ArrayList<RigaIncontro> incontriSpecificati = new ArrayList<>(); 
 	
 	public FramePubblicaAnnuncio(Controller controller, String tipoAnnuncioDaPubblicare) {
 		tipoAnnuncio = tipoAnnuncioDaPubblicare;
@@ -152,66 +170,11 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
-		panelCentrale.setPreferredSize(new Dimension(375, 4000));
+		panelCentrale.setPreferredSize(new Dimension(1225, 4000));
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
 		this.creaPanelAggiungiFoto();
-		
-		nomeAnnuncioTextField = new MyJTextField("Dai un nome al tuo annuncio!");
-		nomeAnnuncioTextField.rendiTextFieldFocusable();
-		
-		nomeAnnuncioTextField.setFocusGainedAction(() -> {
-			if(nomeAnnuncioTextField.getText().equals("Dai un nome al tuo annuncio!"))
-				nomeAnnuncioTextField.setText("");
-		});
-		
-		nomeAnnuncioTextField.setFocusLostAction(() -> {
-			if(nomeAnnuncioTextField.getText().isEmpty())
-				nomeAnnuncioTextField.setText("Dai un nome al tuo annuncio!");
-		});
-		
-		nomeAnnuncioTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				if(nomeAnnuncioTextField.getText().length() >= 100)
-					e.consume();
-			}
-		});
-		
-		nomeAnnuncioTextField.setFont(new Font("Ubuntu Sans", Font.BOLD, 30));
-		nomeAnnuncioTextField.setForeground(Color.black);
-		nomeAnnuncioTextField.setPreferredSize(new Dimension(1225, 40));
-		nomeAnnuncioTextField.setOpaque(true);
-		nomeAnnuncioTextField.setBackground(Color.white);
-		nomeAnnuncioTextField.setMaximumSize(new Dimension(1225, 40));
-		nomeAnnuncioTextField.setBorder(blackBorder);
-		
-		lblErroreNomeAnnuncio = new MyJLabel(true);
-		lblErroreNomeAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		lblErroreNomeAnnuncio.setText("VAMOOOOOOOS");
-		lblErroreNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
-		lblErroreNomeAnnuncio.setVisible(true);
-		lblErroreNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
-		
-		MyJPanel panelNomeAnnuncio = new MyJPanel();
-		panelNomeAnnuncio.setPreferredSize(new Dimension(1225, 60));
-		panelNomeAnnuncio.setMaximumSize(new Dimension(1225, 60));
-		panelNomeAnnuncio.setLayout(new BorderLayout());
-		panelNomeAnnuncio.setBackground(Color.white);
-		
-		MyJPanel panelSuperiore = new MyJPanel();
-		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
-		panelSuperiore.setBackground(Color.white);
-		panelSuperiore.add(nomeAnnuncioTextField);
-		
-		panelErroreNomeAnnuncio = new MyJPanel();
-		panelErroreNomeAnnuncio.setLayout(new BoxLayout(panelErroreNomeAnnuncio, BoxLayout.X_AXIS));
-		panelErroreNomeAnnuncio.add(lblErroreNomeAnnuncio);
-		panelErroreNomeAnnuncio.setBackground(Color.white);
-		panelErroreNomeAnnuncio.setVisible(false);
-		
-		panelNomeAnnuncio.add(panelSuperiore, BorderLayout.NORTH);
-		panelNomeAnnuncio.add(panelErroreNomeAnnuncio, BorderLayout.CENTER);
+		this.creaPanelNomeAnnuncio();
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(panelNomeAnnuncio);
@@ -230,15 +193,98 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 
 		return scrollPane;
 	}
-
-	private MyJPanel creaPanelAggiungiFoto() {
-		panelAggiungiFoto = new MyJPanel();
-		panelAggiungiFoto.setLayout(new BorderLayout());
-		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 600));
-		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 600));
+	
+	private void creaPanelNomeAnnuncio() {		
+		panelNomeAnnuncio = new MyJPanel();
+		panelNomeAnnuncio.setPreferredSize(new Dimension(1225, 115));
+		panelNomeAnnuncio.setMaximumSize(new Dimension(1225, 115));
+		panelNomeAnnuncio.setLayout(new BorderLayout());
+		panelNomeAnnuncio.setBackground(Color.white);
+		
+		nomeAnnuncioTextField = new MyJTextField("Titolo");
+		nomeAnnuncioTextField.setBorder(new EmptyBorder(0, 10, 0, 0));
+		nomeAnnuncioTextField.setPreferredSize(new Dimension(1225, 30));
+		nomeAnnuncioTextField.setMaximumSize(new Dimension(1225, 30));
+		nomeAnnuncioTextField.rendiTextFieldFocusable();
+		
+		nomeAnnuncioTextField.setFocusGainedAction(() -> {
+			if(nomeAnnuncioTextField.getText().equals("Titolo"))
+				nomeAnnuncioTextField.setText("");
+		});
+		
+		nomeAnnuncioTextField.setFocusLostAction(() -> {
+			if(nomeAnnuncioTextField.getText().isEmpty())
+				nomeAnnuncioTextField.setText("Titolo");
+		});
+		
+		nomeAnnuncioTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(nomeAnnuncioTextField.getText().length() >= 100)
+					e.consume();
+			}
+		});
+		
+		lblErroreNomeAnnuncio = new MyJLabel(true);
+		lblErroreNomeAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErroreNomeAnnuncio.setText("prova");
+		lblErroreNomeAnnuncio.setVisible(true);
+		lblErroreNomeAnnuncio.setBorder(new EmptyBorder(0, 10, 0, 0));
+		lblErroreNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		panelErroreNomeAnnuncio.add(lblErroreNomeAnnuncio);
 		
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
 		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
+		panelSuperiore.setAlignmentX(LEFT_ALIGNMENT);
+		MyJLabel lblNomeAnnuncio = new MyJLabel("Dai un nome al tuo annuncio!");
+		lblNomeAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 30));
+		lblNomeAnnuncio.setForeground(Color.white);
+		lblNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		lblNomeAnnuncio.setBorder(new EmptyBorder(0, 10, 0, 0));
+		panelSuperiore.add(lblNomeAnnuncio);
+		
+		MyJPanel panelCentrale = new MyJPanel();
+		panelCentrale.setLayout(new BorderLayout());
+		panelCentrale.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.NORTH);
+		panelCentrale.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.WEST);
+		panelCentrale.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.SOUTH);
+		panelCentrale.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.EAST);
+		
+		MyJPanel panelPerTextField = new MyJPanel();
+		panelPerTextField.setLayout(new BoxLayout(panelPerTextField, BoxLayout.PAGE_AXIS));
+		panelPerTextField.setAlignmentX(LEFT_ALIGNMENT);
+		panelPerTextField.setBackground(MyJPanel.uninaLightColor);
+		this.nomeAnnuncioTextField.setAlignmentX(LEFT_ALIGNMENT);
+		this.nomeAnnuncioTextField.setFont(new Font("Ubuntu Sans", Font.PLAIN, 25));
+		
+		panelCentrale.add(panelPerTextField);
+		
+		panelPerTextField.add(nomeAnnuncioTextField);
+		
+		panelErroreNomeAnnuncio.setBackground(Color.white);
+		panelErroreNomeAnnuncio.setLayout(new BoxLayout(panelErroreNomeAnnuncio, BoxLayout.X_AXIS));
+		panelErroreNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		panelErroreNomeAnnuncio.setVisible(false);
+		panelErroreNomeAnnuncio.add(lblErroreNomeAnnuncio);
+		
+		panelNomeAnnuncio.add(panelSuperiore, BorderLayout.NORTH);
+		panelNomeAnnuncio.add(panelCentrale, BorderLayout.CENTER);
+		panelNomeAnnuncio.add(panelErroreNomeAnnuncio, BorderLayout.SOUTH);
+		
+		this.panelCentrale.add(panelNomeAnnuncio);
+		
+	}
+
+	private void creaPanelAggiungiFoto() {
+		panelAggiungiFoto = new MyJPanel();
+		panelAggiungiFoto.setLayout(new BorderLayout());
+		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 640));
+		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 640));
+		
+		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
+		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
+		panelSuperiore.setPreferredSize(new Dimension(1225, 35));
+		panelSuperiore.setMaximumSize(new Dimension(1225, 35));
 		MyJLabel lblAggiungiFoto = new MyJLabel("Carica fino ad un massimo di 3 foto! (Si consiglia la risoluzione 3:4)");
 		lblAggiungiFoto.setFont(new Font("Ubuntu Sans", Font.BOLD, 30));
 		lblAggiungiFoto.setForeground(Color.white);
@@ -248,77 +294,93 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelSuperiore.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJPanel panelContieniFoto = new MyJPanel();
-		panelContieniFoto.setLayout(new FlowLayout());
+		panelContieniFoto.setLayout(new BorderLayout());
+		panelContieniFoto.setPreferredSize(new Dimension(1225, 520));
+		panelContieniFoto.setMaximumSize(new Dimension(1225, 520));
 		panelContieniFoto.setBackground(MyJPanel.uninaLightColor);
 		
+		MyJPanel panelDelleFoto = new MyJPanel();
+		panelDelleFoto.setLayout(new FlowLayout());
+		panelDelleFoto.setPreferredSize(new Dimension(1225, 500));
+		panelDelleFoto.setMaximumSize(new Dimension(1225, 500));
+		panelDelleFoto.setBackground(MyJPanel.uninaLightColor);
 		
 		MyJPanel panelFoto1 = new MyJPanel(Color.white, new Dimension(375, 500));
 		panelFoto1.setMaximumSize(new Dimension(375, 500));
 		panelFoto1.setLayout(new BoxLayout(panelFoto1, BoxLayout.Y_AXIS));
 		panelFoto1.setAlignmentX(CENTER_ALIGNMENT);
-		aggiungiFoto1 = new MyJLabel();
-		aggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		aggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
+		lblAggiungiFoto1 = new MyJLabel();
+		lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		lblAggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto1.add(Box.createVerticalGlue());
 		panelFoto1.add(Box.createHorizontalGlue());
-		panelFoto1.add(aggiungiFoto1);
+		panelFoto1.add(lblAggiungiFoto1);
 		panelFoto1.add(Box.createHorizontalGlue());
 		panelFoto1.add(Box.createVerticalGlue());
 		
-		aggiungiFoto1.rendiLabelInteragibile();
-		aggiungiFoto1.setOnMouseClickedAction(() -> {foto1Caricata = aggiungiFoto1.aggiungiImmagineDaFileSystem();});
-		aggiungiFoto1.setOnMouseEnteredAction(() -> {});
-		aggiungiFoto1.setOnMouseExitedAction(() -> {});
+		lblAggiungiFoto1.rendiLabelInteragibile();
+		lblAggiungiFoto1.setOnMouseClickedAction(() -> {foto1Caricata = lblAggiungiFoto1.aggiungiImmagineDaFileSystem();});
+		lblAggiungiFoto1.setOnMouseEnteredAction(() -> {});
+		lblAggiungiFoto1.setOnMouseExitedAction(() -> {});
 
-		MyJPanel panelFoto2 = new MyJPanel(Color.white, new Dimension(375, 500));
+		MyJPanel panelFoto2 = new MyJPanel(Color.white);
+		panelFoto2.setPreferredSize(new Dimension(375, 500));
+		panelFoto2.setMaximumSize(new Dimension(375, 500));
 		panelFoto2.setLayout(new BoxLayout(panelFoto2, BoxLayout.Y_AXIS));
 		panelFoto2.setAlignmentX(CENTER_ALIGNMENT);
-		aggiungiFoto2 = new MyJLabel();
-		aggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		aggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
+		lblAggiungiFoto2 = new MyJLabel();
+		lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		lblAggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto2.add(Box.createVerticalGlue());
 		panelFoto2.add(Box.createHorizontalGlue());
-		panelFoto2.add(aggiungiFoto2);
+		panelFoto2.add(lblAggiungiFoto2);
 		panelFoto2.add(Box.createHorizontalGlue());
 		panelFoto2.add(Box.createVerticalGlue());
-		panelFoto2.setMaximumSize(new Dimension(375, 500));
 		
-		aggiungiFoto2.rendiLabelInteragibile();
-		aggiungiFoto2.setOnMouseClickedAction(() -> {foto2Caricata = aggiungiFoto2.aggiungiImmagineDaFileSystem();});
-		aggiungiFoto2.setOnMouseEnteredAction(() -> {});
-		aggiungiFoto2.setOnMouseExitedAction(() -> {});
+		lblAggiungiFoto2.rendiLabelInteragibile();
+		lblAggiungiFoto2.setOnMouseClickedAction(() -> {foto2Caricata = lblAggiungiFoto2.aggiungiImmagineDaFileSystem();});
+		lblAggiungiFoto2.setOnMouseEnteredAction(() -> {});
+		lblAggiungiFoto2.setOnMouseExitedAction(() -> {});
 		
-		MyJPanel panelFoto3 = new MyJPanel(Color.white, new Dimension(375, 500));
+		MyJPanel panelFoto3 = new MyJPanel(Color.white);
+		panelFoto3.setPreferredSize(new Dimension(375, 500));
+		panelFoto3.setMaximumSize(new Dimension(375, 500));
 		panelFoto3.setLayout(new BoxLayout(panelFoto3, BoxLayout.Y_AXIS));
 		panelFoto3.setAlignmentX(CENTER_ALIGNMENT);
-		aggiungiFoto3 = new MyJLabel();
-		aggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		aggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
+		lblAggiungiFoto3 = new MyJLabel();
+		lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		lblAggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto3.add(Box.createVerticalGlue());
 		panelFoto3.add(Box.createHorizontalGlue());
-		panelFoto3.add(aggiungiFoto3);
+		panelFoto3.add(lblAggiungiFoto3);
 		panelFoto3.add(Box.createHorizontalGlue());
 		panelFoto3.add(Box.createVerticalGlue());
-		panelFoto3.setMaximumSize(new Dimension(375, 500));
 		
-		aggiungiFoto3.rendiLabelInteragibile();
-		aggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = aggiungiFoto3.aggiungiImmagineDaFileSystem();});
-		aggiungiFoto3.setOnMouseEnteredAction(() -> {});
-		aggiungiFoto3.setOnMouseExitedAction(() -> {});
+		lblAggiungiFoto3.rendiLabelInteragibile();
+		lblAggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = lblAggiungiFoto3.aggiungiImmagineDaFileSystem();});
+		lblAggiungiFoto3.setOnMouseEnteredAction(() -> {});
+		lblAggiungiFoto3.setOnMouseExitedAction(() -> {});
 		
-		panelContieniFoto.add(panelFoto1);
-		panelContieniFoto.add(panelFoto2);
-		panelContieniFoto.add(panelFoto3);
+		panelDelleFoto.add(panelFoto1);
+		panelDelleFoto.add(panelFoto2);
+		panelDelleFoto.add(panelFoto3);
 		
-		panelErroreFoto.setPreferredSize(new Dimension(1225, 30));
-		panelErroreFoto.setMaximumSize(new Dimension(1225, 30));
-		panelErroreFoto.setBackground(MyJPanel.uninaLightColor);
+		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.NORTH);
+		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.EAST);
+		panelContieniFoto.add(panelDelleFoto, BorderLayout.NORTH);
+		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.WEST);
+		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.SOUTH);
+		
+//		panelErroreFoto.setPreferredSize(new Dimension(1225, 30));
+//		panelErroreFoto.setMaximumSize(new Dimension(1225, 30));
+		panelErroreFoto.setBackground(Color.white);
 		panelErroreFoto.setLayout(new BoxLayout(panelErroreFoto, BoxLayout.X_AXIS));
 		panelErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
 		panelErroreFoto.setVisible(false);
 
 		lblErroreFoto = new MyJLabel(true);
 		lblErroreFoto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErroreFoto.setText("prova");
 		lblErroreFoto.setVisible(true);
 		lblErroreFoto.setBorder(new EmptyBorder(0, 10, 0, 0));
 		lblErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
@@ -328,7 +390,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelAggiungiFoto.add(panelContieniFoto, BorderLayout.CENTER);
 		panelAggiungiFoto.add(panelErroreFoto, BorderLayout.SOUTH);
 		
-		return panelAggiungiFoto;
 	}
 	
 	private MyJPanel creaPanelInserimentoDati() {
@@ -349,6 +410,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		lblErroreNotaScambio = new MyJLabel(true);
 		
 		prezzoInizialeTextField = new MyJTextField();
+		prezzoInizialeTextField.setBorder(new EmptyBorder(0, 10, 0, 0));
 		prezzoInizialeTextField.setPreferredSize(new Dimension(300, 30));
 		prezzoInizialeTextField.setMaximumSize(new Dimension(300, 30));
 		
@@ -434,7 +496,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		panelDiErrore.setPreferredSize(new Dimension(1225, 30));
 		panelDiErrore.setMaximumSize(new Dimension(1225, 30));
-		panelDiErrore.setBackground(MyJPanel.uninaLightColor);
+		panelDiErrore.setBackground(Color.white);
 		panelDiErrore.setLayout(new BoxLayout(panelDiErrore, BoxLayout.X_AXIS));
 		panelDiErrore.add(lblDiErrore);
 		panelDiErrore.setAlignmentX(LEFT_ALIGNMENT);
@@ -491,10 +553,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		categorieOggetto = this.creaCBCategorieOggetto();
-		categorieOggetto.setSelectedIndex(0);
-		categorieOggetto.setAlignmentX(LEFT_ALIGNMENT);
-		panelPerComboBox.add(categorieOggetto);
+		categorieOggettoComboBox = this.creaCBCategorieOggetto();
+		categorieOggettoComboBox.setSelectedIndex(0);
+		categorieOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
+		panelPerComboBox.add(categorieOggettoComboBox);
 		
 		panelCentrale.add(panelPerComboBox, BorderLayout.CENTER);
 			
@@ -531,10 +593,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		condizioniOggetto = this.creaCBCondizioniOggetto();
-		condizioniOggetto.setSelectedIndex(0);
-		condizioniOggetto.setAlignmentX(LEFT_ALIGNMENT);
-		panelPerComboBox.add(condizioniOggetto);
+		condizioniOggettoComboBox = this.creaCBCondizioniOggetto();
+		condizioniOggettoComboBox.setSelectedIndex(0);
+		condizioniOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
+		panelPerComboBox.add(condizioniOggettoComboBox);
 		
 		panelCentrale.add(panelPerComboBox, BorderLayout.CENTER);
 			
@@ -576,16 +638,16 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		panelCentrale.add(panelPerTextField);
 		
-		MyJPanel panelInferiore = new MyJPanel(new Color(220, 220, 220));
-		panelInferiore.setLayout(new BoxLayout(panelInferiore, BoxLayout.X_AXIS));
-		panelInferiore.setAlignmentX(LEFT_ALIGNMENT);
-		panelInferiore.setBackground(MyJPanel.uninaLightColor);
-		panelInferiore.setVisible(false);
-		MyJLabel lblDiErrore = new MyJLabel(true);
-		lblDiErrore.setVisible(true);
-		lblDiErrore.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		lblDiErrore.setBorder(new EmptyBorder(0, 10, 0, 0));
-		lblDiErrore.setAlignmentX(LEFT_ALIGNMENT);
+		panelErrorePrezzoIniziale = new MyJPanel(new Color(220, 220, 220));
+		panelErrorePrezzoIniziale.setLayout(new BoxLayout(panelErrorePrezzoIniziale, BoxLayout.X_AXIS));
+		panelErrorePrezzoIniziale.setAlignmentX(LEFT_ALIGNMENT);
+		panelErrorePrezzoIniziale.setBackground(Color.white);
+		panelErrorePrezzoIniziale.setVisible(false);
+		lblErrorePrezzoIniziale = new MyJLabel(true);
+		lblErrorePrezzoIniziale.setVisible(true);
+		lblErrorePrezzoIniziale.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		lblErrorePrezzoIniziale.setBorder(new EmptyBorder(0, 10, 0, 0));
+		lblErrorePrezzoIniziale.setAlignmentX(LEFT_ALIGNMENT);
 		
 		textFieldIn.addKeyListener(new KeyAdapter() {
 			@Override
@@ -598,34 +660,34 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 					if(posizioneDiUnPunto != -1 && textFieldIn.getText().length() - posizioneDiUnPunto > 2)
 						e.consume();
 					else {
-						panelInferiore.setVisible(false);
+						panelErrorePrezzoIniziale.setVisible(false);
 						textFieldIn.settaBordiTextFieldStandard();
 					}
 				}
 				else if(carattereDigitato != '.'){
 					e.consume();
 					textFieldIn.settaBordiTextFieldErrore();
-					panelInferiore.setVisible(true);
-					lblDiErrore.setText("Formato non valido.");
+					panelErrorePrezzoIniziale.setVisible(true);
+					lblErrorePrezzoIniziale.setText("Formato non valido.");
 				}
-				else if(textFieldIn.getText().contains(".") || textFieldIn.getText().startsWith(".")) {
+				else if(textFieldIn.getText().contains(".") || textFieldIn.getText().length() == 0) {
 					e.consume();
 					textFieldIn.settaBordiTextFieldErrore();
-					panelInferiore.setVisible(true);
-					lblDiErrore.setText("Formato non valido.");
+					panelErrorePrezzoIniziale.setVisible(true);
+					lblErrorePrezzoIniziale.setText("Formato non valido.");
 				}
 				else {
 					textFieldIn.settaBordiTextFieldStandard();
-					panelInferiore.setVisible(false);
+					panelErrorePrezzoIniziale.setVisible(false);
 				}
 			}
 		});
 		panelPerTextField.add(textFieldIn);
-		panelInferiore.add(lblDiErrore);
+		panelErrorePrezzoIniziale.add(lblErrorePrezzoIniziale);
 		
 		panelPrezzoIniziale.add(panelSuperiore, BorderLayout.NORTH);
 		panelPrezzoIniziale.add(panelCentrale, BorderLayout.CENTER);
-		panelPrezzoIniziale.add(panelInferiore, BorderLayout.SOUTH);
+		panelPrezzoIniziale.add(panelErrorePrezzoIniziale, BorderLayout.SOUTH);
 		
 		
 		return panelPrezzoIniziale;
@@ -658,19 +720,19 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		JComboBox periodiDiScadenza = new JComboBox();
-		periodiDiScadenza.setBackground(Color.white);
-		periodiDiScadenza.setPreferredSize(new Dimension(300, 30));
-		periodiDiScadenza.setMaximumSize(new Dimension(300, 30));
-		periodiDiScadenza.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
+		dataScadenzaComboBox = new JComboBox();
+		dataScadenzaComboBox.setBackground(Color.white);
+		dataScadenzaComboBox.setPreferredSize(new Dimension(300, 30));
+		dataScadenzaComboBox.setMaximumSize(new Dimension(300, 30));
+		dataScadenzaComboBox.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 
-		periodiDiScadenza.addItem("Non far scadere l'annuncio");
-		periodiDiScadenza.addItem("7 giorni");
-		periodiDiScadenza.addItem("15 giorni");
-		periodiDiScadenza.addItem("31 giorni");
-		periodiDiScadenza.setSelectedIndex(0);
-		periodiDiScadenza.setAlignmentX(LEFT_ALIGNMENT);
-		panelPerComboBox.add(periodiDiScadenza);
+		dataScadenzaComboBox.addItem("Non far scadere l'annuncio");
+		dataScadenzaComboBox.addItem("7 giorni");
+		dataScadenzaComboBox.addItem("15 giorni");
+		dataScadenzaComboBox.addItem("31 giorni");
+		dataScadenzaComboBox.setSelectedIndex(0);
+		dataScadenzaComboBox.setAlignmentX(LEFT_ALIGNMENT);
+		panelPerComboBox.add(dataScadenzaComboBox);
 		
 		panelCentrale.add(panelPerComboBox, BorderLayout.CENTER);
 			
@@ -734,7 +796,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale.add(panelPerCheckBoxes, BorderLayout.CENTER);
 		
 		panelErroreModalitaDiConsegna.setLayout(new BoxLayout(panelErroreModalitaDiConsegna, BoxLayout.X_AXIS));
-		panelErroreModalitaDiConsegna.setBackground(MyJPanel.uninaLightColor);
+		panelErroreModalitaDiConsegna.setBackground(Color.white);
 		panelErroreModalitaDiConsegna.setAlignmentX(LEFT_ALIGNMENT);
 		lblErroreModalitaConsegna = new MyJLabel(true);
 		lblErroreModalitaConsegna.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
@@ -819,27 +881,34 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
 		
+		JComboBox sediUniversitaCB = this.creaCBSediUniversita();
+		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
+		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
+		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();
+		JComboBox minutoFineIncontroCB = this.creaCBMinutoIncontro();
+		JComboBox giornoIncontroCB = this.creaCBGiornoIncontro();
+		
 		rigaIncontro.add(Box.createRigidArea(new Dimension(50, 0)));
 		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel("Incontriamoci a ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBSediUniversita());
+		rigaIncontro.add(sediUniversitaCB);
 		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" dalle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBOraIncontro());
+		rigaIncontro.add(oraInizioIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(this.creaCBMinutoIncontro());
+		rigaIncontro.add(minutoInizioIncontroCB);
 		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" alle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBOraIncontro());
+		rigaIncontro.add(oraFineIncontroCB);
 		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(this.creaCBMinutoIncontro());
+		rigaIncontro.add(minutoFineIncontroCB);
 		rigaIncontro.add(Box.createHorizontalGlue());
 		rigaIncontro.add(new MyJLabel(" di ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
 		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBGiornoIncontro());
+		rigaIncontro.add(giornoIncontroCB);
 		rigaIncontro.add(Box.createHorizontalGlue());
 		
 		MyJLabel lblAggiungiIncontro = new MyJLabel();
@@ -872,6 +941,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.add(lblAggiungiIncontro);
 		panelPerIncontri.add(rigaIncontro);
 		
+		RigaIncontro nuovoIncontro = new RigaIncontro(sediUniversitaCB, oraInizioIncontroCB, minutoInizioIncontroCB, oraFineIncontroCB, minutoFineIncontroCB,
+													  giornoIncontroCB);
+		this.incontriSpecificati.add(nuovoIncontro);
+		
 		panelCentrale.add(panelPerIncontri, BorderLayout.CENTER);
 		
 		panelDettagliIncontri.add(panelSuperiore, BorderLayout.NORTH);
@@ -887,6 +960,47 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
 		rigaIncontro.setPreferredSize(new Dimension(1225, 100));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 100));
+		
+		JComboBox sediUniversitaCB = this.creaCBSediUniversita();
+		JComboBox oraInizioIncontroCB = this.creaCBOraIncontro();
+		JComboBox minutoInizioIncontroCB = this.creaCBMinutoIncontro();
+		JComboBox oraFineIncontroCB = this.creaCBOraIncontro();
+		JComboBox minutoFineIncontroCB = this.creaCBMinutoIncontro();
+		JComboBox giornoIncontroCB = this.creaCBGiornoIncontro();
+		
+		rigaIncontro.add(Box.createRigidArea(new Dimension(50, 0)));
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(new MyJLabel("Incontriamoci a ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(sediUniversitaCB);
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(new MyJLabel(" dalle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(oraInizioIncontroCB);
+		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(minutoInizioIncontroCB);
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(new MyJLabel(" alle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(oraFineIncontroCB);
+		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(minutoFineIncontroCB);
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(new MyJLabel(" di ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
+		rigaIncontro.add(Box.createHorizontalGlue());
+		rigaIncontro.add(giornoIncontroCB);
+		rigaIncontro.add(Box.createHorizontalGlue());
+		
+		RigaIncontro nuovoIncontro = new RigaIncontro(
+				sediUniversitaCB, 
+				oraInizioIncontroCB, 
+				minutoInizioIncontroCB, 
+				oraFineIncontroCB, 
+				minutoFineIncontroCB,
+				giornoIncontroCB
+		);
+		
+		this.incontriSpecificati.add(nuovoIncontro);
 		
 		MyJLabel lblRimuoviIncontro = new MyJLabel();
 		lblRimuoviIncontro.aggiungiImmagineScalata("images/iconaRimuoviIncontro.png" , 50, 50, true);
@@ -906,6 +1020,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			panelPerIncontri.repaint();
 				
 			panelPerIncontri.remove(rigaIncontro);
+			this.incontriSpecificati.remove(nuovoIncontro);
 			
 			numeroIncontri--;
 		});
@@ -914,28 +1029,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		lblRimuoviIncontro.setOnMouseExitedAction(() -> {});
 		
 		rigaIncontro.add(lblRimuoviIncontro);
-		
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(new MyJLabel("Incontriamoci a ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBSediUniversita());
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(new MyJLabel(" dalle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBOraIncontro());
-		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(this.creaCBMinutoIncontro());
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(new MyJLabel(" alle ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBOraIncontro());
-		rigaIncontro.add(new MyJLabel(":", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(this.creaCBMinutoIncontro());
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(new MyJLabel(" di ", new Font("Ubuntu Sans", Font.PLAIN, 25)));
-		rigaIncontro.add(Box.createHorizontalGlue());
-		rigaIncontro.add(this.creaCBGiornoIncontro());
-		rigaIncontro.add(Box.createHorizontalGlue());
 		
 		MyJLabel lblAggiungiIncontro = new MyJLabel();
 		lblAggiungiIncontro.aggiungiImmagineScalata("images/iconaAggiungiIncontro.png", 50, 50, true);
@@ -971,41 +1064,41 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	}
 	
 	private JComboBox creaCBOraIncontro() {
-		JComboBox oraInizioIncontro = new JComboBox();
-		oraInizioIncontro.setPreferredSize(new Dimension(100, 30));
-		oraInizioIncontro.setMaximumSize(new Dimension(100, 30));
-		oraInizioIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
-		oraInizioIncontro.setBackground(Color.white);
+		JComboBox oraIncontro = new JComboBox();
+		oraIncontro.setPreferredSize(new Dimension(100, 30));
+		oraIncontro.setMaximumSize(new Dimension(100, 30));
+		oraIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
+		oraIncontro.setBackground(Color.white);
 		
-		oraInizioIncontro.addItem("09");
-		oraInizioIncontro.addItem("10");
-		oraInizioIncontro.addItem("11");
-		oraInizioIncontro.addItem("12");
-		oraInizioIncontro.addItem("13");
-		oraInizioIncontro.addItem("14");
-		oraInizioIncontro.addItem("15");
-		oraInizioIncontro.addItem("16");
-		oraInizioIncontro.addItem("17");
-		oraInizioIncontro.addItem("18");
-		oraInizioIncontro.addItem("19");
-		oraInizioIncontro.addItem("20");
+		oraIncontro.addItem("09");
+		oraIncontro.addItem("10");
+		oraIncontro.addItem("11");
+		oraIncontro.addItem("12");
+		oraIncontro.addItem("13");
+		oraIncontro.addItem("14");
+		oraIncontro.addItem("15");
+		oraIncontro.addItem("16");
+		oraIncontro.addItem("17");
+		oraIncontro.addItem("18");
+		oraIncontro.addItem("19");
+		oraIncontro.addItem("20");
 		
-		return oraInizioIncontro;
+		return oraIncontro;
 	}
 	
 	private JComboBox creaCBMinutoIncontro() {
-		JComboBox oraFineIncontro = new JComboBox();
-		oraFineIncontro.setBackground(Color.white);
-		oraFineIncontro.setPreferredSize(new Dimension(100, 30));
-		oraFineIncontro.setMaximumSize(new Dimension(100, 30));
-		oraFineIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
+		JComboBox minutoIncontro = new JComboBox();
+		minutoIncontro.setBackground(Color.white);
+		minutoIncontro.setPreferredSize(new Dimension(100, 30));
+		minutoIncontro.setMaximumSize(new Dimension(100, 30));
+		minutoIncontro.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
 		
-		oraFineIncontro.addItem("00");
-		oraFineIncontro.addItem("15");
-		oraFineIncontro.addItem("30");
-		oraFineIncontro.addItem("45");
+		minutoIncontro.addItem("00");
+		minutoIncontro.addItem("15");
+		minutoIncontro.addItem("30");
+		minutoIncontro.addItem("45");
 		
-		return oraFineIncontro;
+		return minutoIncontro;
 	}
 	
 	private JComboBox creaCBGiornoIncontro() {
@@ -1101,45 +1194,23 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	
 	private void clickBottonePubblicaAnnuncio() {
 		try {
-			resettaBordiTextField(this.nomeAnnuncioTextField);
-			resettaBordiTextA(this.inserisciDescrizioneTextA);	
+			resettaBordiTextField(new EmptyBorder(0, 10, 0, 0), this.nomeAnnuncioTextField);
+			resettaBordiTextA(new EmptyBorder(0, 10, 0, 0), this.inserisciDescrizioneTextA);	
 			nascondiPanelErrore(this.panelErroreNomeAnnuncio, this.panelErroreFoto, this.panelErroreDescrizione, this.panelErroreModalitaDiConsegna);
 			
 			if(tipoAnnuncio == "Vendita") {
-				resettaBordiTextField(this.prezzoInizialeTextField);
+				resettaBordiTextField(new EmptyBorder(0, 10, 0, 0), this.prezzoInizialeTextField);
 				nascondiPanelErrore(this.panelErrorePrezzoIniziale);
 			}
 			else if(tipoAnnuncio == "Scambio") {
-				resettaBordiTextA(this.inserisciNotaScambioTextA);
+				resettaBordiTextA(new EmptyBorder(0, 10, 0, 0), this.inserisciNotaScambioTextA);
 				nascondiPanelErrore(this.panelErroreNotaScambio);
 			}
 
-			checkDatiInseriti();
-			
-			CategoriaEnum categoriaSelezionata = CategoriaEnum.confrontaConStringa(this.categorieOggetto.getSelectedItem().toString());
-			CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggetto.getSelectedItem().toString());
-			
-			Oggetto oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
-					this.aggiungiFoto1.getImmagineInByte(), true);
-			oggettoDaPassare.aggiungiImmagine(1, this.aggiungiFoto2.getImmagineInByte());
-			oggettoDaPassare.aggiungiImmagine(2, this.aggiungiFoto3.getImmagineInByte());
-
-			Annuncio annuncioDaPassare;
-			if(tipoAnnuncio == "Vendita") {	
-				double prezzoIniziale = Double.valueOf(this.prezzoInizialeTextField.getText());
-				annuncioDaPassare = new AnnuncioVendita(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
-					StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, prezzoIniziale);
-			}
-			else if(tipoAnnuncio == "Scambio") {
-				annuncioDaPassare = new AnnuncioScambio(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
-						StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, this.inserisciNotaScambioTextA.getText());
-			}
-			else {
-				annuncioDaPassare = new AnnuncioRegalo(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
-						StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare);					
-			}
-			
-			mainController.onPubblicaAnnuncioButtonClicked(annuncioDaPassare);
+//			checkDatiInseriti();
+//			Annuncio annuncioDaPassare = organizzaDatiDaPassareAlController();
+//			
+//			mainController.onPubblicaAnnuncioButtonClicked(annuncioDaPassare);
 		}
 		catch(NomeAnnuncioException exc1) {
 			this.settaLabelETextFieldDiErrore(lblErroreNomeAnnuncio, exc1.getMessage(), this.nomeAnnuncioTextField);
@@ -1148,7 +1219,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(nomeAnnuncioTextField.getBounds());				
 			});
 			panelErroreNomeAnnuncio.setVisible(true);
-			exc1.printStackTrace();
 		}
 		catch(FotoException exc2) {
 			SwingUtilities.invokeLater(() -> {
@@ -1157,8 +1227,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			});
 			lblErroreFoto.setText(exc2.getMessage());
 			panelErroreFoto.setVisible(true);
-			exc2.printStackTrace();
-
 		}
 		catch(DescrizioneException exc3) {
 			this.settaLabelETextAreaDiErrore(lblErroreDescrizione, exc3.getMessage(), this.inserisciDescrizioneTextA);
@@ -1167,8 +1235,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(inserisciDescrizioneTextA.getBounds());				
 			});
 			panelErroreDescrizione.setVisible(true);
-			exc3.printStackTrace();
-
 		}
 		catch(NotaScambioException exc4) {
 			this.settaLabelETextAreaDiErrore(lblErroreNotaScambio, exc4.getMessage(), this.inserisciNotaScambioTextA);
@@ -1177,22 +1243,28 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
 			});	
 			panelErroreNotaScambio.setVisible(true);
-			exc4.printStackTrace();
-
 		}
-		catch(ModalitaDiConsegnaException exc5) {
+		catch(PrezzoInizialeException exc5) {
+			this.settaLabelETextFieldDiErrore(lblErrorePrezzoIniziale, exc5.getMessage(), this.prezzoInizialeTextField);
 			SwingUtilities.invokeLater(() -> {
 				this.panelInserimentoDati.requestFocusInWindow();
 				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
 			});	
-			lblErroreModalitaConsegna.setText(exc5.getMessage());
+			panelErrorePrezzoIniziale.setVisible(true);
+		}
+		catch(ModalitaDiConsegnaException exc6) {
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciNotaScambioTextA.getBounds());				
+			});	
+			lblErroreModalitaConsegna.setText(exc6.getMessage());
 			panelErroreModalitaDiConsegna.setVisible(true);
-			exc5.printStackTrace();
-
 		}
-		catch(SQLException exc6) {
-			exc6.printStackTrace();
-		}
+//		catch(SQLException exc7) {
+//			System.out.println(exc7.getErrorCode());
+//			System.out.println(exc7.getMessage());
+//			System.out.println(exc7.getSQLState());	
+//		}
 	}
 	
 	private void checkDatiInseriti() {
@@ -1203,17 +1275,26 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		if(tipoAnnuncio == "Scambio")
 			checkNotaScambio();
 		
+		if(tipoAnnuncio == "Vendita")
+			checkPrezzoIniziale();
+		
 		checkModalitaConsegna();
 	}
 	
 	private void checkNomeAnnuncio() throws NomeAnnuncioException{
 		if(this.nomeAnnuncioTextField.getText().isEmpty() || 
-		   this.nomeAnnuncioTextField.getText().equals("Dai un nome al tuo annuncio!"))
+		   this.nomeAnnuncioTextField.getText().equals("Titolo"))
 		{
 			throw new NomeAnnuncioException("Inserisci un nome per il tuo annuncio.");
 		}
 	}
 	
+	private void checkFoto() throws FotoException{
+		if(!foto1Caricata && !foto2Caricata && !foto3Caricata)
+			throw new FotoException("Devi caricare almeno una foto.");
+		
+	}
+
 	private void checkDescrizioneAnnuncio() throws DescrizioneException{
 		if(this.inserisciDescrizioneTextA.getText().isEmpty() ||
 		   this.inserisciDescrizioneTextA.getText().equals("Dai una descrizione accurata dell'oggetto che stai vendendo. L'acquirente deve avere ben chiaro cosa starà acquistando!")) 
@@ -1230,13 +1311,66 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		}
 	}
 	
+	private void checkPrezzoIniziale() throws PrezzoInizialeException{
+		if(this.prezzoInizialeTextField.getText().isEmpty())
+			throw new PrezzoInizialeException("Inserisci il prezzo iniziale per il tuo articolo.");
+		
+		double prezzoIniziale = Double.valueOf(prezzoInizialeTextField.getText());
+		
+		if(prezzoIniziale <= 0.50)
+			throw new PrezzoInizialeException("Il prezzo iniziale deve essere di almeno 0.50€");
+	}
+	
 	private void checkModalitaConsegna() throws ModalitaDiConsegnaException{
 		if(!this.spedizioneCheckBox.isSelected() && !this.ritiroInPostaCheckBox.isSelected() && !this.incontroCheckBox.isSelected())
 			throw new ModalitaDiConsegnaException("Seleziona almeno una modalità di consegna.");
 	}
 	
-	private void checkFoto() throws FotoException{
-		if(!foto1Caricata && !foto2Caricata && !foto3Caricata)
-			throw new FotoException("Devi caricare almeno una foto.");
+	private Annuncio organizzaDatiDaPassareAlController() {
+		CategoriaEnum categoriaSelezionata = CategoriaEnum.confrontaConStringa(this.categorieOggettoComboBox.getSelectedItem().toString());
+		CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggettoComboBox.getSelectedItem().toString());
+		
+		Oggetto oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
+				this.lblAggiungiFoto1.getImmagineInByte(), true);
+		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
+		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
+
+		Annuncio annuncioDaPassare;
+		if(tipoAnnuncio == "Vendita") {	
+			double prezzoIniziale = Double.valueOf(this.prezzoInizialeTextField.getText());
+			annuncioDaPassare = new AnnuncioVendita(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+				StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, prezzoIniziale);
+		}
+		else if(tipoAnnuncio == "Scambio") {
+			annuncioDaPassare = new AnnuncioScambio(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+					StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, this.inserisciNotaScambioTextA.getText());
+		}
+		else {
+			annuncioDaPassare = new AnnuncioRegalo(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
+					StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare);					
+		}
+		
+		if(this.dataScadenzaComboBox.getSelectedIndex() == 1)
+			annuncioDaPassare.setDataScadenza(Date.valueOf(LocalDate.now().plusDays(7)));
+		else if(this.dataScadenzaComboBox.getSelectedIndex() == 2)
+			annuncioDaPassare.setDataScadenza(Date.valueOf(LocalDate.now().plusDays(15)));
+		else if(this.dataScadenzaComboBox.getSelectedIndex() == 3)
+			annuncioDaPassare.setDataScadenza(Date.valueOf(LocalDate.now().plusDays(31)));
+		
+		if(this.incontroCheckBox.isSelected())
+			this.aggiungiIncontriAdAnnuncio(annuncioDaPassare);
+		
+		return annuncioDaPassare;
+	}
+	
+	private void aggiungiIncontriAdAnnuncio(Annuncio annuncioDaPassare) {
+		for(RigaIncontro incontroAttuale : this.incontriSpecificati) {
+			String inizioIncontro = incontroAttuale.getOraInizioIncontro()+":"+incontroAttuale.getMinutoInizioIncontro();
+			String fineIncontro = incontroAttuale.getOraFineIncontro()+":"+incontroAttuale.getMinutoFineIncontro();
+			String giornoIncontro = incontroAttuale.getGiornoIncontro();
+
+			annuncioDaPassare.aggiungiPropostaIncontro(new SedeUniversita(incontroAttuale.getSedeDiIncontro()), inizioIncontro, 
+													   fineIncontro, GiornoEnum.confrontaConDB(giornoIncontro));
+		}
 	}
 }
