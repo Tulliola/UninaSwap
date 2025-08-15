@@ -33,6 +33,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	private MyJPanel contentPane;
 	private JPanel panelProfilo;
 	private MyJPanel panelRiepilogoInfoUtente;
+	private MyJPanel panelAnnunciDisponibiliUtente;
 	private MyJPanel panelBottoni;
 
 	//Buttons
@@ -89,6 +90,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
 		
+		PanelVisualizzaAnnunciDisponibiliUtente panelAnnunciDisponibili = new PanelVisualizzaAnnunciDisponibiliUtente(utenteLoggato);
+		
+		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 
@@ -100,7 +104,8 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
-		contentPane.add(panelProfilo, BorderLayout.CENTER);
+//		contentPane.add(panelProfilo, BorderLayout.CENTER);
+		contentPane.add(panelAnnunciDisponibili);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
