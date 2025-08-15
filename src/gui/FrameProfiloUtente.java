@@ -102,7 +102,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
-//		contentPane.add(panelProfilo, BorderLayout.CENTER);
+		contentPane.add(panelProfilo, BorderLayout.CENTER);
 //		contentPane.add(panelAnnunciDisponibili);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		

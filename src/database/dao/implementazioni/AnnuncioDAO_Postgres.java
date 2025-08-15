@@ -25,6 +25,7 @@ import dto.ProfiloUtente;
 import dto.SedeUniversita;
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
+import utilities.GiornoEnum;
 import utilities.StatoAnnuncioEnum;
 
 public class AnnuncioDAO_Postgres implements AnnuncioDAO{
@@ -73,7 +74,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciNonDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException, IOException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
@@ -222,7 +223,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT idOggetto FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND "
 				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
-				+ "INTERSECT (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
+				+ "UNION (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
 				+ "(NOT(Stato = 'Accettata')))")){
 			ps.setInt(1, idOggetto);
 			ps.setInt(2, idOggetto);
@@ -254,6 +255,8 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 	
 	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException, IOException{
+		Annuncio annuncioRecuperato;
+		
 		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");
 		boolean spedizione = rs.getBoolean("Spedizione");
 		boolean ritiroInPosta = rs.getBoolean("Ritiro_in_posta");
@@ -264,24 +267,47 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs.getInt("idOggetto"));
 		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs.getString("Email"));
 		
+
 		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
-			return new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
+			annuncioRecuperato = new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
 		}
 		else if(rs.getString("Tipo_annuncio").equals("Scambio")) {
-			return new AnnuncioScambio(
+			annuncioRecuperato = new AnnuncioScambio(
 				idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getString("Nota_scambio")	
 			);
 		}
 		else {
-			return new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
+			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utenteProprietario, oggettoInAnnuncio
 			);
 		}
+		
+		if(rs.getBoolean("Incontro")) {
+			String recuperaIncontri = "SELECT * FROM Incontro WHERE idAnnuncio = ?";
+			
+			try(PreparedStatement psRecuperaIncontri = connessioneDB.prepareStatement(recuperaIncontri)){
+				psRecuperaIncontri.setInt(1, idAnnuncioRecuperato);
+				
+				try(ResultSet rsRecuperaIncontri = psRecuperaIncontri.executeQuery()){
+					rsRecuperaIncontri.next();
+					
+					SedeUniversita sedeDiIncontro;
+					
+					SedeUniversitaDAO_Postgres sedeUniversitaDAO = new SedeUniversitaDAO_Postgres(this.connessioneDB);
+					sedeDiIncontro = sedeUniversitaDAO.recuperaSedeDaId(rsRecuperaIncontri.getInt("idSede"));
+					
+					annuncioRecuperato.aggiungiPropostaIncontro(sedeDiIncontro, rsRecuperaIncontri.getString("Ora_inizio_incontro"), 
+																rsRecuperaIncontri.getString("Ora_fine_incontro"), GiornoEnum.confrontaConStringa(rsRecuperaIncontri.getString("Giorno_incontro")));
+				}
+			}
+		}
+		
+		return annuncioRecuperato;
 	}
 	
 	private byte[] recuperaPrimaImmagineDiOggetto(int idOggetto) throws SQLException{

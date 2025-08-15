@@ -10,18 +10,22 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -61,11 +65,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		prova.setLayout(new FlowLayout());
 		
 		for(int i = 0; i < annunci.size(); i++) {
-			if(annunci.get(i).getStato() == StatoAnnuncioEnum.Disponibile) {
-				MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
-				prova.add(annuncioCorrente);
-			}
-
+			MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
+			prova.add(annuncioCorrente);
 		}
 		
 		prova.setPreferredSize(new Dimension(500, 4000));
@@ -74,6 +75,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		JScrollPane scrollPanel = new JScrollPane(prova);
 		scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPanel.getVerticalScrollBar().setValue(0);
 		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
 
 		this.add(bordoSuperiore, BorderLayout.NORTH);
@@ -192,7 +194,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		annuncioPanel.setLayout(new BorderLayout());
 		annuncioPanel.setPreferredSize(new Dimension(800, 600));
 		annuncioPanel.setMaximumSize(new Dimension(800, 600));
-		annuncioPanel.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+		annuncioPanel.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 2));
 		
 		MyJPanel panelInfoEFotoOggetto = new MyJPanel();
 		panelInfoEFotoOggetto.setLayout(new BorderLayout());
@@ -204,7 +206,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		MyJPanel panelInfoAnnuncio = new MyJPanel();
 		panelInfoAnnuncio.setLayout(new BorderLayout());
 		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(annuncioToAdd), BorderLayout.NORTH);
-		panelInfoAnnuncio.add(this.creaPanelTipoAnnuncio(annuncioToAdd), BorderLayout.CENTER);
+		panelInfoAnnuncio.add(this.creaPanelDescrizioneAnnuncio(annuncioToAdd), BorderLayout.CENTER);
+		panelInfoAnnuncio.add(this.creaPanelFaiOfferta(annuncioToAdd), BorderLayout.SOUTH);
 
 		annuncioPanel.add(panelInfoAnnuncio, BorderLayout.CENTER);
 		
@@ -216,7 +219,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelFotoOggetto.setLayout(new BorderLayout());
 		panelFotoOggetto.setPreferredSize(new Dimension(375, 500));
 		panelFotoOggetto.setMaximumSize(new Dimension(375, 500));
-		panelFotoOggetto.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+		panelFotoOggetto.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
 				
 		ImageIcon fotoToAdd;
 		MyJPanel panelInterno;
@@ -244,23 +247,25 @@ public class PanelHomePageAnnunci extends JPanel{
 		MyJPanel panelCategoria = new MyJPanel();
 		panelCategoria.setPreferredSize(new Dimension(375, 50));
 		panelCategoria.setMaximumSize(new Dimension(375, 50));
-		panelCategoria.setBackground(Color.white);
-		panelCategoria.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
 		panelCategoria.setLayout(new FlowLayout());
+		panelCategoria.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCategoria.setAlignmentX(CENTER_ALIGNMENT);
+		panelCategoria.setBackground(new Color(220, 220, 220));
 		
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setPreferredSize(new Dimension(375, 50));
 		panelCondizioni.setMaximumSize(new Dimension(375, 50));
-		panelCondizioni.setBackground(Color.white);
 		panelCondizioni.setLayout(new FlowLayout());
+		panelCondizioni.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCondizioni.setAlignmentX(CENTER_ALIGNMENT);
-		panelCondizioni.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+		panelCondizioni.setBackground(new Color(220, 220, 220));
 
 		MyJLabel lblCategoria = new MyJLabel();
 		lblCategoria.setAlignmentX(CENTER_ALIGNMENT);
 		lblCategoria.setBorder(new EmptyBorder(10, 0, 0, 0));
 		lblCategoria.setText(lblCategoria.getText()+annuncioToAdd.getOggettoInAnnuncio().getCategoria());
+		lblCategoria.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCategoriaEnum().getImmagineCategoria(), 25, 25, false);
+		lblCategoria.setHorizontalTextPosition(SwingConstants.LEFT);
 		panelCategoria.add(Box.createVerticalGlue());
 		panelCategoria.add(lblCategoria);
 		panelCategoria.add(Box.createVerticalGlue());
@@ -269,9 +274,35 @@ public class PanelHomePageAnnunci extends JPanel{
 		lblCondizioni.setAlignmentX(CENTER_ALIGNMENT);
 		lblCondizioni.setBorder(new EmptyBorder(10, 0, 0, 0));
 		lblCondizioni.setText(lblCondizioni.getText()+annuncioToAdd.getOggettoInAnnuncio().getCondizioni());
-		panelCondizioni.add(Box.createVerticalGlue());
-		panelCondizioni.add(lblCondizioni);
-		panelCondizioni.add(Box.createVerticalGlue());
+		lblCondizioni.setForeground(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getColoreCondizione());
+		
+		if(!annuncioToAdd.getOggettoInAnnuncio().getCondizioni().equals("Ricondizionato")) {
+			MyJPanel panelStelleCondizioni = new MyJPanel();
+			panelStelleCondizioni.setBackground(new Color(220, 220, 220));
+			panelStelleCondizioni.setPreferredSize(new Dimension(90, 30));
+			MyJLabel lblStella1 = new MyJLabel();
+			lblStella1.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getStella1(), 25, 25, false);
+			MyJLabel lblStella2 = new MyJLabel();
+			lblStella2.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getStella2(), 25, 25, false);
+			MyJLabel lblStella3 = new MyJLabel();
+			lblStella3.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getStella3(), 25, 25, false);
+			panelStelleCondizioni.add(lblStella1);
+			panelStelleCondizioni.add(lblStella2);
+			panelStelleCondizioni.add(lblStella3);
+		
+			panelCondizioni.add(Box.createVerticalGlue());
+			panelCondizioni.add(lblCondizioni);
+			panelCondizioni.add(panelStelleCondizioni);
+			panelCondizioni.add(Box.createVerticalGlue());
+		}
+		else {
+			lblCondizioni.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getFixPerRicondizionato(), 25, 25, false);
+			lblCondizioni.setHorizontalTextPosition(SwingConstants.LEFT);
+			
+			panelCondizioni.add(Box.createVerticalGlue());
+			panelCondizioni.add(lblCondizioni);
+			panelCondizioni.add(Box.createVerticalGlue());
+		}
 		
 		panelInfoOggetto.add(panelCategoria, BorderLayout.NORTH);
 		panelInfoOggetto.add(panelCondizioni, BorderLayout.CENTER);
@@ -292,6 +323,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		MyJLabel lblUsername = new MyJLabel(annuncio.getUtenteProprietario().getUsername());
 		lblUsername.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblUsername.setAlignmentX(RIGHT_ALIGNMENT);
+		lblUsername.setForeground(Color.white);
 		MyJLabel lblIconaTipoAnnuncio = new MyJLabel();
 		
 		if(annuncio instanceof AnnuncioVendita) {
@@ -318,31 +350,176 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelUsernamePubblicante;
 	}
 	
-	private MyJPanel creaPanelTipoAnnuncio(Annuncio annuncio) {
-		MyJPanel panelTipoAnnuncio = new MyJPanel();
-		panelTipoAnnuncio.setLayout(new BoxLayout(panelTipoAnnuncio, BoxLayout.Y_AXIS));
-		panelTipoAnnuncio.setPreferredSize(new Dimension(550, 570));
-		panelTipoAnnuncio.setMaximumSize(new Dimension(550, 570));
-		panelTipoAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
-		panelTipoAnnuncio.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 1));
+	private MyJPanel creaPanelDescrizioneAnnuncio(Annuncio annuncio) {
+		MyJPanel panelDescrizioneAnnuncio = new MyJPanel();
+		panelDescrizioneAnnuncio.setLayout(new BorderLayout());
+		panelDescrizioneAnnuncio.setPreferredSize(new Dimension(425, 500));
+		panelDescrizioneAnnuncio.setMaximumSize(new Dimension(425, 500));
+		panelDescrizioneAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
 		
-		MyJLabel lblNomeAnnuncio = new MyJLabel(annuncio.getNome());
-		lblNomeAnnuncio.setAlignmentX(LEFT_ALIGNMENT);
+		MyJPanel panelNomeAnnuncio = new MyJPanel();
+		panelNomeAnnuncio.setLayout(new BoxLayout(panelNomeAnnuncio, BoxLayout.PAGE_AXIS));
+		panelNomeAnnuncio.setPreferredSize(new Dimension(425, 100));
+		panelNomeAnnuncio.setMaximumSize(new Dimension(425, 100));
+		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
+		JTextArea nomeAnnuncioTextArea = new JTextArea(annuncio.getNome());
+		nomeAnnuncioTextArea.setBackground(Color.orange);
+		nomeAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+		nomeAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
+		nomeAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
+		nomeAnnuncioTextArea.setEditable(false);
+		nomeAnnuncioTextArea.setOpaque(true);
+		nomeAnnuncioTextArea.setLineWrap(true);
+		nomeAnnuncioTextArea.setWrapStyleWord(true);
+		nomeAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
+		nomeAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
+		panelNomeAnnuncio.add(nomeAnnuncioTextArea);
 		
-		MyJLabel lblNotaScambio = new MyJLabel(annuncio.getNotaScambio());
-		if(annuncio.getNotaScambio() != null) {
-			lblNotaScambio.setAlignmentX(LEFT_ALIGNMENT);
+		MyJPanel panelDescrizione = new MyJPanel();
+		panelDescrizione.setLayout(new BoxLayout(panelDescrizione, BoxLayout.PAGE_AXIS));
+		panelDescrizione.setPreferredSize(new Dimension(425, 300));
+		panelDescrizione.setMaximumSize(new Dimension(425, 300));
+		JTextArea descrizioneAnnuncioTextArea = new JTextArea(annuncio.getOggettoInAnnuncio().getDescrizione());
+		descrizioneAnnuncioTextArea.setBackground(Color.orange);
+		descrizioneAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
+		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
+		descrizioneAnnuncioTextArea.setEditable(false);
+		descrizioneAnnuncioTextArea.setOpaque(true);
+		descrizioneAnnuncioTextArea.setLineWrap(true);
+		descrizioneAnnuncioTextArea.setWrapStyleWord(true);
+		descrizioneAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
+		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
+		panelDescrizione.add(descrizioneAnnuncioTextArea);
+		
+		MyJPanel panelModalitaConsegna = this.creaPanelModalitaConsegna(annuncio);
+		
+		panelDescrizioneAnnuncio.add(panelNomeAnnuncio, BorderLayout.NORTH);
+		panelDescrizioneAnnuncio.add(panelDescrizione, BorderLayout.CENTER);
+		panelDescrizioneAnnuncio.add(panelModalitaConsegna, BorderLayout.SOUTH);
+		
+		panelDescrizioneAnnuncio.setBackground(Color.white);
+		
+		return panelDescrizioneAnnuncio;
+	}
+	
+	private MyJPanel creaPanelFaiOfferta(Annuncio annuncio) {
+		MyJPanel panelFaiOfferta = new MyJPanel();
+		panelFaiOfferta.setLayout(new BoxLayout(panelFaiOfferta, BoxLayout.X_AXIS));
+		panelFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
+		panelFaiOfferta.setPreferredSize(new Dimension(425, 50));
+		panelFaiOfferta.setMaximumSize(new Dimension(425, 50));
+		panelFaiOfferta.setBackground(Color.white);
+		
+		JButton bottoneFaiOfferta = new JButton("Fai un'offerta!");
+		bottoneFaiOfferta.setBackground(new Color(65, 106, 144));
+		bottoneFaiOfferta.setForeground(Color.white);
+		bottoneFaiOfferta.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
+		bottoneFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
+		
+		MyJLabel lblInterazioni = new MyJLabel(String.valueOf(annuncio.getNumeroInterazioni()));
+		lblInterazioni.aggiungiImmagineScalata("images/iconaMiPiace.png", 25, 25, false);
+		
+		lblInterazioni.setForeground(Color.red);
+		lblInterazioni.setHorizontalTextPosition(SwingConstants.RIGHT);
+		
+		panelFaiOfferta.add(Box.createVerticalGlue());
+		panelFaiOfferta.add(Box.createHorizontalGlue());
+		panelFaiOfferta.add(bottoneFaiOfferta);
+		panelFaiOfferta.add(Box.createHorizontalGlue());
+		panelFaiOfferta.add(lblInterazioni);
+		panelFaiOfferta.add(Box.createHorizontalGlue());
+		panelFaiOfferta.add(Box.createVerticalGlue());
+		
+		return panelFaiOfferta;
+	}
+	
+	private MyJPanel creaPanelModalitaConsegna(Annuncio annuncio) {
+		MyJPanel panelModalitaConsegna = new MyJPanel();
+		panelModalitaConsegna.setPreferredSize(new Dimension(425, 50));
+		panelModalitaConsegna.setMaximumSize(new Dimension(425, 50));
+		panelModalitaConsegna.setLayout(new BoxLayout(panelModalitaConsegna, BoxLayout.X_AXIS));
+		panelModalitaConsegna.setAlignmentX(CENTER_ALIGNMENT);
+		panelModalitaConsegna.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, MyJPanel.uninaColorClicked));
+		panelModalitaConsegna.setBackground(Color.white);
+		
+		MyJPanel panelSpedizione = new MyJPanel();
+		panelSpedizione.setPreferredSize(new Dimension(60, 30));
+		panelSpedizione.setMaximumSize(new Dimension(60, 30));
+		panelSpedizione.setBackground(Color.white);
+		MyJLabel lblSpedizione = new MyJLabel();
+		lblSpedizione.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
+		panelSpedizione.add(lblSpedizione);
+		if(annuncio.isSpedizione()) {
+			MyJLabel lblPrevista = new MyJLabel();
+			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelSpedizione.add(lblPrevista);
+		}
+		else {
+			MyJLabel lblNonPrevista = new MyJLabel();
+			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+			panelSpedizione.add(lblNonPrevista);
 		}
 		
-		MyJLabel lblDescrizione = new MyJLabel(annuncio.getOggettoInAnnuncio().getDescrizione());
-		lblDescrizione.setAlignmentX(LEFT_ALIGNMENT);
+		MyJPanel panelRitiroInPosta = new MyJPanel();
+		panelRitiroInPosta.setPreferredSize(new Dimension(60, 30));
+		panelRitiroInPosta.setMaximumSize(new Dimension(60, 30));
+		panelRitiroInPosta.setBackground(Color.white);
+		MyJLabel lblRitiroInPosta = new MyJLabel();
+		lblRitiroInPosta.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
+		panelRitiroInPosta.add(lblRitiroInPosta);
+		if(annuncio.isRitiroInPosta()) {
+			MyJLabel lblPrevista = new MyJLabel();
+			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelRitiroInPosta.add(lblPrevista);
+		}
+		else {
+			MyJLabel lblNonPrevista = new MyJLabel();
+			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+			panelRitiroInPosta.add(lblNonPrevista);
+		}
 		
-		panelTipoAnnuncio.add(lblNomeAnnuncio);
-		panelTipoAnnuncio.add(lblDescrizione);
-		panelTipoAnnuncio.add(lblNotaScambio);
+		MyJPanel panelIncontro = new MyJPanel();
+		panelIncontro.setPreferredSize(new Dimension(60, 30));
+		panelIncontro.setMaximumSize(new Dimension(60, 30));
+		panelIncontro.setBackground(Color.white);
+		MyJLabel lblIncontro = new MyJLabel();
+		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
+		panelIncontro.add(lblIncontro);
+		if(annuncio.isIncontro()) {
+			String stringaPerToolTip = "<html>Sono disposto ad un incontro di persona secondo le seguenti disponibilità: <br>";
+			
+			for(int i = 0; i < annuncio.getGiornoIncontro().size(); i++) {
+				stringaPerToolTip += " - ";
+				stringaPerToolTip += annuncio.getGiornoIncontro().get(i) + ", dalle ";
+				stringaPerToolTip += annuncio.getOraInizioIncontro().get(i) + " alle ";
+				stringaPerToolTip += annuncio.getOraFineIncontro().get(i) + ", a ";
+				stringaPerToolTip += annuncio.getSedeIncontroProposte().get(i).getNome() + "; <br>";
+			}
+						
+			stringaPerToolTip += " </html>";
+			lblIncontro.setToolTipText(stringaPerToolTip);
+			
+			MyJLabel lblPrevista = new MyJLabel();
+			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelIncontro.add(lblPrevista);
+		}
+		else {
+			MyJLabel lblNonPrevista = new MyJLabel();
+			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);			
+			panelIncontro.add(lblNonPrevista);
+		}
 		
-		panelTipoAnnuncio.setBackground(Color.white);
+		panelModalitaConsegna.add(Box.createVerticalGlue());
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
+		panelModalitaConsegna.add(panelSpedizione);
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
+		panelModalitaConsegna.add(panelRitiroInPosta);
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
+		panelModalitaConsegna.add(panelIncontro);
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
+		panelModalitaConsegna.add(Box.createVerticalGlue());
 		
-		return panelTipoAnnuncio;
+		return panelModalitaConsegna;
 	}
 }

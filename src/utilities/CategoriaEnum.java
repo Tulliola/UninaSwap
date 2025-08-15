@@ -36,7 +36,7 @@ public enum CategoriaEnum {
 		return categoria;
 	}
 	 
-	 public ImageIcon getImmagineCondizione() {
+	 public ImageIcon getImmagineCategoria() {
 		 return immagineCategoria;
 	 }
 }

@@ -1372,7 +1372,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			String giornoIncontro = incontroAttuale.getGiornoIncontro();
 
 			annuncioDaPassare.aggiungiPropostaIncontro(sedeScelta, inizioIncontro, 
-													   fineIncontro, GiornoEnum.confrontaConDB(giornoIncontro));
+													   fineIncontro, GiornoEnum.confrontaConStringa(giornoIncontro));
 		}
 		
 		for(RigaIncontro incontroAttuale : this.incontriSpecificati) {
@@ -1382,7 +1382,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			String giornoIncontro = incontroAttuale.getGiornoIncontro();
 
 			System.out.println(sedeScelta.getIdSede()+","+inizioIncontro+","+ 
-													   fineIncontro+","+GiornoEnum.confrontaConDB(giornoIncontro));
+													   fineIncontro+","+GiornoEnum.confrontaConStringa(giornoIncontro));
 		}
 	}
 	

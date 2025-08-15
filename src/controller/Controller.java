@@ -38,29 +38,29 @@ public class Controller {
 	private static Connection connessioneDB;
 	
 	private ProfiloUtente utenteLoggato;
-	private ArrayList<Annuncio> annunciNonDiUtente;
+	private ArrayList<Annuncio> annunciInBacheca;
 	private ArrayList<SedeUniversita> sediPresenti;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);		
 
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
 		
-		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-		try {
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
-			frameProfiloUtente = new FrameProfiloUtente(this, "        Annunci disponibili", utenteLoggato);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		frameProfiloUtente.setVisible(true);
-		
+//		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+//		try {
+//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
+//			frameProfiloUtente = new FrameProfiloUtente(this, "        Annunci disponibili", utenteLoggato);
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		frameProfiloUtente.setVisible(true);
+//		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
 //			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
@@ -135,7 +135,7 @@ public class Controller {
 		
 	public void passaAHomePage(MyJFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
-		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciNonDiUtente);
+		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
 		frameHomePage.setVisible(true);
 		
 	}
@@ -169,7 +169,7 @@ public class Controller {
 			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
-			this.annunciNonDiUtente = annunciDAO.recuperaAnnunciNonDiUtente(utenteLoggato);
+			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
 			this.passaAHomePage(frameDiLogin);
 		}
 	}

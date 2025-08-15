@@ -4,6 +4,7 @@ package dto;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Random;
 
 import utilities.GiornoEnum;
 import utilities.StatoAnnuncioEnum;
@@ -28,9 +29,14 @@ public abstract class Annuncio {
 	private ArrayList<String> oraFineIncontro = new ArrayList();
 	private ArrayList<GiornoEnum> giornoIncontro = new ArrayList();
 	
+	//Attributi per le interazioni
+	private Random generatoreCasualeDiInterazioni = new Random();
+	private int numeroDiInterazioni = generatoreCasualeDiInterazioni.nextInt(200 - 0 + 1);
+	
 	//Costruttore per la costruzione di oggetti durante la retrieve
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
+		this.idAnnuncio = idAnnuncio;
 		this.spedizione = spedizione;
 		this.ritiroInPosta = ritiroInPosta;
 		this.incontro = incontro;
@@ -231,6 +237,10 @@ public abstract class Annuncio {
 	
 	public String getNotaScambio() {
 		return null;
+	}
+	
+	public int getNumeroInterazioni() {
+		return this.numeroDiInterazioni;
 	}
 	
 	@Override

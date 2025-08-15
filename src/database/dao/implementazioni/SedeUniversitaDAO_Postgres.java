@@ -38,4 +38,19 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 			}
 		}
 	}
+	
+	@Override
+	public SedeUniversita recuperaSedeDaId(int idSede) throws SQLException {
+		String recuperaSede = "SELECT Nome FROM Sede_universita WHERE idSede = ?";
+		
+		try(PreparedStatement psRecuperaSede = connessioneDB.prepareStatement(recuperaSede)){
+			psRecuperaSede.setInt(1, idSede);
+			try(ResultSet rsRecuperaSede = psRecuperaSede.executeQuery()){	
+				if(rsRecuperaSede.next())
+					return new SedeUniversita(idSede, rsRecuperaSede.getString("Nome"));
+			}
+		}
+		
+		return null;
+	}
 }

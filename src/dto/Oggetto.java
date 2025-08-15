@@ -68,6 +68,10 @@ public class Oggetto {
 	public String getCategoria() {
 		return categoria.toString();
 	}
+	
+	public CategoriaEnum getCategoriaEnum() {
+		return categoria;
+	}
 
 	public void setCategoria(CategoriaEnum cateogria) {
 		this.categoria = cateogria;
@@ -75,6 +79,10 @@ public class Oggetto {
 
 	public String getCondizioni() {
 		return condizioni.toString();
+	}
+	
+	public CondizioneEnum getCondizioniEnum() {
+		return condizioni;
 	}
 
 	public void setCondizioni(CondizioneEnum condizioni) {

@@ -13,7 +13,7 @@ public enum GiornoEnum {
 		this.giorno = giorno;
 	}
 	
-	public static GiornoEnum confrontaConDB(String giorno) {
+	public static GiornoEnum confrontaConStringa(String giorno) {
 		for(GiornoEnum g : values()) {
 			if(g.giorno.equals(giorno)) {
 				return g;
