@@ -294,18 +294,21 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				psRecuperaIncontri.setInt(1, idAnnuncioRecuperato);
 				
 				try(ResultSet rsRecuperaIncontri = psRecuperaIncontri.executeQuery()){
-					rsRecuperaIncontri.next();
-					
-					SedeUniversita sedeDiIncontro;
-					
-					SedeUniversitaDAO_Postgres sedeUniversitaDAO = new SedeUniversitaDAO_Postgres(this.connessioneDB);
-					sedeDiIncontro = sedeUniversitaDAO.recuperaSedeDaId(rsRecuperaIncontri.getInt("idSede"));
-					
-					annuncioRecuperato.aggiungiPropostaIncontro(sedeDiIncontro, rsRecuperaIncontri.getString("Ora_inizio_incontro"), 
-																rsRecuperaIncontri.getString("Ora_fine_incontro"), GiornoEnum.confrontaConStringa(rsRecuperaIncontri.getString("Giorno_incontro")));
+					while(rsRecuperaIncontri.next()) {
+						SedeUniversita sedeDiIncontro;
+						
+						SedeUniversitaDAO_Postgres sedeUniversitaDAO = new SedeUniversitaDAO_Postgres(this.connessioneDB);
+						sedeDiIncontro = sedeUniversitaDAO.recuperaSedeDaId(rsRecuperaIncontri.getInt("idSede"));
+						
+						annuncioRecuperato.aggiungiPropostaIncontro(sedeDiIncontro, rsRecuperaIncontri.getString("Ora_inizio_incontro"), 
+																	rsRecuperaIncontri.getString("Ora_fine_incontro"), GiornoEnum.confrontaConStringa(rsRecuperaIncontri.getString("Giorno_incontro")));
+					}
 				}
 			}
 		}
+		
+		if(rs.getDate("Data_scadenza") != null)
+			annuncioRecuperato.setDataScadenza(rs.getDate("Data_scadenza"));
 		
 		return annuncioRecuperato;
 	}

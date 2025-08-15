@@ -8,10 +8,14 @@ import java.awt.Image;
 
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -19,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -34,6 +39,7 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import utilities.CategoriaEnum;
 //import dto.AnnuncioRegalo;
 //import dto.AnnuncioScambio;
 import utilities.MyJButton;
@@ -50,6 +56,13 @@ public class PanelHomePageAnnunci extends JPanel{
 	private MyJPanel bordoSuperiore = new MyJPanel();
 	private MyJPanel barraDiRicerca = new MyJPanel();
 	private MyJPanel bordoInferiore = new MyJPanel();
+	private MyJPanel panelAnnunciInBacheca = new MyJPanel();
+	private MyJPanel panelAnnunci = new MyJPanel();
+	private MyJPanel panelRisultatiDiRicerca = new MyJPanel();
+	
+	private MyJLabel lblRisultatiDiRicerca = new MyJLabel();
+	
+	
 	
 	private Controller mainController;
 	
@@ -58,33 +71,27 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		this.setLayout(new BorderLayout());
 		
-		this.settaBordoSuperiore();
+		this.settaBordoSuperiore(annunci);
 		this.settaBordoInferiore();
 
-		MyJPanel prova = new MyJPanel();
-		prova.setLayout(new FlowLayout());
-		
-		for(int i = 0; i < annunci.size(); i++) {
-			MyJPanel annuncioCorrente = creaPanelAnnuncio(annunci.get(i));
-			prova.add(annuncioCorrente);
-		}
-		
-		prova.setPreferredSize(new Dimension(500, 4000));
-		
-		
-		JScrollPane scrollPanel = new JScrollPane(prova);
+		JScrollPane scrollPanel = new JScrollPane(panelAnnunci);
 		scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPanel.getVerticalScrollBar().setValue(0);
 		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
+		
+		this.settaPanelAnnunciEPanelRisultatiRicerca(annunci, scrollPanel);
+		
+		mostraAnnunciInBacheca(annunci);		
+		
 
 		this.add(bordoSuperiore, BorderLayout.NORTH);
-		this.add(scrollPanel, BorderLayout.CENTER);
+		this.add(panelAnnunciInBacheca, BorderLayout.CENTER);
 		this.add(bordoInferiore, BorderLayout.SOUTH);
 	}
 	
-	private void settaBordoSuperiore() {
-		bordoSuperiore.setLayout(new BoxLayout(bordoSuperiore, BoxLayout.Y_AXIS));
+	private void settaBordoSuperiore(ArrayList<Annuncio> annunci) {
+		bordoSuperiore.setLayout(new FlowLayout(FlowLayout.LEFT));
 		bordoSuperiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoSuperiore.setPreferredSize(new Dimension(500, 50));
 		bordoSuperiore.setBackground(MyJPanel.uninaColorClicked);
@@ -108,6 +115,12 @@ public class PanelHomePageAnnunci extends JPanel{
 			public void focusLost(FocusEvent fe) {
 				if(campoDiTestoTextField.getText().isEmpty())
 					campoDiTestoTextField.setText("Cerca ora!");
+			}
+		});
+		campoDiTestoTextField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				filtraAnnunciPerRicerca(annunci, campoDiTestoTextField.getText());
 			}
 		});
 		
@@ -142,8 +155,59 @@ public class PanelHomePageAnnunci extends JPanel{
 		barraDiRicerca.add(campoDiTestoTextField, BorderLayout.CENTER);
 		barraDiRicerca.add(lblIconaDiEliminaTesto, BorderLayout.EAST);
 	
+		
+		JComboBox<String> tipologiaAnnunciCB = new JComboBox();
+		tipologiaAnnunciCB.setBackground(Color.white);
+		tipologiaAnnunciCB.setPreferredSize(new Dimension(300, 35));
+		tipologiaAnnunciCB.setMaximumSize(new Dimension(300, 35));
+		tipologiaAnnunciCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
+		
+		tipologiaAnnunciCB.addItem("Tutti gli annunci");
+		tipologiaAnnunciCB.addItem("Vendita");
+		tipologiaAnnunciCB.addItem("Scambio");
+		tipologiaAnnunciCB.addItem("Regalo");
+		tipologiaAnnunciCB.setSelectedIndex(0);
+		
+		JComboBox<String> categoriaOggettoInAnnuncioCB = new JComboBox();
+		categoriaOggettoInAnnuncioCB.setBackground(Color.white);
+		categoriaOggettoInAnnuncioCB.setPreferredSize(new Dimension(300, 35));
+		categoriaOggettoInAnnuncioCB.setMaximumSize(new Dimension(300, 35));
+		categoriaOggettoInAnnuncioCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
+		
+		categoriaOggettoInAnnuncioCB.addItem("Tutte le categorie");
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Abbigliamento.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Appunti.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Collezionismo.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Cura_della_persona.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Elettronica_e_Informatica.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Film.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Libri.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Libri_di_testo.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Musica.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Per_la_casa.toString());
+		categoriaOggettoInAnnuncioCB.addItem(CategoriaEnum.Sport_e_Tempo_libero.toString());
+		categoriaOggettoInAnnuncioCB.setSelectedIndex(0);
+
+		categoriaOggettoInAnnuncioCB.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				aggiornaFiltri(annunci, tipologiaAnnunciCB, categoriaOggettoInAnnuncioCB);
+			}
+		});
+		
+		tipologiaAnnunciCB.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				aggiornaFiltri(annunci, tipologiaAnnunciCB, categoriaOggettoInAnnuncioCB);
+			}
+		});
+		
 		bordoSuperiore.add(Box.createVerticalGlue());
+		bordoSuperiore.add(tipologiaAnnunciCB);
+		bordoSuperiore.add(Box.createRigidArea(new Dimension(10, 0)));
 		bordoSuperiore.add(barraDiRicerca);
+		bordoSuperiore.add(Box.createRigidArea(new Dimension(10, 0)));
+		bordoSuperiore.add(categoriaOggettoInAnnuncioCB);
 		bordoSuperiore.add(Box.createVerticalGlue());
 	}
 	
@@ -187,6 +251,16 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.add(bottonePubblicaAnnuncioRegalo);
 		bordoInferiore.add(Box.createHorizontalGlue());
 		bordoInferiore.add(Box.createVerticalGlue());
+	}
+	
+	private void settaPanelAnnunciEPanelRisultatiRicerca(ArrayList<Annuncio> annunciInBacheca, JScrollPane scrollPanel) {
+		this.panelAnnunciInBacheca.setLayout(new BorderLayout());
+		
+		panelRisultatiDiRicerca.add(lblRisultatiDiRicerca);
+		panelRisultatiDiRicerca.setVisible(false);
+			
+		panelAnnunciInBacheca.add(panelRisultatiDiRicerca, BorderLayout.NORTH);
+		panelAnnunciInBacheca.add(scrollPanel, BorderLayout.CENTER);
 	}
 	
 	private MyJPanel creaPanelAnnuncio(Annuncio annuncioToAdd) {
@@ -250,7 +324,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelCategoria.setLayout(new FlowLayout());
 		panelCategoria.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCategoria.setAlignmentX(CENTER_ALIGNMENT);
-		panelCategoria.setBackground(new Color(220, 220, 220));
+		panelCategoria.setBackground(Color.white);
 		
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setPreferredSize(new Dimension(375, 50));
@@ -258,7 +332,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelCondizioni.setLayout(new FlowLayout());
 		panelCondizioni.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCondizioni.setAlignmentX(CENTER_ALIGNMENT);
-		panelCondizioni.setBackground(new Color(220, 220, 220));
+		panelCondizioni.setBackground(Color.white);
 
 		MyJLabel lblCategoria = new MyJLabel();
 		lblCategoria.setAlignmentX(CENTER_ALIGNMENT);
@@ -278,7 +352,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		if(!annuncioToAdd.getOggettoInAnnuncio().getCondizioni().equals("Ricondizionato")) {
 			MyJPanel panelStelleCondizioni = new MyJPanel();
-			panelStelleCondizioni.setBackground(new Color(220, 220, 220));
+			panelStelleCondizioni.setBackground(Color.white);
 			panelStelleCondizioni.setPreferredSize(new Dimension(90, 30));
 			MyJLabel lblStella1 = new MyJLabel();
 			lblStella1.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getStella1(), 25, 25, false);
@@ -363,7 +437,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelNomeAnnuncio.setMaximumSize(new Dimension(425, 100));
 		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
 		JTextArea nomeAnnuncioTextArea = new JTextArea(annuncio.getNome());
-		nomeAnnuncioTextArea.setBackground(Color.orange);
+		nomeAnnuncioTextArea.setBackground(new Color(98, 145, 188));
 		nomeAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 		nomeAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
@@ -372,25 +446,39 @@ public class PanelHomePageAnnunci extends JPanel{
 		nomeAnnuncioTextArea.setLineWrap(true);
 		nomeAnnuncioTextArea.setWrapStyleWord(true);
 		nomeAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		nomeAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
+		nomeAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 18));
 		panelNomeAnnuncio.add(nomeAnnuncioTextArea);
 		
 		MyJPanel panelDescrizione = new MyJPanel();
-		panelDescrizione.setLayout(new BoxLayout(panelDescrizione, BoxLayout.PAGE_AXIS));
+		panelDescrizione.setLayout(new BorderLayout());
 		panelDescrizione.setPreferredSize(new Dimension(425, 300));
 		panelDescrizione.setMaximumSize(new Dimension(425, 300));
 		JTextArea descrizioneAnnuncioTextArea = new JTextArea(annuncio.getOggettoInAnnuncio().getDescrizione());
-		descrizioneAnnuncioTextArea.setBackground(Color.orange);
+		descrizioneAnnuncioTextArea.setBackground(new Color(110, 164, 213));
 		descrizioneAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
-		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
+		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 270));
+		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setEditable(false);
 		descrizioneAnnuncioTextArea.setOpaque(true);
 		descrizioneAnnuncioTextArea.setLineWrap(true);
 		descrizioneAnnuncioTextArea.setWrapStyleWord(true);
 		descrizioneAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
-		panelDescrizione.add(descrizioneAnnuncioTextArea);
+		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.ITALIC, 18));
+		panelDescrizione.add(descrizioneAnnuncioTextArea, BorderLayout.NORTH);
+		
+		MyJPanel panelDataScadenza = new MyJPanel();
+		panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.X_AXIS));
+		panelDataScadenza.setBackground(new Color(123, 183, 237));
+		panelDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
+		MyJLabel lblDataScadenza = new MyJLabel("Data scadenza - N/A");
+		lblDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
+		lblDataScadenza.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		if(annuncio.getDataScadenza() != null)
+			lblDataScadenza.setText("Affrettati, questo annuncio scade tra "+ 
+								   (annuncio.getDataScadenza().getDate() - LocalDate.now().getDayOfMonth()) + " giorni!");
+		panelDataScadenza.add(lblDataScadenza);
+		panelDescrizione.add(panelDataScadenza, BorderLayout.CENTER);
 		
 		MyJPanel panelModalitaConsegna = this.creaPanelModalitaConsegna(annuncio);
 		
@@ -521,5 +609,111 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelModalitaConsegna.add(Box.createVerticalGlue());
 		
 		return panelModalitaConsegna;
+	}
+	
+	private void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
+		int larghezza = panelAnnunci.getWidth();
+		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
+		int altezza = (annunciInBacheca.size() / 2 == 0) ? (annunciInBacheca.size()/2 * 610) : ((annunciInBacheca.size()/2+1) * 610);
+		
+		panelAnnunci.setPreferredSize(new Dimension(larghezza, altezza));
+		panelAnnunci.setMaximumSize(new Dimension(larghezza, altezza));
+	}
+	
+	private void mostraAnnunciInBacheca(ArrayList<Annuncio> tuttiGliAnnunci) {
+		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
+		panelRisultatiDiRicerca.setVisible(false);
+		
+		panelAnnunci.removeAll();
+		
+		for(int i = 0; i < tuttiGliAnnunci.size(); i++) {
+			MyJPanel annuncioCorrente = creaPanelAnnuncio(tuttiGliAnnunci.get(i));
+			this.panelAnnunci.add(annuncioCorrente);
+		}
+		
+		panelAnnunci.revalidate();
+		panelAnnunci.repaint();
+	}
+	
+	private void filtraAnnunciPerRicerca(ArrayList<Annuncio> tuttiGliAnnunci, String stringaIn) {
+		ArrayList<Annuncio> annunciFiltratiPerRicerca = new ArrayList();
+		
+		for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+			if((annuncioCorrente.getNome().toLowerCase()).contains(stringaIn.toLowerCase()))
+				annunciFiltratiPerRicerca.add(annuncioCorrente);
+		
+		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
+		this.mostraAnnunciInBacheca(annunciFiltratiPerRicerca);
+		
+		panelRisultatiDiRicerca.setVisible(true);
+		
+		if(annunciFiltratiPerRicerca.size() == 0)
+			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma a quanto pare l'articolo che stai cercando non è presente.");
+		else 
+			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerRicerca.size() + " di " + tuttiGliAnnunci.size());
+	}
+	
+	private void filtraAnnunciPerTipoECategoria(ArrayList<Annuncio> tuttiGliAnnunci, String tipoAnnuncio, String categoriaOggetto) {
+		ArrayList<Annuncio> annunciFiltratiPerTipo = new ArrayList();
+		
+		if(tipoAnnuncio.equals("Tutti gli annunci") && !categoriaOggetto.equals("Tutte le categorie")) {
+			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+				if(annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto))
+					annunciFiltratiPerTipo.add(annuncioCorrente);
+		}
+		else if(!tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
+			if(tipoAnnuncio.equals("Vendita")) {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+					if(annuncioCorrente instanceof AnnuncioVendita)
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+			else if(tipoAnnuncio.equals("Scambio")) {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
+					if(annuncioCorrente instanceof AnnuncioScambio)
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+			else {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+					if(annuncioCorrente instanceof AnnuncioRegalo)
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+		}
+		else {
+			if(tipoAnnuncio.equals("Vendita")) {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+					if((annuncioCorrente instanceof AnnuncioVendita) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+			else if(tipoAnnuncio.equals("Scambio")) {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
+					if((annuncioCorrente instanceof AnnuncioScambio) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+			else {
+				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+					if((annuncioCorrente instanceof AnnuncioRegalo) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
+						annunciFiltratiPerTipo.add(annuncioCorrente);
+			}
+		}
+		
+		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerTipo);
+		this.mostraAnnunciInBacheca(annunciFiltratiPerTipo);
+	
+		panelRisultatiDiRicerca.setVisible(true);
+		
+		if(annunciFiltratiPerTipo.size() == 0)
+			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + tipoAnnuncio + ".");
+		else
+			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerTipo.size() + " di " + tuttiGliAnnunci.size());
+	}
+	
+	private void aggiornaFiltri(ArrayList<Annuncio> annunci, JComboBox tipologiaAnnunciCB, JComboBox categoriaOggettoInAnnuncio) {
+		String tipologiaSelezionata = tipologiaAnnunciCB.getSelectedItem().toString();
+		String categoriaSelezionata = categoriaOggettoInAnnuncio.getSelectedItem().toString();
+		if(tipologiaSelezionata.equals("Tutti gli annunci") && categoriaSelezionata.equals("Tutte le categorie"))
+			mostraAnnunciInBacheca(annunci);
+		else
+			filtraAnnunciPerTipoECategoria(annunci, tipologiaSelezionata, categoriaSelezionata);
+		
 	}
 }

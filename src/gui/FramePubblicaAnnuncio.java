@@ -171,7 +171,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
-		panelCentrale.setPreferredSize(new Dimension(1225, 4000));
+		panelCentrale.setPreferredSize(new Dimension(1225, 3500));
+		panelCentrale.setMaximumSize(new Dimension(1225, 3500));
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
 		this.creaPanelAggiungiFoto();
@@ -372,8 +373,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.WEST);
 		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.SOUTH);
 		
-//		panelErroreFoto.setPreferredSize(new Dimension(1225, 30));
-//		panelErroreFoto.setMaximumSize(new Dimension(1225, 30));
 		panelErroreFoto.setBackground(Color.white);
 		panelErroreFoto.setLayout(new BoxLayout(panelErroreFoto, BoxLayout.X_AXIS));
 		panelErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
@@ -397,8 +396,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelInserimentoDati = new MyJPanel();
 		panelInserimentoDati.setBackground(Color.white);
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
-		panelInserimentoDati.setPreferredSize(new Dimension(1225, 4000));
-		panelInserimentoDati.setMaximumSize(new Dimension(1225, 4000));
+		panelInserimentoDati.setPreferredSize(new Dimension(1225, 3000));
+		panelInserimentoDati.setMaximumSize(new Dimension(1225, 3000));
 
 		inserisciDescrizioneTextA = new JTextArea();
 		this.settaTextArea(inserisciDescrizioneTextA);
@@ -1161,6 +1160,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private MyJPanel creaPanelBottoni() {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
+		panelBottoni.setBackground(Color.red);
+		panelBottoni.setPreferredSize(new Dimension(1225, 100));
+		panelBottoni.setMaximumSize(new Dimension(1225, 100));
 		
 		bottoneTornaIndietro = new MyJButton("Torna alla home page");
 		bottoneTornaIndietro.setPreferredSize(new Dimension(300, 100));
