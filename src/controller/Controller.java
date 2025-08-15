@@ -44,11 +44,22 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+//		frameDiLogin = new FrameDiLogin(this);
+//		frameDiLogin.setVisible(true);		
 
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
+		
+		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+		try {
+			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
+			frameProfiloUtente = new FrameProfiloUtente(this, "        Annunci disponibili", utenteLoggato);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		frameProfiloUtente.setVisible(true);
 		
 //		try {
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
