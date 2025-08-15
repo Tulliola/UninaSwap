@@ -1,5 +1,7 @@
 package utilities;
 
+import javax.swing.ImageIcon;
+
 public enum CategoriaEnum {
 	Libri_di_testo("Libri di testo"),
 	Appunti("Appunti"),
@@ -14,9 +16,11 @@ public enum CategoriaEnum {
 	Collezionismo("Collezionismo");
 	
 	private String categoria;
+	private ImageIcon immaginePerCategoria;
 	
-	private CategoriaEnum(String categoria) {
+	private CategoriaEnum(String categoria, ImageIcon immaginePerCategoria) {
 		this.categoria = categoria;
+		this.immaginePerCategoria = immaginePerCategoria;
 	}
 	
 	public static CategoriaEnum confrontaConStringa(String valoreCategoria){
