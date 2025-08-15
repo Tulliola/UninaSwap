@@ -28,6 +28,7 @@ public abstract class Annuncio {
 	private ArrayList<String> oraFineIncontro = new ArrayList();
 	private ArrayList<GiornoEnum> giornoIncontro = new ArrayList();
 	
+	//Costruttore per la costruzione di oggetti durante la retrieve
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
 		this.spedizione = spedizione;
@@ -40,6 +41,7 @@ public abstract class Annuncio {
 		this.oggettoInAnnuncio = oggettoInAnnuncio;	
 	}
 	
+	//Costruzione per la costruzione di oggetti durante la create
 	public Annuncio(boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
 		this.spedizione = spedizione;
@@ -51,10 +53,12 @@ public abstract class Annuncio {
 		this.oggettoInAnnuncio = oggettoInAnnuncio;	
 	}
 
+	//Metodo che aggiunge eventuali offerte all'annuncio
 	public void aggiungiOffertaRicevuta(Offerta offertaRicevuta) {
 		this.offerteRicevute.add(offertaRicevuta);
 	}
 	
+	//Metodo che aggiunge proposte di incontro all'annuncio, se questa opportunità è offerta
 	public void aggiungiPropostaIncontro(SedeUniversita sedeIncontroProposta, String oraInizioIncontro,
 			String oraFineIncontro, GiornoEnum giornoIncontro) {
 		if(incontro) {
@@ -65,11 +69,13 @@ public abstract class Annuncio {
 		}
 	}
 	
+	//Metodo che setta l'eventuale scadenza dell'annuncio
 	public void impostaDataScadenza(Date dataScadenza) {
 		if(this.dataScadenza == null)
 			this.dataScadenza = dataScadenza;
 	}
-
+	
+	//Getter e setter
 	public int getIdAnnuncio() {
 		return idAnnuncio;
 	}
