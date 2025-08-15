@@ -88,10 +88,11 @@ public class FrameProfiloUtente extends MyJFrame {
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
 		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
-		
+			
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
-
+		panelProfilo.setBackground(Color.white);
+		
 		panelProfilo.setMaximumSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));
 		panelProfilo.setBorder(new EmptyBorder(20, 0, 0, 0));
