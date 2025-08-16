@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -250,7 +251,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelCategoria.setLayout(new FlowLayout());
 		panelCategoria.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCategoria.setAlignmentX(CENTER_ALIGNMENT);
-		panelCategoria.setBackground(new Color(220, 220, 220));
+		panelCategoria.setBackground(Color.white);
 		
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setPreferredSize(new Dimension(375, 50));
@@ -258,7 +259,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelCondizioni.setLayout(new FlowLayout());
 		panelCondizioni.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
 		panelCondizioni.setAlignmentX(CENTER_ALIGNMENT);
-		panelCondizioni.setBackground(new Color(220, 220, 220));
+		panelCondizioni.setBackground(Color.white);
 
 		MyJLabel lblCategoria = new MyJLabel();
 		lblCategoria.setAlignmentX(CENTER_ALIGNMENT);
@@ -278,7 +279,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		
 		if(!annuncioToAdd.getOggettoInAnnuncio().getCondizioni().equals("Ricondizionato")) {
 			MyJPanel panelStelleCondizioni = new MyJPanel();
-			panelStelleCondizioni.setBackground(new Color(220, 220, 220));
+			panelStelleCondizioni.setBackground(Color.white);
 			panelStelleCondizioni.setPreferredSize(new Dimension(90, 30));
 			MyJLabel lblStella1 = new MyJLabel();
 			lblStella1.aggiungiImmagineScalata(annuncioToAdd.getOggettoInAnnuncio().getCondizioniEnum().getStella1(), 25, 25, false);
@@ -363,7 +364,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelNomeAnnuncio.setMaximumSize(new Dimension(425, 100));
 		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
 		JTextArea nomeAnnuncioTextArea = new JTextArea(annuncio.getNome());
-		nomeAnnuncioTextArea.setBackground(Color.orange);
+		nomeAnnuncioTextArea.setBackground(new Color(98, 145, 188));
 		nomeAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 		nomeAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
@@ -372,25 +373,39 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		nomeAnnuncioTextArea.setLineWrap(true);
 		nomeAnnuncioTextArea.setWrapStyleWord(true);
 		nomeAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		nomeAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
+		nomeAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 18));
 		panelNomeAnnuncio.add(nomeAnnuncioTextArea);
 		
 		MyJPanel panelDescrizione = new MyJPanel();
-		panelDescrizione.setLayout(new BoxLayout(panelDescrizione, BoxLayout.PAGE_AXIS));
+		panelDescrizione.setLayout(new BorderLayout());
 		panelDescrizione.setPreferredSize(new Dimension(425, 300));
 		panelDescrizione.setMaximumSize(new Dimension(425, 300));
 		JTextArea descrizioneAnnuncioTextArea = new JTextArea(annuncio.getOggettoInAnnuncio().getDescrizione());
-		descrizioneAnnuncioTextArea.setBackground(Color.orange);
+		descrizioneAnnuncioTextArea.setBackground(new Color(110, 164, 213));
 		descrizioneAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
-		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
+		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 270));
+		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setEditable(false);
 		descrizioneAnnuncioTextArea.setOpaque(true);
 		descrizioneAnnuncioTextArea.setLineWrap(true);
 		descrizioneAnnuncioTextArea.setWrapStyleWord(true);
 		descrizioneAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 21));
-		panelDescrizione.add(descrizioneAnnuncioTextArea);
+		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.ITALIC, 18));
+		panelDescrizione.add(descrizioneAnnuncioTextArea, BorderLayout.NORTH);
+		
+		MyJPanel panelDataScadenza = new MyJPanel();
+		panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.X_AXIS));
+		panelDataScadenza.setBackground(new Color(123, 183, 237));
+		panelDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
+		MyJLabel lblDataScadenza = new MyJLabel("Data scadenza - N/A");
+		lblDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
+		lblDataScadenza.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		if(annuncio.getDataScadenza() != null)
+			lblDataScadenza.setText("Affrettati, questo annuncio scade tra "+ 
+								   (annuncio.getDataScadenza().getDate() - LocalDate.now().getDayOfMonth()) + " giorni!");
+		panelDataScadenza.add(lblDataScadenza);
+		panelDescrizione.add(panelDataScadenza, BorderLayout.CENTER);
 		
 		MyJPanel panelModalitaConsegna = this.creaPanelModalitaConsegna(annuncio);
 		
@@ -402,34 +417,11 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		
 		return panelDescrizioneAnnuncio;
 	}
+
+	
 	
 	private MyJPanel creaPanelFaiOfferta(Annuncio annuncio) {
 		MyJPanel panelFaiOfferta = new MyJPanel();
-		panelFaiOfferta.setLayout(new BoxLayout(panelFaiOfferta, BoxLayout.X_AXIS));
-		panelFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
-		panelFaiOfferta.setPreferredSize(new Dimension(425, 50));
-		panelFaiOfferta.setMaximumSize(new Dimension(425, 50));
-		panelFaiOfferta.setBackground(Color.white);
-		
-		JButton bottoneFaiOfferta = new JButton("Fai un'offerta!");
-		bottoneFaiOfferta.setBackground(new Color(65, 106, 144));
-		bottoneFaiOfferta.setForeground(Color.white);
-		bottoneFaiOfferta.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
-		bottoneFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
-		
-		MyJLabel lblInterazioni = new MyJLabel(String.valueOf(annuncio.getNumeroInterazioni()));
-		lblInterazioni.aggiungiImmagineScalata("images/iconaMiPiace.png", 25, 25, false);
-		
-		lblInterazioni.setForeground(Color.red);
-		lblInterazioni.setHorizontalTextPosition(SwingConstants.RIGHT);
-		
-		panelFaiOfferta.add(Box.createVerticalGlue());
-		panelFaiOfferta.add(Box.createHorizontalGlue());
-		panelFaiOfferta.add(bottoneFaiOfferta);
-		panelFaiOfferta.add(Box.createHorizontalGlue());
-		panelFaiOfferta.add(lblInterazioni);
-		panelFaiOfferta.add(Box.createHorizontalGlue());
-		panelFaiOfferta.add(Box.createVerticalGlue());
 		
 		return panelFaiOfferta;
 	}
