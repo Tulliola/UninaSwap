@@ -14,6 +14,7 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
+import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 //Import dal package DTO
@@ -34,19 +35,21 @@ public class Controller {
 	private FrameCambiaImmagine frameCambiaImmagine;
 	private FrameHomePage frameHomePage;
 	private FramePubblicaAnnuncio framePubblicaAnnuncio;
+	private DialogOffertaAcquisto dialogOffertaAcquisto;
 	
 	private static Connection connessioneDB;
 	
 	private ProfiloUtente utenteLoggato;
 	private ArrayList<Annuncio> annunciInBacheca;
 	private ArrayList<SedeUniversita> sediPresenti;
+	private ArrayList<UfficioPostale> ufficiPresenti;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
 		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
-
+		frameDiLogin.setVisible(true);				
+		
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
 		
@@ -62,10 +65,18 @@ public class Controller {
 //		frameProfiloUtente.setVisible(true);
 //		
 //		try {
+//			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+//			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
+//
 //			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
+//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "tullio33");
+//			AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+//			annuncioDAO.recuperaAnnunciDiUtente(utenteLoggato);
+//			dialogOffertaAcquisto = new DialogOffertaAcquisto(utenteLoggato.getAnnunciUtente().get(6), this);
+//			dialogOffertaAcquisto.setVisible(true);
 //		}
 //		catch(SQLException exc) {
+//
 //			
 //		}
 //		frameHomePage = new FrameHomePage(this, utenteLoggato);
@@ -108,7 +119,9 @@ public class Controller {
 			System.out.println("La connessione è stata definita con successo.");
 		
 	}
+
 	
+	// Metodi passaA
 	public void tornaALogin() {
 		frameDiRegistrazione.dispose();
 		frameDiLogin = new FrameDiLogin(this);
@@ -133,11 +146,15 @@ public class Controller {
 		frameProfiloUtente.setVisible(true);
 	}
 		
-	public void passaAHomePage(MyJFrame frameDiPartenza) {
+	public void passaAFrameHomePage(MyJFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
 		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
 		frameHomePage.setVisible(true);
 		
+	}
+	
+	public void passaAFrameHomePage(JDialog frameDiPartenza) {
+		frameDiPartenza.dispose();
 	}
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
@@ -155,7 +172,14 @@ public class Controller {
 		comunicaSospensione.setVisible(true);
 		frameDiLogin.dispose();
 	}
+	
+	public void passaADialogOffertaAcquisto(Annuncio annuncioACuiOffrire) {
+		dialogOffertaAcquisto = new DialogOffertaAcquisto(annuncioACuiOffrire, this);
+		dialogOffertaAcquisto.setVisible(true);
+	}
 
+	
+	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
 		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
@@ -166,11 +190,15 @@ public class Controller {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
 			OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
 			SedeUniversitaDAO_Postgres sediDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
+			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+			
 			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
+			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
-			this.passaAHomePage(frameDiLogin);
+			
+			this.passaAFrameHomePage(frameDiLogin);
 		}
 	}
 	
@@ -204,10 +232,16 @@ public class Controller {
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
 		
-		this.passaAHomePage(framePubblicaAnnuncio);
+		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
+	
+	//Getters
 	public ProfiloUtente getUtenteLoggato() {
 		return utenteLoggato;
+	}
+	
+	public ArrayList<UfficioPostale> getUfficiPostali(){
+		return ufficiPresenti;
 	}
 }

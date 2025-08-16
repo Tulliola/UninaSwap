@@ -354,6 +354,9 @@ public class FrameDiRegistrazione extends MyJFrame {
 		
 		if(residenzaIn.endsWith(" "))
 			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
+		
+		if(residenzaIn.length() > 75)
+			throw new ResidenzaException("La residenza deve essere di massimo 75 caratteri.");
 
 	}
 }

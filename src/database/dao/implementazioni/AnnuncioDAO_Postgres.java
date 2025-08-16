@@ -44,7 +44,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException, IOException{
+	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ?")){
 			ps.setInt(1, idAnnuncio);
 			
@@ -58,7 +58,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? ORDER BY Momento_pubblicazione DESC")){
@@ -74,7 +74,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException, IOException{
+	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione DESC")){
@@ -196,7 +196,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}	
 	
-	private Oggetto recuperaOggettoInAnnuncio(int idOggetto) throws SQLException, IOException{
+	private Oggetto recuperaOggettoInAnnuncio(int idOggetto) throws SQLException{
 		
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
 			psOggetto.setInt(1, idOggetto);
@@ -254,7 +254,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}
 	
-	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException, IOException{
+	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException{
 		Annuncio annuncioRecuperato;
 		
 		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");

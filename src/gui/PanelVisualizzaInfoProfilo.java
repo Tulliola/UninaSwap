@@ -51,7 +51,7 @@ public class PanelVisualizzaInfoProfilo extends MyJPanel {
 		MyJLabel lblTornaAllaHome = new MyJLabel("   Torna alla home page");
 		lblIlTuoProfiloUtente = new MyJLabel("    Il mio profilo");
 		
-		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHomePage.png", () -> {mainController.passaAHomePage(parentFrame);});
+		aggiungiRigaNelPanel(lblTornaAllaHome, true, "images/iconaHomePage.png", () -> {mainController.passaAFrameHomePage(parentFrame);});
 		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png", null);
 
 		aggiungiRigheAnnunciNelPanel();

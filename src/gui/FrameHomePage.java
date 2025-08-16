@@ -39,7 +39,7 @@ public class FrameHomePage extends MyJFrame {
 
 	private void settaContentPane(ProfiloUtente utenteLoggato, ArrayList<Annuncio> annunci) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setBounds(new Rectangle(1200, 1000));
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setTitle("Il mercatino digitale federiciano");
 		

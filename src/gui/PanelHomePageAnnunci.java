@@ -25,12 +25,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -62,6 +64,7 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	private MyJLabel lblRisultatiDiRicerca = new MyJLabel();
 	
+	private JScrollPane scrollPanelAnnunci;
 	
 	
 	private Controller mainController;
@@ -74,13 +77,14 @@ public class PanelHomePageAnnunci extends JPanel{
 		this.settaBordoSuperiore(annunci);
 		this.settaBordoInferiore();
 
-		JScrollPane scrollPanel = new JScrollPane(panelAnnunci);
-		scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPanel.getVerticalScrollBar().setValue(0);
-		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
+		panelAnnunci.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
-		this.settaPanelAnnunciEPanelRisultatiRicerca(annunci, scrollPanel);
+		scrollPanelAnnunci = new JScrollPane(panelAnnunci);
+		scrollPanelAnnunci.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPanelAnnunci.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPanelAnnunci.getVerticalScrollBar().setUnitIncrement(30);
+		
+		this.settaPanelAnnunciEPanelRisultatiRicerca(annunci, scrollPanelAnnunci);
 		
 		mostraAnnunciInBacheca(annunci);		
 		
@@ -217,7 +221,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.setPreferredSize(new Dimension(500, 100));
 		bordoInferiore.setBackground(new Color(220, 220, 220));	
 		
-		MyJButton bottonePubblicaAnnuncioVendita = new MyJButton("Pubblica un nuovo annuncio di vendita");
+		MyJButton bottonePubblicaAnnuncioVendita = new MyJButton("Pubblica un nuovo annuncio di vendita!");
 		bottonePubblicaAnnuncioVendita.setAlignmentX(CENTER_ALIGNMENT);
 		bottonePubblicaAnnuncioVendita.setPreferredSize(new Dimension(400, 75));
 		bottonePubblicaAnnuncioVendita.setMaximumSize(new Dimension(400, 75));
@@ -225,7 +229,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bottonePubblicaAnnuncioVendita.setUpAction(() -> {});
 		bottonePubblicaAnnuncioVendita.setDownAction(() -> {});
 		
-		MyJButton bottonePubblicaAnnuncioScambio = new MyJButton("Pubblica un nuovo annuncio di scambio");
+		MyJButton bottonePubblicaAnnuncioScambio = new MyJButton("Pubblica un nuovo annuncio di scambio!");
 		bottonePubblicaAnnuncioScambio.setAlignmentX(CENTER_ALIGNMENT);
 		bottonePubblicaAnnuncioScambio.setPreferredSize(new Dimension(400, 75));
 		bottonePubblicaAnnuncioScambio.setMaximumSize(new Dimension(400, 75));
@@ -233,7 +237,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bottonePubblicaAnnuncioScambio.setUpAction(() -> {});
 		bottonePubblicaAnnuncioScambio.setDownAction(() -> {});
 		
-		MyJButton bottonePubblicaAnnuncioRegalo = new MyJButton("Pubblica un nuovo annuncio di regalo");
+		MyJButton bottonePubblicaAnnuncioRegalo = new MyJButton("Pubblica un nuovo annuncio di regalo!");
 		bottonePubblicaAnnuncioRegalo.setAlignmentX(CENTER_ALIGNMENT);
 		bottonePubblicaAnnuncioRegalo.setPreferredSize(new Dimension(400, 75));
 		bottonePubblicaAnnuncioRegalo.setMaximumSize(new Dimension(400, 75));
@@ -499,11 +503,18 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelFaiOfferta.setMaximumSize(new Dimension(425, 50));
 		panelFaiOfferta.setBackground(Color.white);
 		
-		JButton bottoneFaiOfferta = new JButton("Fai un'offerta!");
+		MyJButton bottoneFaiOfferta = new MyJButton("Fai un'offerta!");
 		bottoneFaiOfferta.setBackground(new Color(65, 106, 144));
 		bottoneFaiOfferta.setForeground(Color.white);
 		bottoneFaiOfferta.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));
 		bottoneFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
+		
+		if(annuncio instanceof AnnuncioVendita)
+			bottoneFaiOfferta.setDefaultAction(() -> {
+				mainController.passaADialogOffertaAcquisto(annuncio);
+			});
+		else 
+			bottoneFaiOfferta.setDefaultAction(() -> JOptionPane.showMessageDialog(this, "Work in progress"));
 		
 		MyJLabel lblInterazioni = new MyJLabel(String.valueOf(annuncio.getNumeroInterazioni()));
 		lblInterazioni.aggiungiImmagineScalata("images/iconaMiPiace.png", 25, 25, false);
@@ -633,6 +644,11 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		panelAnnunci.revalidate();
 		panelAnnunci.repaint();
+		
+		SwingUtilities.invokeLater(() -> {
+			JScrollBar scrollBarDelPanel = scrollPanelAnnunci.getVerticalScrollBar();
+			scrollBarDelPanel.setValue(scrollBarDelPanel.getMinimum());
+		});
 	}
 	
 	private void filtraAnnunciPerRicerca(ArrayList<Annuncio> tuttiGliAnnunci, String stringaIn) {
@@ -642,7 +658,7 @@ public class PanelHomePageAnnunci extends JPanel{
 			if((annuncioCorrente.getNome().toLowerCase()).contains(stringaIn.toLowerCase()))
 				annunciFiltratiPerRicerca.add(annuncioCorrente);
 		
-		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
+		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerRicerca);
 		this.mostraAnnunciInBacheca(annunciFiltratiPerRicerca);
 		
 		panelRisultatiDiRicerca.setVisible(true);
@@ -702,7 +718,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelRisultatiDiRicerca.setVisible(true);
 		
 		if(annunciFiltratiPerTipo.size() == 0)
-			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + categoriaOggetto + ".");
+			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + categoriaOggetto + " (" + tipoAnnuncio + " ).");
 		else
 			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerTipo.size() + " di " + tuttiGliAnnunci.size());
 	}
