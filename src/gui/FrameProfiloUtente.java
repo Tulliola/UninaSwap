@@ -96,9 +96,21 @@ public class FrameProfiloUtente extends MyJFrame {
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this);
+		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, sezioneScelta);
 		panelLateraleSx.aggiungiRigaNelPanel(lblTornaAHomePage, true, "images/iconaHomePage.png");
 		panelLateraleSx.add(lblTornaAHomePage, 0);
+		
+		panelAnnunciCard.setLayout(new CardLayout());
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi");
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare");
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti");
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata");
+		
+		panelAnnunciCard.add(panelAnnunciDisponibili, "        Annunci disponibili");
+		panelAnnunciCard.add(panelAnnunciUltimati, "        Annunci andati a buon fine");
+		panelAnnunciCard.add(panelAnnunciScaduti, "        Annunci scaduti");
+		panelAnnunciCard.add(panelAnnunciRimossi, "        Annunci rimossi");
+		((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneScelta);
 		
 		lblTornaAHomePage.setOnMouseClickedAction(() -> 
 		{
@@ -106,64 +118,31 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
-			contentPane.removeAll();
-			contentPane.revalidate();
-			contentPane.repaint();
-			contentPane.add(panelLateraleSx, BorderLayout.WEST);
-			contentPane.add(panelProfilo, BorderLayout.CENTER);
+			setClickedActions(panelLateraleSx.getLblIlMioProfilo(), null);
 		});
 		
 		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
 		{
-			contentPane.removeAll();
-			contentPane.revalidate();
-			contentPane.repaint();
-			contentPane.add(panelLateraleSx, BorderLayout.WEST);
-			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciDisponibili");
+			setClickedActions(panelLateraleSx.getLblAnnunciDisponibili(), "        Annunci disponibili");
 		});
 		
 		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
 		{
-			contentPane.removeAll();
-			contentPane.revalidate();
-			contentPane.repaint();
-			contentPane.add(panelLateraleSx, BorderLayout.WEST);
-			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciUltimati");
+			setClickedActions(panelLateraleSx.getLblAnnunciUltimati(), "        Annunci andati a buon fine");
 		});
 		
 		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
 		{
-			contentPane.removeAll();
-			contentPane.revalidate();
-			contentPane.repaint();
-			contentPane.add(panelLateraleSx, BorderLayout.WEST);
-			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciScaduti");
+			setClickedActions(panelLateraleSx.getLblAnnunciScaduti(), "        Annunci scaduti");
 		});
 		
 		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
-		{
-			contentPane.removeAll();
-			contentPane.revalidate();
-			contentPane.repaint();
-			contentPane.add(panelLateraleSx, BorderLayout.WEST);
-			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciRimossi");
+		{        
+			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Annunci rimossi");
 		});
 
-		panelAnnunciCard.setLayout(new CardLayout());
 		
-		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(recuperaAnnunciDisponibiliUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci ancora attivi");
-		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(recuperaAnnunciUltimatiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare");
-		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(recuperaAnnunciScadutiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci che sono scaduti");
-		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(recuperaAnnunciRimossiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata");
 		
-		panelAnnunciCard.add(panelAnnunciDisponibili, "panelAnnunciDisponibili");
-		panelAnnunciCard.add(panelAnnunciUltimati, "panelAnnunciUltimati");
-		panelAnnunciCard.add(panelAnnunciScaduti, "panelAnnunciScaduti");
-		panelAnnunciCard.add(panelAnnunciRimossi, "panelAnnunciRimossi");
 		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
@@ -186,6 +165,22 @@ public class FrameProfiloUtente extends MyJFrame {
 		this.setContentPane(contentPane);
 	}
 	
+	private void setClickedActions(MyJLabel label, String sezioneCard) {
+		contentPane.removeAll();
+		contentPane.revalidate();
+		contentPane.repaint();
+		label.setBackground(MyJPanel.uninaColor);
+		panelLateraleSx.setSelectedLabel(label);
+		panelLateraleSx.resettaFocusLabelsNonCliccate();
+		contentPane.add(panelLateraleSx, BorderLayout.WEST);
+		if(sezioneCard != null) {
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneCard);
+		}
+		else
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+			
+	}
 
 	private void settaBandaLaterale(JPanel bandaLaterale) {
 		bandaLaterale.setPreferredSize(new Dimension(30, contentPane.getHeight()));
@@ -605,47 +600,5 @@ public class FrameProfiloUtente extends MyJFrame {
 
 	}
 	
-	private ArrayList<Annuncio> recuperaAnnunciDisponibiliUtente(ArrayList<Annuncio> annunciUtente){
-		ArrayList<Annuncio> toReturn = new ArrayList();
-		
-		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Disponibile))
-				toReturn.add(annuncio);
-		}
-		
-		return toReturn;
-	}
 	
-	private ArrayList<Annuncio> recuperaAnnunciUltimatiUtente(ArrayList<Annuncio> annunciUtente){
-		ArrayList<Annuncio> toReturn = new ArrayList();
-		
-		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Venduto) || annuncio.getStato().equals(StatoAnnuncioEnum.Scambiato) || annuncio.getStato().equals(StatoAnnuncioEnum.Regalato))
-				toReturn.add(annuncio);
-		}
-		
-		return toReturn;
-	}
-	
-	private ArrayList<Annuncio> recuperaAnnunciScadutiUtente(ArrayList<Annuncio> annunciUtente){
-		ArrayList<Annuncio> toReturn = new ArrayList();
-		
-		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Scaduto))
-				toReturn.add(annuncio);
-		}
-		
-		return toReturn;
-	}
-	
-	private ArrayList<Annuncio> recuperaAnnunciRimossiUtente(ArrayList<Annuncio> annunciUtente){
-		ArrayList<Annuncio> toReturn = new ArrayList();
-		
-		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Rimosso))
-				toReturn.add(annuncio);
-		}
-		
-		return toReturn;
-	}
 }

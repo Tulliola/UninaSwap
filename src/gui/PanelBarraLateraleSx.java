@@ -23,15 +23,23 @@ private static final long serialVersionUID = 1L;
 	private MyJPanel panelChiamante;
 	private Controller mainController;
 	
-	MyJLabel lblTornaAHomePage = new MyJLabel("   Torna alla home page");
-	MyJLabel lblIMieiAnnunci = new MyJLabel("   I miei annunci");
-	MyJLabel lblAnnunciDisponibili = new MyJLabel("        Annunci disponibili");
-	MyJLabel lblAnnunciUltimati = new MyJLabel("        Annunci andati a buon fine");
-	MyJLabel lblAnnunciScaduti = new MyJLabel("        Annunci scaduti");
-	MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
-	MyJLabel lblIlTuoProfiloUtente = new MyJLabel("   Il mio profilo");
+	private MyJLabel lblIMieiAnnunci = new MyJLabel("   I miei annunci");
+	private MyJLabel lblAnnunciDisponibili = new MyJLabel("        Annunci disponibili");
+	private MyJLabel lblAnnunciUltimati = new MyJLabel("        Annunci andati a buon fine");
+	private MyJLabel lblAnnunciScaduti = new MyJLabel("        Annunci scaduti");
+	private MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
+	private MyJLabel lblIlTuoProfiloUtente = new MyJLabel("   Il mio profilo");
 	
-	public PanelBarraLateraleSx(MyJPanel parentPanel, Controller controller, MyJFrame parentFrame) {
+	private MyJLabel lblLeMieOfferte = new MyJLabel("   Le mie offerte");
+	private MyJLabel lblOfferteAccettate = new MyJLabel("        Offerte accettate");
+	private MyJLabel lblOfferteInAttesa = new MyJLabel("        Offerte in attesa");
+	private MyJLabel lblOfferteRifiutate = new MyJLabel("        Offerte rifiutate");
+	private MyJLabel lblOfferteRitirate = new MyJLabel("        Offerte ritirate");
+	private MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
+	
+	private MyJLabel lblSelezionata = null;
+
+	public PanelBarraLateraleSx(MyJPanel parentPanel, Controller controller, MyJFrame parentFrame, String sezioneScelta) {
 		mainController = controller;
 		panelChiamante = parentPanel;
 	
@@ -45,6 +53,8 @@ private static final long serialVersionUID = 1L;
 		
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();
+		
+		comparaConSezioneScelta(sezioneScelta);
 	}
 	
 	private void aggiungiRigheAnnunciNelPanel() {
@@ -59,13 +69,7 @@ private static final long serialVersionUID = 1L;
 	
 	//TODO Una volta fatti i panel per le offerte
 	private void aggiungiRigheOfferteNelPanel() {
-		MyJLabel lblLeMieOfferte = new MyJLabel("   Le mie offerte");
-		MyJLabel lblOfferteAccettate = new MyJLabel("        Offerte accettate");
-		MyJLabel lblOfferteInAttesa = new MyJLabel("        Offerte in attesa");
-		MyJLabel lblOfferteRifiutate = new MyJLabel("        Offerte rifiutate");
-		MyJLabel lblOfferteRitirate = new MyJLabel("        Offerte ritirate");
-		MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
-			
+		
 		aggiungiRigaNelPanel(lblLeMieOfferte, false, null);
 		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png");
 		aggiungiRigaNelPanel(lblOfferteInAttesa, true, "images/iconaInAttesa.png");
@@ -98,17 +102,51 @@ private static final long serialVersionUID = 1L;
 		});
 		
 		labelIn.setOnMouseExitedAction(() -> {
-			labelIn.setBackground(new Color(85, 126, 164));
+			if(labelIn != lblSelezionata)
+				labelIn.setBackground(new Color(85, 126, 164));
 			labelIn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		});
-		
-//		if(azioneSeCliccato != null)
-//			labelIn.setOnMouseClickedAction(azioneSeCliccato);
-//		else
-//			labelIn.setOnMouseClickedAction(() -> {});
 			
 		
 		this.add(labelIn);
+	}
+	
+	
+	public void resettaFocusLabelsNonCliccate() {
+		ArrayList<MyJLabel> jlabels = getLabelsFocusabili();
+		
+		for(MyJLabel label: jlabels) {
+			if(label != lblSelezionata)
+				label.setBackground(new Color(85, 126, 164));
+		}
+	}
+	
+	private void comparaConSezioneScelta(String sezioneScelta) {
+		ArrayList<MyJLabel> jlabels = getLabelsFocusabili();
+		
+		for(MyJLabel label: jlabels) {
+			if(label.getText().equals(sezioneScelta)) {
+				label.setBackground(uninaColor);
+				lblSelezionata = label;
+			}
+		}
+	}
+	
+	private ArrayList <MyJLabel> getLabelsFocusabili(){
+		ArrayList<MyJLabel> labelsFocusabili = new ArrayList();
+		
+		labelsFocusabili.add(lblIlTuoProfiloUtente);
+		labelsFocusabili.add(lblAnnunciDisponibili);
+		labelsFocusabili.add(lblAnnunciUltimati);
+		labelsFocusabili.add(lblAnnunciRimossi);
+		labelsFocusabili.add(lblAnnunciScaduti);
+		labelsFocusabili.add(lblOfferteAccettate);
+		labelsFocusabili.add(lblOfferteRifiutate);
+		labelsFocusabili.add(lblOfferteInAttesa);
+		labelsFocusabili.add(lblOfferteRitirate);
+		
+		return labelsFocusabili;
+		
 	}
 	
 	public MyJLabel getLblAnnunciDisponibili() {
@@ -145,5 +183,78 @@ private static final long serialVersionUID = 1L;
 	
 	public MyJLabel getLblIlMioProfilo() {
 		return lblIlTuoProfiloUtente;
+	}
+
+	public MyJLabel getLblOfferteAccettate() {
+		return lblOfferteAccettate;
+	}
+
+	public void setLblOfferteAccettate(MyJLabel lblOfferteAccettate) {
+		this.lblOfferteAccettate = lblOfferteAccettate;
+	}
+
+	public MyJLabel getLblOfferteInAttesa() {
+		return lblOfferteInAttesa;
+	}
+
+	public void setLblOfferteInAttesa(MyJLabel lblOfferteInAttesa) {
+		this.lblOfferteInAttesa = lblOfferteInAttesa;
+	}
+
+	public MyJLabel getLblOfferteRifiutate() {
+		return lblOfferteRifiutate;
+	}
+
+	public void setLblOfferteRifiutate(MyJLabel lblOfferteRifiutate) {
+		this.lblOfferteRifiutate = lblOfferteRifiutate;
+	}
+
+	public MyJLabel getLblOfferteRitirate() {
+		return lblOfferteRitirate;
+	}
+
+	public void setLblOfferteRitirate(MyJLabel lblOfferteRitirate) {
+		this.lblOfferteRitirate = lblOfferteRitirate;
+	}
+
+	public MyJLabel getLblReportOfferte() {
+		return lblReportOfferte;
+	}
+
+	public void setLblReportOfferte(MyJLabel lblReportOfferte) {
+		this.lblReportOfferte = lblReportOfferte;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public MyJPanel getPanelChiamante() {
+		return panelChiamante;
+	}
+
+	public Controller getMainController() {
+		return mainController;
+	}
+
+
+	public MyJLabel getLblIMieiAnnunci() {
+		return lblIMieiAnnunci;
+	}
+
+	public MyJLabel getLblIlTuoProfiloUtente() {
+		return lblIlTuoProfiloUtente;
+	}
+
+	public MyJLabel getLblLeMieOfferte() {
+		return lblLeMieOfferte;
+	}
+	
+	public MyJLabel getSelectedLabel() {
+		return lblSelezionata;
+	}
+
+	public void setSelectedLabel(MyJLabel selectedLabel) {
+		this.lblSelezionata = selectedLabel;
 	}
 }

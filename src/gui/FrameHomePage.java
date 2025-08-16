@@ -46,7 +46,7 @@ public class FrameHomePage extends MyJFrame {
 		contentPane.setLayout(new BorderLayout());
 		
 		panelAnnunci = new PanelHomePageAnnunci(mainController, annunci);
-		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this);
+		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, null);
 		
 		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() ->{
 			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblIlMioProfilo().getText());
@@ -72,6 +72,10 @@ public class FrameHomePage extends MyJFrame {
 			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciRimossi().getText());
 		});
 		
+		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());
+		});
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
