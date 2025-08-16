@@ -34,6 +34,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	//Panels
 	private MyJPanel contentPane;
 	private JPanel panelProfilo;
+	private PanelBarraLateraleSx panelLateraleSx;
 	private MyJPanel panelRiepilogoInfoUtente;
 	private MyJPanel panelBottoni;
 	private MyJPanel panelAnnunciCard = new MyJPanel();
@@ -58,9 +59,10 @@ public class FrameProfiloUtente extends MyJFrame {
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
 	MyJLabel lblErroreResidenza = new MyJLabel(true);
-
+	
 	//Labels generiche
 	MyJLabel lblModificheEffettuate = new MyJLabel("Modifiche effettuate con successo!");
+	MyJLabel lblTornaAHomePage = new MyJLabel("   Torna alla home page");
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
@@ -94,21 +96,74 @@ public class FrameProfiloUtente extends MyJFrame {
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
+		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this);
+		panelLateraleSx.aggiungiRigaNelPanel(lblTornaAHomePage, true, "images/iconaHomePage.png");
+		panelLateraleSx.add(lblTornaAHomePage, 0);
+		
+		lblTornaAHomePage.setOnMouseClickedAction(() -> 
+		{
+			mainController.passaAHomePage(this);
+		});
+		
+		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
+			contentPane.removeAll();
+			contentPane.revalidate();
+			contentPane.repaint();
+			contentPane.add(panelLateraleSx, BorderLayout.WEST);
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+		});
+		
+		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
+		{
+			contentPane.removeAll();
+			contentPane.revalidate();
+			contentPane.repaint();
+			contentPane.add(panelLateraleSx, BorderLayout.WEST);
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciDisponibili");
+		});
+		
+		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
+		{
+			contentPane.removeAll();
+			contentPane.revalidate();
+			contentPane.repaint();
+			contentPane.add(panelLateraleSx, BorderLayout.WEST);
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciUltimati");
+		});
+		
+		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
+		{
+			contentPane.removeAll();
+			contentPane.revalidate();
+			contentPane.repaint();
+			contentPane.add(panelLateraleSx, BorderLayout.WEST);
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciScaduti");
+		});
+		
+		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
+		{
+			contentPane.removeAll();
+			contentPane.revalidate();
+			contentPane.repaint();
+			contentPane.add(panelLateraleSx, BorderLayout.WEST);
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciRimossi");
+		});
 
 		panelAnnunciCard.setLayout(new CardLayout());
 		
-		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(recuperaAnnunciDisponibiliUtente(utenteLoggato.getAnnunciUtente()));
-		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(recuperaAnnunciUltimatiUtente(utenteLoggato.getAnnunciUtente()));
-		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(recuperaAnnunciScadutiUtente(utenteLoggato.getAnnunciUtente()));
-		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(recuperaAnnunciRimossiUtente(utenteLoggato.getAnnunciUtente()));
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(recuperaAnnunciDisponibiliUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci ancora attivi");
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(recuperaAnnunciUltimatiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare");
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(recuperaAnnunciScadutiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci che sono scaduti");
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(recuperaAnnunciRimossiUtente(utenteLoggato.getAnnunciUtente()), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata");
 		
 		panelAnnunciCard.add(panelAnnunciDisponibili, "panelAnnunciDisponibili");
 		panelAnnunciCard.add(panelAnnunciUltimati, "panelAnnunciUltimati");
 		panelAnnunciCard.add(panelAnnunciScaduti, "panelAnnunciScaduti");
 		panelAnnunciCard.add(panelAnnunciRimossi, "panelAnnunciRimossi");
-		
-		scegliSezioneDaMostrare(sezioneScelta);
 		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
@@ -122,30 +177,15 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
-//		contentPane.add(panelProfilo, BorderLayout.CENTER);
-		contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
-		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
+		if(sezioneScelta.equals("   Il mio profilo"))
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+		else 
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
 	}
 	
-	private void scegliSezioneDaMostrare(String sezioneScelta) {
-		if(sezioneScelta.equals("        Annunci disponibili")) {
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciDisponibili");
-		}
-		else if(sezioneScelta.equals("        Annunci andati a buon fine")) {
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciUltimati");
-		}
-		else if(sezioneScelta.equals("        Annunci scaduti")) {
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciScaduti");
-		}
-		else if(sezioneScelta.equals("        Annunci rimossi")) {
-			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciRimossi");
-		}
-		else if(sezioneScelta.equals(sezioneScelta)) {
-			
-		}
-	}
 
 	private void settaBandaLaterale(JPanel bandaLaterale) {
 		bandaLaterale.setPreferredSize(new Dimension(30, contentPane.getHeight()));

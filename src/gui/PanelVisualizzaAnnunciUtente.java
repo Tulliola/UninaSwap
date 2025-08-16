@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -31,12 +32,12 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	private MyJPanel panelSuperiore = new MyJPanel();
 	private MyJPanel panelCentrale = new MyJPanel();
 	
-	public PanelVisualizzaAnnunciUtente(ArrayList<Annuncio> annunciToDisplay) {
+	public PanelVisualizzaAnnunciUtente(ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente) {
 		this.setLayout(new BorderLayout());
 		
 		
 		settaPanelSuperiore(annunciToDisplay);
-		settaPanelCentrale();
+		settaPanelCentrale(messaggioAllUtente);
 		
 		this.add(panelSuperiore, BorderLayout.NORTH);
 		this.add(panelCentrale, BorderLayout.CENTER);
@@ -58,9 +59,9 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelRegalo.setLayout(new FlowLayout());
 		panelRegalo.setBackground(Color.WHITE);
 		
-		MyJLabel lblVendita = new MyJLabel(new ImageIcon("images/iconaAnnuncioVendita.png"), true);
-		MyJLabel lblScambio = new MyJLabel(new ImageIcon("images/iconaAnnuncioScambio.png"), true);
-		MyJLabel lblRegalo = new MyJLabel(new ImageIcon("images/iconaAnnuncioRegalo.png"), true);
+		MyJLabel lblVendita = new MyJLabel(new ImageIcon("images/iconaAnnuncioVenditaColored.png"), true);
+		MyJLabel lblScambio = new MyJLabel(new ImageIcon("images/iconaAnnuncioScambioColored.png"), true);
+		MyJLabel lblRegalo = new MyJLabel(new ImageIcon("images/iconaAnnuncioRegaloColored.png"), true);
 		
 		lblVendita.rendiLabelInteragibile();
 		lblScambio.rendiLabelInteragibile();
@@ -135,8 +136,11 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelSuperiore.add(panelRegalo);
 	}
 
-	private void settaPanelCentrale() {
+	private void settaPanelCentrale(String messaggioAllUtente) {
 		panelCentrale.setLayout(new FlowLayout());
+		MyJLabel messaggio = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
+		messaggio.setForeground(Color.BLACK);
+		panelCentrale.add(messaggio);
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 	}
 	
@@ -145,6 +149,12 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 			if(annuncio instanceof AnnuncioVendita) {
 				panelCentrale.add(creaPanelAnnuncio(annuncio));
 			}
+		}
+		
+		if(!panelCentrale.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelCentrale.add(lblNonCiSonoAnnunci);
 		}
 	}
 
@@ -155,6 +165,12 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 				panelCentrale.add(creaPanelAnnuncio(annuncio));
 			}
 		}
+		
+		if(!panelCentrale.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelCentrale.add(lblNonCiSonoAnnunci);
+		}
 	}
 	
 	private void mostraAnnunciDiRegaloSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
@@ -163,7 +179,14 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 				panelCentrale.add(creaPanelAnnuncio(annuncio));
 			}
 		}
+		
+		if(!panelCentrale.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelCentrale.add(lblNonCiSonoAnnunci);
+		}
 	}
+
 
 	//copied
 	private MyJPanel creaPanelAnnuncio(Annuncio annuncioToAdd) {
