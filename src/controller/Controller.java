@@ -203,7 +203,7 @@ public class Controller {
 	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
-		
+		utenteLoggato.aggiungiAnnuncio(newAnnuncio);
 		this.passaAHomePage(framePubblicaAnnuncio);
 	}
 	
