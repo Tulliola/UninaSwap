@@ -1167,7 +1167,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		bottoneTornaIndietro = new MyJButton("Torna alla home page");
 		bottoneTornaIndietro.setPreferredSize(new Dimension(300, 100));
 		bottoneTornaIndietro.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		bottoneTornaIndietro.setDefaultAction(() -> {mainController.passaAHomePage(this);});
+		bottoneTornaIndietro.setDefaultAction(() -> {mainController.passaAFrameHomePage(this);});
 		
 		bottonePubblicaAnnuncio = new MyJButton("Pubblica annuncio");
 		bottonePubblicaAnnuncio.setPreferredSize(new Dimension(300, 100));

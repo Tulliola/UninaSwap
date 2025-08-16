@@ -10,5 +10,5 @@ import dto.ProfiloUtente;
 public interface OffertaDAO {
 	public ArrayList<Offerta> recuperaOfferteDiUtente(String email) throws SQLException, IOException;
 	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(int idAnnuncio) throws SQLException, IOException;
-	public void inserisciOfferta() throws SQLException;
+	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException;
 }

@@ -67,6 +67,6 @@ public class UfficioPostale {
 	
 	@Override
 	public String toString() {
-		return nome+"\n"+via+", "+civico+", "+comune+", "+cap+"\n";
+		return nome+" - " +via+ ", "+civico+", "+comune+", "+cap+"\n";
 	}
 }

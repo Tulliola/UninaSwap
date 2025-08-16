@@ -167,16 +167,16 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	@Override
-	public void inserisciOfferta() throws SQLException{
-		String emailOfferente = this.offerta.getUtenteProprietario().getEmail();
-		int idAnnuncioRiferito = this.offerta.getAnnuncioRiferito().getIdAnnuncio();
-		Timestamp momentoProposta = this.offerta.getMomentoProposta();
-		String nota = this.offerta.getNota();
-		String indirizzoSpedizione = this.offerta.getIndirizzoSpedizione();
-		String oraInizioIncontro = this.offerta.getOraInizioIncontro();
-		String oraFineIncontro = this.offerta.getOraFineIncontro();
-		String giornoIncontro = this.offerta.getGiornoIncontro();
-		SedeUniversita sede = this.offerta.getSedeDIncontroScelta();
+	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException{
+		String emailOfferente = offertaDaInserire.getUtenteProprietario().getEmail();
+		int idAnnuncioRiferito = offertaDaInserire.getAnnuncioRiferito().getIdAnnuncio();
+		Timestamp momentoProposta = offertaDaInserire.getMomentoProposta();
+		String nota = offertaDaInserire.getNota();
+		String indirizzoSpedizione = offertaDaInserire.getIndirizzoSpedizione();
+		String oraInizioIncontro = offertaDaInserire.getOraInizioIncontro();
+		String oraFineIncontro = offertaDaInserire.getOraFineIncontro();
+		String giornoIncontro = offertaDaInserire.getGiornoIncontro();
+		SedeUniversita sede = offertaDaInserire.getSedeDIncontroScelta();
 		
 		if(this.offerta instanceof OffertaAcquisto) {
 			String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(";

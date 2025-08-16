@@ -243,6 +243,15 @@ public abstract class Annuncio {
 		return this.numeroDiInterazioni;
 	}
 	
+	public String getIncontro(int i) {
+		if(i >= 0 && i < this.giornoIncontro.size()) {
+			String incontro = this.giornoIncontro.get(i) + ", " + "dalle " + this.oraInizioIncontro.get(i) + " alle " + this.oraFineIncontro.get(i) + " a " + this.sedeIncontroProposte.get(i);
+			return incontro;
+		}
+		else
+			throw new IllegalArgumentException("Indice non valido");
+	}
+	
 	@Override
 	public String toString() {
 		String toReturn = "ANNUNCIO\n-----------------------------------------\n";

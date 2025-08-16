@@ -1,10 +1,12 @@
 package database.dao.implementazioni;
 
 import database.dao.interfacce.ProfiloUtenteDAO;
+import dto.Annuncio;
 import dto.ProfiloUtente;
 import eccezioni.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	private Connection connessioneDB = null;
@@ -90,15 +92,23 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			
 				isPasswordMatching(rs);
 				
-				return new ProfiloUtente(
-						rs.getString("username"),
-						rs.getString("email"),
-						rs.getDouble("saldo"),
-						rs.getBytes("immagine_profilo"),
-						rs.getString("residenza"),
-						rs.getString("PW"),
-						rs.getBoolean("sospeso")
+				ProfiloUtente profiloToReturn = new ProfiloUtente(
+													rs.getString("username"),
+													rs.getString("email"),
+													rs.getDouble("saldo"),
+													rs.getBytes("immagine_profilo"),
+													rs.getString("residenza"),
+													rs.getString("PW"),
+													rs.getBoolean("sospeso")
 				);
+				
+				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn);
+				
+				for(Annuncio annuncioCorrente : annunciDiUtente)
+					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
+				
+				return profiloToReturn;
 			}
 		}
 	}

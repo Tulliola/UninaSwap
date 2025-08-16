@@ -114,7 +114,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		lblTornaAHomePage.setOnMouseClickedAction(() -> 
 		{
-			mainController.passaAHomePage(this);
+			mainController.passaAFrameHomePage(this);
 		});
 		
 		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {

@@ -17,8 +17,8 @@ public class ProfiloUtente {
 	private boolean sospeso;
 	
 	//Attributi derivati da relazioni
-	private ArrayList<Annuncio> annunciUtente;
-	private ArrayList<Offerta> offerteUtente;
+	private ArrayList<Annuncio> annunciUtente = new ArrayList();
+	private ArrayList<Offerta> offerteUtente = new ArrayList();
 	
 	public ProfiloUtente(String username, String email, double saldo, byte[] immagineProfilo, String residenza,
 			String password, boolean sospeso) {
