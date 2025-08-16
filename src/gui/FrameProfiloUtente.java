@@ -6,13 +6,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import controller.Controller;
-
+import dto.Annuncio;
 import dto.ProfiloUtente;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
@@ -24,6 +25,7 @@ import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
+import utilities.StatoAnnuncioEnum;
 
 public class FrameProfiloUtente extends MyJFrame {
 
@@ -33,9 +35,13 @@ public class FrameProfiloUtente extends MyJFrame {
 	private MyJPanel contentPane;
 	private JPanel panelProfilo;
 	private MyJPanel panelRiepilogoInfoUtente;
-	private MyJPanel panelAnnunciDisponibiliUtente;
 	private MyJPanel panelBottoni;
-
+	private MyJPanel panelAnnunciCard = new MyJPanel();
+	private PanelVisualizzaAnnunciUtente panelAnnunciDisponibili;
+	private PanelVisualizzaAnnunciUtente panelAnnunciUltimati;
+	private PanelVisualizzaAnnunciUtente panelAnnunciScaduti;
+	private PanelVisualizzaAnnunciUtente panelAnnunciRimossi;
+	
 	//Buttons
 	private MyJButton bottoneSalvaModifiche;
 	
@@ -90,6 +96,20 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
 
+		panelAnnunciCard.setLayout(new CardLayout());
+		
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(recuperaAnnunciDisponibiliUtente(utenteLoggato.getAnnunciUtente()));
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(recuperaAnnunciUltimatiUtente(utenteLoggato.getAnnunciUtente()));
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(recuperaAnnunciScadutiUtente(utenteLoggato.getAnnunciUtente()));
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(recuperaAnnunciRimossiUtente(utenteLoggato.getAnnunciUtente()));
+		
+		panelAnnunciCard.add(panelAnnunciDisponibili, "panelAnnunciDisponibili");
+		panelAnnunciCard.add(panelAnnunciUltimati, "panelAnnunciUltimati");
+		panelAnnunciCard.add(panelAnnunciScaduti, "panelAnnunciScaduti");
+		panelAnnunciCard.add(panelAnnunciRimossi, "panelAnnunciRimossi");
+		
+		scegliSezioneDaMostrare(sezioneScelta);
+		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setBackground(Color.white);
@@ -102,13 +122,31 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
-		contentPane.add(panelProfilo, BorderLayout.CENTER);
-//		contentPane.add(panelAnnunciDisponibili);
+//		contentPane.add(panelProfilo, BorderLayout.CENTER);
+		contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
 		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
 	}
 	
+	private void scegliSezioneDaMostrare(String sezioneScelta) {
+		if(sezioneScelta.equals("        Annunci disponibili")) {
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciDisponibili");
+		}
+		else if(sezioneScelta.equals("        Annunci andati a buon fine")) {
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciUltimati");
+		}
+		else if(sezioneScelta.equals("        Annunci scaduti")) {
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciScaduti");
+		}
+		else if(sezioneScelta.equals("        Annunci rimossi")) {
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, "panelAnnunciRimossi");
+		}
+		else if(sezioneScelta.equals(sezioneScelta)) {
+			
+		}
+	}
+
 	private void settaBandaLaterale(JPanel bandaLaterale) {
 		bandaLaterale.setPreferredSize(new Dimension(30, contentPane.getHeight()));
 		bandaLaterale.setBackground(new Color(198, 210, 222));
@@ -525,5 +563,49 @@ public class FrameProfiloUtente extends MyJFrame {
 		if(residenzaIn.equals(oldResidenza))
 			throw new ResidenzaException("La nuova residenza deve essere diversa dalla vecchia.");
 
+	}
+	
+	private ArrayList<Annuncio> recuperaAnnunciDisponibiliUtente(ArrayList<Annuncio> annunciUtente){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Disponibile))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	private ArrayList<Annuncio> recuperaAnnunciUltimatiUtente(ArrayList<Annuncio> annunciUtente){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Venduto) || annuncio.getStato().equals(StatoAnnuncioEnum.Scambiato) || annuncio.getStato().equals(StatoAnnuncioEnum.Regalato))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	private ArrayList<Annuncio> recuperaAnnunciScadutiUtente(ArrayList<Annuncio> annunciUtente){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Scaduto))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	private ArrayList<Annuncio> recuperaAnnunciRimossiUtente(ArrayList<Annuncio> annunciUtente){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Rimosso))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
 	}
 }
