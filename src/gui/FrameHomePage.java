@@ -9,7 +9,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import gui.PanelHomePageAnnunci;
-import gui.PanelHomePageLateraleSx;
 import gui.PanelHomePageSuperiore;
 import utilities.MyJFrame;
 import utilities.MyJPanel;
@@ -24,7 +23,7 @@ public class FrameHomePage extends MyJFrame {
 	private static final long serialVersionUID = 1L;
 	private MyJPanel contentPane;
 	private PanelHomePageAnnunci panelAnnunci;
-	private PanelHomePageLateraleSx panelLateraleSx;
+	private PanelBarraLateraleSx panelLateraleSx;
 	private PanelHomePageSuperiore panelSuperiore;
 	private Controller mainController;
 	
@@ -47,7 +46,36 @@ public class FrameHomePage extends MyJFrame {
 		contentPane.setLayout(new BorderLayout());
 		
 		panelAnnunci = new PanelHomePageAnnunci(mainController, annunci);
-		panelLateraleSx = new PanelHomePageLateraleSx(contentPane, mainController);
+		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, null);
+		
+		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() ->{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblIlMioProfilo().getText());
+		});
+		
+		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciDisponibili().getText());
+		});
+		
+		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciUltimati().getText());
+		});
+		
+		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciScaduti().getText());
+		});
+		
+		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciRimossi().getText());
+		});
+		
+		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());
+		});
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);

@@ -6,13 +6,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import controller.Controller;
-
+import dto.Annuncio;
 import dto.ProfiloUtente;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
@@ -24,6 +25,7 @@ import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
+import utilities.StatoAnnuncioEnum;
 
 public class FrameProfiloUtente extends MyJFrame {
 
@@ -32,10 +34,15 @@ public class FrameProfiloUtente extends MyJFrame {
 	//Panels
 	private MyJPanel contentPane;
 	private JPanel panelProfilo;
+	private PanelBarraLateraleSx panelLateraleSx;
 	private MyJPanel panelRiepilogoInfoUtente;
-	private MyJPanel panelAnnunciDisponibiliUtente;
 	private MyJPanel panelBottoni;
-
+	private MyJPanel panelAnnunciCard = new MyJPanel();
+	private PanelVisualizzaAnnunciUtente panelAnnunciDisponibili;
+	private PanelVisualizzaAnnunciUtente panelAnnunciUltimati;
+	private PanelVisualizzaAnnunciUtente panelAnnunciScaduti;
+	private PanelVisualizzaAnnunciUtente panelAnnunciRimossi;
+	
 	//Buttons
 	private MyJButton bottoneSalvaModifiche;
 	
@@ -52,9 +59,10 @@ public class FrameProfiloUtente extends MyJFrame {
 	MyJLabel lblErroreUsername = new MyJLabel(true);
 	MyJLabel lblErrorePWD = new MyJLabel(true);
 	MyJLabel lblErroreResidenza = new MyJLabel(true);
-
+	
 	//Labels generiche
 	MyJLabel lblModificheEffettuate = new MyJLabel("Modifiche effettuate con successo!");
+	MyJLabel lblTornaAHomePage = new MyJLabel("   Torna alla home page");
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
@@ -88,8 +96,54 @@ public class FrameProfiloUtente extends MyJFrame {
 		contentPane.setBackground(Color.white);
 		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
-		PanelVisualizzaInfoProfilo bandaLateraleSx = new PanelVisualizzaInfoProfilo(contentPane, this, sezioneScelta, mainController);
+		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, sezioneScelta);
+		panelLateraleSx.aggiungiRigaNelPanel(lblTornaAHomePage, true, "images/iconaHomePage.png");
+		panelLateraleSx.add(lblTornaAHomePage, 0);
+		
+		panelAnnunciCard.setLayout(new CardLayout());
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi");
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare");
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti");
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata");
+		
+		panelAnnunciCard.add(panelAnnunciDisponibili, "        Annunci disponibili");
+		panelAnnunciCard.add(panelAnnunciUltimati, "        Annunci andati a buon fine");
+		panelAnnunciCard.add(panelAnnunciScaduti, "        Annunci scaduti");
+		panelAnnunciCard.add(panelAnnunciRimossi, "        Annunci rimossi");
+		((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneScelta);
+		
+		lblTornaAHomePage.setOnMouseClickedAction(() -> 
+		{
+			mainController.passaAFrameHomePage(this);
+		});
+		
+		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblIlMioProfilo(), null);
+		});
+		
+		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
+		{
+			setClickedActions(panelLateraleSx.getLblAnnunciDisponibili(), "        Annunci disponibili");
+		});
+		
+		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
+		{
+			setClickedActions(panelLateraleSx.getLblAnnunciUltimati(), "        Annunci andati a buon fine");
+		});
+		
+		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
+		{
+			setClickedActions(panelLateraleSx.getLblAnnunciScaduti(), "        Annunci scaduti");
+		});
+		
+		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
+		{        
+			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Annunci rimossi");
+		});
 
+		
+		
+		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setBackground(Color.white);
@@ -102,13 +156,32 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo.setAlignmentX(CENTER_ALIGNMENT);
 		panelProfilo.setAlignmentY(CENTER_ALIGNMENT);
 
-		contentPane.add(panelProfilo, BorderLayout.CENTER);
-//		contentPane.add(panelAnnunciDisponibili);
-		contentPane.add(bandaLateraleSx, BorderLayout.WEST);
+		if(sezioneScelta.equals("   Il mio profilo"))
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+		else 
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
 	}
 	
+	private void setClickedActions(MyJLabel label, String sezioneCard) {
+		contentPane.removeAll();
+		contentPane.revalidate();
+		contentPane.repaint();
+		label.setBackground(MyJPanel.uninaColor);
+		panelLateraleSx.setSelectedLabel(label);
+		panelLateraleSx.resettaFocusLabelsNonCliccate();
+		contentPane.add(panelLateraleSx, BorderLayout.WEST);
+		if(sezioneCard != null) {
+			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneCard);
+		}
+		else
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+			
+	}
+
 	private void settaBandaLaterale(JPanel bandaLaterale) {
 		bandaLaterale.setPreferredSize(new Dimension(30, contentPane.getHeight()));
 		bandaLaterale.setBackground(new Color(198, 210, 222));
@@ -526,4 +599,6 @@ public class FrameProfiloUtente extends MyJFrame {
 			throw new ResidenzaException("La nuova residenza deve essere diversa dalla vecchia.");
 
 	}
+	
+	
 }

@@ -104,7 +104,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	@Override
-	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(int idAnnuncio) throws SQLException, IOException {
+	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(int idAnnuncio) throws SQLException, IOException{
 		ArrayList<Offerta> offerteAnnuncio = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT"

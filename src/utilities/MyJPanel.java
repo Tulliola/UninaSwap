@@ -1,6 +1,7 @@
 package utilities;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -54,5 +55,15 @@ public class MyJPanel extends JPanel {
 		
 		if(immagineDaAdattare != null)
 			immagineDaAdattare.drawImage(immagine, 0, 0, getWidth(), getHeight(), this);
+	}
+	
+	public boolean hasPanels() {
+	    for (Component component : this.getComponents()) {
+	        if (component instanceof JPanel) {
+	        	System.out.print("Ciao");
+	            return true; 
+	        }
+	    }
+	    return false; 
 	}
 }

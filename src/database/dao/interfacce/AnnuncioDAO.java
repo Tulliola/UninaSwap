@@ -8,6 +8,7 @@ import dto.Annuncio;
 import dto.ProfiloUtente;
 
 public interface AnnuncioDAO {
+	
 	public Annuncio recuperaAnnuncioDaID(int idAnnuncio) throws SQLException;
 	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException;
 	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException;

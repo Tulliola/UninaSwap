@@ -3,6 +3,8 @@ package dto;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import utilities.StatoAnnuncioEnum;
+
 public class ProfiloUtente {
 	//Attributi propri
 	private String username;
@@ -127,6 +129,50 @@ public class ProfiloUtente {
 		toReturn += "Residenza = "+residenza+"\n";
 		toReturn += "Eventuale data sospensione = "+dataSospensione+"\n";
 		toReturn += "Utente sospeso? = "+sospeso+"\n";
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Annuncio> getAnnunciDisponibili(){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Disponibile))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Annuncio> getAnnunciUltimati(){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Venduto) || annuncio.getStato().equals(StatoAnnuncioEnum.Scambiato) || annuncio.getStato().equals(StatoAnnuncioEnum.Regalato))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Annuncio> getAnnunciScaduti(){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Scaduto))
+				toReturn.add(annuncio);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Annuncio> getAnnunciRimossi(){
+		ArrayList<Annuncio> toReturn = new ArrayList();
+		
+		for(Annuncio annuncio: annunciUtente) {
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Rimosso))
+				toReturn.add(annuncio);
+		}
 		
 		return toReturn;
 	}
