@@ -702,7 +702,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelRisultatiDiRicerca.setVisible(true);
 		
 		if(annunciFiltratiPerTipo.size() == 0)
-			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + tipoAnnuncio + ".");
+			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + categoriaOggetto + ".");
 		else
 			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerTipo.size() + " di " + tuttiGliAnnunci.size());
 	}
