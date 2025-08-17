@@ -122,15 +122,18 @@ public abstract class Annuncio {
 	}
 
 
-	public StatoAnnuncioEnum getStato() {
+	public StatoAnnuncioEnum getStatoEnum() {
 		return stato;
 	}
 
 
-	public void setStato(StatoAnnuncioEnum stato) {
+	public void setStatoEnum(StatoAnnuncioEnum stato) {
 		this.stato = stato;
 	}
-
+	
+	public String getStato() {
+		return stato.toString();
+	}
 
 	public Timestamp getMomentoPubblicazione() {
 		return momentoPubblicazione;

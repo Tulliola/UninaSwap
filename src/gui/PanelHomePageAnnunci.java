@@ -41,6 +41,9 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import dto.Offerta;
+import dto.OffertaAcquisto;
+import eccezioni.OffertaAcquistoException;
 import utilities.CategoriaEnum;
 //import dto.AnnuncioRegalo;
 //import dto.AnnuncioScambio;
@@ -50,6 +53,7 @@ import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 import utilities.StatoAnnuncioEnum;
+import utilities.StatoOffertaEnum;
 
 public class PanelHomePageAnnunci extends JPanel{
 
@@ -269,6 +273,7 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	private MyJPanel creaPanelAnnuncio(Annuncio annuncioToAdd) {
 		MyJPanel annuncioPanel = new MyJPanel();
+		annuncioPanel.putClientProperty("idAnnuncio", annuncioToAdd.getIdAnnuncio());
 		annuncioPanel.setLayout(new BorderLayout());
 		annuncioPanel.setPreferredSize(new Dimension(800, 600));
 		annuncioPanel.setMaximumSize(new Dimension(800, 600));
@@ -511,7 +516,13 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		if(annuncio instanceof AnnuncioVendita)
 			bottoneFaiOfferta.setDefaultAction(() -> {
-				mainController.passaADialogOffertaAcquisto(annuncio);
+				try {
+					this.checkOffertaAcquistoGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+					mainController.passaADialogOffertaAcquisto(annuncio);
+				}
+				catch(OffertaAcquistoException exc) {
+					JOptionPane.showMessageDialog(this, "Hai già una offerta di acquisto in attesa per questo annuncio.");
+				}
 			});
 		else 
 			bottoneFaiOfferta.setDefaultAction(() -> JOptionPane.showMessageDialog(this, "Work in progress"));
@@ -731,5 +742,15 @@ public class PanelHomePageAnnunci extends JPanel{
 		else
 			filtraAnnunciPerTipoECategoria(annunci, tipologiaSelezionata, categoriaSelezionata);
 		
+	}
+	
+	private void checkOffertaAcquistoGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaAcquistoException{
+		
+		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
+			if(offertaCorrente instanceof OffertaAcquisto) {
+				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
+					throw new OffertaAcquistoException("Hai già un'offerta di acquisto attiva per questo annuncio.");
+			}
+		}
 	}
 }

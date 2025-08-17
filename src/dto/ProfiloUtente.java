@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import utilities.StatoAnnuncioEnum;
+import utilities.StatoOffertaEnum;
 
 public class ProfiloUtente {
 	//Attributi propri
@@ -137,7 +138,7 @@ public class ProfiloUtente {
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Disponibile))
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Disponibile.toString()))
 				toReturn.add(annuncio);
 		}
 		
@@ -148,7 +149,8 @@ public class ProfiloUtente {
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Venduto) || annuncio.getStato().equals(StatoAnnuncioEnum.Scambiato) || annuncio.getStato().equals(StatoAnnuncioEnum.Regalato))
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Venduto.toString()) || annuncio.getStato().equals(StatoAnnuncioEnum.Scambiato.toString()) || 
+					annuncio.getStato().equals(StatoAnnuncioEnum.Regalato.toString()))
 				toReturn.add(annuncio);
 		}
 		
@@ -159,7 +161,7 @@ public class ProfiloUtente {
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Scaduto))
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Scaduto.toString()))
 				toReturn.add(annuncio);
 		}
 		
@@ -170,9 +172,19 @@ public class ProfiloUtente {
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		for(Annuncio annuncio: annunciUtente) {
-			if(annuncio.getStato().equals(StatoAnnuncioEnum.Rimosso))
+			if(annuncio.getStato().equals(StatoAnnuncioEnum.Rimosso.toString()))
 				toReturn.add(annuncio);
 		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteInAttesa(){
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
+		
+		for(Offerta offertaCorrente : this.offerteUtente)
+			if(offertaCorrente.getStato().equals(StatoOffertaEnum.In_attesa.toString()))
+				toReturn.add(offertaCorrente);
 		
 		return toReturn;
 	}

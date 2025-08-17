@@ -12,7 +12,7 @@ public enum ModConsegnaEnum {
 	}
 		
 	
-	public static ModConsegnaEnum confrontaConDB(String modalitàConsegna) {
+	public static ModConsegnaEnum confrontaConStringa(String modalitàConsegna) {
 		for(ModConsegnaEnum m : values()) {
 			if(m.modalitàConsegna.equals(modalitàConsegna)) {
 				return m;

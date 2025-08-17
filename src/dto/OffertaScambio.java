@@ -14,9 +14,9 @@ public class OffertaScambio extends Offerta {
 	//Attributi derivati da relazioni
 	private ArrayList<Oggetto> oggettiOfferti = new ArrayList()	;
 
-	public OffertaScambio(int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
+	public OffertaScambio(ProfiloUtente offerente, int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito, ArrayList<Oggetto> oggettiOfferti) {
-		super( momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
+		super(offerente, momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
 		this.idOfferta = idOfferta;
 		this.oggettiOfferti.addAll(oggettiOfferti);
 	}

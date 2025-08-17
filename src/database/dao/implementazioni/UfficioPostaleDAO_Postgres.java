@@ -39,5 +39,21 @@ public class UfficioPostaleDAO_Postgres implements UfficioPostaleDAO{
 			}
 		}
 	}
+
+	@Override
+	public UfficioPostale recuperaUfficioPostaleConId(int idUfficio) throws SQLException {
+		try(PreparedStatement psRecuperaUfficio = connessioneDB.prepareStatement("SELECT * FROM Ufficio_postale WHERE idUfficio = ?")){
+			psRecuperaUfficio.setInt(1, idUfficio);
+			
+			try(ResultSet rsRecuperaUfficio = psRecuperaUfficio.executeQuery()){
+				if(rsRecuperaUfficio.next())
+					return new UfficioPostale(rsRecuperaUfficio.getInt("idUfficio"), rsRecuperaUfficio.getString("Nome"), 
+											  rsRecuperaUfficio.getString("Via"), rsRecuperaUfficio.getString("Civico"),
+											  rsRecuperaUfficio.getString("Comune"), rsRecuperaUfficio.getString("CAP"));
+			}
+		}
+		
+		return null;
+	}
 	
 }
