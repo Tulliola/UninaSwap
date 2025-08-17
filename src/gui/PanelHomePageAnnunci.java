@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -483,9 +484,11 @@ public class PanelHomePageAnnunci extends JPanel{
 		lblDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
 		lblDataScadenza.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
-		if(annuncio.getDataScadenza() != null)
+		if(annuncio.getDataScadenza() != null) {
 			lblDataScadenza.setText("Affrettati, questo annuncio scade tra "+ 
-								   (annuncio.getDataScadenza().getDate() - LocalDate.now().getDayOfMonth()) + " giorni!");
+								   (ChronoUnit.DAYS.between(LocalDate.now(), annuncio.getDataScadenza().toLocalDate())+ " giorni!"));
+			
+		}
 		panelDataScadenza.add(lblDataScadenza);
 		panelDescrizione.add(panelDataScadenza, BorderLayout.CENTER);
 		

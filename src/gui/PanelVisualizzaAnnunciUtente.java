@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -171,7 +172,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelCentrale.repaint();
 
 		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
+		    scrollPane.getVerticalScrollBar().setValue(0);
 		});
 		
 		if(!panelCentrale.hasPanels()) {
@@ -278,6 +279,9 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private MyJPanel creaPanelInfoOggetto(Annuncio annuncioToAdd) {
+		if(annuncioToAdd.getDataScadenza() != null)
+			System.out.println(ChronoUnit.DAYS.between(LocalDate.now(), annuncioToAdd.getDataScadenza().toLocalDate()));
+		
 		MyJPanel panelInfoOggetto = new MyJPanel();
 		panelInfoOggetto.setLayout(new BorderLayout());
 		panelInfoOggetto.setPreferredSize(new Dimension(375, 100));
@@ -442,7 +446,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		
 		if(annuncio.getDataScadenza() != null)
 			lblDataScadenza.setText("Affrettati, questo annuncio scade tra "+ 
-								   (annuncio.getDataScadenza().getDate() - LocalDate.now().getDayOfMonth()) + " giorni!");
+								   (ChronoUnit.DAYS.between(LocalDate.now(), annuncio.getDataScadenza().toLocalDate())) + " giorni!");
 		panelDataScadenza.add(lblDataScadenza);
 		panelDescrizione.add(panelDataScadenza, BorderLayout.CENTER);
 		

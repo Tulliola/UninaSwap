@@ -13,11 +13,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import java.util.ArrayList;
 
 import controller.Controller;
+import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
@@ -25,6 +27,7 @@ import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
 import dto.OffertaScambio;
+import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 
@@ -32,24 +35,26 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
 	
+	private JScrollPane scrollPane;
+	private MyJPanel panelSuperiore = new MyJPanel();
+	private MyJPanel panelCentrale = new MyJPanel();
 	
-	MyJPanel panelSuperiore = new MyJPanel();
-	MyJPanel panelCentrale = new MyJPanel();
-	
-	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente) {
+	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		this.setLayout(new BorderLayout());
+		
+		
+		
+		scrollPane = new JScrollPane(panelCentrale);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+		parentFrame.add(scrollPane);
 		
 		settaPanelSuperiore(offerteToDisplay);
 		settaPanelCentrale(messaggioAllUtente);
 		
 		this.add(panelSuperiore, BorderLayout.NORTH);
-		this.add(panelCentrale, BorderLayout.CENTER);
-		
-		JScrollPane scrollPane = new JScrollPane(panelCentrale);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		
-		this.add(scrollPane);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	private void settaPanelCentrale(String messaggioAllUtente) {
@@ -152,11 +157,19 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 	}
 
 	private void mostraOfferteDiRegaloSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		for(Offerta offerta: offerteToDisplay) {
-			if(offerta instanceof OffertaRegalo) {
-				panelCentrale.add(creaPanelOfferta(offerta));
+		ricalcolaAltezzaConOfferte(offerteToDisplay);
+		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
+			if(offerteToDisplay.get(i) instanceof OffertaRegalo) {
+				panelCentrale.add(creaPanelOfferta(offerteToDisplay.get(i)));
 			}
 		}
+		
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0);
+		});
 		
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
@@ -165,11 +178,19 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 	}
 
 	private void mostraOfferteDiScambioSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		for(Offerta offerta: offerteToDisplay) {
-			if(offerta instanceof OffertaScambio) {
-				panelCentrale.add(creaPanelOfferta(offerta));
+		ricalcolaAltezzaConOfferte(offerteToDisplay);
+		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
+			if(offerteToDisplay.get(i) instanceof OffertaScambio) {
+				panelCentrale.add(creaPanelOfferta(offerteToDisplay.get(i)));
 			}
 		}
+		
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0);
+		});
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
 			panelCentrale.add(lblNoOfferte);
@@ -177,11 +198,20 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 	}
 
 	private void mostraOfferteDiAcquistoSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		for(Offerta offerta: offerteToDisplay) {
-			if(offerta instanceof OffertaAcquisto) {
-				panelCentrale.add(creaPanelOfferta(offerta));
+		ricalcolaAltezzaConOfferte(offerteToDisplay);
+		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
+			if(offerteToDisplay.get(i) instanceof OffertaAcquisto) {
+				panelCentrale.add(creaPanelOfferta(offerteToDisplay.get(i)));
 			}
 		}
+		
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0);
+		});
+		
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di acquisto da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
 			panelCentrale.add(lblNoOfferte);
@@ -357,5 +387,14 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 		panelFotoOggetto.add(panelInterno, BorderLayout.CENTER);
 		
 		return panelFotoOggetto;
+	}
+	
+	private void ricalcolaAltezzaConOfferte(ArrayList<Offerta> offerteMostrate) {
+		int larghezza = panelCentrale.getWidth();
+		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
+		int altezza = (offerteMostrate.size() / 2 == 0) ? (offerteMostrate.size()/2 * 610) : ((offerteMostrate.size()/2+1) * 610);
+		
+		panelCentrale.setPreferredSize(new Dimension(larghezza, altezza));
+		panelCentrale.setMaximumSize(new Dimension(larghezza, altezza));
 	}
 }
