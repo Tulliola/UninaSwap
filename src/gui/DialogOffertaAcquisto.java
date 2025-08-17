@@ -509,7 +509,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		
 		MyJPanel panelCentrale = new MyJPanel();
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
-		JTextArea inserisciNotaTextArea = new JTextArea("Ciao " + mainController.getUtenteLoggato().getUsername() + ", ho visto il tuo annuncio \"" + annuncioPerOfferta.getNome() + "\".");
+		JTextArea inserisciNotaTextArea = new JTextArea("Ciao " + annuncioPerOfferta.getUtenteProprietario().getUsername() + ", ho visto il tuo annuncio \"" + annuncioPerOfferta.getNome() + "\".");
 		inserisciNotaTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		inserisciNotaTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 		inserisciNotaTextArea.setLineWrap(true);

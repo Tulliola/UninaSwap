@@ -14,6 +14,7 @@ import javax.swing.border.*;
 
 import controller.Controller;
 import dto.Annuncio;
+import dto.Offerta;
 import dto.ProfiloUtente;
 import eccezioni.EmailException;
 import eccezioni.PasswordException;
@@ -42,6 +43,12 @@ public class FrameProfiloUtente extends MyJFrame {
 	private PanelVisualizzaAnnunciUtente panelAnnunciUltimati;
 	private PanelVisualizzaAnnunciUtente panelAnnunciScaduti;
 	private PanelVisualizzaAnnunciUtente panelAnnunciRimossi;
+	private MyJPanel panelOfferteCard = new MyJPanel();
+	private PanelVisualizzaOfferteUtente panelOfferteAccettate;
+	private PanelVisualizzaOfferteUtente panelOfferteRifiutate;
+	private PanelVisualizzaOfferteUtente panelOfferteInAttesa;
+	private PanelVisualizzaOfferteUtente panelOfferteRitirate;
+//	private PanelVisualizzaReportOfferteUtente panelReportOfferteUtente();
 	
 	//Buttons
 	private MyJButton bottoneSalvaModifiche;
@@ -112,6 +119,18 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelAnnunciCard.add(panelAnnunciRimossi, "        Annunci rimossi");
 		((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneScelta);
 		
+		panelOfferteCard.setLayout(new CardLayout());
+		
+		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte accettate");
+		panelOfferteRifiutate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte ritirate");
+		panelOfferteInAttesa = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate");
+		panelOfferteRitirate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte che hai ritirato");
+		panelOfferteCard.add(panelOfferteAccettate, "        Offerte accettate");
+		panelOfferteCard.add(panelOfferteRifiutate, "        Offerte rifiutate");
+		panelOfferteCard.add(panelOfferteInAttesa, "        Offerte in attesa");
+		panelOfferteCard.add(panelOfferteRitirate, "        Offerte ritirate");
+		((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneScelta);
+		
 		lblTornaAHomePage.setOnMouseClickedAction(() -> 
 		{
 			mainController.passaAFrameHomePage(this);
@@ -140,9 +159,22 @@ public class FrameProfiloUtente extends MyJFrame {
 		{        
 			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Annunci rimossi");
 		});
-
 		
+		panelLateraleSx.getLblOfferteAccettate().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblOfferteAccettate(),"        Offerte accettate");
+		});
 		
+		panelLateraleSx.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblOfferteRifiutate(),"        Offerte rifiutate");
+		});
+		
+		panelLateraleSx.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblOfferteInAttesa(),"        Offerte in attesa");
+		});
+		
+		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblOfferteRitirate(),"        Offerte ritirate");
+		});
 		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
@@ -158,8 +190,11 @@ public class FrameProfiloUtente extends MyJFrame {
 
 		if(sezioneScelta.equals("   Il mio profilo"))
 			contentPane.add(panelProfilo, BorderLayout.CENTER);
-		else 
+		else if(sezioneScelta.startsWith("        Annunci"))
 			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
+		else if(sezioneScelta.startsWith("        Offerte"))
+			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
+		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		
 		this.setContentPane(contentPane);
@@ -173,12 +208,17 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx.setSelectedLabel(label);
 		panelLateraleSx.resettaFocusLabelsNonCliccate();
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
-		if(sezioneCard != null) {
+		if(sezioneCard.startsWith("        Annunci")) {
 			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
 			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneCard);
 		}
-		else
+		else if(sezioneCard.startsWith("        Offerte")) {
+			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
+			((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneCard);
+		}
+		else {
 			contentPane.add(panelProfilo, BorderLayout.CENTER);
+		}
 			
 	}
 
