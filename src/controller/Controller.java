@@ -232,7 +232,7 @@ public class Controller {
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
 		utenteLoggato.aggiungiAnnuncio(newAnnuncio);
-		
+
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
