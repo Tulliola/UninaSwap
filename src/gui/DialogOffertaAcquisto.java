@@ -29,10 +29,14 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
+import dto.OffertaAcquisto;
+import dto.SedeUniversita;
 import dto.UfficioPostale;
 import eccezioni.PrezzoOffertoException;
 import eccezioni.ResidenzaException;
 import eccezioni.SaldoException;
+import utilities.GiornoEnum;
+import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
@@ -63,8 +67,12 @@ public class DialogOffertaAcquisto extends MyJDialog {
 	private MyJTextField inserisciPrezzoTextField;
 	private MyJTextField inserisciIndirizzoTextField;
 	private ButtonGroup modalitaSceltaBG;
+	private JTextArea inserisciNotaTextArea;
 	private MyJLabel lblErrorePrezzoOfferto;
 	private MyJLabel lblErroreSpedizione;
+	
+	private JComboBox<UfficioPostale> ufficiPostaliCB;
+	private ButtonGroup incontriBG;
 	
 	public DialogOffertaAcquisto(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
@@ -437,7 +445,8 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		MyJLabel lblRitiroInPosta = new MyJLabel("L'ufficio postale in cui preferirei ritirare l'articolo è: ");
 		lblRitiroInPosta.aggiungiImmagineScalata("images/iconaUfficioPostale.png", 25, 25, false);	
 		lblRitiroInPosta.setAlignmentX(LEFT_ALIGNMENT);
-		JComboBox<UfficioPostale> ufficiPostaliCB = new JComboBox();
+		
+		ufficiPostaliCB = new JComboBox<UfficioPostale>();
 		ufficiPostaliCB.setFont(new Font("Ubuntu Sans", Font.BOLD, 13));
 		ufficiPostaliCB.setAlignmentX(LEFT_ALIGNMENT);
 		ufficiPostaliCB.setPreferredSize(new Dimension(500, 30));
@@ -463,11 +472,17 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		
 		sottoPanelIncontro.add(lblIncontro);
 
-		ButtonGroup incontriBG = new ButtonGroup();
+		incontriBG = new ButtonGroup();
 		JRadioButton primoIncontroInserito = null;
 		
 		for(int i = 0; i < annuncioPerOfferta.getSedeIncontroProposte().size(); i++) {
 			JRadioButton incontro = new JRadioButton(annuncioPerOfferta.getIncontro(i));
+			incontro.putClientProperty("Ora inizio", annuncioPerOfferta.getOraInizioIncontro().get(i).toString());
+			incontro.putClientProperty("Ora fine", annuncioPerOfferta.getOraFineIncontro().get(i).toString());
+			incontro.putClientProperty("Giorno", annuncioPerOfferta.getGiornoIncontro().get(i));
+			incontro.putClientProperty("Sede", annuncioPerOfferta.getSedeIncontroProposte().get(i));
+			
+			incontro.setActionCommand("Opzione "+i);
 			incontro.setFont(new Font("Ubuntu Sans", Font.BOLD, 13));
 			incontro.setOpaque(false);
 			incontriBG.add(incontro);
@@ -476,7 +491,6 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				primoIncontroInserito = incontro;
 			sottoPanelIncontro.add(incontro);
 		}
-
 		sottoPanelIncontro.setVisible(false);
 				
 		primaModalitaInserita.doClick();
@@ -509,7 +523,8 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		
 		MyJPanel panelCentrale = new MyJPanel();
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
-		JTextArea inserisciNotaTextArea = new JTextArea("Ciao " + annuncioPerOfferta.getUtenteProprietario().getUsername() + ", ho visto il tuo annuncio \"" + annuncioPerOfferta.getNome() + "\".");
+		inserisciNotaTextArea = new JTextArea("Ciao " + annuncioPerOfferta.getUtenteProprietario().getUsername() + ", ho visto il tuo annuncio \"" + annuncioPerOfferta.getNome() + "\".");
+
 		inserisciNotaTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
 		inserisciNotaTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 		inserisciNotaTextArea.setLineWrap(true);
@@ -583,10 +598,13 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		try {
 			this.nascondiLabelErrore(this.lblErrorePrezzoOfferto, this.lblErroreSpedizione);
 			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField, this.inserisciPrezzoTextField);
+			
 			checkPrezzoOfferto(Double.valueOf(this.inserisciPrezzoTextField.getText()), annuncioPerOfferta.getPrezzoIniziale() * 0.4, annuncioPerOfferta.getPrezzoIniziale());
-						
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
 				checkResidenza(this.inserisciIndirizzoTextField.getText());
+			
+			OffertaAcquisto newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
+			mainController.onConfermaOffertaAcquistoButtonClicked(newOfferta);
 		}
 		catch(PrezzoOffertoException | SaldoException throwables) {
 			this.settaLabelETextFieldDiErrore(lblErrorePrezzoOfferto, throwables.getMessage(), this.inserisciPrezzoTextField);
@@ -594,11 +612,11 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		catch(ResidenzaException exc2) {
 			this.settaLabelETextFieldDiErrore(lblErroreSpedizione, exc2.getMessage(), this.inserisciIndirizzoTextField);
 		}
-//		catch(SQLException exc2) {
-//			System.out.println(exc2.getErrorCode());
-//			System.out.println(exc2.getMessage());
-//			System.out.println(exc2.getSQLState());
-//		}
+		catch(SQLException exc3) {
+			System.out.println(exc3.getErrorCode());
+			System.out.println(exc3.getMessage());
+			System.out.println(exc3.getSQLState());
+		}
 		
 	}
 
@@ -631,4 +649,32 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		if(prezzoOfferto > prezzoIniziale)
 			throw new PrezzoOffertoException("Il prezzo offerto deve essere al più pari al prezzo iniziale.");
 	}
+	
+	private OffertaAcquisto organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
+		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+		
+		OffertaAcquisto offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, Double.valueOf(this.inserisciPrezzoTextField.getText()));
+				
+		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
+			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
+		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))
+			offertaToAdd.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
+		else {
+			JRadioButton rbSelezionato = (JRadioButton)this.incontriBG.getSelection();
+			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
+			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
+			GiornoEnum giornoIncontro = (GiornoEnum)rbSelezionato.getClientProperty("Giorno");
+			SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
+
+			offertaToAdd.setOraInizioIncontro(oraInizio);
+			offertaToAdd.setOraFineIncontro(oraFine);
+			offertaToAdd.setGiornoIncontro(giornoIncontro);
+			offertaToAdd.setSedeDIncontroScelta(sedeIncontro);
+		}		
+		
+		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
+		
+		return offertaToAdd;
+	}
+
 }

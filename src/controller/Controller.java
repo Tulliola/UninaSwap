@@ -232,9 +232,17 @@ public class Controller {
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB, newAnnuncio);
 		annuncioDAO.inserisciAnnuncio(newAnnuncio);
 		utenteLoggato.aggiungiAnnuncio(newAnnuncio);
+
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
+	public void onConfermaOffertaAcquistoButtonClicked(OffertaAcquisto offertaToAdd) throws SQLException {
+		OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
+		offertaDAO.inserisciOfferta(offertaToAdd);
+		utenteLoggato.aggiungiOfferta(offertaToAdd);
+		
+		dialogOffertaAcquisto.dispose();
+	}
 	
 	//Getters
 	public ProfiloUtente getUtenteLoggato() {

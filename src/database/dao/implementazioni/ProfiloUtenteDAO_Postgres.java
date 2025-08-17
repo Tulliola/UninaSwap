@@ -2,6 +2,7 @@ package database.dao.implementazioni;
 
 import database.dao.interfacce.ProfiloUtenteDAO;
 import dto.Annuncio;
+import dto.Offerta;
 import dto.ProfiloUtente;
 import eccezioni.*;
 
@@ -107,6 +108,15 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				
 				for(Annuncio annuncioCorrente : annunciDiUtente)
 					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
+				
+				OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
+				ArrayList<Offerta> offerteDiUtente = offertaDAO.recuperaOfferteDiUtente(profiloToReturn.getEmail());
+				
+				for(Offerta offertaCorrente : offerteDiUtente)
+					System.out.println(offertaCorrente);
+				
+				for(Offerta offertaCorrente : offerteDiUtente)
+					profiloToReturn.aggiungiOfferta(offertaCorrente);
 				
 				return profiloToReturn;
 			}

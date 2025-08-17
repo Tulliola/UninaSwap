@@ -11,7 +11,6 @@ public abstract class Offerta {
 	//Attributi propri
 	private Timestamp momentoProposta;
 	private String nota;
-	private String sedeIncontro;
 	private String indirizzoSpedizione;
 	private String oraInizioIncontro;
 	private String oraFineIncontro;
@@ -20,21 +19,24 @@ public abstract class Offerta {
 	private StatoOffertaEnum stato = StatoOffertaEnum.In_attesa;
 	
 	//Attributi derivati da relazioni
-	private ProfiloUtente utenteProprietario;
-	private ArrayList<UfficioPostale> ufficiRitiro;
+	protected ProfiloUtente utenteProprietario;
+	private UfficioPostale ufficioRitiro;
 	private SedeUniversita sedeDIncontroScelta;
 
 	private Annuncio annuncioRiferito;
 	
-	public Offerta(Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
+	
+	public Offerta(ProfiloUtente offerente, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
+		this.utenteProprietario = offerente;
 		this.momentoProposta = momentoProposta;
 		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
 		this.stato = stato;
 		this.annuncioRiferito = annuncioRiferito;
 	}
 	
-	public Offerta(ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {
+	public Offerta(ProfiloUtente offerente, ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {
+		this.utenteProprietario = offerente;
 		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
 		this.annuncioRiferito = annuncioRiferito;
 	}
@@ -74,14 +76,6 @@ public abstract class Offerta {
 
 	public void setNota(String nota) {
 		this.nota = nota;
-	}
-
-	public String getSedeIncontro() {
-		return sedeIncontro;
-	}
-
-	public void setSedeIncontro(String sedeIncontro) {
-		this.sedeIncontro = sedeIncontro;
 	}
 
 	public String getIndirizzoSpedizione() {
@@ -140,12 +134,12 @@ public abstract class Offerta {
 		this.utenteProprietario = utenteProprietario;
 	}
 
-	public ArrayList<UfficioPostale> getUfficiRitiro() {
-		return ufficiRitiro;
+	public UfficioPostale getUfficioRitiro() {
+		return ufficioRitiro;
 	}
 
-	public void setUfficiRitiro(ArrayList<UfficioPostale> ufficiRitiro) {
-		this.ufficiRitiro = ufficiRitiro;
+	public void setUfficioRitiro(UfficioPostale ufficioRitiro) {
+		this.ufficioRitiro = ufficioRitiro;
 	}
 
 	public Annuncio getAnnuncioRiferito() {
@@ -155,7 +149,6 @@ public abstract class Offerta {
 	public void setAnnuncioRiferito(Annuncio annuncioRiferito) {
 		this.annuncioRiferito = annuncioRiferito;
 	}
-
 	
 	@Override
 	public String toString() {
@@ -163,7 +156,7 @@ public abstract class Offerta {
 		
 		toReturn += "Momento proposta = "+momentoProposta+"\n";
 		toReturn += "Nota = "+nota+"\n";
-		toReturn += "Sede Incontro = "+sedeIncontro+"\n";
+//		toReturn += "Sede Incontro = "+sedeIncontro+"\n";
 		toReturn += "Indirizzo spedizione = "+indirizzoSpedizione+"\n";
 		toReturn += "Ora inizio incontro scelta = "+oraInizioIncontro+"\n";
 		toReturn += "Ora fine incontro scelta = "+oraFineIncontro+"\n";
@@ -172,14 +165,12 @@ public abstract class Offerta {
 		toReturn += "Stato = "+stato+"\n";
 		toReturn += "Utente offerente = "+utenteProprietario+"\n";
 		
-		toReturn += "Uffici scelti = \n";
-		
-		for(UfficioPostale ufficio: ufficiRitiro) {
-			toReturn += ufficio;
-		}
+		toReturn += "Ufficio scelto = " +ufficioRitiro+"\n";
 		
 		toReturn += "Sede incontro scelta = "+sedeDIncontroScelta+"\n";
+		toReturn += "Annuncio riferito = "+annuncioRiferito+"\n";
 		
 		return toReturn;
 	}
+	
 }
