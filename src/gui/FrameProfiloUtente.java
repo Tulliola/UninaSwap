@@ -108,10 +108,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx.add(lblTornaAHomePage, 0);
 		
 		panelAnnunciCard.setLayout(new CardLayout());
-		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi");
-		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare");
-		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti");
-		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata");
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi", this);
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare", this);
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti", this);
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata", this);
 		
 		panelAnnunciCard.add(panelAnnunciDisponibili, "        Annunci disponibili");
 		panelAnnunciCard.add(panelAnnunciUltimati, "        Annunci andati a buon fine");
@@ -121,10 +121,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		panelOfferteCard.setLayout(new CardLayout());
 		
-		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte accettate");
-		panelOfferteRifiutate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte ritirate");
-		panelOfferteInAttesa = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate");
-		panelOfferteRitirate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteUtente(), "Qui troverai tutte le tue offerte che hai ritirato");
+		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteAccettate(), "Qui troverai tutte le tue offerte accettate");
+		panelOfferteRifiutate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRifiutate(), "Qui troverai tutte le tue offerte rifiutate");
+		panelOfferteInAttesa = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteInAttesa(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate");
+		panelOfferteRitirate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRitirate(), "Qui troverai tutte le tue offerte che hai ritirato");
 		panelOfferteCard.add(panelOfferteAccettate, "        Offerte accettate");
 		panelOfferteCard.add(panelOfferteRifiutate, "        Offerte rifiutate");
 		panelOfferteCard.add(panelOfferteInAttesa, "        Offerte in attesa");
@@ -194,6 +194,9 @@ public class FrameProfiloUtente extends MyJFrame {
 			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
 		else if(sezioneScelta.startsWith("        Offerte"))
 			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
+		else if(sezioneScelta.startsWith(panelLateraleSx.getLblReportOfferte().getText())) {
+//			contentPane.add(panelReport, BorderLayout.CENTER);
+		}
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		
@@ -208,16 +211,16 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx.setSelectedLabel(label);
 		panelLateraleSx.resettaFocusLabelsNonCliccate();
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
-		if(sezioneCard.startsWith("        Annunci")) {
+		if(sezioneCard == null) {
+			contentPane.add(panelProfilo, BorderLayout.CENTER);
+		}
+		else if(sezioneCard.startsWith("        Annunci")) {
 			contentPane.add(panelAnnunciCard, BorderLayout.CENTER);
 			((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneCard);
 		}
 		else if(sezioneCard.startsWith("        Offerte")) {
 			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
 			((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneCard);
-		}
-		else {
-			contentPane.add(panelProfilo, BorderLayout.CENTER);
 		}
 			
 	}

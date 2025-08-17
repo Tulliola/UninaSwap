@@ -188,4 +188,37 @@ public class ProfiloUtente {
 		
 		return toReturn;
 	}
+	
+	public ArrayList<Offerta> getOfferteAccettate(){
+		ArrayList<Offerta> toReturn = new ArrayList();
+		
+		for(Offerta offertaCorrente: offerteUtente) {
+			if(offertaCorrente.getStato().equals(StatoOffertaEnum.Accettata.toString()))
+				toReturn.add(offertaCorrente);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteRifiutate(){
+		ArrayList<Offerta> toReturn = new ArrayList();
+		
+		for(Offerta offertaCorrente: offerteUtente) {
+			if(offertaCorrente.getStato().equals(StatoOffertaEnum.Rifiutata.toString()))
+				toReturn.add(offertaCorrente);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteRitirate(){
+		ArrayList<Offerta> toReturn = new ArrayList();
+		
+		for(Offerta offertaCorrente: offerteUtente) {
+			if(offertaCorrente.getStato().equals(StatoOffertaEnum.Ritirata.toString()))
+				toReturn.add(offertaCorrente);
+		}
+		
+		return toReturn;
+	}
 }

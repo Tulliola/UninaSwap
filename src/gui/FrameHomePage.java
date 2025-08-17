@@ -72,11 +72,27 @@ public class FrameHomePage extends MyJFrame {
 			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciRimossi().getText());
 		});
 		
-		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> 
+		panelLateraleSx.getLblOfferteAccettate().setOnMouseClickedAction(() -> 
 		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteAccettate().getText());
+		});
+		
+		panelLateraleSx.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteRifiutate().getText());
+		});
+		
+		panelLateraleSx.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteInAttesa().getText());
+		});
+		
+		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteRitirate().getText());
 		});
 		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
+		
+		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());
+		});
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		contentPane.add(panelAnnunci, BorderLayout.CENTER);

@@ -15,14 +15,17 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 
@@ -32,16 +35,27 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	
 	private MyJPanel panelSuperiore = new MyJPanel();
 	private MyJPanel panelCentrale = new MyJPanel();
+	private JScrollPane scrollPane;
 	
-	public PanelVisualizzaAnnunciUtente(ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente) {
+	public PanelVisualizzaAnnunciUtente(ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		this.setLayout(new BorderLayout());
 		
+		panelCentrale.setPreferredSize(new Dimension(800, 600));
+		panelCentrale.setMaximumSize(new Dimension(800, 600));
+		
+		scrollPane = new JScrollPane(panelCentrale);
+		
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(30);		
+		parentFrame.add(scrollPane);
 		
 		settaPanelSuperiore(annunciToDisplay);
 		settaPanelCentrale(messaggioAllUtente);
 		
 		this.add(panelSuperiore, BorderLayout.NORTH);
-		this.add(panelCentrale, BorderLayout.CENTER);
+		this.add(scrollPane, BorderLayout.CENTER);
+		
 	}
 
 
@@ -138,7 +152,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 
 	private void settaPanelCentrale(String messaggioAllUtente) {
-		panelCentrale.setLayout(new FlowLayout());
+		panelCentrale.setLayout(new FlowLayout(FlowLayout.CENTER));
 		MyJLabel messaggio = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
 		messaggio.setForeground(Color.BLACK);
 		panelCentrale.add(messaggio);
@@ -146,11 +160,19 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private void mostraAnnunciDiVenditaSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		for(Annuncio annuncio: annunciToDisplay) {
-			if(annuncio instanceof AnnuncioVendita) {
-				panelCentrale.add(creaPanelAnnuncio(annuncio));
+		ricalcolaAltezzaConAnnunci(annunciToDisplay);
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			if(annunciToDisplay.get(i) instanceof AnnuncioVendita) {
+				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 			}
 		}
+
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
+		});
 		
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
@@ -161,11 +183,20 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 
 	
 	private void mostraAnnunciDiScambioSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		for(Annuncio annuncio: annunciToDisplay) {
-			if(annuncio instanceof AnnuncioScambio) {
-				panelCentrale.add(creaPanelAnnuncio(annuncio));
+		ricalcolaAltezzaConAnnunci(annunciToDisplay);
+		
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			if(annunciToDisplay.get(i) instanceof AnnuncioScambio) {
+				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 			}
 		}
+		
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
+		});
 		
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
@@ -175,11 +206,19 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private void mostraAnnunciDiRegaloSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		for(Annuncio annuncio: annunciToDisplay) {
-			if(annuncio instanceof AnnuncioRegalo) {
-				panelCentrale.add(creaPanelAnnuncio(annuncio));
+		ricalcolaAltezzaConAnnunci(annunciToDisplay);
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			if(annunciToDisplay.get(i) instanceof AnnuncioRegalo) {
+				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 			}
 		}
+
+		panelCentrale.revalidate();
+		panelCentrale.repaint();
+
+		SwingUtilities.invokeLater(() -> {
+		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
+		});
 		
 		if(!panelCentrale.hasPanels()) {
 			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
@@ -515,4 +554,12 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		return panelModalitaConsegna;
 	}
 	
+	private void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciMostrati) {
+		int larghezza = panelCentrale.getWidth();
+		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
+		int altezza = (annunciMostrati.size() / 2 == 0) ? (annunciMostrati.size()/2 * 610) : ((annunciMostrati.size()/2+1) * 610);
+		
+		panelCentrale.setPreferredSize(new Dimension(larghezza, altezza));
+		panelCentrale.setMaximumSize(new Dimension(larghezza, altezza));
+	}
 }
