@@ -173,7 +173,8 @@ public class Controller {
 	}
 
 	public void passaAFrameCambiaImmagine() {
-		frameProfiloUtente.setVisible(false);
+		frameProfiloUtente.dispose();
+		
 		frameCambiaImmagine = new FrameCambiaImmagine(this, immaginiDiSistema);
 		frameCambiaImmagine.setVisible(true);
 	}
