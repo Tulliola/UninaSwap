@@ -40,6 +40,7 @@ public class Controller {
 	private DialogOffertaAcquisto dialogOffertaAcquisto;
 	private DialogOffertaScambio dialogOffertaScambio;
 	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
+	private DialogConfermaLogout dialogConfermaLogout;
 	
 	private static Connection connessioneDB;
 	
@@ -178,7 +179,8 @@ public class Controller {
 	}
 
 	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
-		frameHomePage.dispose();
+		if(frameHomePage.isVisible())
+			frameHomePage.setVisible(false);
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
 	}
@@ -198,10 +200,11 @@ public class Controller {
 	
 	public void passaAFrameHomePage(JDialog frameDiPartenza) {
 		frameDiPartenza.dispose();
+		frameHomePage.setVisible(true);
 	}
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
-		frameHomePage.dispose();
+		frameHomePage.setVisible(false);
 		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare, sediPresenti);
 		framePubblicaAnnuncio.setVisible(true);
 	}
@@ -251,12 +254,12 @@ public class Controller {
 			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
 			ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
 			
-			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
+			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
-			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
+			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -343,6 +346,20 @@ public class Controller {
 	}
 
 
+	public void logout() {
+		frameProfiloUtente.dispose();
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
+	}
 
 
+	public void passaADialogConfermaLogout() {
+		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
+		dialogConfermaLogout.setVisible(true);
+	}
+
+
+	public void chiudiDialogConfermaLogout() {
+		dialogConfermaLogout.dispose();
+	}
 }
