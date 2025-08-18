@@ -40,6 +40,7 @@ public class Controller {
 	private DialogOffertaAcquisto dialogOffertaAcquisto;
 	private DialogOffertaScambio dialogOffertaScambio;
 	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
+	private DialogConfermaLogout dialogConfermaLogout;
 	
 	private static Connection connessioneDB;
 	
@@ -255,8 +256,8 @@ public class Controller {
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
-			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
+			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -343,7 +344,20 @@ public class Controller {
 		return ufficiPresenti;
 	}
 
+	public void logout() {
+		frameProfiloUtente.dispose();
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
+	}
 
 
+	public void passaADialogConfermaLogout() {
+		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
+		dialogConfermaLogout.setVisible(true);
+	}
 
+
+	public void chiudiDialogConfermaLogout() {
+		dialogConfermaLogout.dispose();
+	}
 }
