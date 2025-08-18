@@ -274,15 +274,15 @@ public class FrameProfiloUtente extends MyJFrame {
 		lblCambiaImmagine.setAlignmentX(CENTER_ALIGNMENT);
 		
 		lblCambiaImmagine.aggiungiEffettoCliccabilitaPerTesto();
-		lblCambiaImmagine.addMouseListener(new MouseAdapter() { 
-			@Override
-			public void mouseClicked(MouseEvent me) {
-				if(lblModificheEffettuate.isVisible())
-					lblModificheEffettuate.setVisible(false);
-				
-				mainController.passaAFrameCambiaImmagine();
-			}
-		});
+//		lblCambiaImmagine.addMouseListener(new MouseAdapter() { 
+//			@Override
+//			public void mouseClicked(MouseEvent me) {
+//				if(lblModificheEffettuate.isVisible())
+//					lblModificheEffettuate.setVisible(false);
+//				
+//				mainController.passaAFrameCambiaImmagine();
+//			}
+//		});
 	
 		panelProfilo.add(lblCambiaImmagine);
 	}
