@@ -48,7 +48,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(30);		
+		scrollPane.getVerticalScrollBar().setUnitIncrement(30);	
 		parentFrame.add(scrollPane);
 		
 		settaPanelSuperiore(annunciToDisplay);
@@ -83,16 +83,24 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		lblScambio.rendiLabelInteragibile();
 		lblRegalo.rendiLabelInteragibile();
 		
+		ArrayList<Annuncio> annunciVendita = new ArrayList();
+		ArrayList<Annuncio> annunciScambio = new ArrayList();
+		ArrayList<Annuncio> annunciRegalo = new ArrayList();
 		
+		for(Annuncio annuncio: annunciToDisplay) {
+			if(annuncio instanceof AnnuncioVendita)
+				annunciVendita.add(annuncio);
+			else if(annuncio instanceof AnnuncioScambio)
+				annunciScambio.add(annuncio);
+			else if(annuncio instanceof AnnuncioRegalo)
+				annunciRegalo.add(annuncio);
+		}
 		
 		lblVendita.setOnMouseClickedAction(() -> {
 			panelVendita.setBackground(MyJPanel.uninaLightColor);
 			panelScambio.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraAnnunciDiVenditaSulCentrale(annunciToDisplay);
+			mostraAnnunciDiVenditaSulCentrale(annunciVendita);
 		});
 		lblVendita.setOnMouseEnteredAction(() -> {
 			if(panelVendita.getBackground().equals(Color.WHITE)) {
@@ -109,10 +117,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 			panelScambio.setBackground(MyJPanel.uninaLightColor);
 			panelVendita.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraAnnunciDiScambioSulCentrale(annunciToDisplay);
+			mostraAnnunciDiScambioSulCentrale(annunciScambio);
 		});
 		lblScambio.setOnMouseEnteredAction(() -> {
 			if(panelScambio.getBackground().equals(Color.WHITE)) {
@@ -129,10 +134,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 			panelRegalo.setBackground(MyJPanel.uninaLightColor);
 			panelVendita.setBackground(Color.WHITE);
 			panelScambio.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraAnnunciDiRegaloSulCentrale(annunciToDisplay);
+			mostraAnnunciDiRegaloSulCentrale(annunciRegalo);
 		});
 		lblRegalo.setOnMouseEnteredAction(() -> {
 			if(panelRegalo.getBackground().equals(Color.WHITE)) {
@@ -163,16 +165,16 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private void mostraAnnunciDiVenditaSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
+		panelCentrale.removeAll();
+
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			if(annunciToDisplay.get(i) instanceof AnnuncioVendita) {
-				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
-			}
+			panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 		}
-
+		
 		panelCentrale.revalidate();
 		panelCentrale.repaint();
-
+		
 		SwingUtilities.invokeLater(() -> {
 		    scrollPane.getVerticalScrollBar().setValue(0);
 		});
@@ -186,17 +188,16 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 
 	
 	private void mostraAnnunciDiScambioSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
+		panelCentrale.removeAll();
+		
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
-		
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			if(annunciToDisplay.get(i) instanceof AnnuncioScambio) {
-				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
-			}
+			panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 		}
-		
+
 		panelCentrale.revalidate();
 		panelCentrale.repaint();
-
+		
 		SwingUtilities.invokeLater(() -> {
 		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
 		});
@@ -209,16 +210,16 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private void mostraAnnunciDiRegaloSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
+		panelCentrale.removeAll();
+		
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			if(annunciToDisplay.get(i) instanceof AnnuncioRegalo) {
-				panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
-			}
+			panelCentrale.add(creaPanelAnnuncio(annunciToDisplay.get(i)));
 		}
 
 		panelCentrale.revalidate();
 		panelCentrale.repaint();
-
+		
 		SwingUtilities.invokeLater(() -> {
 		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
 		});

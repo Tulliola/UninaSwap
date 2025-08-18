@@ -251,11 +251,11 @@ public class Controller {
 			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
 			ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
 			
-			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
+			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
-			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
+			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
 			
 			this.passaAFrameHomePage(frameDiLogin);
@@ -279,6 +279,7 @@ public class Controller {
 		
 		dialogConfermaCambiaImmagine.dispose();
 		frameCambiaImmagine.dispose();
+		
 		
 		frameProfiloUtente = new FrameProfiloUtente(this,"   Il mio profilo", utenteLoggato);
 		frameProfiloUtente.setVisible(true);

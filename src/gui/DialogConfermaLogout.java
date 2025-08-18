@@ -1,0 +1,70 @@
+package gui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+
+import controller.Controller;
+import utilities.MyJButton;
+import utilities.MyJDialog;
+import utilities.MyJLabel;
+import utilities.MyJPanel;
+
+public class DialogConfermaLogout extends JDialog {
+
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
+	Controller mainController;
+	
+	public DialogConfermaLogout(Controller mainController, JFrame framePadre) {
+		super(framePadre, "Logout", true);
+		this.mainController = mainController;
+		settaDialog(framePadre);
+	}
+
+	private void settaDialog(JFrame framePadre) {
+		this.setLayout(new BorderLayout());
+//		this.setSize(new Dimension(600, 300));
+		MyJPanel contentPane = new MyJPanel();
+		contentPane.setLayout(new BorderLayout());
+		
+		MyJPanel panelMessaggio = new MyJPanel();
+		MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler effettuare il logout?", new Font("Ubuntu Sans", Font.BOLD, 16));
+		panelMessaggio.add(lblMessaggio);
+		
+		MyJPanel panelBottoni = new MyJPanel();
+		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
+		MyJButton okButton = new MyJButton("OK");
+		okButton.setDefaultAction(() -> {
+			mainController.logout();
+		});
+		
+		panelBottoni.add(okButton);
+		
+		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
+		tornaIndietroButton.setDefaultAction(() -> {
+			mainController.chiudiDialogConfermaLogout();
+		});
+		
+		panelBottoni.add(tornaIndietroButton);
+		
+		contentPane.add(panelMessaggio, BorderLayout.CENTER);
+		contentPane.add(panelBottoni, BorderLayout.SOUTH);
+		
+		this.setContentPane(contentPane);
+		this.pack();
+		this.setResizable(false);
+		this.setLocationRelativeTo(framePadre);
+	}
+}

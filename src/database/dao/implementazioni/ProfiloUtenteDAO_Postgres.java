@@ -128,7 +128,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
 				
 				OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
-				ArrayList<Offerta> offerteDiUtente = offertaDAO.recuperaOfferteDiUtente(profiloToReturn.getEmail());
+				ArrayList<Offerta> offerteDiUtente = offertaDAO.recuperaOfferteDiUtente(profiloToReturn);
 				
 				for(Offerta offertaCorrente : offerteDiUtente)
 					profiloToReturn.aggiungiOfferta(offertaCorrente);

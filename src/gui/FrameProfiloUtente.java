@@ -70,6 +70,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	//Labels generiche
 	MyJLabel lblModificheEffettuate = new MyJLabel("Modifiche effettuate con successo!");
 	MyJLabel lblTornaAHomePage = new MyJLabel("   Torna alla home page");
+	MyJLabel lblLogout = new MyJLabel("   Logout");
 	
 	//RigidArea
 	private Component rigidArea = Box.createRigidArea(new Dimension(0, 20));
@@ -106,6 +107,8 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, sezioneScelta);
 		panelLateraleSx.aggiungiRigaNelPanel(lblTornaAHomePage, true, "images/iconaHomePage.png");
 		panelLateraleSx.add(lblTornaAHomePage, 0);
+		panelLateraleSx.aggiungiRigaNelPanel(lblLogout, true, "images/iconaLogout.png");
+		panelLateraleSx.add(lblLogout);
 		
 		panelAnnunciCard.setLayout(new CardLayout());
 		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi", this);
@@ -134,6 +137,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		lblTornaAHomePage.setOnMouseClickedAction(() -> 
 		{
 			mainController.passaAFrameHomePage(this);
+		});
+		
+		lblLogout.setOnMouseClickedAction(() -> {
+			mainController.passaADialogConfermaLogout();
 		});
 		
 		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
