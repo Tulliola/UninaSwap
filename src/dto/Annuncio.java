@@ -18,7 +18,7 @@ public abstract class Annuncio {
 	private StatoAnnuncioEnum stato = StatoAnnuncioEnum.Disponibile;
 	private Timestamp momentoPubblicazione;
 	private String nome;
-	private Date dataScadenza;
+	private Date dataScadenza = null;
 
 	//Attributi derivati da relazioni
 	private ArrayList<Offerta> offerteRicevute = new ArrayList();
@@ -35,7 +35,8 @@ public abstract class Annuncio {
 	
 	//Costruttore per la costruzione di oggetti durante la retrieve
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
-			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, Oggetto oggettoInAnnuncio) {
+			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, 
+			Oggetto oggettoInAnnuncio) {
 		this.idAnnuncio = idAnnuncio;
 		this.spedizione = spedizione;
 		this.ritiroInPosta = ritiroInPosta;
@@ -57,11 +58,6 @@ public abstract class Annuncio {
 		this.nome = nome;
 		this.utenteProprietario = utenteProprietario;
 		this.oggettoInAnnuncio = oggettoInAnnuncio;	
-	}
-
-	//Metodo che aggiunge eventuali offerte all'annuncio
-	public void aggiungiOffertaRicevuta(Offerta offertaRicevuta) {
-		this.offerteRicevute.add(offertaRicevuta);
 	}
 	
 	//Metodo che aggiunge proposte di incontro all'annuncio, se questa opportunità è offerta
@@ -267,10 +263,15 @@ public abstract class Annuncio {
 		toReturn += "Nome = "+nome+"\n";
 		toReturn += "Data scadenza = "+dataScadenza+"\n";
 		
-		toReturn += "Offerte a questo annuncio= \n";
-		for(Offerta offerta: offerteRicevute)
-			toReturn += offerta;
-		
+		toReturn += "Offerte a questo annuncio = \n";
+		for(Offerta offerta: offerteRicevute) {
+			if(offerta.getPrezzoOfferto() != null)
+				toReturn += "\t"+offerta.getUtenteProprietario().getUsername()+": "+offerta.getPrezzoOfferto()+"\n";
+			else if(offerta.getNota() != null)
+				toReturn += "\t"+offerta.getUtenteProprietario().getUsername()+": "+offerta.getNota()+"\n";
+			else
+				toReturn += "\t"+offerta.getUtenteProprietario().getUsername()+"vuole accettare il regalo\n";
+		}
 		toReturn += "Utente proprietario dell'annuncio = \n" + utenteProprietario;
 		toReturn += "Oggetto riguardante: \n" + oggettoInAnnuncio;
 		

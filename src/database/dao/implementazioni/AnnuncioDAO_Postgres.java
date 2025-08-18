@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import database.dao.interfacce.AnnuncioDAO;
 import dto.Annuncio;
@@ -19,6 +21,7 @@ import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
 import dto.Offerta;
+import dto.OffertaAcquisto;
 import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
@@ -26,7 +29,9 @@ import dto.SedeUniversita;
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
 import utilities.GiornoEnum;
+import utilities.ModConsegnaEnum;
 import utilities.StatoAnnuncioEnum;
+import utilities.StatoOffertaEnum;
 
 public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	private Connection connessioneDB;
@@ -58,11 +63,11 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
+	public ArrayList<Annuncio> recuperaAnnunciDiUtente(String email) throws SQLException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? ORDER BY Momento_pubblicazione ASC")){
-			ps.setString(1, utenteLoggato.getEmail());
+			ps.setString(1, email);
 			
 			try(ResultSet rs = ps.executeQuery()){
 				while(rs.next()) {
@@ -256,6 +261,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	
 	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException{
 		Annuncio annuncioRecuperato;
+		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
 		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");
 		boolean spedizione = rs.getBoolean("Spedizione");
@@ -265,13 +271,15 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
 		String nome = rs.getString("Nome");
 		Oggetto oggettoInAnnuncio = recuperaOggettoInAnnuncio(rs.getInt("idOggetto"));
-		ProfiloUtente utenteProprietario = recuperaUtenteProprietario(rs.getString("Email"));
+		ProfiloUtente utenteProprietario = utenteDAO.recuperaUtenteConEmail(rs.getString("Email"));
 		
 
 		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
 			annuncioRecuperato = new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
+			
+			annuncioRecuperato.setOfferteRicevute(recuperaOfferteAnnuncioVendita(annuncioRecuperato));
 		}
 		else if(rs.getString("Tipo_annuncio").equals("Scambio")) {
 			annuncioRecuperato = new AnnuncioScambio(
@@ -279,12 +287,16 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getString("Nota_scambio")	
 			);
+			
+			annuncioRecuperato.setOfferteRicevute(recuperaOfferteAnnuncioScambio(annuncioRecuperato));
 		}
 		else {
 			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utenteProprietario, oggettoInAnnuncio
 			);
+
+			annuncioRecuperato.setOfferteRicevute(recuperaOfferteAnnuncioRegalo(annuncioRecuperato));
 		}
 		
 		if(rs.getBoolean("Incontro")) {
@@ -313,6 +325,114 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		return annuncioRecuperato;
 	}
 	
+	private ArrayList<Offerta> recuperaOfferteAnnuncioRegalo(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+//		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
+//			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
+//			
+//			try(ResultSet rs = ps.executeQuery()){
+//				while(rs.next()) {
+//				
+//					toReturn.add(new OffertaScambio(recuperaUtenteProprietario(rs.getString("email")),  rs.getInt("idOfferta"),
+//							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+//							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, recuperaOggettiOfferti(rs.getInt("idOfferta"))));
+//				}
+//			}
+//		}
+		toReturn.addAll(recuperaOfferteAnnuncioVendita(annuncioRecuperato));
+		toReturn.addAll(recuperaOfferteAnnuncioScambio(annuncioRecuperato));
+//		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_ACQUISTO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
+//			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
+//			
+//			try(ResultSet rs = ps.executeQuery()){
+//				while(rs.next()) {
+//					toReturn.add(new OffertaAcquisto(recuperaUtenteProprietario(rs.getString("email")), 
+//							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+//							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
+//				}
+//			}
+//		}
+//		Collections.sort(toReturn, Collections.reverseOrder());
+		return toReturn;
+	}
+
+	private ArrayList<Offerta> recuperaOfferteAnnuncioScambio(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
+			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
+			
+			try(ResultSet rs = ps.executeQuery()){
+				while(rs.next()) {
+					ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+					toReturn.add(new OffertaScambio(utenteDAO.recuperaUtenteConEmail(rs.getString("email")),  rs.getInt("idOfferta"),
+							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, recuperaOggettiOfferti(rs.getInt("idOfferta"))));
+				}
+			}
+		}
+		
+		return toReturn;
+	}
+
+	private ArrayList<Oggetto> recuperaOggettiOfferti(int idOfferta) throws SQLException {
+		ArrayList<Oggetto> toReturn = new ArrayList();
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OGGETTO NATURAL JOIN OGGETTO_OFFERTO WHERE idOfferta = ? ORDER BY Momento_proposta DESC")){
+			ps.setInt(1, idOfferta);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				while(rs.next()) {
+					byte[][] immaginiOggetto = recuperaImmagini(rs.getInt("idOggetto"));
+					Oggetto oggettoDaAggiungere = new Oggetto(rs.getInt("idOggetto"), CategoriaEnum.confrontaConStringa(rs.getString("categoria")),
+							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0], 
+							isOggettoDisponibile(rs.getInt("idOggetto")));
+					
+					toReturn.add(oggettoDaAggiungere);
+					
+					if(immaginiOggetto[1] != null)
+						oggettoDaAggiungere.aggiungiImmagine(1, immaginiOggetto[1]);
+
+					if(immaginiOggetto[2] != null)
+						oggettoDaAggiungere.aggiungiImmagine(2, immaginiOggetto[2]);
+				}
+			}
+		}
+		return toReturn;
+	}
+
+	private byte[][] recuperaImmagini(int idOggetto) throws SQLException {
+		byte[][] toReturn = null;
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT file_immagine FROM IMMAGINE WHERE idOggetto = ?")){
+			ps.setInt(1, idOggetto);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				int i = 0;
+				
+				while(rs.next()) {
+					toReturn[i] = rs.getBytes("file_immagine");
+					i++;
+				}
+				
+				return toReturn;
+			}
+		}
+	}
+
+	private ArrayList<Offerta> recuperaOfferteAnnuncioVendita(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_ACQUISTO WHERE idAnnuncio = ?")){
+			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
+			
+			try(ResultSet rs = ps.executeQuery()){
+				while(rs.next()) {
+					toReturn.add(new OffertaAcquisto(recuperaUtenteProprietario(rs.getString("email")), 
+							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
+				}
+			}
+		}
+		return toReturn;
+	}
+
 	private byte[] recuperaPrimaImmagineDiOggetto(int idOggetto) throws SQLException{
 		String recuperaImmagine = "SELECT File_immagine FROM Immagine WHERE idOggetto = ?";
 		

@@ -16,9 +16,9 @@ public interface ProfiloUtenteDAO {
 	//Metodi di eliminazione
 
 	//Metodi di ricerca
-	public ProfiloUtente recuperaUtenteConEmailOUsername(String email, String password) throws SQLException;
+	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String email, String password) throws SQLException;
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException;
 	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException;
 	public String[] recuperaUtentiSegnalanti(String emailSegnalato) throws SQLException;
-	
+	public ProfiloUtente recuperaUtenteConEmail(String email) throws SQLException;
 }

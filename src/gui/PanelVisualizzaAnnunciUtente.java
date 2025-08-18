@@ -395,6 +395,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private MyJPanel creaPanelDescrizioneAnnuncio(Annuncio annuncio) {
+		System.out.println(annuncio);
 		MyJPanel panelDescrizioneAnnuncio = new MyJPanel();
 		panelDescrizioneAnnuncio.setLayout(new BorderLayout());
 		panelDescrizioneAnnuncio.setPreferredSize(new Dimension(425, 500));

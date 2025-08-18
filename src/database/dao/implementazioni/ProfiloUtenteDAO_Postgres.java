@@ -17,7 +17,10 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		this.connessioneDB = connInput;
 		this.utenteLoggato = utenteIn;
 	}
-
+	
+	public ProfiloUtenteDAO_Postgres(Connection connInput) {
+		this.connessioneDB = connInput;
+	}
 	//Metodi di inserimento
 
 	@Override
@@ -80,7 +83,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	
 	//Metodi di ricerca
 	@Override
-	public ProfiloUtente recuperaUtenteConEmailOUsername(String emailOrUsername, String password) throws SQLException  {
+	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String emailOrUsername, String password) throws SQLException  {
 		
 		isUtenteExisting(emailOrUsername);
 		
@@ -104,7 +107,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				);
 				
 				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn);
+				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn.getEmail());
 				
 				for(Annuncio annuncioCorrente : annunciDiUtente)
 					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
@@ -120,7 +123,27 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		}
 	}
 
-
+	@Override
+	public ProfiloUtente recuperaUtenteConEmail(String email) throws SQLException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE Email = ?")){
+			ps.setString(1, email);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				if(rs.next()) {
+					ProfiloUtente utenteToAdd = new ProfiloUtente(rs.getString("username"), rs.getString("Email"),
+							rs.getDouble("Saldo"), rs.getBytes("immagine_profilo"), rs.getString("Residenza"),
+							rs.getString("password"), rs.getBoolean("sospeso"));
+					AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+					
+					utenteToAdd.setAnnunciUtente(annuncioDAO.recuperaAnnunciDiUtente(utenteToAdd.getEmail()));
+					return utenteToAdd;
+				}
+				
+				return null;
+			}
+		}
+	}
+	
 	@Override
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException {
 		String sqlQuery = "SELECT Matricola FROM Studente WHERE Email = ?";
