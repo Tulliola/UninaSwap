@@ -83,6 +83,8 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		lblScambio.rendiLabelInteragibile();
 		lblRegalo.rendiLabelInteragibile();
 		
+		
+		
 		lblVendita.setOnMouseClickedAction(() -> {
 			panelVendita.setBackground(MyJPanel.uninaLightColor);
 			panelScambio.setBackground(Color.WHITE);
@@ -279,8 +281,6 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 	
 	private MyJPanel creaPanelInfoOggetto(Annuncio annuncioToAdd) {
-		if(annuncioToAdd.getDataScadenza() != null)
-			System.out.println(ChronoUnit.DAYS.between(LocalDate.now(), annuncioToAdd.getDataScadenza().toLocalDate()));
 		
 		MyJPanel panelInfoOggetto = new MyJPanel();
 		panelInfoOggetto.setLayout(new BorderLayout());

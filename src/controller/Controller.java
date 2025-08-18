@@ -49,9 +49,10 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		frameDiLogin = new FrameDiLogin(this);
-//		frameDiLogin.setVisible(true);				
-//		
+
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);				
+		
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
 		
@@ -66,21 +67,22 @@ public class Controller {
 //		
 //		frameProfiloUtente.setVisible(true);
 //		
-		try {
-			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
+//		try {
+//			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+//			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
+//
+//			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
+//			utenteLoggato = dao.recuperaUtenteConEmailOUsernameEPassword("tulliola", "tullio33");
+//			AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+//			annuncioDAO.recuperaAnnunciDiUtente(utenteLoggato);
+//			dialogOffertaScambio = new DialogOffertaScambio(utenteLoggato.getAnnunciUtente().get(2), this);
+//			dialogOffertaScambio.setVisible(true);
+//		}
+//		catch(SQLException exc) {
+//
+//			
+//		}
 
-			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "tullio33");
-			AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-			annuncioDAO.recuperaAnnunciDiUtente(utenteLoggato);
-			dialogOffertaScambio = new DialogOffertaScambio(utenteLoggato.getAnnunciUtente().get(2), this);
-			dialogOffertaScambio.setVisible(true);
-		}
-		catch(SQLException exc) {
-
-			
-		}
 //		frameHomePage = new FrameHomePage(this, utenteLoggato);
 //		frameHomePage.setVisible(true);
 	}
@@ -213,7 +215,7 @@ public class Controller {
 	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
 		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsername(email, password);
+		utenteLoggato = profiloDAO.recuperaUtenteConEmailOUsernameEPassword(email, password);
 		
 		if(utenteLoggato.isSospeso())
 			this.passaADialogDiComunicataSospensione(email);
@@ -272,7 +274,10 @@ public class Controller {
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);
 		
-		dialogOffertaAcquisto.dispose();
+		if(dialogOffertaAcquisto != null)
+			dialogOffertaAcquisto.dispose();
+		else if(dialogOffertaScambio != null)
+			dialogOffertaScambio.dispose();
 	}
 	
 	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {

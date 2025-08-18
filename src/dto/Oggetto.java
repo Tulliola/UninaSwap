@@ -26,11 +26,11 @@ public class Oggetto {
 		this.disponibile = disponibile;
 	}
 	
-	public Oggetto(CategoriaEnum categoria, CondizioneEnum condizioni, String descrizione, byte[] immagine) {
+	public Oggetto(CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine, boolean disponibile) {
 		this.categoria = categoria;
 		this.condizioni = condizioni;
-		this.descrizione = descrizione;
 		this.immagini[0] = immagine;
+		this.disponibile = disponibile;
 	}
 	
 	public Oggetto(ProfiloUtente utenteProprietario, CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine,

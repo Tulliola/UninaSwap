@@ -293,7 +293,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					
 					String inserisciOggettoOfferto = "INSERT INTO Oggetto_offerto (idOggetto, idOfferta) VALUES (?, ?)";
 					
-					try(PreparedStatement psInserisciOggettoOfferto = connessioneDB.prepareStatement(inserisciOffertaScambio)){
+					try(PreparedStatement psInserisciOggettoOfferto = connessioneDB.prepareStatement(inserisciOggettoOfferto)){
 						psInserisciOggettoOfferto.setInt(1, idOggettoInserito);
 						psInserisciOggettoOfferto.setInt(2, idOffertaInserita);
 						
@@ -301,8 +301,11 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					}
 				}
 				
+				connessioneDB.commit();
 			}
 			catch(SQLException exc) {
+				connessioneDB.rollback();
+				exc.printStackTrace();
 				System.out.println(exc.getErrorCode());
 				System.out.println(exc.getMessage());
 				System.out.println(exc.getSQLState());
@@ -405,13 +408,13 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				Oggetto oggettoInAnnuncio = recuperaOggetto(rsAnnuncio.getInt("idOggetto"));
 				
 			
-				if(rsAnnuncio.getString("Tipo_annuncio") == "Vendita") {
+				if(rsAnnuncio.getString("Tipo_annuncio").equals("Vendita")){
 					double prezzoIniziale = rsAnnuncio.getDouble("prezzo_iniziale");
 					
 					return new AnnuncioVendita(idAnnuncio, spedizione, ritiroInPosta, incontro, stato,
 							momentoPubblicazione, nome, utenteProprietario, oggettoInAnnuncio, prezzoIniziale);
 				}
-				else if(rsAnnuncio.getString("Tipo_annuncio") == "Scambio") {
+				else if(rsAnnuncio.getString("Tipo_annuncio").equals("Scambio")) {
 					String notaScambio = rsAnnuncio.getString("nota_scambio");
 					return new AnnuncioScambio(idAnnuncio, spedizione, ritiroInPosta, incontro, stato,
 							momentoPubblicazione, nome, utenteProprietario, oggettoInAnnuncio, notaScambio);

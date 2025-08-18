@@ -60,7 +60,6 @@ public class MyJPanel extends JPanel {
 	public boolean hasPanels() {
 	    for (Component component : this.getComponents()) {
 	        if (component instanceof JPanel) {
-	        	System.out.print("Ciao");
 	            return true; 
 	        }
 	    }

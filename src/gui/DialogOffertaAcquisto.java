@@ -12,11 +12,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -662,7 +665,18 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))
 			offertaToAdd.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
 		else {
-			JRadioButton rbSelezionato = (JRadioButton)this.incontriBG.getSelection();
+			ButtonModel selectedModel = this.incontriBG.getSelection();
+			JRadioButton rbSelezionato = null;
+
+			for (Enumeration<AbstractButton> buttons = this.incontriBG.getElements(); buttons.hasMoreElements();) {
+			    AbstractButton button = buttons.nextElement();
+			    if (button.getModel() == selectedModel) {
+			        rbSelezionato = (JRadioButton) button; // qui il cast è sicuro
+			        break;
+			    }
+			}
+
+			
 			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
 			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
 			GiornoEnum giornoIncontro = (GiornoEnum)rbSelezionato.getClientProperty("Giorno");
