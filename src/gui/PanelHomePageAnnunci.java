@@ -489,6 +489,7 @@ public class PanelHomePageAnnunci extends JPanel{
 								   (ChronoUnit.DAYS.between(LocalDate.now(), annuncio.getDataScadenza().toLocalDate())+ " giorni!"));
 			
 		}
+		
 		panelDataScadenza.add(lblDataScadenza);
 		panelDescrizione.add(panelDataScadenza, BorderLayout.CENTER);
 		
@@ -527,7 +528,9 @@ public class PanelHomePageAnnunci extends JPanel{
 					JOptionPane.showMessageDialog(this, "Hai già una offerta di acquisto in attesa per questo annuncio.");
 				}
 			});
-		else 
+		else if(annuncio instanceof AnnuncioScambio)
+			bottoneFaiOfferta.setDefaultAction(() -> mainController.passaADialogOffertaScambio(annuncio));
+		else
 			bottoneFaiOfferta.setDefaultAction(() -> JOptionPane.showMessageDialog(this, "Work in progress"));
 		
 		MyJLabel lblInterazioni = new MyJLabel(String.valueOf(annuncio.getNumeroInterazioni()));
@@ -746,7 +749,7 @@ public class PanelHomePageAnnunci extends JPanel{
 			filtraAnnunciPerTipoECategoria(annunci, tipologiaSelezionata, categoriaSelezionata);
 		
 	}
-	
+
 	private void checkOffertaAcquistoGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaAcquistoException{
 		
 		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		

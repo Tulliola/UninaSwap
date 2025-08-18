@@ -21,6 +21,12 @@ public class OffertaScambio extends Offerta {
 		this.oggettiOfferti.addAll(oggettiOfferti);
 	}
 	
+	public OffertaScambio(ProfiloUtente offerente, ModConsegnaEnum modalitaConsegnaScelta,
+			Annuncio annuncioRiferito, ArrayList<Oggetto> oggettiOfferti) {
+		super(offerente, modalitaConsegnaScelta, annuncioRiferito);
+		this.oggettiOfferti.addAll(oggettiOfferti);
+	}
+	
 	public void aggiungiOggettoAllOfferta(Oggetto oggettoOfferto) {
 		this.oggettiOfferti.add(oggettoOfferto);
 	}

@@ -18,6 +18,10 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		this.utenteLoggato = utenteIn;
 	}
 
+	public ProfiloUtenteDAO_Postgres(Connection connessioneDB) {
+		this.connessioneDB = connessioneDB;
+	}
+	
 	//Metodi di inserimento
 
 	@Override

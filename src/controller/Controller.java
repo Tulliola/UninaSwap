@@ -51,7 +51,7 @@ public class Controller {
 		
 //		frameDiLogin = new FrameDiLogin(this);
 //		frameDiLogin.setVisible(true);				
-		
+//		
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
 		
@@ -74,7 +74,7 @@ public class Controller {
 			utenteLoggato = dao.recuperaUtenteConEmailOUsername("tulliola", "tullio33");
 			AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 			annuncioDAO.recuperaAnnunciDiUtente(utenteLoggato);
-			dialogOffertaScambio = new DialogOffertaScambio(utenteLoggato.getAnnunciUtente().get(0), this);
+			dialogOffertaScambio = new DialogOffertaScambio(utenteLoggato.getAnnunciUtente().get(2), this);
 			dialogOffertaScambio.setVisible(true);
 		}
 		catch(SQLException exc) {
@@ -130,11 +130,20 @@ public class Controller {
 		frameDiLogin.setVisible(true);
 	}
 	
-	public void tornaADialogOffertaScambio(JFrame frameDiPartenza) {
-		frameDiPartenza.setVisible(false);
+	public void tornaADialogOffertaScambio(JFrame frameDiScambioDiPartenza) {
+		frameDiScambioDiPartenza.setVisible(false);
 		dialogOffertaScambio.setVisible(true);
 	}
 	
+	public void tornaADialogOffertaScambioEliminandoFrame(int indiceNellArrayDeiFrame) {
+		frameCaricaOggetto[indiceNellArrayDeiFrame].dispose();
+		dialogOffertaScambio.eliminaOggettoCaricato(indiceNellArrayDeiFrame);
+
+		dialogOffertaScambio.setVisible(true);
+	}
+	
+	
+	// Metodi passaA
 	public void passaAFrameDiRegistrazione() {
 		frameDiLogin.dispose();
 		frameDiRegistrazione = new FrameDiRegistrazione(this);
@@ -173,8 +182,9 @@ public class Controller {
 	public void passaAFrameCaricaOggetto(int frameOggettoIesimo) {
 		dialogOffertaScambio.setVisible(false);
 		
-		if(frameCaricaOggetto[frameOggettoIesimo] == null)
-			frameCaricaOggetto[frameOggettoIesimo] = new FrameCaricaOggettoScambio(this);
+		//Se sto creando l'oggetto per la prima volta o se ho chiamato la dispose sul frame
+		if(frameCaricaOggetto[frameOggettoIesimo] == null || !frameCaricaOggetto[frameOggettoIesimo].isDisplayable())
+			frameCaricaOggetto[frameOggettoIesimo] = new FrameCaricaOggettoScambio(this, frameOggettoIesimo);
 		
 		frameCaricaOggetto[frameOggettoIesimo].setVisible(true);
 	}
@@ -192,6 +202,11 @@ public class Controller {
 	public void passaADialogOffertaAcquisto(Annuncio annuncioACuiOffrire) {
 		dialogOffertaAcquisto = new DialogOffertaAcquisto(annuncioACuiOffrire, this);
 		dialogOffertaAcquisto.setVisible(true);
+	}
+	
+	public void passaADialogOffertaScambio(Annuncio annuncioACuiOffrire) {
+		dialogOffertaScambio = new DialogOffertaScambio(annuncioACuiOffrire, this);
+		dialogOffertaScambio.setVisible(true);
 	}
 
 	
@@ -252,12 +267,27 @@ public class Controller {
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
-	public void onConfermaOffertaAcquistoButtonClicked(OffertaAcquisto offertaToAdd) throws SQLException {
+	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
 		OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);
 		
 		dialogOffertaAcquisto.dispose();
+	}
+	
+	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {
+		this.frameCaricaOggetto[indiceNellArrayDeiFrame].setVisible(false);
+		dialogOffertaScambio.aggiungiOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
+
+		dialogOffertaScambio.setVisible(true);
+	}
+	
+	// Metodi di recupero
+	
+	public Oggetto recuperaOggettoDaFrame(int indiceDelFrame) {
+		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
+		
+		return oggettoRecuperato;
 	}
 	
 	//Getters

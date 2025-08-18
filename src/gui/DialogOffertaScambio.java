@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -20,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -27,9 +29,11 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
-import dto.OffertaAcquisto;
+import dto.OffertaScambio;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
+import dto.Oggetto;
+import eccezioni.OffertaScambioException;
 import eccezioni.PrezzoOffertoException;
 import eccezioni.ResidenzaException;
 import eccezioni.SaldoException;
@@ -64,12 +68,19 @@ public class DialogOffertaScambio extends MyJDialog {
 	private MyJTextField inserisciIndirizzoTextField;
 	private ButtonGroup modalitaSceltaBG;
 	private JTextArea inserisciNotaTextArea;
+	
+	// Label di errore spedizione
+	private MyJLabel lblErroreCaricamentoOggetti;
 	private MyJLabel lblErroreSpedizione;
 	
 	private JComboBox<UfficioPostale> ufficiPostaliCB;
 	private ButtonGroup incontriBG;
 	
-	int numeroDiOggettiCaricati = 0;
+	private int numeroOggettiCaricati = 0;
+	private MyJLabel[] lblCaricaOggetto = new MyJLabel[3];
+	private String defaultStringPerCaricaOggettoLbl = "Carica il tuo oggetto!";
+	
+	private boolean isOggettoCaricato[] = new boolean[3];
 	
 	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
@@ -297,8 +308,8 @@ public class DialogOffertaScambio extends MyJDialog {
 		MyJPanel panelCaricamentoOggetti = new MyJPanel();
 		panelCaricamentoOggetti.setLayout(new BoxLayout(panelCaricamentoOggetti, BoxLayout.Y_AXIS));
 		panelCaricamentoOggetti.setAlignmentX(CENTER_ALIGNMENT);
-		panelCaricamentoOggetti.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 100));
-		panelCaricamentoOggetti.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 100));
+		panelCaricamentoOggetti.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 200));
+		panelCaricamentoOggetti.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 200));
 		
 		MyJPanel panelWrapper = new MyJPanel();
 		panelWrapper.setAlignmentX(CENTER_ALIGNMENT);
@@ -307,18 +318,40 @@ public class DialogOffertaScambio extends MyJDialog {
 		
 		MyJLabel lblCaricaOggetti = new MyJLabel(annuncioPerOfferta.getUtenteProprietario().getUsername() + ", ecco gli oggetti che potrei scambiarti: ");
 		lblCaricaOggetti.aggiungiImmagineScalata("images/iconaFrecceScambio.png", 25, 25, false);
-		MyJLabel lblOggetto1 = new MyJLabel("Carica il primo oggetto!");
-		lblOggetto1.setAlignmentX(CENTER_ALIGNMENT);
-		lblOggetto1.aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
-		lblOggetto1.rendiLabelInteragibile();
-		lblOggetto1.setOnMouseEnteredAction(() -> {});
-		lblOggetto1.setOnMouseExitedAction(() -> {});
-		lblOggetto1.setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(0);});
+		lblCaricaOggetto[0] = new MyJLabel(this.defaultStringPerCaricaOggettoLbl);
+		lblCaricaOggetto[0].setAlignmentX(CENTER_ALIGNMENT);
+		lblCaricaOggetto[0].aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
+		lblCaricaOggetto[0].rendiLabelInteragibile();
+		lblCaricaOggetto[0].setOnMouseEnteredAction(() -> {});
+		lblCaricaOggetto[0].setOnMouseExitedAction(() -> {});
+		lblCaricaOggetto[0].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(0);});
+		
+		lblCaricaOggetto[1] = new MyJLabel(this.defaultStringPerCaricaOggettoLbl);
+		lblCaricaOggetto[1].setAlignmentX(CENTER_ALIGNMENT);
+		lblCaricaOggetto[1].aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
+		lblCaricaOggetto[1].rendiLabelInteragibile();
+		lblCaricaOggetto[1].setOnMouseEnteredAction(() -> {});
+		lblCaricaOggetto[1].setOnMouseExitedAction(() -> {});
+		lblCaricaOggetto[1].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(1);});
+		
+		lblCaricaOggetto[2] = new MyJLabel(this.defaultStringPerCaricaOggettoLbl);
+		lblCaricaOggetto[2].setAlignmentX(CENTER_ALIGNMENT);
+		lblCaricaOggetto[2].aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
+		lblCaricaOggetto[2].rendiLabelInteragibile();
+		lblCaricaOggetto[2].setOnMouseEnteredAction(() -> {});
+		lblCaricaOggetto[2].setOnMouseExitedAction(() -> {});
+		lblCaricaOggetto[2].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(2);});
+		
+		lblErroreCaricamentoOggetti = new MyJLabel(true);
+		lblErroreCaricamentoOggetti.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelWrapper.add(lblCaricaOggetti);
 		panelCaricamentoOggetti.add(Box.createVerticalGlue());
 		panelCaricamentoOggetti.add(panelWrapper);
-		panelCaricamentoOggetti.add(lblOggetto1);
+		panelCaricamentoOggetti.add(lblCaricaOggetto[0]);
+		panelCaricamentoOggetti.add(lblCaricaOggetto[1]);
+		panelCaricamentoOggetti.add(lblCaricaOggetto[2]);
+		panelCaricamentoOggetti.add(lblErroreCaricamentoOggetti);
 		panelCaricamentoOggetti.setBackground(MyJPanel.uninaLightColor);
 		panelCaricamentoOggetti.add(Box.createVerticalGlue());
 		
@@ -553,7 +586,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		panelBottoni.setBackground(new Color(220, 220, 220));
 		
 		MyJButton bottoneConfermaOfferta = new MyJButton("Conferma la mia offerta!");
-		bottoneConfermaOfferta.setDefaultAction(() -> {});
+		bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta);});
 		
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
 		bottoneCiHoRipensato.setDefaultAction(() -> {mainController.passaAFrameHomePage(this);});
@@ -567,7 +600,30 @@ public class DialogOffertaScambio extends MyJDialog {
 	}
 	
 	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta) {
-		
+		try {
+			this.nascondiLabelErrore(this.lblErroreSpedizione, this.lblErroreCaricamentoOggetti);
+			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField);
+			
+			checkNumeroOggettiCaricati();
+			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
+				this.checkResidenza(this.inserisciIndirizzoTextField.getText());
+			
+			OffertaScambio newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
+			mainController.onConfermaOffertaButtonClicked(newOfferta);
+			
+		}
+		catch(OffertaScambioException exc1) {
+			lblErroreCaricamentoOggetti.setText(exc1.getMessage());
+			lblErroreCaricamentoOggetti.setVisible(true);			
+		}
+		catch(ResidenzaException exc2) {
+			this.settaLabelETextFieldDiErrore(lblErroreSpedizione, exc2.getMessage(), this.inserisciIndirizzoTextField);
+		}
+		catch(SQLException exc3) {
+			System.out.println(exc3.getErrorCode());
+			System.out.println(exc3.getMessage());
+			System.out.println(exc3.getSQLState());
+		}
 	}
 
 	private void checkResidenza(String indirizzoDiSpedizione) throws ResidenzaException{
@@ -585,31 +641,56 @@ public class DialogOffertaScambio extends MyJDialog {
 
 	}
 	
-	private OffertaAcquisto organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
-//		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
-//		
-//		OffertaAcquisto offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, Double.valueOf(this.inserisciPrezzoTextField.getText()));
-//				
-//		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
-//			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
-//		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))
-//			offertaToAdd.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
-//		else {
-//			JRadioButton rbSelezionato = (JRadioButton)this.incontriBG.getSelection();
-//			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
-//			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
-//			GiornoEnum giornoIncontro = (GiornoEnum)rbSelezionato.getClientProperty("Giorno");
-//			SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
-//
-//			offertaToAdd.setOraInizioIncontro(oraInizio);
-//			offertaToAdd.setOraFineIncontro(oraFine);
-//			offertaToAdd.setGiornoIncontro(giornoIncontro);
-//			offertaToAdd.setSedeDIncontroScelta(sedeIncontro);
-//		}		
-//		
-//		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
-//		
-//		return offertaToAdd;
-		return null;
+	private void checkNumeroOggettiCaricati() throws OffertaScambioException{
+		if(this.numeroOggettiCaricati == 0)
+			throw new OffertaScambioException("Devi caricare almeno un oggetto.");
+	}
+	
+	private OffertaScambio organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
+		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+		ArrayList<Oggetto> oggettiCaricati = new ArrayList<Oggetto>();
+		
+		for(int i = 0; i < isOggettoCaricato.length; i++)
+			if(isOggettoCaricato[i]) {
+				Oggetto oggettoCaricato = mainController.recuperaOggettoDaFrame(i);
+				oggettiCaricati.add(oggettoCaricato);
+			}
+		
+		OffertaScambio offertaToAdd = new OffertaScambio(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, oggettiCaricati);
+				
+		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
+			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
+		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))
+			offertaToAdd.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
+		else {
+			JRadioButton rbSelezionato = (JRadioButton)this.incontriBG.getSelection();
+			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
+			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
+			GiornoEnum giornoIncontro = (GiornoEnum)rbSelezionato.getClientProperty("Giorno");
+			SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
+
+			offertaToAdd.setOraInizioIncontro(oraInizio);
+			offertaToAdd.setOraFineIncontro(oraFine);
+			offertaToAdd.setGiornoIncontro(giornoIncontro);
+			offertaToAdd.setSedeDIncontroScelta(sedeIncontro);
+		}		
+		
+		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
+		
+		return offertaToAdd;
+	}
+
+	public void eliminaOggettoCaricato(int indiceDelFrameDaCuiRicevi) {
+		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].setText(this.defaultStringPerCaricaOggettoLbl);
+		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
+		this.numeroOggettiCaricati--;
+		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = false;
+	}
+	
+	public void aggiungiOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto) {
+		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].setText(nomeOggetto);
+		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
+		this.numeroOggettiCaricati++;
+		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = true;
 	}
 }

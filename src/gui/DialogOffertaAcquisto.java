@@ -604,7 +604,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				checkResidenza(this.inserisciIndirizzoTextField.getText());
 			
 			OffertaAcquisto newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
-			mainController.onConfermaOffertaAcquistoButtonClicked(newOfferta);
+			mainController.onConfermaOffertaButtonClicked(newOfferta);
 		}
 		catch(PrezzoOffertoException | SaldoException throwables) {
 			this.settaLabelETextFieldDiErrore(lblErrorePrezzoOfferto, throwables.getMessage(), this.inserisciPrezzoTextField);

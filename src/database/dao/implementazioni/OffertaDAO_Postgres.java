@@ -241,6 +241,77 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				
 			}
 		}
+		
+		if(offertaDaInserire instanceof OffertaScambio) {
+			connessioneDB.setAutoCommit(false);
+			
+			String inserisciOffertaScambio = "INSERT INTO Offerta_scambio(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
+					+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta) "
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
+						
+			try(PreparedStatement psInserisciOffertaScambio = connessioneDB.prepareStatement(inserisciOffertaScambio)){
+				psInserisciOffertaScambio.setString(1, emailOfferente);
+				psInserisciOffertaScambio.setInt(2, idAnnuncioRiferito);
+				
+				if(modalitaConsegnaScelta.equals("Ritiro in posta"))
+					psInserisciOffertaScambio.setInt(3, offertaDaInserire.getUfficioRitiro().getIdUfficio());
+				else
+					psInserisciOffertaScambio.setNull(3, Types.INTEGER);
+				
+				psInserisciOffertaScambio.setString(4, nota);
+				
+				if(modalitaConsegnaScelta.equals("Spedizione"))
+					psInserisciOffertaScambio.setString(5, offertaDaInserire.getIndirizzoSpedizione());
+				else
+					psInserisciOffertaScambio.setNull(5, Types.VARCHAR);
+				
+				if(modalitaConsegnaScelta.equals("Incontro")) {
+					psInserisciOffertaScambio.setString(6, offertaDaInserire.getOraInizioIncontro());
+					psInserisciOffertaScambio.setString(7, offertaDaInserire.getOraFineIncontro());
+					psInserisciOffertaScambio.setString(8, offertaDaInserire.getGiornoIncontro());
+					psInserisciOffertaScambio.setString(9, offertaDaInserire.getSedeDIncontroScelta().toString());
+				}
+				else {
+					psInserisciOffertaScambio.setNull(6, Types.VARCHAR);
+					psInserisciOffertaScambio.setNull(7, Types.VARCHAR);
+					psInserisciOffertaScambio.setNull(8, Types.VARCHAR);
+					psInserisciOffertaScambio.setNull(9, Types.VARCHAR);
+				}
+					
+				psInserisciOffertaScambio.setString(10, modalitaConsegnaScelta);;
+				
+				int idOffertaInserita;
+				
+				try(ResultSet rsInserisciOffertaScambio = psInserisciOffertaScambio.executeQuery()){
+					rsInserisciOffertaScambio.next();
+					idOffertaInserita = rsInserisciOffertaScambio.getInt("idOfferta");
+				}
+				
+				for(Oggetto oggettoCorrente : offertaDaInserire.getOggettiOfferti()) {
+					OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+					Integer idOggettoInserito = oggettoDAO.inserisciOggetto(oggettoCorrente, emailOfferente);
+					
+					String inserisciOggettoOfferto = "INSERT INTO Oggetto_offerto (idOggetto, idOfferta) VALUES (?, ?)";
+					
+					try(PreparedStatement psInserisciOggettoOfferto = connessioneDB.prepareStatement(inserisciOffertaScambio)){
+						psInserisciOggettoOfferto.setInt(1, idOggettoInserito);
+						psInserisciOggettoOfferto.setInt(2, idOffertaInserita);
+						
+						psInserisciOggettoOfferto.executeUpdate();
+					}
+				}
+				
+			}
+			catch(SQLException exc) {
+				System.out.println(exc.getErrorCode());
+				System.out.println(exc.getMessage());
+				System.out.println(exc.getSQLState());
+				throw exc;
+			}
+			finally{
+				connessioneDB.setAutoCommit(true);
+			}
+		}
 	}
 	
 	//Metodi ausiliari
