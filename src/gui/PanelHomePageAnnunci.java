@@ -654,7 +654,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		panelAnnunci.removeAll();
 		
-		for(int i = 0; i < tuttiGliAnnunci.size(); i++) {
+		for(int i = tuttiGliAnnunci.size()-1; i >= 0; i--) {
 			MyJPanel annuncioCorrente = creaPanelAnnuncio(tuttiGliAnnunci.get(i));
 			this.panelAnnunci.add(annuncioCorrente);
 		}

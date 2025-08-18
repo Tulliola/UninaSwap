@@ -175,10 +175,11 @@ public class Controller {
 	
 	public void passaAFrameHomePage(JDialog frameDiPartenza) {
 		frameDiPartenza.dispose();
+		frameHomePage.setVisible(true);
 	}
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
-		frameHomePage.dispose();
+		frameHomePage.setVisible(false);
 		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare, sediPresenti);
 		framePubblicaAnnuncio.setVisible(true);
 	}
@@ -227,7 +228,7 @@ public class Controller {
 			SedeUniversitaDAO_Postgres sediDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
 			
-			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
+			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
@@ -317,5 +318,10 @@ public class Controller {
 	public void passaADialogConfermaLogout() {
 		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
 		dialogConfermaLogout.setVisible(true);
+	}
+
+
+	public void chiudiDialogConfermaLogout() {
+		dialogConfermaLogout.dispose();
 	}
 }

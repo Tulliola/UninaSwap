@@ -48,7 +48,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 	
 	@Override
-	public ArrayList<Offerta> recuperaOfferteDiUtente(String email) throws SQLException{
+	public ArrayList<Offerta> recuperaOfferteDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
 		ArrayList<Offerta> offerteUtente = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT "
@@ -61,45 +61,49 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO "
 				+ "WHERE email = ?) ORDER BY momento_proposta DESC)")){
 			
-			ps.setString(1, email);
-			ps.setString(2, email);
+			ps.setString(1, utenteLoggato.getEmail());
+			ps.setString(2, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
 				if(rs.next()) {
-					ProfiloUtente offerente = this.recuperaUtente(rs.getString("email"));
+					ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 					do {
+						AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+						
 						Offerta offertaToAdd = null;
 						Timestamp momentoProposta = rs.getTimestamp("momento_proposta");
 						ModConsegnaEnum modConsegna = ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta"));
 						StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
-						Annuncio annuncioRiferito = recuperaAnnuncio(rs.getInt("idAnnuncio"));
+						Annuncio annuncioRiferito = annuncioDAO.recuperaAnnuncioConId(rs.getInt("idAnnuncio"));
 						
 						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Vendita")) {
 							double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
-							offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
+							offertaToAdd = new OffertaAcquisto(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
 						}
 						
 						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Scambio")) {
-							int idOfferta = recuperaIdOfferta(momentoProposta, email);
-							ArrayList<Oggetto> oggettiOfferti = recuperaOggettiOfferti(idOfferta);
+							int idOfferta = recuperaIdOfferta(momentoProposta, utenteLoggato.getEmail());
+							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+							ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferta);
 							
-							offertaToAdd = new OffertaScambio(offerente, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
+							offertaToAdd = new OffertaScambio(utenteLoggato, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
 						}
 						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Regalo")) {
 							double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("email"), rs.getTimestamp("Momento_proposta"));
 							
-							int idOfferta = recuperaIdOfferta(momentoProposta, email);
-							ArrayList<Oggetto> oggettiOfferti = recuperaOggettiOfferti(idOfferta);
+							int idOfferta = recuperaIdOfferta(momentoProposta, utenteLoggato.getEmail());
+							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+							ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferta);
 							
 							if(prezzoOfferto > 0) {
-								offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
+								offertaToAdd = new OffertaAcquisto(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
 							}
 							
 							else if(!(oggettiOfferti.isEmpty())) {
-								offertaToAdd = new OffertaScambio(offerente, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
+								offertaToAdd = new OffertaScambio(utenteLoggato, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
 							}
 							else {
-								offertaToAdd = new OffertaRegalo(offerente, momentoProposta, modConsegna, stato, annuncioRiferito);
+								offertaToAdd = new OffertaRegalo(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito);
 							}
 						}
 						
@@ -128,7 +132,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	@Override
-	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(int idAnnuncio) throws SQLException, IOException{
+	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException, IOException{
 		ArrayList<Offerta> offerteAnnuncio = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT"
@@ -141,17 +145,19 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				+ "modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO"
 				+ "WHERE idAnnuncio = ?) ORDER BY momento_proposta DESC)")){
 			
-			ps.setInt(1, idAnnuncio);
-			ps.setInt(2, idAnnuncio);
+			ps.setInt(1, annuncio.getIdAnnuncio());
+			ps.setInt(2, annuncio.getIdAnnuncio());
 			
 			try(ResultSet rs = ps.executeQuery()){
-				ProfiloUtente offerente = this.recuperaUtente(rs.getString("email"));
-				
+				ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+//				ProfiloUtente offerente = this.recuperaUtente(rs.getString("email"));
+				ProfiloUtente offerente = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email"));
+				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 				while(rs.next()) {
 					Timestamp momentoProposta = rs.getTimestamp("momento_proposta");
 					ModConsegnaEnum modConsegna = ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta"));
 					StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
-					Annuncio annuncioRiferito = recuperaAnnuncio(rs.getInt("idAnnuncio"));
+					Annuncio annuncioRiferito = annuncioDAO.recuperaAnnuncioConId(rs.getInt("idAnnuncio"));
 					
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Vendita")){
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
@@ -159,25 +165,31 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					}
 					
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Scambio")) {
-						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, idAnnuncio);
+						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, annuncio.getIdAnnuncio());
 						ArrayList<Oggetto> oggettiOfferti = new ArrayList();
+						
+						OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+						
 						for(int i = 0; i < idOfferte.size(); i++) {
-							oggettiOfferti = recuperaOggettiOfferti(idOfferte.get(i));
+							oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferte.get(i));
 							offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 						}
 					}
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Regalo")) {
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
 						
-						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, idAnnuncio);
+						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, annuncio.getIdAnnuncio());
 						
 						if(prezzoOfferto > 0) {
 							offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 						}
 						
 						else if(!(idOfferte.isEmpty())) {
+			
+							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+							
 							for(int i = 0; i < idOfferte.size(); i++) {
-								ArrayList<Oggetto> oggettiOfferti = recuperaOggettiOfferti(idOfferte.get(i));
+								ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferte.get(i));
 								offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 							}
 						}
@@ -318,23 +330,6 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 	
 	//Metodi ausiliari
-	private ArrayList<Oggetto> recuperaOggettiOfferti(int idOfferta) throws SQLException {
-		ArrayList<Oggetto> oggettiOfferti = new ArrayList();
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idOggetto FROM OGGETTO_OFFERTO WHERE idOfferta = ?")){
-			ps.setInt(1, idOfferta);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				while(rs.next()) {
-					oggettiOfferti.add(recuperaOggetto(rs.getInt("idOggetto")));
-					
-				}
-				
-				return oggettiOfferti;
-			}
-		}
-		
-	}
-
 	private int recuperaIdOfferta(Timestamp momentoProposta, String email) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idOfferta FROM OFFERTA_SCAMBIO WHERE "
 				+ "momento_proposta = ? AND email = ?")){
@@ -390,88 +385,52 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 		}
 	}
 	
-	private Annuncio recuperaAnnuncio(int idAnnuncio) throws SQLException {
-		try(PreparedStatement psAnnuncio = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ?")){
-			psAnnuncio.setInt(1, idAnnuncio);
+	@Override
+	public ArrayList<Offerta> recuperaOfferteAnnuncioRegalo(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+
+		toReturn.addAll(recuperaOfferteAnnuncioVendita(annuncioRecuperato));
+		toReturn.addAll(recuperaOfferteAnnuncioScambio(annuncioRecuperato));
+		
+		return toReturn;
+	}
+
+	@Override
+	public ArrayList<Offerta> recuperaOfferteAnnuncioScambio(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
+			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
 			
-			
-			try(ResultSet rsAnnuncio = psAnnuncio.executeQuery()){
-				rsAnnuncio.next();
-				
-				boolean spedizione = rsAnnuncio.getBoolean("spedizione");
-				boolean ritiroInPosta = rsAnnuncio.getBoolean("ritiro_in_posta");
-				boolean incontro = rsAnnuncio.getBoolean("incontro");
-				StatoAnnuncioEnum stato = StatoAnnuncioEnum.confrontaConDB(rsAnnuncio.getString("stato"));
-				Timestamp momentoPubblicazione = rsAnnuncio.getTimestamp("momento_pubblicazione");
-				String nome = rsAnnuncio.getString("nome");
-				ProfiloUtente utenteProprietario = recuperaUtente(rsAnnuncio.getString("Email"));
-				Oggetto oggettoInAnnuncio = recuperaOggetto(rsAnnuncio.getInt("idOggetto"));
-				
-			
-				if(rsAnnuncio.getString("Tipo_annuncio").equals("Vendita")){
-					double prezzoIniziale = rsAnnuncio.getDouble("prezzo_iniziale");
-					
-					return new AnnuncioVendita(idAnnuncio, spedizione, ritiroInPosta, incontro, stato,
-							momentoPubblicazione, nome, utenteProprietario, oggettoInAnnuncio, prezzoIniziale);
-				}
-				else if(rsAnnuncio.getString("Tipo_annuncio").equals("Scambio")) {
-					String notaScambio = rsAnnuncio.getString("nota_scambio");
-					return new AnnuncioScambio(idAnnuncio, spedizione, ritiroInPosta, incontro, stato,
-							momentoPubblicazione, nome, utenteProprietario, oggettoInAnnuncio, notaScambio);
-				}
-				else {
-					return new AnnuncioRegalo(idAnnuncio, spedizione, ritiroInPosta, incontro, stato,
-							momentoPubblicazione, nome, utenteProprietario, oggettoInAnnuncio);
+			try(ResultSet rs = ps.executeQuery()){
+				while(rs.next()) {
+					OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+
+					ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+					toReturn.add(new OffertaScambio(utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email")),  rs.getInt("idOfferta"),
+							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, oggettoDAO.recuperaOggettiOffertiConIdOfferta(rs.getInt("idOfferta"))));
 				}
 			}
 		}
+		
+		return toReturn;
 	}
 
-	private Oggetto recuperaOggetto(int idOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Oggetto NATURAL JOIN Immagine WHERE idOggetto = ?")){
-			ps.setInt(1, idOggetto);
+	@Override
+	public ArrayList<Offerta> recuperaOfferteAnnuncioVendita(Annuncio annuncioRecuperato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList();
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_ACQUISTO WHERE idAnnuncio = ?")){
+			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
 			
 			try(ResultSet rs = ps.executeQuery()){
-				rs.next();
-				CategoriaEnum categoria = CategoriaEnum.confrontaConStringa(rs.getString("categoria"));
-				CondizioneEnum condizioni = CondizioneEnum.confrontaConStringa(rs.getString("condizioni"));
-	            boolean disponibile = isOggettoDisponibile(idOggetto);
-	           	byte[] immagineOggetto = rs.getBytes("File_immagine");	
-	            
-	            return new Oggetto(idOggetto, categoria, condizioni, immagineOggetto, disponibile);
+				ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+				while(rs.next()) {
+					toReturn.add(new OffertaAcquisto(profiloDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email")), 
+							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
+				}
 			}
 		}
-	}
-
-	private boolean isOggettoDisponibile(int idOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT idOggetto FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND"
-				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
-				+ "INTERSECT (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
-				+ "(NOT(Stato = 'Accettata')))")){
-			ps.setInt(1, idOggetto);
-			ps.setInt(2, idOggetto);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				return rs.next();
-			}
-		}
-	}
-
-	private ProfiloUtente recuperaUtente(String email) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM PROFILO_UTENTE WHERE Email = ?")){
-			ps.setString(1, email);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				rs.next();
-				String username = rs.getString("username");
-				double saldo = rs.getDouble("saldo");
-				byte[] immagineProfilo = rs.getBytes("immagine_profilo");
-				String residenza = rs.getString("residenza");
-				String password = rs.getString("PW");
-				boolean sospeso = rs.getBoolean("sospeso");
-				
-				return new ProfiloUtente(username, email, saldo, immagineProfilo, residenza, password, sospeso);
-			}
-		}
+		return toReturn;
 	}
 }

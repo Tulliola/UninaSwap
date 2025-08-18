@@ -40,25 +40,21 @@ public class DialogConfermaLogout extends JDialog {
 		contentPane.setLayout(new BorderLayout());
 		
 		MyJPanel panelMessaggio = new MyJPanel();
-		MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler effettuare il logout?", new Font("Ubuntu Sans", Font.BOLD, 20));
+		MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler effettuare il logout?", new Font("Ubuntu Sans", Font.BOLD, 16));
 		panelMessaggio.add(lblMessaggio);
 		
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		MyJButton okButton = new MyJButton("OK");
-		okButton.setBackground(MyJLabel.uninaColor);
-		okButton.setForeground(Color.WHITE);
-		okButton.setDefaultAction(()->{
+		okButton.setDefaultAction(() -> {
 			mainController.logout();
 		});
 		
 		panelBottoni.add(okButton);
 		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
-		tornaIndietroButton.setBackground(MyJLabel.uninaColor);
-		tornaIndietroButton.setForeground(Color.WHITE);
 		tornaIndietroButton.setDefaultAction(() -> {
-			this.dispose();
+			mainController.chiudiDialogConfermaLogout();
 		});
 		
 		panelBottoni.add(tornaIndietroButton);
@@ -67,8 +63,8 @@ public class DialogConfermaLogout extends JDialog {
 		contentPane.add(panelBottoni, BorderLayout.SOUTH);
 		
 		this.setContentPane(contentPane);
-		
 		this.pack();
-		this.setLocationRelativeTo(null);
+		this.setResizable(false);
+		this.setLocationRelativeTo(framePadre);
 	}
 }
