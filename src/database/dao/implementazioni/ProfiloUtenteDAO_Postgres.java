@@ -82,6 +82,20 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		}
 	}
 	
+	@Override
+	public void aggiornaBioPicUtente(String emailIn, byte[] newBioPic) throws SQLException {
+		String aggiornaFoto = "UPDATE Profilo_utente SET Immagine_profilo = ? WHERE Email = ?";
+		
+		try(PreparedStatement psAggiornaFoto = connessioneDB.prepareStatement(aggiornaFoto)){
+			psAggiornaFoto.setBytes(1, newBioPic);
+			psAggiornaFoto.setString(2, emailIn);
+			
+			psAggiornaFoto.executeUpdate();
+			
+			utenteLoggato.setImmagineProfilo(newBioPic);
+		}
+	}
+	
 	//Metodi di ricerca
 	@Override
 	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String emailOrUsername, String password) throws SQLException  {

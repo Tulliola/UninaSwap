@@ -655,7 +655,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		
 		for(int i = 0; i < isOggettoCaricato.length; i++)
 			if(isOggettoCaricato[i]) {
-				Oggetto oggettoCaricato = mainController.recuperaOggettoDaFrame(i);
+				Oggetto oggettoCaricato = mainController.recuperaOggettoDaFrameCaricaOggetto(i);
 				oggettiCaricati.add(oggettoCaricato);
 			}
 		

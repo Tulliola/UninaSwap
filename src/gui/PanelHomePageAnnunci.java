@@ -44,7 +44,9 @@ import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
 import dto.Offerta;
 import dto.OffertaAcquisto;
+import dto.OffertaScambio;
 import eccezioni.OffertaAcquistoException;
+import eccezioni.OffertaScambioException;
 import utilities.CategoriaEnum;
 //import dto.AnnuncioRegalo;
 //import dto.AnnuncioScambio;
@@ -525,11 +527,19 @@ public class PanelHomePageAnnunci extends JPanel{
 					mainController.passaADialogOffertaAcquisto(annuncio);
 				}
 				catch(OffertaAcquistoException exc) {
-					JOptionPane.showMessageDialog(this, "Hai già una offerta di acquisto in attesa per questo annuncio.");
+					JOptionPane.showMessageDialog(this, exc.getMessage());
 				}
 			});
 		else if(annuncio instanceof AnnuncioScambio)
-			bottoneFaiOfferta.setDefaultAction(() -> mainController.passaADialogOffertaScambio(annuncio));
+			bottoneFaiOfferta.setDefaultAction(() -> {
+				try {
+					this.checkOffertaScambioGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+					mainController.passaADialogOffertaScambio(annuncio);
+				}
+				catch(OffertaScambioException exc) {
+					JOptionPane.showMessageDialog(this, exc.getMessage());
+				}
+			});
 		else
 			bottoneFaiOfferta.setDefaultAction(() -> JOptionPane.showMessageDialog(this, "Work in progress"));
 		
@@ -756,6 +766,16 @@ public class PanelHomePageAnnunci extends JPanel{
 			if(offertaCorrente instanceof OffertaAcquisto) {
 				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
 					throw new OffertaAcquistoException("Hai già un'offerta di acquisto attiva per questo annuncio.");
+			}
+		}
+	}
+	
+private void checkOffertaScambioGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaScambioException{
+		
+		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
+			if(offertaCorrente instanceof OffertaScambio) {
+				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
+					throw new OffertaScambioException("Hai già un'offerta di scambio attiva per questo annuncio.");
 			}
 		}
 	}

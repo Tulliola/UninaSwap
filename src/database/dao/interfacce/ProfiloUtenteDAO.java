@@ -12,6 +12,7 @@ public interface ProfiloUtenteDAO {
 	public void aggiornaUsernameUtente(String emailIn, String newUsername) throws SQLException;
 	public void aggiornaPasswordUtente(String emailIn, String newPassword) throws SQLException;
 	public void aggiornaResidenzaUtente(String emailIn, String newResidenza) throws SQLException;
+	public void aggiornaBioPicUtente(String emailIn, byte[] newBioPic) throws SQLException;
 	
 	//Metodi di eliminazione
 

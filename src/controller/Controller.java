@@ -14,6 +14,7 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
+import utilities.ImmagineDiSistemaDAO;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -38,8 +39,11 @@ public class Controller {
 	private FrameCaricaOggettoScambio[] frameCaricaOggetto = new FrameCaricaOggettoScambio[3];
 	private DialogOffertaAcquisto dialogOffertaAcquisto;
 	private DialogOffertaScambio dialogOffertaScambio;
+	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
 	
 	private static Connection connessioneDB;
+	
+	private byte[][] immaginiDiSistema;
 	
 	private ProfiloUtente utenteLoggato;
 	private ArrayList<Annuncio> annunciInBacheca;
@@ -55,6 +59,12 @@ public class Controller {
 		
 //		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
 //		framePubblicaAnnuncio.setVisible(true);
+		
+//		ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
+//		this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
+		
+//		frameCambiaImmagine = new FrameCambiaImmagine(this, immaginiDiSistema);
+//		frameCambiaImmagine.setVisible(true);
 		
 //		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
 //		try {
@@ -144,6 +154,15 @@ public class Controller {
 		dialogOffertaScambio.setVisible(true);
 	}
 	
+	public void tornaAFrameCambiaImmagine(JDialog dialogDiPartenza) {
+		dialogDiPartenza.dispose();
+	}
+	
+	public void tornaAFrameProfiloUtente() {
+		frameCambiaImmagine.dispose();
+		frameProfiloUtente.setVisible(true);
+	}
+	
 	
 	// Metodi passaA
 	public void passaAFrameDiRegistrazione() {
@@ -154,7 +173,7 @@ public class Controller {
 
 	public void passaAFrameCambiaImmagine() {
 		frameProfiloUtente.setVisible(false);
-		frameCambiaImmagine = new FrameCambiaImmagine(this);
+		frameCambiaImmagine = new FrameCambiaImmagine(this, immaginiDiSistema);
 		frameCambiaImmagine.setVisible(true);
 	}
 
@@ -162,6 +181,12 @@ public class Controller {
 		frameHomePage.dispose();
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
+	}
+	
+
+	public void passaADialogConfermaCambioImmagine(byte[] immagineProfilo) {
+		dialogConfermaCambiaImmagine = new DialogConfermaCambiaImmagine(frameCambiaImmagine, this, immagineProfilo);
+		dialogConfermaCambiaImmagine.setVisible(true);
 	}
 		
 	public void passaAFrameHomePage(MyJFrame frameDiPartenza) {
@@ -224,12 +249,14 @@ public class Controller {
 			OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
 			SedeUniversitaDAO_Postgres sediDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+			ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
 			
 			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato.getEmail()));
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
+			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -244,6 +271,17 @@ public class Controller {
 		caricamentoTornaALoginFrame.setVisible(true);
 		
 		this.tornaALogin();
+	}
+
+	public void onConfermaCambiaImmagineButton(byte[] newBioPic) throws SQLException{
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB, utenteLoggato);
+		profiloDAO.aggiornaBioPicUtente(utenteLoggato.getEmail(), newBioPic);
+		
+		dialogConfermaCambiaImmagine.dispose();
+		frameCambiaImmagine.dispose();
+		
+		frameProfiloUtente = new FrameProfiloUtente(this,"   Il mio profilo", utenteLoggato);
+		frameProfiloUtente.setVisible(true);
 	}
 	
 	public void onSalvaModificheButtonClickedAggiornaUsername(String newUsername) throws SQLException{
@@ -289,7 +327,7 @@ public class Controller {
 	
 	// Metodi di recupero
 	
-	public Oggetto recuperaOggettoDaFrame(int indiceDelFrame) {
+	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame) {
 		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
 		
 		return oggettoRecuperato;
@@ -303,4 +341,8 @@ public class Controller {
 	public ArrayList<UfficioPostale> getUfficiPostali(){
 		return ufficiPresenti;
 	}
+
+
+
+
 }
