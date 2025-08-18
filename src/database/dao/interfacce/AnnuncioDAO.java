@@ -10,6 +10,6 @@ import dto.ProfiloUtente;
 public interface AnnuncioDAO {
 	
 	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException;
-	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException;
+	public ArrayList<Annuncio> recuperaAnnunciInBacheca(String emailUtenteLoggato) throws SQLException;
 	public void inserisciAnnuncio(Annuncio annuncioDaInserire) throws SQLException;
 }

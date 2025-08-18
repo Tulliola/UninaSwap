@@ -65,11 +65,11 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	}
 
 	@Override
-	public ArrayList<Annuncio> recuperaAnnunciInBacheca(ProfiloUtente utenteLoggato) throws SQLException{
+	public ArrayList<Annuncio> recuperaAnnunciInBacheca(String emailUtenteLoggato) throws SQLException{
 		ArrayList<Annuncio> toReturn = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione ASC")){
-			ps.setString(1, utenteLoggato.getEmail());
+			ps.setString(1, emailUtenteLoggato);
 			
 			try(ResultSet rs = ps.executeQuery()){
 				while(rs.next()) {
@@ -162,6 +162,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	
 	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException{
 		Annuncio annuncioRecuperato;
+		
 		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
@@ -230,32 +231,10 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 	private ArrayList<Offerta> recuperaOfferteAnnuncioRegalo(Annuncio annuncioRecuperato) throws SQLException {
 		ArrayList<Offerta> toReturn = new ArrayList();
-//		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_SCAMBIO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
-//			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
-//			
-//			try(ResultSet rs = ps.executeQuery()){
-//				while(rs.next()) {
-//				
-//					toReturn.add(new OffertaScambio(recuperaUtenteProprietario(rs.getString("email")),  rs.getInt("idOfferta"),
-//							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
-//							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, recuperaOggettiOfferti(rs.getInt("idOfferta"))));
-//				}
-//			}
-//		}
+
 		toReturn.addAll(recuperaOfferteAnnuncioVendita(annuncioRecuperato));
 		toReturn.addAll(recuperaOfferteAnnuncioScambio(annuncioRecuperato));
-//		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM OFFERTA_ACQUISTO WHERE idAnnuncio = ? ORDER BY Momento_proposta DESC")){
-//			ps.setInt(1, annuncioRecuperato.getIdAnnuncio());
-//			
-//			try(ResultSet rs = ps.executeQuery()){
-//				while(rs.next()) {
-//					toReturn.add(new OffertaAcquisto(recuperaUtenteProprietario(rs.getString("email")), 
-//							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
-//							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
-//				}
-//			}
-//		}
-//		Collections.sort(toReturn, Collections.reverseOrder());
+		
 		return toReturn;
 	}
 

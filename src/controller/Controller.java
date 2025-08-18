@@ -38,6 +38,7 @@ public class Controller {
 	private FrameCaricaOggettoScambio[] frameCaricaOggetto = new FrameCaricaOggettoScambio[3];
 	private DialogOffertaAcquisto dialogOffertaAcquisto;
 	private DialogOffertaScambio dialogOffertaScambio;
+	private DialogConfermaLogout dialogConfermaLogout;
 	
 	private static Connection connessioneDB;
 	
@@ -159,7 +160,8 @@ public class Controller {
 	}
 
 	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
-		frameHomePage.dispose();
+		if(frameHomePage.isVisible())
+			frameHomePage.setVisible(false);
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
 	}
@@ -229,7 +231,7 @@ public class Controller {
 			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
-			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato);
+			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -302,5 +304,18 @@ public class Controller {
 	
 	public ArrayList<UfficioPostale> getUfficiPostali(){
 		return ufficiPresenti;
+	}
+
+
+	public void logout() {
+		frameProfiloUtente.dispose();
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
+	}
+
+
+	public void passaADialogConfermaLogout() {
+		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
+		dialogConfermaLogout.setVisible(true);
 	}
 }
