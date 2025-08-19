@@ -283,8 +283,7 @@ public class FrameProfiloUtente extends MyJFrame {
 			mainController.passaAFrameCambiaImmagine();
 		});
 		lblCambiaImmagine.setOnMouseEnteredAction(() -> {});
-		lblCambiaImmagine.setOnMouseExitedAction(() -> {});
-	
+		lblCambiaImmagine.setOnMouseExitedAction(() -> {});	
 		panelProfilo.add(lblCambiaImmagine);
 	}
 	
