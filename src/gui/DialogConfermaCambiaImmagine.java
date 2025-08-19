@@ -27,7 +27,6 @@ public class DialogConfermaCambiaImmagine extends MyJDialog {
 		mainController = controller;
 		
 		this.setModal(true);
-		this.setLocationRelativeTo(null);
 		this.setResizable(false);
 		
 		contentPane.setLayout(new BorderLayout());
@@ -39,6 +38,7 @@ public class DialogConfermaCambiaImmagine extends MyJDialog {
 		this.setContentPane(contentPane);
 		
 		this.pack();
+		this.setLocationRelativeTo(framePadre);
 	}
 
 	private MyJPanel creaPanelMessaggio() {

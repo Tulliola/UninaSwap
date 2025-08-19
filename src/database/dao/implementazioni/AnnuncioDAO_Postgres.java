@@ -159,6 +159,18 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}	
 
+	@Override
+	public Annuncio recuperaAnnuncioConId(int idAnnuncio) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ?")){
+			ps.setInt(1, idAnnuncio);
+			try(ResultSet rs = ps.executeQuery()){
+				rs.next();
+				return annuncioCorrenteRecuperato(rs);
+			}
+		}
+	}
+	
+/******************** METODI AUSILIARI NON EREDITATI DALL'INTERFACCIA *****************/
 	
 	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException{
 		Annuncio annuncioRecuperato;
@@ -216,8 +228,12 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 						SedeUniversitaDAO_Postgres sedeUniversitaDAO = new SedeUniversitaDAO_Postgres(this.connessioneDB);
 						sedeDiIncontro = sedeUniversitaDAO.recuperaSedeDaId(rsRecuperaIncontri.getInt("idSede"));
 						
-						annuncioRecuperato.aggiungiPropostaIncontro(sedeDiIncontro, rsRecuperaIncontri.getString("Ora_inizio_incontro"), 
-																	rsRecuperaIncontri.getString("Ora_fine_incontro"), GiornoEnum.confrontaConStringa(rsRecuperaIncontri.getString("Giorno_incontro")));
+						annuncioRecuperato.aggiungiPropostaIncontro(
+								sedeDiIncontro, 
+								rsRecuperaIncontri.getString("Ora_inizio_incontro"), 
+								rsRecuperaIncontri.getString("Ora_fine_incontro"), 
+								GiornoEnum.confrontaConStringa(rsRecuperaIncontri.getString("Giorno_incontro"))
+						);
 					}
 				}
 			}
@@ -227,16 +243,5 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			annuncioRecuperato.setDataScadenza(rs.getDate("Data_scadenza"));
 		
 		return annuncioRecuperato;
-	}
-
-	@Override
-	public Annuncio recuperaAnnuncioConId(int idAnnuncio) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ?")){
-			ps.setInt(1, idAnnuncio);
-			try(ResultSet rs = ps.executeQuery()){
-				rs.next();
-				return annuncioCorrenteRecuperato(rs);
-			}
-		}
 	}
 }

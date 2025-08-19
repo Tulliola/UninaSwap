@@ -361,11 +361,6 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 		return panelInfoOggetto;
 	}
 
-	private MyJPanel creaPanelFaiOfferta(Offerta offerta) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private MyJPanel creaPanelFotoOggetto(Offerta offerta) {
 		MyJPanel panelFotoOggetto = new MyJPanel();
 		panelFotoOggetto.setLayout(new BorderLayout());

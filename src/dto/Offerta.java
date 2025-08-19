@@ -9,22 +9,23 @@ import utilities.StatoOffertaEnum;
 
 public abstract class Offerta {
 	//Attributi propri
-	private Timestamp momentoProposta;
-	private String nota;
-	private String indirizzoSpedizione;
-	private String oraInizioIncontro;
-	private String oraFineIncontro;
-	private GiornoEnum giornoIncontro;
-	private ModConsegnaEnum modalitaConsegnaScelta;
-	private StatoOffertaEnum stato = StatoOffertaEnum.In_attesa;
+	protected Timestamp momentoProposta;
+	protected String nota;
+	protected String indirizzoSpedizione;
+	protected String oraInizioIncontro;
+	protected String oraFineIncontro;
+	protected GiornoEnum giornoIncontro;
+	protected ModConsegnaEnum modalitaConsegnaScelta;
+	protected StatoOffertaEnum stato = StatoOffertaEnum.In_attesa;
 	
 	//Attributi derivati da relazioni
 	protected ProfiloUtente utenteProprietario;
-	private UfficioPostale ufficioRitiro;
-	private SedeUniversita sedeDIncontroScelta;
+	protected UfficioPostale ufficioRitiro;
+	protected SedeUniversita sedeDIncontroScelta;
 
-	private Annuncio annuncioRiferito;
+	protected Annuncio annuncioRiferito;
 	
+	protected String messaggioMotivazionale;
 	
 	public Offerta(ProfiloUtente offerente, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
@@ -150,6 +151,13 @@ public abstract class Offerta {
 		this.annuncioRiferito = annuncioRiferito;
 	}
 	
+	public String getMessaggioMotivazionale() {
+		return messaggioMotivazionale;
+	}
+	
+	public void setMessaggioMotivazionale(String messaggioMotivazionale) {
+		this.messaggioMotivazionale = messaggioMotivazionale;
+	}
 	@Override
 	public String toString() {
 		String toReturn = "OFFERTA\n--------------------------------------\n";

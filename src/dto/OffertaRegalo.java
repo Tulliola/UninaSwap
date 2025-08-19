@@ -8,48 +8,20 @@ import utilities.ModConsegnaEnum;
 import utilities.StatoOffertaEnum;
 
 public class OffertaRegalo extends Offerta {
-	//Attributi propri
-	private Double prezzoOfferto = null;
-	
-	//Attributi derivati da relazioni
-	private ArrayList<Oggetto> oggettiOfferti;
-
 	public OffertaRegalo(ProfiloUtente offerente, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
 		super(offerente, momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
 	}
-
-	public void aggiungiOggettoAllOfferta(Oggetto oggettoOfferto) {
-		this.oggettiOfferti.add(oggettoOfferto);
-	}
 	
-	public void aggiungiOggettiAllOfferta(ArrayList<Oggetto> oggettiOfferti) {
-		this.oggettiOfferti.addAll(oggettiOfferti);
+	public OffertaRegalo(ProfiloUtente offerente, ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {
+		super(offerente, modalitaConsegnaScelta, annuncioRiferito);
 	}
-	
-	public void aggiuntiOffertaMonetaria(double offerta) {
-		this.prezzoOfferto = offerta;
-	}
-	
-	@Override
-	public ArrayList<Oggetto> getOggettiOfferti() {
-		return this.oggettiOfferti;
-	}
-
-	@Override
-	public Double getPrezzoOfferto() {
-		return prezzoOfferto;
-	}
-	
 	@Override
 	public String toString() {
 		String toReturn = super.toString();
 		
-		toReturn += "\nPrezzo offerto = "+prezzoOfferto+"\n";
+		toReturn += "\nPrezzo offerto = "+"\n";
 		toReturn += "Oggetti offerti = \n";
-		for(Oggetto oggetto: oggettiOfferti) {
-			toReturn += oggetto+"\n";
-		}
 		
 		return toReturn;
 	}

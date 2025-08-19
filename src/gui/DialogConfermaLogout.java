@@ -45,19 +45,19 @@ public class DialogConfermaLogout extends JDialog {
 		
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
-		MyJButton okButton = new MyJButton("OK");
-		okButton.setDefaultAction(() -> {
-			mainController.logout();
-		});
-		
-		panelBottoni.add(okButton);
-		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
 		tornaIndietroButton.setDefaultAction(() -> {
 			mainController.chiudiDialogConfermaLogout();
 		});
 		
 		panelBottoni.add(tornaIndietroButton);
+		
+		MyJButton okButton = new MyJButton("OK");
+		okButton.setDefaultAction(() -> {
+			mainController.logout();
+		});
+		
+		panelBottoni.add(okButton);
 		
 		contentPane.add(panelMessaggio, BorderLayout.CENTER);
 		contentPane.add(panelBottoni, BorderLayout.SOUTH);
