@@ -46,6 +46,7 @@ import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaScambio;
 import eccezioni.OffertaAcquistoException;
+import eccezioni.OffertaRegaloException;
 import eccezioni.OffertaScambioException;
 import utilities.CategoriaEnum;
 //import dto.AnnuncioRegalo;
@@ -541,7 +542,14 @@ public class PanelHomePageAnnunci extends JPanel{
 				}
 			});
 		else
-			bottoneFaiOfferta.setDefaultAction(() -> JOptionPane.showMessageDialog(this, "Work in progress"));
+			bottoneFaiOfferta.setDefaultAction(() -> {
+				try {
+					mainController.passaADialogScegliOffertaRegalo(annuncio);
+				}
+				catch(OffertaRegaloException exc) {
+					JOptionPane.showMessageDialog(this, exc.getMessage());
+				}
+			});
 		
 		MyJLabel lblInterazioni = new MyJLabel(String.valueOf(annuncio.getNumeroInterazioni()));
 		lblInterazioni.aggiungiImmagineScalata("images/iconaMiPiace.png", 25, 25, false);
@@ -770,7 +778,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		}
 	}
 	
-private void checkOffertaScambioGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaScambioException{
+	private void checkOffertaScambioGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaScambioException{
 		
 		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
 			if(offertaCorrente instanceof OffertaScambio) {

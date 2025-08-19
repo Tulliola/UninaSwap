@@ -75,36 +75,35 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 						ModConsegnaEnum modConsegna = ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta"));
 						StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
 						Annuncio annuncioRiferito = annuncioDAO.recuperaAnnuncioConId(rs.getInt("idAnnuncio"));
+						String tipoAnnuncio = recuperaTipoAnnuncio(rs.getInt("idAnnuncio"));
 						
-						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Vendita")) {
+						if(tipoAnnuncio.equals("Vendita")) {
 							double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
 							offertaToAdd = new OffertaAcquisto(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
 						}
-						
-						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Scambio")) {
+						else if(tipoAnnuncio.equals("Scambio")) {
 							int idOfferta = recuperaIdOfferta(momentoProposta, utenteLoggato.getEmail());
 							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
 							ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferta);
 							
 							offertaToAdd = new OffertaScambio(utenteLoggato, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
 						}
-						if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Regalo")) {
-							double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("email"), rs.getTimestamp("Momento_proposta"));
+						else {
+							Double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("email"), rs.getTimestamp("Momento_proposta"));
 							
-							int idOfferta = recuperaIdOfferta(momentoProposta, utenteLoggato.getEmail());
-							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
-							ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferta);
-							
-							if(prezzoOfferto > 0) {
+							Integer idOfferta = recuperaIdOfferta(momentoProposta, utenteLoggato.getEmail());
+										
+							if(prezzoOfferto != null && prezzoOfferto > 0) {
 								offertaToAdd = new OffertaAcquisto(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
-							}
-							
-							else if(!(oggettiOfferti.isEmpty())) {
+							}							
+							else if(idOfferta != null) {
+								OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+								ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferta);
+								
 								offertaToAdd = new OffertaScambio(utenteLoggato, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
 							}
-							else {
+							else 
 								offertaToAdd = new OffertaRegalo(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito);
-							}
 						}
 						
 						if(modConsegna.equals(ModConsegnaEnum.Ritiro_in_posta)) {
@@ -132,7 +131,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 	@Override
-	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException, IOException{
+	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException{
 		ArrayList<Offerta> offerteAnnuncio = new ArrayList();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT"
@@ -150,7 +149,6 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 			
 			try(ResultSet rs = ps.executeQuery()){
 				ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-//				ProfiloUtente offerente = this.recuperaUtente(rs.getString("email"));
 				ProfiloUtente offerente = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email"));
 				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 				while(rs.next()) {
@@ -210,11 +208,12 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 		int idAnnuncioRiferito = offertaDaInserire.getAnnuncioRiferito().getIdAnnuncio();
 		String modalitaConsegnaScelta = offertaDaInserire.getModalitaConsegnaScelta();
 		String nota = offertaDaInserire.getNota();
+		String messaggioMotivazionale = offertaDaInserire.getMessaggioMotivazionale();
 		
 		if(offertaDaInserire instanceof OffertaAcquisto) {
 			String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
 					+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, "
-					+ "Prezzo_offerto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ "Prezzo_offerto, Messaggio_motivazionale) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 						
 			try(PreparedStatement psInserisciOffertaAcquisto = connessioneDB.prepareStatement(inserisciOffertaAcquisto)){
 				psInserisciOffertaAcquisto.setString(1, emailOfferente);
@@ -244,11 +243,15 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					psInserisciOffertaAcquisto.setNull(8, Types.VARCHAR);
 					psInserisciOffertaAcquisto.setNull(9, Types.VARCHAR);
 				}
-					
-			
+									
 				psInserisciOffertaAcquisto.setString(10, modalitaConsegnaScelta);;
 				psInserisciOffertaAcquisto.setDouble(11, offertaDaInserire.getPrezzoOfferto());
 				
+				if(messaggioMotivazionale != null)
+					psInserisciOffertaAcquisto.setString(12, messaggioMotivazionale);
+				else
+					psInserisciOffertaAcquisto.setNull(12, Types.VARCHAR);
+					
 				psInserisciOffertaAcquisto.executeUpdate();
 				
 			}
@@ -258,8 +261,8 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 			connessioneDB.setAutoCommit(false);
 			
 			String inserisciOffertaScambio = "INSERT INTO Offerta_scambio(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
-					+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta) "
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
+					+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, Messaggio_motivazionale) "
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
 						
 			try(PreparedStatement psInserisciOffertaScambio = connessioneDB.prepareStatement(inserisciOffertaScambio)){
 				psInserisciOffertaScambio.setString(1, emailOfferente);
@@ -291,6 +294,11 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				}
 					
 				psInserisciOffertaScambio.setString(10, modalitaConsegnaScelta);;
+				
+				if(messaggioMotivazionale != null)
+					psInserisciOffertaScambio.setString(11, messaggioMotivazionale);
+				else
+					psInserisciOffertaScambio.setNull(11, Types.VARCHAR);
 				
 				int idOffertaInserita;
 				
@@ -327,20 +335,66 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				connessioneDB.setAutoCommit(true);
 			}
 		}
+		
+		if(offertaDaInserire instanceof OffertaRegalo) {
+			String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
+					+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, "
+					+ "Prezzo_offerto, Messaggio_motivazionale) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						
+			try(PreparedStatement psInserisciOffertaAcquisto = connessioneDB.prepareStatement(inserisciOffertaAcquisto)){
+				psInserisciOffertaAcquisto.setString(1, emailOfferente);
+				psInserisciOffertaAcquisto.setInt(2, idAnnuncioRiferito);
+				
+				if(modalitaConsegnaScelta.equals("Ritiro in posta"))
+					psInserisciOffertaAcquisto.setInt(3, offertaDaInserire.getUfficioRitiro().getIdUfficio());
+				else
+					psInserisciOffertaAcquisto.setNull(3, Types.INTEGER);
+				
+				psInserisciOffertaAcquisto.setString(4, nota);
+				
+				if(modalitaConsegnaScelta.equals("Spedizione"))
+					psInserisciOffertaAcquisto.setString(5, offertaDaInserire.getIndirizzoSpedizione());
+				else
+					psInserisciOffertaAcquisto.setNull(5, Types.VARCHAR);
+				
+				if(modalitaConsegnaScelta.equals("Incontro")) {
+					psInserisciOffertaAcquisto.setString(6, offertaDaInserire.getOraInizioIncontro());
+					psInserisciOffertaAcquisto.setString(7, offertaDaInserire.getOraFineIncontro());
+					psInserisciOffertaAcquisto.setString(8, offertaDaInserire.getGiornoIncontro());
+					psInserisciOffertaAcquisto.setString(9, offertaDaInserire.getSedeDIncontroScelta().toString());
+				}
+				else {
+					psInserisciOffertaAcquisto.setNull(6, Types.VARCHAR);
+					psInserisciOffertaAcquisto.setNull(7, Types.VARCHAR);
+					psInserisciOffertaAcquisto.setNull(8, Types.VARCHAR);
+					psInserisciOffertaAcquisto.setNull(9, Types.VARCHAR);
+				}
+					
+			
+				psInserisciOffertaAcquisto.setString(10, modalitaConsegnaScelta);;
+				psInserisciOffertaAcquisto.setDouble(11, 0);
+				psInserisciOffertaAcquisto.setString(12, offertaDaInserire.getMessaggioMotivazionale());
+				
+				psInserisciOffertaAcquisto.executeUpdate();
+				
+			}
+		}
 	}
 	
 	//Metodi ausiliari
-	private int recuperaIdOfferta(Timestamp momentoProposta, String email) throws SQLException {
+	private Integer recuperaIdOfferta(Timestamp momentoProposta, String email) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idOfferta FROM OFFERTA_SCAMBIO WHERE "
 				+ "momento_proposta = ? AND email = ?")){
 			ps.setTimestamp(1, momentoProposta);
 			ps.setString(2, email);
 			
 			try(ResultSet rs = ps.executeQuery()){
-				rs.next();
-				return rs.getInt("idOfferta");
+				if(rs.next())
+					return rs.getInt("idOfferta");
 			}
 		}
+		
+		return null;
 	}
 	
 	private ArrayList<Integer> recuperaIdOfferte(Timestamp momentoProposta, int idAnnuncio) throws SQLException {
@@ -380,6 +434,7 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 			try(ResultSet rs = ps.executeQuery()){
 				if(rs.next())
 					return rs.getDouble("prezzo_offerto");
+
 				else
 					return null;
 			}
@@ -433,5 +488,9 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 			}
 		}
 		return toReturn;
+	}
+	
+	private void settaParametriComuniPerInserimento() throws SQLException {
+		
 	}
 }

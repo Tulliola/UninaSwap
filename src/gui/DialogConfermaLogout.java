@@ -43,11 +43,10 @@ public class DialogConfermaLogout extends JDialog {
 		panelMessaggio.add(lblMessaggio);
 		
 		MyJPanel panelBottoni = new MyJPanel();
-		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
+
 		MyJButton okButton = new MyJButton("OK");
 		
 		panelBottoni.add(okButton);
-		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
 		
 		okButton.setDefaultAction(() -> {

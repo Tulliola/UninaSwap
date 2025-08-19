@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -23,7 +22,6 @@ import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -35,6 +33,7 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioVendita;
 import dto.OffertaAcquisto;
+import dto.OffertaRegalo;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
 import eccezioni.PrezzoOffertoException;
@@ -44,16 +43,15 @@ import utilities.GiornoEnum;
 import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
 import utilities.MyJDialog;
-import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 
-public class DialogOffertaAcquisto extends MyJDialog {
+public class DialogOffertaRegalo extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel contentPane = new MyJPanel();
-	
+	private final JPanel contentPane = new JPanel();
+
 	private MyJPanel panelProposteVenditore = new MyJPanel();
 	private MyJPanel panelDatiProposte;
 	private MyJPanel panelModalitaConsegnaProposte;
@@ -69,18 +67,17 @@ public class DialogOffertaAcquisto extends MyJDialog {
 	private MyJPanel panelBottoni = new MyJPanel();
 	
 	private Controller mainController;
-	private MyJTextField inserisciPrezzoTextField;
+
 	private MyJTextField inserisciIndirizzoTextField;
 	private ButtonGroup modalitaSceltaBG;
 	private JTextArea inserisciNotaTextArea;
-	private MyJLabel lblErrorePrezzoOfferto;
 	private MyJLabel lblErroreSpedizione;
 	
 	private JComboBox<UfficioPostale> ufficiPostaliCB;
 	private ButtonGroup incontriBG;
 	private MyJTextField inserisciMessaggioTextField;
 	
-	public DialogOffertaAcquisto(Annuncio annuncioPerOfferta, Controller controller) {
+	public DialogOffertaRegalo(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
 		
 		this.setSize(1200, 800);
@@ -131,25 +128,18 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		panelDatiProposte.setAlignmentX(CENTER_ALIGNMENT);
 		panelDatiProposte.setLayout(new BoxLayout(panelDatiProposte, BoxLayout.Y_AXIS));
 	
-		MyJPanel panelPrezzoIniziale = new MyJPanel();
-		panelPrezzoIniziale.setBackground(Color.white);
-		MyJLabel lblPrezzoIniziale = new MyJLabel();
-		lblPrezzoIniziale.setAlignmentX(LEFT_ALIGNMENT);
+		MyJPanel panelRegalo = new MyJPanel();
+		panelRegalo.setBackground(Color.white);
+		MyJLabel lblRegalo = new MyJLabel();
+		lblRegalo.setAlignmentX(LEFT_ALIGNMENT);
 
-		if(!(annuncioPerOfferta instanceof AnnuncioRegalo)) {
-			lblPrezzoIniziale.setText(mainController.getUtenteLoggato().getUsername()+ ", il prezzo iniziale del mio articolo è " + annuncioPerOfferta.getPrezzoIniziale() + "€ ...");
-			lblPrezzoIniziale.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
-			panelPrezzoIniziale.add(lblPrezzoIniziale);
-			panelPrezzoIniziale.add(new MyJLabel("... ma sono disposto a trattare!"));
-		}
-		else {
-			lblPrezzoIniziale.setText(mainController.getUtenteLoggato().getUsername()+ ", questo articolo è in regalo!");
-			lblPrezzoIniziale.aggiungiImmagineScalata("images/iconaAnnuncioRegaloColored.png", 25, 25, false);
-			panelPrezzoIniziale.add(lblPrezzoIniziale);
-		}
+		lblRegalo.setText(mainController.getUtenteLoggato().getUsername()+ ", questo articolo è in regalo!");
+		lblRegalo.aggiungiImmagineScalata("images/iconaAnnuncioRegaloColored.png", 25, 25, false);
+		
+		panelRegalo.add(lblRegalo);
 
 		panelDatiProposte.add(Box.createVerticalGlue());
-		panelDatiProposte.add(panelPrezzoIniziale);
+		panelDatiProposte.add(panelRegalo);
 		panelDatiProposte.add(this.creaPanelModalitaConsegnaProposte(annuncioPerOfferta));
 		
 		return panelDatiProposte;
@@ -289,95 +279,11 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		panelMieProposte = new MyJPanel();
 		panelMieProposte.setLayout(new BorderLayout());
 		
-		panelMieProposte.add(this.creaPanelPrezzoOfferto(annuncioPerOfferta), BorderLayout.NORTH);
+		panelMieProposte.add(this.creaPanelMessaggioMotivazionale(), BorderLayout.NORTH);
 		panelMieProposte.add(this.creaPanelModalitaConsegnaScelta(annuncioPerOfferta), BorderLayout.CENTER);
 		panelMieProposte.add(this.creaPanelNotaOfferta(annuncioPerOfferta), BorderLayout.SOUTH);
 		
 		return panelMieProposte;
-	}
-	
-	private MyJPanel creaPanelPrezzoOfferto(Annuncio annuncioPerOfferta) {
-		MyJPanel panelPrezzoOfferto = new MyJPanel();
-		panelPrezzoOfferto.setLayout(new BoxLayout(panelPrezzoOfferto, BoxLayout.Y_AXIS));
-		panelPrezzoOfferto.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 100));
-		panelPrezzoOfferto.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 100));
-		panelPrezzoOfferto.setBackground(MyJPanel.uninaLightColor);
-
-		MyJPanel panelWrapper = new MyJPanel();
-		panelWrapper.setLayout(new BoxLayout(panelWrapper, BoxLayout.X_AXIS));
-		panelWrapper.setBackground(MyJPanel.uninaLightColor);
-		
-		MyJLabel lblPrezzoOfferto = new MyJLabel(annuncioPerOfferta.getUtenteProprietario().getUsername() + ", sono disposto ad offrire ");
-		lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
-		inserisciPrezzoTextField = new MyJTextField();
-		
-		if(annuncioPerOfferta instanceof AnnuncioVendita) {
-			Double prezzoOffertaMinimo = annuncioPerOfferta.getPrezzoIniziale() * 0.4;
-			inserisciPrezzoTextField.setText(prezzoOffertaMinimo.toString());
-		}
-		inserisciPrezzoTextField.setPreferredSize(new Dimension (100, 25));		
-		inserisciPrezzoTextField.setMaximumSize(new Dimension (100, 25));
-		inserisciPrezzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
-		MyJLabel lblEuro = new MyJLabel(" €.");
-		
-		panelWrapper.add(lblPrezzoOfferto);
-		panelWrapper.add(inserisciPrezzoTextField);
-		panelWrapper.add(lblEuro);
-		
-		lblErrorePrezzoOfferto = new MyJLabel(true);
-		lblErrorePrezzoOfferto.setAlignmentX(CENTER_ALIGNMENT);
-		
-		inserisciPrezzoTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				char carattereDigitato = e.getKeyChar();
-				
-				if(Character.isDigit(carattereDigitato)) {
-					int posizioneDiUnPunto = inserisciPrezzoTextField.getText().indexOf('.');
-					
-					if(posizioneDiUnPunto != -1 && inserisciPrezzoTextField.getText().length() - posizioneDiUnPunto > 2)
-						e.consume();
-					else {
-						inserisciPrezzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
-						lblErrorePrezzoOfferto.setVisible(false);
-					}
-				}
-				else if(carattereDigitato != '.'){
-					e.consume();
-					inserisciPrezzoTextField.settaBordiTextFieldErrore();
-					lblErrorePrezzoOfferto.setText("Formato non valido.");
-					lblErrorePrezzoOfferto.setVisible(true);
-				}
-				else if(inserisciPrezzoTextField.getText().contains(".") || inserisciPrezzoTextField.getText().length() == 0) {
-					e.consume();
-					inserisciPrezzoTextField.settaBordiTextFieldErrore();
-					lblErrorePrezzoOfferto.setText("Formato non valido.");
-					lblErrorePrezzoOfferto.setVisible(true);
-				}
-				else {
-					inserisciPrezzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
-					lblErrorePrezzoOfferto.setVisible(false);
-				}
-			}
-		});
-		
-		panelPrezzoOfferto.add(Box.createVerticalGlue());
-		panelPrezzoOfferto.add(Box.createHorizontalGlue());
-		
-		if(annuncioPerOfferta instanceof AnnuncioRegalo) {
-			panelPrezzoOfferto.add(this.creaPanelMessaggioMotivazionale());
-			panelPrezzoOfferto.add(Box.createVerticalGlue());
-		}
-		
-		panelPrezzoOfferto.add(panelWrapper);
-		panelPrezzoOfferto.add(Box.createVerticalGlue());
-		panelPrezzoOfferto.add(lblErrorePrezzoOfferto);
-		panelPrezzoOfferto.add(Box.createHorizontalGlue());
-		panelPrezzoOfferto.add(Box.createVerticalGlue());
-		
-		return panelPrezzoOfferto;
-
 	}
 	
 	private MyJPanel creaPanelMessaggioMotivazionale() {
@@ -406,7 +312,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		panelMessaggioMotivazionale.add(lblMessaggio);
 		panelMessaggioMotivazionale.add(inserisciMessaggioTextField);
 		panelMessaggioMotivazionale.add(Box.createRigidArea(new Dimension(0, 20)));
-
+		
 		return panelMessaggioMotivazionale;
 	}
 	
@@ -654,22 +560,14 @@ public class DialogOffertaAcquisto extends MyJDialog {
 	
 	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta) {
 		try {
-			this.nascondiLabelErrore(this.lblErrorePrezzoOfferto, this.lblErroreSpedizione);
-			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField, this.inserisciPrezzoTextField);
+			this.nascondiLabelErrore(this.lblErroreSpedizione);
+			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField);
 			
-			if(annuncioPerOfferta instanceof AnnuncioVendita)
-				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), annuncioPerOfferta.getPrezzoIniziale() * 0.4, annuncioPerOfferta.getPrezzoIniziale());
-			else if(annuncioPerOfferta instanceof AnnuncioRegalo)
-				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), 0.01, 0);
-
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
 				checkResidenza(this.inserisciIndirizzoTextField.getText());
 			
-			OffertaAcquisto newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
+			OffertaRegalo newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
 			mainController.onConfermaOffertaButtonClicked(newOfferta);
-		}
-		catch(PrezzoOffertoException | SaldoException throwables) {
-			this.settaLabelETextFieldDiErrore(lblErrorePrezzoOfferto, throwables.getMessage(), this.inserisciPrezzoTextField);
 		}
 		catch(ResidenzaException exc2) {
 			this.settaLabelETextFieldDiErrore(lblErroreSpedizione, exc2.getMessage(), this.inserisciIndirizzoTextField);
@@ -697,29 +595,10 @@ public class DialogOffertaAcquisto extends MyJDialog {
 
 	}
 
-	private void checkPrezzoOfferto(String prezzoOfferto, double prezzoMinimo, double prezzoIniziale) throws SaldoException, PrezzoOffertoException {
-		
-		if(this.inserisciPrezzoTextField.getText().isEmpty() || this.inserisciPrezzoTextField.getText() == null)
-			throw new PrezzoOffertoException("Inserisci un'offerta monetaria.");
-		
-		double prezzoOffertoDouble = Double.valueOf(prezzoOfferto);
-		
-		if(mainController.getUtenteLoggato().getSaldo() <= prezzoOffertoDouble)
-			throw new SaldoException("Saldo insufficiente.");
-		
-		if(prezzoIniziale > 0) {
-			if(prezzoOffertoDouble < prezzoMinimo)
-				throw new PrezzoOffertoException("Il prezzo offerto deve essere almeno pari a " + prezzoMinimo + "€ (il 40%).");
-			
-			if(prezzoOffertoDouble > prezzoIniziale)
-				throw new PrezzoOffertoException("Il prezzo offerto deve essere al più pari al prezzo iniziale.");
-		}
-	}
-	
-	private OffertaAcquisto organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
+	private OffertaRegalo organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 		
-		OffertaAcquisto offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, Double.valueOf(this.inserisciPrezzoTextField.getText()));
+		OffertaRegalo offertaToAdd = new OffertaRegalo(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito);
 				
 		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
 			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
@@ -751,10 +630,8 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		
 		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
 		
-		if(annuncioRiferito instanceof AnnuncioRegalo)
-			offertaToAdd.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
+		offertaToAdd.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
 		
 		return offertaToAdd;
 	}
-
 }

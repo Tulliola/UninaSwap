@@ -48,6 +48,38 @@ public class MyJPanel extends JPanel {
 		this.add(textFieldInput);
 	}
 	
+	public void nascondiLabelErrore(JLabel... labelsDiErrore) {
+		for(JLabel labelAttuale: labelsDiErrore)
+			labelAttuale.setVisible(false);
+	}
+	
+	public void nascondiPanelErrore(JPanel... panelsDiErrore) {
+		for(JPanel panelAttuale: panelsDiErrore)
+			panelAttuale.setVisible(false);
+	}
+
+	public void resettaBordiTextField(Border borderDaSettare, JTextField... textFields) {
+		for(JTextField textFieldAttuale: textFields)
+			textFieldAttuale.setBorder(borderDaSettare);
+	}
+	
+	public void resettaBordiTextA(Border borderDaSettare, JTextArea... textAreas) {
+		for(JTextArea textAreaAttuale: textAreas)
+			textAreaAttuale.setBorder(borderDaSettare);
+	}
+	
+	public void settaLabelETextFieldDiErrore(MyJLabel labelInput, String messaggioDiErrore, JTextField textFieldInput) {
+		labelInput.setText(messaggioDiErrore);
+		textFieldInput.setBorder(redBorder);
+		labelInput.setVisible(true);
+	}
+	
+	public void settaLabelETextAreaDiErrore(MyJLabel labelInput, String messaggioDiErrore, JTextArea textAInput) {
+		labelInput.setText(messaggioDiErrore);
+		textAInput.setBorder(redBorder);
+		labelInput.setVisible(true);
+	}
+	
 	
 	@Override
 	protected void paintComponent(Graphics immagineDaAdattare) {

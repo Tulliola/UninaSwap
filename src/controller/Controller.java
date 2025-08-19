@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.IOException;
@@ -36,12 +37,16 @@ public class Controller {
 	private FrameHomePage frameHomePage;
 	private FramePubblicaAnnuncio framePubblicaAnnuncio;
 	private FrameCaricaOggettoScambio[] frameCaricaOggetto = new FrameCaricaOggettoScambio[3];
-	private DialogOffertaAcquisto dialogOffertaAcquisto;
-	private DialogOffertaScambio dialogOffertaScambio;
-	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
-	private DialogConfermaLogout dialogConfermaLogout;
 	private FrameReport frameReport;
 	private FrameVisualizzaOfferte frameVisualizzaOfferte;
+	
+	// Dialogs
+	private DialogConfermaLogout dialogConfermaLogout;
+	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
+	private DialogOffertaAcquisto dialogOffertaAcquisto;
+	private DialogOffertaScambio dialogOffertaScambio;
+	private DialogScegliOffertaRegalo dialogScegliOffertaRegalo;
+	private DialogOffertaRegalo dialogOffertaRegalo;
 	
 	private static Connection connessioneDB;
 	
@@ -64,48 +69,8 @@ public class Controller {
 //			e.printStackTrace();
 //		}
 //		frameReport.setVisible(true);
-	 
 		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);				
-		
-//		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, "Vendita", sediPresenti);
-//		framePubblicaAnnuncio.setVisible(true);
-		
-//		ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
-//		this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
-		
-//		frameCambiaImmagine = new FrameCambiaImmagine(this, immaginiDiSistema);
-//		frameCambiaImmagine.setVisible(true);
-		
-//		ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-//		try {
-//			utenteLoggato = dao.recuperaUtenteConEmailOUsername("king_antonio", "killerpin");
-//			frameProfiloUtente = new FrameProfiloUtente(this, "        Annunci disponibili", utenteLoggato);
-//			
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		frameProfiloUtente.setVisible(true);
-//		
-//		try {
-//			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-//			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
-//
-//			ProfiloUtenteDAO_Postgres dao = new ProfiloUtenteDAO_Postgres(connessioneDB, null);
-//			utenteLoggato = dao.recuperaUtenteConEmailOUsernameEPassword("tulliola", "tullio33");
-//			AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-//			annuncioDAO.recuperaAnnunciDiUtente(utenteLoggato);
-//			dialogOffertaScambio = new DialogOffertaScambio(utenteLoggato.getAnnunciUtente().get(2), this);
-//			dialogOffertaScambio.setVisible(true);
-//		}
-//		catch(SQLException exc) {
-//
-//			
-//		}
-
-//		frameHomePage = new FrameHomePage(this, utenteLoggato);
-//		frameHomePage.setVisible(true);
+		frameDiLogin.setVisible(true);		
 	}
 
 	static {
@@ -190,7 +155,7 @@ public class Controller {
 	}
 
 	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
-		frameHomePage.dispose();
+		frameHomePage.setVisible(false);
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
 	}
@@ -201,11 +166,13 @@ public class Controller {
 		dialogConfermaCambiaImmagine.setVisible(true);
 	}
 		
-	public void passaAFrameHomePage(MyJFrame frameDiPartenza) {
+	public void passaAFrameHomePage(JFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
-		frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
-		frameHomePage.setVisible(true);
+
+		if(frameHomePage == null)
+			frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
 		
+		frameHomePage.setVisible(true);
 	}
 	
 	public void passaAFrameHomePage(JDialog frameDiPartenza) {
@@ -213,13 +180,14 @@ public class Controller {
 	}
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
-		frameHomePage.dispose();
+		frameHomePage.setVisible(false);
 		framePubblicaAnnuncio = new FramePubblicaAnnuncio(this, tipoAnnuncioDaPubblicare, sediPresenti);
 		framePubblicaAnnuncio.setVisible(true);
 	}
 	
 	public void passaAFrameCaricaOggetto(int frameOggettoIesimo) {
-		dialogOffertaScambio.setVisible(false);
+		if(dialogOffertaScambio != null)
+			dialogOffertaScambio.setVisible(false);
 		
 		//Se sto creando l'oggetto per la prima volta o se ho chiamato la dispose sul frame
 		if(frameCaricaOggetto[frameOggettoIesimo] == null || !frameCaricaOggetto[frameOggettoIesimo].isDisplayable())
@@ -239,15 +207,33 @@ public class Controller {
 	}
 	
 	public void passaADialogOffertaAcquisto(Annuncio annuncioACuiOffrire) {
+		if(dialogScegliOffertaRegalo != null)
+			dialogScegliOffertaRegalo.dispose();
+		
 		dialogOffertaAcquisto = new DialogOffertaAcquisto(annuncioACuiOffrire, this);
 		dialogOffertaAcquisto.setVisible(true);
 	}
 	
 	public void passaADialogOffertaScambio(Annuncio annuncioACuiOffrire) {
+		if(dialogScegliOffertaRegalo != null)
+			dialogScegliOffertaRegalo.dispose();
+		
 		dialogOffertaScambio = new DialogOffertaScambio(annuncioACuiOffrire, this);
 		dialogOffertaScambio.setVisible(true);
 	}
-
+	
+	public void passaADialogScegliOffertaRegalo(Annuncio annuncio) {
+		dialogScegliOffertaRegalo = new DialogScegliOffertaRegalo(this, frameHomePage, annuncio);
+		dialogScegliOffertaRegalo.setVisible(true);
+		
+	}
+	
+	public void passaADialogOffertaRegalo(Annuncio annuncio) {
+		dialogScegliOffertaRegalo.dispose();
+		
+		dialogOffertaRegalo = new DialogOffertaRegalo(annuncio, this);
+		dialogOffertaRegalo.setVisible(true);
+	}
 	
 	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
@@ -323,18 +309,24 @@ public class Controller {
 	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
 		OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
 		offertaDAO.inserisciOfferta(offertaToAdd);
-		utenteLoggato.aggiungiOfferta(offertaToAdd);
-		
-		if(dialogOffertaAcquisto != null)
+		utenteLoggato.aggiungiOfferta(offertaToAdd);		
+
+		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
-		else if(dialogOffertaScambio != null)
+		else if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
+			for(int i = 0; i < 3; i++)
+				if(frameCaricaOggetto[i] != null)
+					frameCaricaOggetto[i].dispose();
 			dialogOffertaScambio.dispose();
+		}
+		else
+			dialogOffertaRegalo.dispose();
 	}
 	
 	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {
 		this.frameCaricaOggetto[indiceNellArrayDeiFrame].setVisible(false);
+		
 		dialogOffertaScambio.aggiungiOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
-
 		dialogOffertaScambio.setVisible(true);
 	}
 	
@@ -371,7 +363,6 @@ public class Controller {
 	public void chiudiDialogConfermaLogout() {
 		dialogConfermaLogout.dispose();
 	}
-
 
 	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
 		frameProfiloUtente.setVisible(false);

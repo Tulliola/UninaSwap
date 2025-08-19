@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
+import dto.AnnuncioRegalo;
 import dto.OffertaScambio;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
@@ -84,6 +85,7 @@ public class DialogOffertaScambio extends MyJDialog {
 	private String defaultStringPerCaricaOggettoLbl = "Carica il tuo oggetto!";
 	
 	private boolean isOggettoCaricato[] = new boolean[3];
+	private MyJTextField inserisciMessaggioTextField;
 	
 	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
@@ -142,22 +144,35 @@ public class DialogOffertaScambio extends MyJDialog {
 		panelNotaScambio.setAlignmentX(CENTER_ALIGNMENT);
 		panelNotaScambio.setPreferredSize(new Dimension(this.panelProposteVenditore.getPreferredSize().width-10, 200));
 		panelNotaScambio.setMaximumSize(new Dimension(this.panelProposteVenditore.getPreferredSize().width-10, 200));
-		MyJLabel lblNotaScambio = new MyJLabel(mainController.getUtenteLoggato().getUsername() + ", per questo articolo vorrei...");
-		lblNotaScambio.aggiungiImmagineScalata("images/iconaFrecceScambio.png", 25, 25, false);
-		lblNotaScambio.setAlignmentX(CENTER_ALIGNMENT);
-		JTextArea notaScambioTextA = new JTextArea();
-		notaScambioTextA.setText(annuncioPerOfferta.getNotaScambio());
-		notaScambioTextA.setEditable(false);
-		notaScambioTextA.setOpaque(false);
-		notaScambioTextA.setLineWrap(true);
-		notaScambioTextA.setPreferredSize(new Dimension(this.panelDatiProposte.getPreferredSize().width-10, 100));
-		notaScambioTextA.setMaximumSize(new Dimension(this.panelDatiProposte.getPreferredSize().width-10, 100));
-		notaScambioTextA.setBorder(new EmptyBorder(5, 5, 5, 5));
-		notaScambioTextA.setEnabled(false);
-		notaScambioTextA.setDisabledTextColor(Color.black);
 		
-		panelNotaScambio.add(lblNotaScambio);
-		panelNotaScambio.add(notaScambioTextA);
+		MyJLabel lblNotaScambio = new MyJLabel();
+		lblNotaScambio.setAlignmentX(CENTER_ALIGNMENT);
+
+		if(!(annuncioPerOfferta instanceof AnnuncioRegalo)) {
+			lblNotaScambio.setText(mainController.getUtenteLoggato().getUsername() + ", per questo articolo vorrei...");
+			lblNotaScambio.aggiungiImmagineScalata("images/iconaFrecceScambio.png", 25, 25, false);
+
+			JTextArea notaScambioTextA = new JTextArea();
+			notaScambioTextA.setText(annuncioPerOfferta.getNotaScambio());
+			notaScambioTextA.setEditable(false);
+			notaScambioTextA.setOpaque(false);
+			notaScambioTextA.setLineWrap(true);
+			notaScambioTextA.setPreferredSize(new Dimension(this.panelDatiProposte.getPreferredSize().width-10, 100));
+			notaScambioTextA.setMaximumSize(new Dimension(this.panelDatiProposte.getPreferredSize().width-10, 100));
+			notaScambioTextA.setBorder(new EmptyBorder(5, 5, 5, 5));
+			notaScambioTextA.setEnabled(false);
+			notaScambioTextA.setDisabledTextColor(Color.black);
+			
+			panelNotaScambio.add(lblNotaScambio);
+			panelNotaScambio.add(notaScambioTextA);
+		}
+		else {
+			lblNotaScambio.setText(mainController.getUtenteLoggato().getUsername() + ", questo articolo è in regalo!");
+			lblNotaScambio.aggiungiImmagineScalata("images/iconaAnnuncioRegaloColored.png", 25, 25, false);
+			
+			panelNotaScambio.add(lblNotaScambio);
+		}
+		
 		
 		panelDatiProposte.add(Box.createVerticalGlue());
 		panelDatiProposte.add(panelNotaScambio);
@@ -349,7 +364,14 @@ public class DialogOffertaScambio extends MyJDialog {
 		lblErroreCaricamentoOggetti.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelWrapper.add(lblCaricaOggetti);
+		
 		panelCaricamentoOggetti.add(Box.createVerticalGlue());
+		
+		if(annuncioPerOfferta instanceof AnnuncioRegalo) {
+			panelCaricamentoOggetti.add(this.creaPanelMessaggioMotivazionale());
+			panelCaricamentoOggetti.add(Box.createVerticalGlue());
+		}
+		
 		panelCaricamentoOggetti.add(panelWrapper);
 		panelCaricamentoOggetti.add(lblCaricaOggetto[0]);
 		panelCaricamentoOggetti.add(lblCaricaOggetto[1]);
@@ -361,6 +383,36 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelCaricamentoOggetti;
 	}
 	
+	private MyJPanel creaPanelMessaggioMotivazionale() {
+		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
+		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
+		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
+		panelMessaggioMotivazionale.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 40));
+		panelMessaggioMotivazionale.setBackground(MyJPanel.uninaLightColor);
+		panelMessaggioMotivazionale.setAlignmentX(CENTER_ALIGNMENT);
+		
+		MyJLabel lblMessaggio = new MyJLabel("Lascia un messaggio motivazionale");
+		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
+		inserisciMessaggioTextField = new MyJTextField();
+		inserisciMessaggioTextField.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-20, 30));
+		inserisciMessaggioTextField.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-20, 30));
+		inserisciMessaggioTextField.setAlignmentX(CENTER_ALIGNMENT);
+		inserisciMessaggioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
+		inserisciMessaggioTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent ke) {
+				if(inserisciMessaggioTextField.getText().length() > 100)
+					ke.consume();
+			}
+		});
+		
+		panelMessaggioMotivazionale.add(lblMessaggio);
+		panelMessaggioMotivazionale.add(inserisciMessaggioTextField);
+		panelMessaggioMotivazionale.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		return panelMessaggioMotivazionale;
+	}
+	
 	private MyJPanel creaPanelModalitaConsegnaScelta(Annuncio annuncioPerOfferta) {
 		MyJPanel panelModalitaConsegnaScelta = new MyJPanel();
 		panelModalitaConsegnaScelta.setBackground(MyJPanel.uninaLightColor);
@@ -370,11 +422,11 @@ public class DialogOffertaScambio extends MyJDialog {
 		panelModalitaConsegnaScelta.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-50, 300));
 
 		MyJPanel sottoPanelModalitaScelta = new MyJPanel();
-		sottoPanelModalitaScelta.setLayout(new BoxLayout(sottoPanelModalitaScelta, BoxLayout.Y_AXIS));
+		sottoPanelModalitaScelta.setLayout(new BoxLayout(sottoPanelModalitaScelta, BoxLayout.X_AXIS));
 		sottoPanelModalitaScelta.setAlignmentX(CENTER_ALIGNMENT);
 		sottoPanelModalitaScelta.setBackground(MyJPanel.uninaLightColor);
 		MyJLabel lblModalitaScelta = new MyJLabel("Tra le modalità di consegna che hai proposto, preferirei...");
-		lblModalitaScelta.setAlignmentX(LEFT_ALIGNMENT);
+		lblModalitaScelta.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JRadioButton spedizioneRB = new JRadioButton("Spedizione");
 		this.settaRadioButton(spedizioneRB, () -> {
@@ -400,8 +452,6 @@ public class DialogOffertaScambio extends MyJDialog {
 		});
 		incontroRB.setActionCommand("Incontro");
 		
-		sottoPanelModalitaScelta.add(lblModalitaScelta);
-
 		modalitaSceltaBG = new ButtonGroup();
 		JRadioButton primaModalitaInserita = null;;
 		
@@ -507,6 +557,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		if(annuncioPerOfferta.isIncontro())
 			primoIncontroInserito.doClick();
 		
+		panelModalitaConsegnaScelta.add(lblModalitaScelta);
 		panelModalitaConsegnaScelta.add(sottoPanelModalitaScelta);
 		panelModalitaConsegnaScelta.add(Box.createRigidArea(new Dimension(0, 10)));
 		panelModalitaConsegnaScelta.add(sottoPanelSpedizione);
@@ -689,6 +740,9 @@ public class DialogOffertaScambio extends MyJDialog {
 		}		
 		
 		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
+		
+		if(annuncioRiferito instanceof AnnuncioRegalo)
+			offertaToAdd.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
 		
 		return offertaToAdd;
 	}
