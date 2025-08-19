@@ -115,10 +115,12 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 						else if(modConsegna.equals(ModConsegnaEnum.Spedizione))
 							offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
 						else {
+							SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 							offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
 							offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
 							offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
-							offertaToAdd.setSedeDIncontroScelta(new SedeUniversita(rs.getString("Sede_incontro")));
+							SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+							offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 						}
 						
 						offerteUtente.add(offertaToAdd);
@@ -151,7 +153,9 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 				ProfiloUtente offerente = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email"));
 				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+
 				while(rs.next()) {
+					Offerta offertaToAdd = null;
 					Timestamp momentoProposta = rs.getTimestamp("momento_proposta");
 					ModConsegnaEnum modConsegna = ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta"));
 					StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("stato"));
@@ -159,7 +163,8 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 					
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Vendita")){
 						double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
-						offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
+						offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
+//						offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 					}
 					
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Scambio")) {
@@ -170,7 +175,8 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 						
 						for(int i = 0; i < idOfferte.size(); i++) {
 							oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferte.get(i));
-							offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
+							offertaToAdd = new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
+//							offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 						}
 					}
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Regalo")) {
@@ -179,7 +185,8 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, annuncio.getIdAnnuncio());
 						
 						if(prezzoOfferto != null) {
-							offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
+							offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto);
+//							offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 						}
 						
 						else if(!(idOfferte.size() == 0)) {
@@ -188,12 +195,34 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 							
 							for(int i = 0; i < idOfferte.size(); i++) {
 								ArrayList<Oggetto> oggettiOfferti = oggettoDAO.recuperaOggettiOffertiConIdOfferta(idOfferte.get(i));
-								offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
+								offertaToAdd = new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
+//								offerteAnnuncio.add(new OffertaScambio(offerente, idOfferte.get(i), momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti));
 							}
 						}
 						else {
-							offerteAnnuncio.add(new OffertaRegalo(offerente, momentoProposta, modConsegna, stato, annuncioRiferito));
+							offertaToAdd = new OffertaRegalo(offerente, momentoProposta, modConsegna, stato, annuncioRiferito);
+//							offerteAnnuncio.add(new OffertaRegalo(offerente, momentoProposta, modConsegna, stato, annuncioRiferito));
 						}
+						
+						if(modConsegna.equals(ModConsegnaEnum.Ritiro_in_posta)) {
+							UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+							UfficioPostale ufficioScelto = ufficioDAO.recuperaUfficioPostaleConId(rs.getInt("idUfficio"));
+							offertaToAdd.setUfficioRitiro(ufficioScelto);
+							
+						}
+						else if(modConsegna.equals(ModConsegnaEnum.Spedizione))
+							offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
+						else {
+							SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
+							offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
+							offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
+							offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
+							SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+							offertaToAdd.setSedeDIncontroScelta(sedeScelta);
+						}
+						
+						
+						offerteAnnuncio.add(offertaToAdd);
 					}
 				}
 				
@@ -481,9 +510,27 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 			try(ResultSet rs = ps.executeQuery()){
 				ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 				while(rs.next()) {
-					toReturn.add(new OffertaAcquisto(profiloDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email")), 
+					Offerta offertaToAdd = new OffertaAcquisto(profiloDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email")), 
 							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
-							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
+							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto"));
+//					toReturn.add(new OffertaAcquisto(profiloDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("email")), 
+//							rs.getTimestamp("momento_proposta"), ModConsegnaEnum.confrontaConStringa(rs.getString("modalita_consegna_scelta")),
+//							StatoOffertaEnum.confrontaConDB(rs.getString("stato")), annuncioRecuperato, rs.getDouble("prezzo_offerto")));
+					if(offertaToAdd.getModalitaConsegnaScelta().equals("Spedizione")) {
+						offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
+					}
+					else if(offertaToAdd.getModalitaConsegnaScelta().equals("Ritiro in posta")) {
+						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+						offertaToAdd.setUfficioRitiro(ufficioDAO.recuperaUfficioPostaleConId(rs.getInt("idUfficio")));
+					}
+					else {
+						SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
+						offertaToAdd.setSedeDIncontroScelta(sedeDAO.recuperaSedeNome(rs.getString("sede_incontro")));
+						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("giorno_incontro")));
+						offertaToAdd.setOraInizioIncontro(rs.getString("ora_inizio_incontro"));
+						offertaToAdd.setOraFineIncontro(rs.getString("ora_fine_incontro"));
+					}
+					toReturn.add(offertaToAdd);
 				}
 			}
 		}

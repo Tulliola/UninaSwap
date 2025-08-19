@@ -54,4 +54,16 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 		return null;
 	}
 
+	@Override
+	public SedeUniversita recuperaSedeNome(String nomeSede) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idSede, Nome FROM Sede_universita WHERE Nome = ?")){
+			ps.setString(1, nomeSede);
+			try(ResultSet rs = ps.executeQuery()){
+				if(rs.next())
+					return new SedeUniversita(rs.getInt("idSede"), rs.getString("Nome"));
+			}
+			return null;
+		}
+	}
+
 }

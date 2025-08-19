@@ -221,4 +221,8 @@ public class ProfiloUtente {
 		
 		return toReturn;
 	}
+
+	public ArrayList<Annuncio> getAnnunci() {
+		return this.annunciUtente;
+	}
 }

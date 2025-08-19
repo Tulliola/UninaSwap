@@ -255,6 +255,12 @@ public class Controller {
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
 			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
+			for(Annuncio annuncio: utenteLoggato.getAnnunci()) {
+				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
+			}
+			for(Annuncio annuncio: annunciInBacheca) {
+				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
+			}
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
