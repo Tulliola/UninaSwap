@@ -35,7 +35,6 @@ public class DialogConfermaLogout extends JDialog {
 
 	private void settaDialog(JFrame framePadre) {
 		this.setLayout(new BorderLayout());
-//		this.setSize(new Dimension(600, 300));
 		MyJPanel contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());
 		
@@ -46,17 +45,26 @@ public class DialogConfermaLogout extends JDialog {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		MyJButton okButton = new MyJButton("OK");
-		okButton.setDefaultAction(() -> {
-			mainController.logout();
-		});
 		
 		panelBottoni.add(okButton);
 		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
+		
+		okButton.setDefaultAction(() -> {
+			mainController.logout();
+		});
+		okButton.setUpAction(() -> {});
+		okButton.setDownAction(() -> {
+			tornaIndietroButton.requestFocus();
+		});
+		
 		tornaIndietroButton.setDefaultAction(() -> {
 			mainController.chiudiDialogConfermaLogout();
 		});
-		
+		tornaIndietroButton.setUpAction(() -> {
+			okButton.requestFocus();
+		});
+		tornaIndietroButton.setDownAction(() -> {});
 		panelBottoni.add(tornaIndietroButton);
 		
 		contentPane.add(panelMessaggio, BorderLayout.CENTER);

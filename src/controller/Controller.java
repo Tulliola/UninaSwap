@@ -28,7 +28,6 @@ import database.dao.*;
 //Import dal package Eccezioni
 import eccezioni.*;
 
-
 public class Controller {
 	private FrameDiLogin frameDiLogin;
 	private FrameDiRegistrazione frameDiRegistrazione;
@@ -41,6 +40,8 @@ public class Controller {
 	private DialogOffertaScambio dialogOffertaScambio;
 	private DialogConfermaCambiaImmagine dialogConfermaCambiaImmagine;
 	private DialogConfermaLogout dialogConfermaLogout;
+	private FrameReport frameReport;
+	private FrameVisualizzaOfferte frameVisualizzaOfferte;
 	
 	private static Connection connessioneDB;
 	
@@ -54,7 +55,16 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-
+		ProfiloUtenteDAO_Postgres utente = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+//		try {
+//			frameReport = new FrameReport(this, utente.recuperaUtenteConEmailOUsernameEPassword("comicoDeiSentimenti", "RicomincioDa011"));
+//		} catch (SQLException e) {
+//			System.out.println(e.getMessage());
+//			e.printStackTrace();
+//		}
+//		frameReport.setVisible(true);
+	 
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);				
 		
@@ -360,5 +370,12 @@ public class Controller {
 
 	public void chiudiDialogConfermaLogout() {
 		dialogConfermaLogout.dispose();
+	}
+
+
+	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
+		frameProfiloUtente.setVisible(false);
+		frameVisualizzaOfferte = new FrameVisualizzaOfferte(offerte);
+		frameVisualizzaOfferte.setVisible(true);
 	}
 }

@@ -176,15 +176,15 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 						}
 					}
 					if(recuperaTipoAnnuncio(rs.getInt("idAnnuncio")).equals("Regalo")) {
-						double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
+						Double prezzoOfferto = recuperaPrezzoOfferta(rs.getString("Email"), rs.getTimestamp("Momento_proposta"));
 						
 						ArrayList<Integer> idOfferte = recuperaIdOfferte(momentoProposta, annuncio.getIdAnnuncio());
 						
-						if(prezzoOfferto > 0) {
+						if(prezzoOfferto != null) {
 							offerteAnnuncio.add(new OffertaAcquisto(offerente, momentoProposta, modConsegna, stato, annuncioRiferito, prezzoOfferto));
 						}
 						
-						else if(!(idOfferte.isEmpty())) {
+						else if(!(idOfferte.size() == 0)) {
 			
 							OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
 							
@@ -372,15 +372,16 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	}
 
 
-	private double recuperaPrezzoOfferta(String email, Timestamp momentoProposta) throws SQLException {
+	private Double recuperaPrezzoOfferta(String email, Timestamp momentoProposta) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT prezzo_offerto from OFFERTA_ACQUISTO WHERE Email = ? AND Momento_proposta = ?")){
 			ps.setString(1, email);
 			ps.setTimestamp(2, momentoProposta);
 			
 			try(ResultSet rs = ps.executeQuery()){
-				rs.next();
-				
-				return rs.getDouble("prezzo_offerto");
+				if(rs.next())
+					return rs.getDouble("prezzo_offerto");
+				else
+					return null;
 			}
 		}
 	}

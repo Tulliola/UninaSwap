@@ -55,5 +55,4 @@ public class UfficioPostaleDAO_Postgres implements UfficioPostaleDAO{
 		
 		return null;
 	}
-	
 }

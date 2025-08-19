@@ -227,6 +227,4 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		if(!(rs.next()))
 			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
-
-
 }

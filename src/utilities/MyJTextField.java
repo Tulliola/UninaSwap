@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -14,8 +15,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -48,6 +54,21 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 	public MyJTextField(String stringaDiDefault, int limiteDiColonne) {
 		this(stringaDiDefault);
 		this.setColumns(limiteDiColonne);
+	}
+	
+	public static ImageIcon immageIconDaByteArray(byte[] image) {
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new ByteArrayInputStream(image));
+		} catch (IOException e) {
+			img = null;
+			e.printStackTrace();
+		}
+		ImageIcon immagineDaScalare = new ImageIcon(img);
+		
+		Image immagineScalata = immagineDaScalare.getImage().getScaledInstance(300, 400, Image.SCALE_SMOOTH);
+		
+		return new ImageIcon(immagineScalata);
 	}
 	
 	public void settaBordiTextFieldStandard() {

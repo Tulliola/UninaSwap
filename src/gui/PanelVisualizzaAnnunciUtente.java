@@ -22,10 +22,12 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
+import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
@@ -33,12 +35,14 @@ import utilities.MyJPanel;
 public class PanelVisualizzaAnnunciUtente extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+	private Controller mainController;
 	private MyJPanel panelSuperiore = new MyJPanel();
 	private MyJPanel panelCentrale = new MyJPanel();
 	private JScrollPane scrollPane;
 	
-	public PanelVisualizzaAnnunciUtente(ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
+	public PanelVisualizzaAnnunciUtente(Controller mainController, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
+		this.mainController = mainController;
+		
 		this.setLayout(new BorderLayout());
 		
 		panelCentrale.setPreferredSize(new Dimension(800, 600));
@@ -221,7 +225,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelCentrale.repaint();
 		
 		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0); // torna su
+		    scrollPane.getVerticalScrollBar().setValue(0);
 		});
 		
 		if(!panelCentrale.hasPanels()) {
@@ -474,88 +478,99 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		MyJPanel panelModalitaConsegna = new MyJPanel();
 		panelModalitaConsegna.setPreferredSize(new Dimension(425, 50));
 		panelModalitaConsegna.setMaximumSize(new Dimension(425, 50));
-		panelModalitaConsegna.setLayout(new BoxLayout(panelModalitaConsegna, BoxLayout.X_AXIS));
+		panelModalitaConsegna.setLayout(new BoxLayout(panelModalitaConsegna, BoxLayout.Y_AXIS));
 		panelModalitaConsegna.setAlignmentX(CENTER_ALIGNMENT);
 		panelModalitaConsegna.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, MyJPanel.uninaColorClicked));
 		panelModalitaConsegna.setBackground(Color.white);
 		
-		MyJPanel panelSpedizione = new MyJPanel();
-		panelSpedizione.setPreferredSize(new Dimension(60, 30));
-		panelSpedizione.setMaximumSize(new Dimension(60, 30));
-		panelSpedizione.setBackground(Color.white);
-		MyJLabel lblSpedizione = new MyJLabel();
-		lblSpedizione.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
-		panelSpedizione.add(lblSpedizione);
-		if(annuncio.isSpedizione()) {
-			MyJLabel lblPrevista = new MyJLabel();
-			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
-			panelSpedizione.add(lblPrevista);
-		}
-		else {
-			MyJLabel lblNonPrevista = new MyJLabel();
-			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
-			panelSpedizione.add(lblNonPrevista);
-		}
+		MyJButton visualizzaOfferteButton = new MyJButton("Visualizza offerte");
+		visualizzaOfferteButton.rendiNotificabile(annuncio.getOfferteRicevute().size());
+		visualizzaOfferteButton.setAlignmentX(CENTER_ALIGNMENT);
+		visualizzaOfferteButton.setDefaultAction(() -> {
+			mainController.passaAFrameVisualizzaOfferte(annuncio.getOfferteRicevute());
+		});
+		visualizzaOfferteButton.setUpAction(() ->{});
+		visualizzaOfferteButton.setDownAction(() ->{});
 		
-		MyJPanel panelRitiroInPosta = new MyJPanel();
-		panelRitiroInPosta.setPreferredSize(new Dimension(60, 30));
-		panelRitiroInPosta.setMaximumSize(new Dimension(60, 30));
-		panelRitiroInPosta.setBackground(Color.white);
-		MyJLabel lblRitiroInPosta = new MyJLabel();
-		lblRitiroInPosta.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
-		panelRitiroInPosta.add(lblRitiroInPosta);
-		if(annuncio.isRitiroInPosta()) {
-			MyJLabel lblPrevista = new MyJLabel();
-			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
-			panelRitiroInPosta.add(lblPrevista);
-		}
-		else {
-			MyJLabel lblNonPrevista = new MyJLabel();
-			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
-			panelRitiroInPosta.add(lblNonPrevista);
-		}
-		
-		MyJPanel panelIncontro = new MyJPanel();
-		panelIncontro.setPreferredSize(new Dimension(60, 30));
-		panelIncontro.setMaximumSize(new Dimension(60, 30));
-		panelIncontro.setBackground(Color.white);
-		MyJLabel lblIncontro = new MyJLabel();
-		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
-		panelIncontro.add(lblIncontro);
-		if(annuncio.isIncontro()) {
-			String stringaPerToolTip = "<html>Sono disposto ad un incontro di persona secondo le seguenti disponibilità: <br>";
-			
-			for(int i = 0; i < annuncio.getGiornoIncontro().size(); i++) {
-				stringaPerToolTip += " - ";
-				stringaPerToolTip += annuncio.getGiornoIncontro().get(i) + ", dalle ";
-				stringaPerToolTip += annuncio.getOraInizioIncontro().get(i) + " alle ";
-				stringaPerToolTip += annuncio.getOraFineIncontro().get(i) + ", a ";
-				stringaPerToolTip += annuncio.getSedeIncontroProposte().get(i).getNome() + "; <br>";
-			}
-						
-			stringaPerToolTip += " </html>";
-			lblIncontro.setToolTipText(stringaPerToolTip);
-			
-			MyJLabel lblPrevista = new MyJLabel();
-			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
-			panelIncontro.add(lblPrevista);
-		}
-		else {
-			MyJLabel lblNonPrevista = new MyJLabel();
-			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);			
-			panelIncontro.add(lblNonPrevista);
-		}
-		
-		panelModalitaConsegna.add(Box.createVerticalGlue());
-		panelModalitaConsegna.add(Box.createHorizontalGlue());
-		panelModalitaConsegna.add(panelSpedizione);
-		panelModalitaConsegna.add(Box.createHorizontalGlue());
-		panelModalitaConsegna.add(panelRitiroInPosta);
-		panelModalitaConsegna.add(Box.createHorizontalGlue());
-		panelModalitaConsegna.add(panelIncontro);
-		panelModalitaConsegna.add(Box.createHorizontalGlue());
-		panelModalitaConsegna.add(Box.createVerticalGlue());
-		
+		panelModalitaConsegna.add(Box.createVerticalStrut(panelModalitaConsegna.getHeight()/2));
+		panelModalitaConsegna.add(visualizzaOfferteButton);
+//		MyJPanel panelSpedizione = new MyJPanel();
+//		panelSpedizione.setPreferredSize(new Dimension(60, 30));
+//		panelSpedizione.setMaximumSize(new Dimension(60, 30));
+//		panelSpedizione.setBackground(Color.white);
+//		MyJLabel lblSpedizione = new MyJLabel();
+//		lblSpedizione.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
+//		panelSpedizione.add(lblSpedizione);
+//		if(annuncio.isSpedizione()) {
+//			MyJLabel lblPrevista = new MyJLabel();
+//			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+//			panelSpedizione.add(lblPrevista);
+//		}
+//		else {
+//			MyJLabel lblNonPrevista = new MyJLabel();
+//			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+//			panelSpedizione.add(lblNonPrevista);
+//		}
+//		
+//		MyJPanel panelRitiroInPosta = new MyJPanel();
+//		panelRitiroInPosta.setPreferredSize(new Dimension(60, 30));
+//		panelRitiroInPosta.setMaximumSize(new Dimension(60, 30));
+//		panelRitiroInPosta.setBackground(Color.white);
+//		MyJLabel lblRitiroInPosta = new MyJLabel();
+//		lblRitiroInPosta.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
+//		panelRitiroInPosta.add(lblRitiroInPosta);
+//		if(annuncio.isRitiroInPosta()) {
+//			MyJLabel lblPrevista = new MyJLabel();
+//			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+//			panelRitiroInPosta.add(lblPrevista);
+//		}
+//		else {
+//			MyJLabel lblNonPrevista = new MyJLabel();
+//			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+//			panelRitiroInPosta.add(lblNonPrevista);
+//		}
+//		
+//		MyJPanel panelIncontro = new MyJPanel();
+//		panelIncontro.setPreferredSize(new Dimension(60, 30));
+//		panelIncontro.setMaximumSize(new Dimension(60, 30));
+//		panelIncontro.setBackground(Color.white);
+//		MyJLabel lblIncontro = new MyJLabel();
+//		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
+//		panelIncontro.add(lblIncontro);
+//		if(annuncio.isIncontro()) {
+//			String stringaPerToolTip = "<html>Sono disposto ad un incontro di persona secondo le seguenti disponibilità: <br>";
+//			
+//			for(int i = 0; i < annuncio.getGiornoIncontro().size(); i++) {
+//				stringaPerToolTip += " - ";
+//				stringaPerToolTip += annuncio.getGiornoIncontro().get(i) + ", dalle ";
+//				stringaPerToolTip += annuncio.getOraInizioIncontro().get(i) + " alle ";
+//				stringaPerToolTip += annuncio.getOraFineIncontro().get(i) + ", a ";
+//				stringaPerToolTip += annuncio.getSedeIncontroProposte().get(i).getNome() + "; <br>";
+//			}
+//						
+//			stringaPerToolTip += " </html>";
+//			lblIncontro.setToolTipText(stringaPerToolTip);
+//			
+//			MyJLabel lblPrevista = new MyJLabel();
+//			lblPrevista.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+//			panelIncontro.add(lblPrevista);
+//		}
+//		else {
+//			MyJLabel lblNonPrevista = new MyJLabel();
+//			lblNonPrevista.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);			
+//			panelIncontro.add(lblNonPrevista);
+//		}
+//		
+//		panelModalitaConsegna.add(Box.createVerticalGlue());
+//		panelModalitaConsegna.add(Box.createHorizontalGlue());
+//		panelModalitaConsegna.add(panelSpedizione);
+//		panelModalitaConsegna.add(Box.createHorizontalGlue());
+//		panelModalitaConsegna.add(panelRitiroInPosta);
+//		panelModalitaConsegna.add(Box.createHorizontalGlue());
+//		panelModalitaConsegna.add(panelIncontro);
+//		panelModalitaConsegna.add(Box.createHorizontalGlue());
+//		panelModalitaConsegna.add(Box.createVerticalGlue());
+//		
 		return panelModalitaConsegna;
 	}
 	

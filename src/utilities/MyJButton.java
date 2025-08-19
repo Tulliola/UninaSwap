@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,6 +24,8 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
 	private Runnable defaultAction;
 	private Runnable upAction;
 	private Runnable downAction;
+	
+	private Integer badgeText;
 	
 	private Component previousComponent;
 	private Component nextComponent;
@@ -47,6 +53,42 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
 		this();
 		this.setText(text);
 	}
+	
+	public void rendiNotificabile(Integer numeroOfferte) {
+		this.badgeText = numeroOfferte;
+		repaint();
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (badgeText != null) {
+            Graphics2D graficaConBadgeRosso = (Graphics2D) g.create();
+            graficaConBadgeRosso.setColor(Color.RED);
+
+            graficaConBadgeRosso.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            graficaConBadgeRosso.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            
+            int size = 20;
+            int padding = 4;
+            int x = getWidth() - size + padding;
+            int y = 0;
+
+            graficaConBadgeRosso.fillOval(x, y, size, size);
+
+            graficaConBadgeRosso.setColor(Color.WHITE);
+            graficaConBadgeRosso.setFont(graficaConBadgeRosso.getFont().deriveFont(Font.BOLD, 11f));
+            FontMetrics fm = graficaConBadgeRosso.getFontMetrics();
+            int textWidth = fm.stringWidth(badgeText.toString());
+            int textHeight = fm.getAscent();
+            graficaConBadgeRosso.drawString(badgeText.toString(), x + (size - textWidth) / 2, y + (size + textHeight) / 2 - 2);
+
+            graficaConBadgeRosso.dispose();
+        }
+    }
 	
 	public void setDefaultAction(Runnable defaultAction) {
 		this.defaultAction = defaultAction;

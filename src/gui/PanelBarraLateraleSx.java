@@ -144,6 +144,7 @@ private static final long serialVersionUID = 1L;
 		labelsFocusabili.add(lblOfferteRifiutate);
 		labelsFocusabili.add(lblOfferteInAttesa);
 		labelsFocusabili.add(lblOfferteRitirate);
+		labelsFocusabili.add(lblReportOfferte);
 		
 		return labelsFocusabili;
 		
