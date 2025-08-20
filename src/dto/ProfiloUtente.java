@@ -40,6 +40,10 @@ public class ProfiloUtente {
 		this.offerteUtente.add(offertaAggiunta);
 	}
 
+	public void aggiornaSaldo(double importoDaAggiungere) {
+		this.saldo += importoDaAggiungere;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

@@ -24,7 +24,6 @@ public abstract class Offerta {
 	protected SedeUniversita sedeDIncontroScelta;
 
 	protected Annuncio annuncioRiferito;
-	
 	protected String messaggioMotivazionale;
 	
 	public Offerta(ProfiloUtente offerente, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,

@@ -405,7 +405,6 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 				psInserisciOffertaAcquisto.setString(12, offertaDaInserire.getMessaggioMotivazionale());
 				
 				psInserisciOffertaAcquisto.executeUpdate();
-				
 			}
 		}
 	}
@@ -539,5 +538,15 @@ public class OffertaDAO_Postgres implements OffertaDAO{
 	
 	private void settaParametriComuniPerInserimento() throws SQLException {
 		
+	}
+	
+	@Override
+	public void accettaOfferta(Offerta offertaToAccept) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = 'Accettata' WHERE email = ? AND Momento_proposta = ?")){
+			ps.setString(1, offertaToAccept.getUtenteProprietario().getEmail());
+			ps.setTimestamp(2, offertaToAccept.getMomentoProposta());
+			
+			ps.executeUpdate();
+		}
 	}
 }
