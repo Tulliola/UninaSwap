@@ -44,6 +44,20 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			throw new MatricolaNonTrovataException("Non è stata trovata alcuna matricola associata a questa email.");
 	}
 	
+	@Override
+	public void inserisciSegnalazione(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException {
+		
+		String inserisciSegnalazione = "INSERT INTO Segnalazione (Email_utente_segnalante, Email_utente_segnalato, Motivo_segnalazione) VALUES (?, ?, ?)";
+		
+		try(PreparedStatement psInserisciSegnalazione = connessioneDB.prepareStatement(inserisciSegnalazione)){
+			psInserisciSegnalazione.setString(1, emailSegnalante);
+			psInserisciSegnalazione.setString(2, emailSegnalato);
+			psInserisciSegnalazione.setString(3, motivoSegnalazione);
+			
+			psInserisciSegnalazione.executeUpdate();
+		}
+	}
+	
 	//Metodi di aggiornamento
 	
 	@Override

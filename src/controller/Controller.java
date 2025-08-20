@@ -47,6 +47,7 @@ public class Controller {
 	private DialogOffertaScambio dialogOffertaScambio;
 	private DialogScegliOffertaRegalo dialogScegliOffertaRegalo;
 	private DialogOffertaRegalo dialogOffertaRegalo;
+	private DialogSegnalaUtente dialogSegnalaUtente;
 	
 	private static Connection connessioneDB;
 	
@@ -60,17 +61,9 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		ProfiloUtenteDAO_Postgres utente = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		
-//		try {
-//			frameReport = new FrameReport(this, utente.recuperaUtenteConEmailOUsernameEPassword("comicoDeiSentimenti", "RicomincioDa011"));
-//		} catch (SQLException e) {
-//			System.out.println(e.getMessage());
-//			e.printStackTrace();
-//		}
-//		frameReport.setVisible(true);
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);		
+		dialogSegnalaUtente = new DialogSegnalaUtente(this);
+		dialogSegnalaUtente.setVisible(true);
+			
 	}
 
 	static {
@@ -328,6 +321,13 @@ public class Controller {
 		
 		dialogOffertaScambio.aggiungiOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
 		dialogOffertaScambio.setVisible(true);
+	}
+	
+	public void onConfermaSegnalazioneButtonClicked(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException{
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		profiloDAO.inserisciSegnalazione(emailSegnalante, emailSegnalato, motivoSegnalazione);
+		
+		dialogSegnalaUtente.dispose();
 	}
 	
 	// Metodi di recupero

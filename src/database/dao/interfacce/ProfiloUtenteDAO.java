@@ -7,7 +7,8 @@ import dto.ProfiloUtente;
 public interface ProfiloUtenteDAO {
 	//Metodi di inserimento
 	public void inserisciNuovoUtente(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException;
-
+	public void inserisciSegnalazione(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException;
+	
 	//Metodi di aggiornamento
 	public void aggiornaUsernameUtente(String emailIn, String newUsername) throws SQLException;
 	public void aggiornaPasswordUtente(String emailIn, String newPassword) throws SQLException;
