@@ -88,7 +88,7 @@ public class FrameHomePage extends MyJFrame {
 		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
 			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteRitirate().getText());
 		});
-		panelSuperiore = new PanelHomePageSuperiore(this, utenteLoggato);
+		panelSuperiore = new PanelHomePageSuperiore(this);
 		
 		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
 			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());

@@ -40,6 +40,10 @@ public class ProfiloUtente {
 		this.offerteUtente.add(offertaAggiunta);
 	}
 
+	public void aggiornaSaldo(double importoDaAggiungere) {
+		this.saldo += importoDaAggiungere;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -220,5 +224,9 @@ public class ProfiloUtente {
 		}
 		
 		return toReturn;
+	}
+
+	public ArrayList<Annuncio> getAnnunci() {
+		return this.annunciUtente;
 	}
 }

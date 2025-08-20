@@ -19,6 +19,7 @@ import utilities.ImmagineDiSistemaDAO;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
+import utilities.StatoOffertaEnum;
 //Import dal package DTO
 import dto.*;
 
@@ -47,6 +48,7 @@ public class Controller {
 	private DialogOffertaScambio dialogOffertaScambio;
 	private DialogScegliOffertaRegalo dialogScegliOffertaRegalo;
 	private DialogOffertaRegalo dialogOffertaRegalo;
+	private DialogVersamento dialogVersamento;
 	
 	private static Connection connessioneDB;
 	
@@ -156,6 +158,10 @@ public class Controller {
 
 	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
 		frameHomePage.setVisible(false);
+		if(frameVisualizzaOfferte != null && frameVisualizzaOfferte.isDisplayable()) {
+			frameVisualizzaOfferte.dispose();
+			frameVisualizzaOfferte = null;
+		}
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
 	}
@@ -168,8 +174,8 @@ public class Controller {
 		
 	public void passaAFrameHomePage(JFrame frameDiPartenza) {
 		frameDiPartenza.dispose();
-
-		if(frameHomePage == null)
+		
+		if(frameHomePage == null || frameDiPartenza == this.frameDiLogin)
 			frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
 		
 		frameHomePage.setVisible(true);
@@ -255,6 +261,12 @@ public class Controller {
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
 			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
+			for(Annuncio annuncio: utenteLoggato.getAnnunci()) {
+				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
+			}
+			for(Annuncio annuncio: annunciInBacheca) {
+				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
+			}
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -364,9 +376,48 @@ public class Controller {
 		dialogConfermaLogout.dispose();
 	}
 
+	public void chiudiDialogVersamento() {
+		dialogVersamento.dispose();
+	}
+	
 	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
 		frameProfiloUtente.setVisible(false);
-		frameVisualizzaOfferte = new FrameVisualizzaOfferte(offerte);
+		frameVisualizzaOfferte = new FrameVisualizzaOfferte(offerte, this);
 		frameVisualizzaOfferte.setVisible(true);
+	}
+
+
+	public void aggiornaStatoOffertaAcquisto(OffertaAcquisto offerta, StatoOffertaEnum stato) {
+		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+		try {
+			offertaDAO.updateStatoOfferta(offerta, stato);
+			if(stato.equals(StatoOffertaEnum.Accettata)) {
+				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
+				offerta.getUtenteProprietario().aggiornaSaldo(-offerta.getPrezzoOfferto());
+			}
+		} 
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+	public void passaADialogVersamento() {
+		dialogVersamento = new DialogVersamento(this, frameProfiloUtente);
+		dialogVersamento.setVisible(true);
+	}
+
+
+	public void aggiornaSaldoUtente(double importo) {
+		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		try {
+			utenteDAO.aggiornaSaldoUtente(utenteLoggato, importo);
+			utenteLoggato.aggiornaSaldo(importo);
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

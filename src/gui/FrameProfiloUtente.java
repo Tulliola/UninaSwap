@@ -228,8 +228,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		else if(sezioneCard.startsWith("        Offerte")) {
 			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
 			((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneCard);
-		}
-			
+		}	
 	}
 
 	private void settaBandaLaterale(JPanel bandaLaterale) {
@@ -384,7 +383,9 @@ public class FrameProfiloUtente extends MyJFrame {
 
 		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo())+" $");
 		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
+		saldoTextField.setDisabledTextColor(Color.BLACK);
 		saldoTextField.setEnabled(false);
+		saldoTextField.setBackground(Color.LIGHT_GRAY);
 		MyJLabel lblSaldo = new MyJLabel("Il tuo saldo attuale");
 		lblSaldo.setAlignmentX(LEFT_ALIGNMENT);
 		lblSaldo.aggiungiImmagineScalata("images/iconaPortafoglio.png", 30, 30, false);
@@ -440,6 +441,28 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelPassword.add(Box.createRigidArea(new Dimension(15, 0)));
 		panelPassword.add(modificaPassword);
 		
+		MyJPanel panelSaldo = new MyJPanel();
+		panelSaldo.setLayout(new BoxLayout(panelSaldo, BoxLayout.X_AXIS));
+		panelSaldo.setAlignmentX(LEFT_ALIGNMENT);
+		panelSaldo.add(lblSaldo);
+		MyJButton versaButton = new MyJButton("Versa");
+		versaButton.setDefaultAction(() -> {
+			mainController.passaADialogVersamento();
+		});
+		MyJButton cashoutButton = new MyJButton("Cashout");
+		cashoutButton.setDefaultAction(()->{
+//			mainController.passaADialogCashout;
+		});
+		
+		MyJPanel panelVersaCashout = new MyJPanel();
+		panelVersaCashout.setLayout(new BoxLayout(panelVersaCashout, BoxLayout.X_AXIS));
+		panelVersaCashout.setAlignmentX(LEFT_ALIGNMENT);
+		panelVersaCashout.setPreferredSize(new Dimension(200, 30));
+		panelVersaCashout.setMaximumSize(new Dimension(200, 30));
+		panelVersaCashout.add(versaButton);
+		panelVersaCashout.add(Box.createHorizontalStrut(20));
+		panelVersaCashout.add(cashoutButton);
+		
 //		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
 //		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
 		
@@ -494,7 +517,11 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.add(cambiaPWDField);
 		panelRiepilogoInfoUtente.add(lblErrorePWD);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
+		panelRiepilogoInfoUtente.add(panelSaldo);
+		panelRiepilogoInfoUtente.add(saldoTextField);
+		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
+		panelRiepilogoInfoUtente.add(panelVersaCashout);
+//		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelRiepilogoInfoUtente.add(panelResidenza);
 		panelRiepilogoInfoUtente.add(residenzaTextField);

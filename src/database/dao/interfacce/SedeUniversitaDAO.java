@@ -9,4 +9,5 @@ import dto.SedeUniversita;
 public interface SedeUniversitaDAO {
 	public ArrayList<SedeUniversita> recuperaSediPresenti() throws SQLException;
 	public SedeUniversita recuperaSedeDaId(int idSede) throws SQLException;
+	public SedeUniversita recuperaSedeNome(String nomeSede) throws SQLException;
 }

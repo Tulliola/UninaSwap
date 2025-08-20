@@ -1,6 +1,5 @@
-/database/
 /controller/
+/database/
+/gui/
 /dto/
 /eccezioni/
-/gui/
-/utilities/

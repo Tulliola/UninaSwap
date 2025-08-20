@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -31,9 +32,9 @@ public class PanelHomePageSuperiore extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private FrameHomePage frameChiamante;
+	private Window frameChiamante;
 	
-	public PanelHomePageSuperiore(FrameHomePage parentFrame, ProfiloUtente utenteLoggato) {
+	public PanelHomePageSuperiore(Window parentFrame) {
 		frameChiamante = parentFrame;
 		
 		this.setPreferredSize(new Dimension(parentFrame.getWidth(), 45));

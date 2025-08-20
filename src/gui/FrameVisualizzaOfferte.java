@@ -1,10 +1,12 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 
@@ -12,25 +14,38 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import controller.Controller;
 import dto.Offerta;
+import dto.OffertaAcquisto;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
+import utilities.StatoOffertaEnum;
 
 public class FrameVisualizzaOfferte extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	private MyJPanel contentPane;
+	private Controller mainController;
 	
-	public FrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
-		this.setSize(800, 600);
-		this.setTitle("Le tue offerte");
+	private MyJPanel contentPane;
+	private PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
+	private MyJPanel panelCentrale = new MyJPanel();
+	private PanelBarraLateraleSx panelLaterale;
+	private JScrollPane scrollPane;
+	private MyJPanel panelOfferte = new MyJPanel();
+	private MyJLabel lblTornaAllaHomePage = new MyJLabel("   Torna alla home page");
+	
+	public FrameVisualizzaOfferte(ArrayList<Offerta> offerte, Controller mainController) {
+		this.mainController = mainController;
+		this.setSize(1100, 900);
+		this.setTitle("Le offerte al tuo annuncio - "+offerte.get(0).getAnnuncioRiferito().getNome());
 		this.setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		settaContentPane(offerte);
@@ -38,52 +53,144 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 
 	private void settaContentPane(ArrayList<Offerta> offerte) {
 		contentPane = new MyJPanel();
-		contentPane.setBackground(MyJPanel.uninaLightColor);
 		contentPane.setLayout(new BorderLayout());
-		contentPane.add(aggiungiPanelOfferta(offerte.get(0)));
-		contentPane.add(new JSeparator(JSeparator.HORIZONTAL));
+		settaPanelCentrale(offerte);
+		contentPane.add(panelCentrale, BorderLayout.CENTER);
+		contentPane.add(panelSuperiore, BorderLayout.NORTH);
+		scrollPane = new JScrollPane(panelOfferte);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+		contentPane.add(scrollPane);
 		this.setContentPane(contentPane);
+	}
+
+	private void settaPanelCentrale(ArrayList<Offerta> offerte) {
+		panelCentrale.setLayout(new BorderLayout());
+		panelCentrale.setPreferredSize(new Dimension(1100, 900));
+		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Offerte accettate");
+		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
+		panelLaterale.add(lblTornaAllaHomePage, 0);
+		
+		lblTornaAllaHomePage.setOnMouseClickedAction(() -> 
+		{
+			mainController.passaAFrameHomePage(this);
+		});
+		
+		panelLaterale.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("   Il mio profilo");
+		});
+		
+		panelLaterale.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci disponibili");
+		});
+		
+		panelLaterale.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci andati a buon fine");
+		});
+		
+		panelLaterale.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
+		{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci scaduti");
+		});
+		
+		panelLaterale.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
+		{        
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
+		});
+		
+		panelLaterale.getLblOfferteAccettate().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte accettate");
+		});
+		
+		panelLaterale.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte rifiutate");
+		});
+		
+		panelLaterale.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte in attesa");
+		});
+		
+		panelLaterale.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte ritirate");
+		});
+		
+		contentPane.add(panelLaterale, BorderLayout.WEST);
+		panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);
+	}
+
+	private MyJPanel settaPanelOfferte(ArrayList<Offerta> offerte) {
+		panelOfferte.setBackground(MyJPanel.uninaLightColor);
+		panelOfferte.setPreferredSize(getDimension(offerte));
+		for(Offerta offerta: offerte) {
+			panelOfferte.add(aggiungiPanelOfferta(offerta));
+			panelOfferte.add(new JSeparator(JSeparator.HORIZONTAL));
+		}
+		return this.panelOfferte;
+	}
+
+	private PanelBarraLateraleSx settaPanelLaterale() {
+		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Offerte accettate");
+		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
+		panelLaterale.add(lblTornaAllaHomePage, 0);
+		
+		return this.panelLaterale;
+	}
+
+	private Dimension getDimension(ArrayList<Offerta> offerte) {
+		return new Dimension(800, offerte.size()*400);
 	}
 
 	private MyJPanel aggiungiPanelOfferta(Offerta offertaToAdd) {
 		MyJPanel panelOfferta = new MyJPanel();
-		panelOfferta.setSize(800, 200);
+		panelOfferta.setSize(800, 400);
+		panelOfferta.setPreferredSize(new Dimension(800, 400));
 		panelOfferta.setLayout(new BoxLayout(panelOfferta, BoxLayout.X_AXIS));
 		panelOfferta.add(creaPanelImmagine(offertaToAdd));
 		panelOfferta.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		panelOfferta.add(creaPanelInfoAnnuncio(offertaToAdd));
 		panelOfferta.add(creaPanelInfoOfferta(offertaToAdd));
-		panelOfferta.add(creaPanelAccettaRifiutaOfferta());
+		panelOfferta.add(creaPanelAccettaRifiutaOfferta(offertaToAdd));
 		panelOfferta.setBackground(Color.WHITE);
 		return panelOfferta;
 	}
 
-	private MyJPanel creaPanelAccettaRifiutaOfferta() {
+	private MyJPanel creaPanelAccettaRifiutaOfferta(Offerta offerta) {
 		MyJPanel panelAccettaRifiutaOfferta = new MyJPanel();
-		panelAccettaRifiutaOfferta.setPreferredSize(new Dimension(150, 200));
-		panelAccettaRifiutaOfferta.setMaximumSize(new Dimension(150, 200));
+		panelAccettaRifiutaOfferta.setPreferredSize(new Dimension(250, 400));
+		panelAccettaRifiutaOfferta.setMaximumSize(new Dimension(150, 400));
 		panelAccettaRifiutaOfferta.setLayout(new BoxLayout(panelAccettaRifiutaOfferta, BoxLayout.Y_AXIS));
 		panelAccettaRifiutaOfferta.setBackground(Color.WHITE);
 		
 		MyJButton accettaButton = new MyJButton("Accetta");
 		accettaButton.setAlignmentX(CENTER_ALIGNMENT);
-		MyJButton rifiutaButton = new MyJButton("Rifiuta");
-		rifiutaButton.setBackground(Color.RED);
-		rifiutaButton.setAlignmentX(CENTER_ALIGNMENT);
+		accettaButton.setDefaultAction(() -> {
+			mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Accettata);
+		});
 		
+		MyJButton rifiutaButton = new MyJButton("Rifiuta");
+		rifiutaButton.setAlignmentX(CENTER_ALIGNMENT);
+		rifiutaButton.setBackground(Color.RED);
+		rifiutaButton.setDefaultAction(() -> {
+			mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Rifiutata);
+		});
+		
+		panelAccettaRifiutaOfferta.add(Box.createVerticalGlue());
 		panelAccettaRifiutaOfferta.add(accettaButton);
-		panelAccettaRifiutaOfferta.add(Box.createVerticalStrut(10));
+		panelAccettaRifiutaOfferta.add(Box.createVerticalStrut(30));
 		panelAccettaRifiutaOfferta.add(rifiutaButton);
+		panelAccettaRifiutaOfferta.add(Box.createVerticalGlue());
 		return panelAccettaRifiutaOfferta;
 	}
 
 	private MyJPanel creaPanelInfoOfferta(Offerta offertaToAdd) {
 		MyJPanel panelInfoOfferta = new MyJPanel();
-		panelInfoOfferta.setSize(250, 200);
-		panelInfoOfferta.setMaximumSize(new Dimension(300, 200));
+		panelInfoOfferta.setMaximumSize(new Dimension(300, 400));
 		panelInfoOfferta.setLayout(new BoxLayout(panelInfoOfferta, BoxLayout.Y_AXIS));
 		panelInfoOfferta.setBackground(Color.WHITE);
-		panelInfoOfferta.setPreferredSize(new Dimension(300, 200));
+		panelInfoOfferta.setPreferredSize(new Dimension(300, 400));
 		panelInfoOfferta.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.BLACK));
 		
 		JTextArea textNomeOfferente = new JTextArea();
@@ -93,7 +200,7 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 		textNomeOfferente.setEditable(false);
 		
 		JTextArea textPrezzoOfferto = new JTextArea();
-		textPrezzoOfferto.setText("Prezzo offerto: "+offertaToAdd.getPrezzoOfferto());
+		textPrezzoOfferto.setText("Prezzo offerto: €"+offertaToAdd.getPrezzoOfferto());
 		textPrezzoOfferto.setFont(new Font("Ubuntu Sans", Font.BOLD, 14));
 		textPrezzoOfferto.setFocusable(false);
 		textPrezzoOfferto.setEditable(false);
@@ -125,9 +232,8 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 
 	private MyJPanel creaPanelInfoAnnuncio(Offerta offertaToAdd) {
 		MyJPanel panelInfoAnnunci = new MyJPanel();
-		panelInfoAnnunci.setSize(250, 200);
-		panelInfoAnnunci.setPreferredSize(new Dimension(300, 200));
-		panelInfoAnnunci.setMaximumSize(new Dimension(300, 200));
+		panelInfoAnnunci.setPreferredSize(new Dimension(300, 400));
+		panelInfoAnnunci.setMaximumSize(new Dimension(300, 400));
 		panelInfoAnnunci.setLayout(new BoxLayout(panelInfoAnnunci, BoxLayout.Y_AXIS));
 		panelInfoAnnunci.setBackground(Color.WHITE);
 		panelInfoAnnunci.setBorder(BorderFactory.createMatteBorder(0,  1, 0, 1, Color.BLACK));
@@ -139,14 +245,16 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 		textNomeAnnuncio.setEditable(false);
 		textNomeAnnuncio.setLineWrap(true);
 		textNomeAnnuncio.setWrapStyleWord(true);
+		textNomeAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JTextArea textPrezzoAnnuncio = new JTextArea();
-		textPrezzoAnnuncio.setText("Prezzo iniziale: "+offertaToAdd.getAnnuncioRiferito().getPrezzoIniziale());
+		textPrezzoAnnuncio.setText("Prezzo iniziale: €"+offertaToAdd.getAnnuncioRiferito().getPrezzoIniziale());
 		textPrezzoAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 14));
 		textPrezzoAnnuncio.setFocusable(false);
 		textPrezzoAnnuncio.setEditable(false);
 		textPrezzoAnnuncio.setLineWrap(true);
 		textPrezzoAnnuncio.setWrapStyleWord(true);
+		textPrezzoAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelInfoAnnunci.add(textNomeAnnuncio);
 		panelInfoAnnunci.add(textPrezzoAnnuncio);
@@ -155,13 +263,19 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 
 	private MyJPanel creaPanelImmagine(Offerta offertaToAdd) {
 		MyJPanel panelImmagine = new MyJPanel();
-		panelImmagine.setSize(150, 200);
-		panelImmagine.setPreferredSize(new Dimension(300, 200));
+		panelImmagine.setLayout(new BoxLayout(panelImmagine, BoxLayout.Y_AXIS));
+		panelImmagine.setPreferredSize(new Dimension(300, 400));
+		panelImmagine.setBackground(Color.WHITE);
 		MyJLabel lblPrimaImmagineAnnuncio = new MyJLabel();
 		lblPrimaImmagineAnnuncio.aggiungiImmagineScalata(offertaToAdd.getAnnuncioRiferito().getOggettoInAnnuncio().getImmagine(0),
 				150, 200, false);
+
+		lblPrimaImmagineAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
+		lblPrimaImmagineAnnuncio.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColor, 3));
 		
+		panelImmagine.add(Box.createVerticalGlue());
 		panelImmagine.add(lblPrimaImmagineAnnuncio);
+		panelImmagine.add(Box.createVerticalGlue());
 		return panelImmagine;
 	}
 }
