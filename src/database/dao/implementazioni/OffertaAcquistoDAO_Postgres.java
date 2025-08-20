@@ -57,7 +57,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaAcquistoDAO{
 	}
 
 	@Override
-	public ArrayList<OffertaAcquisto> recuperaOfferteAnnuncio(AnnuncioVendita annuncio) throws SQLException {
+	public ArrayList<OffertaAcquisto> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException {
 		ArrayList<OffertaAcquisto> toReturn = new ArrayList<OffertaAcquisto>();
 		
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
