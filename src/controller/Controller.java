@@ -16,6 +16,7 @@ import database.dao.interfacce.*;
 //Import dal package GUI
 import gui.*;
 import utilities.ImmagineDiSistemaDAO;
+import utilities.MapAnnuncioDAOToOffertaDAO;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -64,8 +65,11 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-		dialogSegnalaUtente = new DialogSegnalaUtente(this);
-		dialogSegnalaUtente.setVisible(true);
+//		dialogSegnalaUtente = new DialogSegnalaUtente(this);
+//		dialogSegnalaUtente.setVisible(true);
+		
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
 			
 	}
 
@@ -244,23 +248,16 @@ public class Controller {
 			this.passaADialogDiComunicataSospensione(email);
 		else {
 			AnnuncioDAO_Postgres annunciDAO = new AnnuncioDAO_Postgres(connessioneDB);
-			OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
+			
 			SedeUniversitaDAO_Postgres sediDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			UfficioPostaleDAO_Postgres ufficiPostaliDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
 			ImmagineDiSistemaDAO immaginiDiSistemaDAO = new ImmagineDiSistemaDAO(connessioneDB);
 			
-			this.utenteLoggato.setOfferteUtente(offerteDAO.recuperaOfferteDiUtente(utenteLoggato));
-			this.utenteLoggato.setAnnunciUtente(annunciDAO.recuperaAnnunciDiUtente(utenteLoggato));
 			this.ufficiPresenti = ufficiPostaliDAO.recuperaUfficiPostali();
 			this.sediPresenti = sediDAO.recuperaSediPresenti();
 			this.immaginiDiSistema = immaginiDiSistemaDAO.getImmaginiDiSistema();
 			this.annunciInBacheca = annunciDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
-			for(Annuncio annuncio: utenteLoggato.getAnnunci()) {
-				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
-			}
-			for(Annuncio annuncio: annunciInBacheca) {
-				annuncio.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncio));
-			}
+			
 			
 			this.passaAFrameHomePage(frameDiLogin);
 		}
@@ -313,7 +310,7 @@ public class Controller {
 	}
 	
 	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
-		OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
+		OffertaRegaloDAO_Postgres offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);		
 

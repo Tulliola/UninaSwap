@@ -183,31 +183,40 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		Oggetto oggettoInAnnuncio = oggettoDAO.recuperaOggettoConId(rs.getInt("idOggetto"));
 		ProfiloUtente utenteProprietario = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("Email"));
 
-		OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
+//		OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
 
 		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
+			OffertaAcquistoDAO_Postgres offerteDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
 			
-			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioVendita(annuncioRecuperato));
+			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 		}
 		else if(rs.getString("Tipo_annuncio").equals("Scambio")) {
+			OffertaScambioDAO_Postgres offerteDAO = new OffertaScambioDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioScambio(
 				idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
 				stato, momentoPubblicazione, nome, utenteProprietario, 
 				oggettoInAnnuncio, rs.getString("Nota_scambio")	
 			);
 			
-			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioScambio(annuncioRecuperato));
+			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 		}
 		else {
+			OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+			OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+			OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utenteProprietario, oggettoInAnnuncio
 			);
-
-			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteAnnuncioRegalo(annuncioRecuperato));
+			ArrayList<Offerta> offerte = new ArrayList<Offerta>();
+			offerte.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			offerte.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			offerte.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			
+			annuncioRecuperato.setOfferteRicevute(offerte);
 		}
 		
 		if(rs.getBoolean("Incontro")) {
@@ -240,3 +249,4 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		return annuncioRecuperato;
 	}
 }
+

@@ -141,11 +141,16 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				for(Annuncio annuncioCorrente : annunciDiUtente)
 					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
 				
-				OffertaDAO_Postgres offertaDAO = new OffertaDAO_Postgres(connessioneDB);
-				ArrayList<Offerta> offerteDiUtente = offertaDAO.recuperaOfferteDiUtente(profiloToReturn);
+				OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+				OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+				OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 				
-				for(Offerta offertaCorrente : offerteDiUtente)
-					profiloToReturn.aggiungiOfferta(offertaCorrente);
+				ArrayList<Offerta> offerteDiUtente = new ArrayList<Offerta>();
+				offerteDiUtente.addAll(offerteAcquistoDAO.recuperaOfferteDiUtente(profiloToReturn));
+				offerteDiUtente.addAll(offerteScambioDAO.recuperaOfferteDiUtente(profiloToReturn));
+				offerteDiUtente.addAll(offerteRegaloDAO.recuperaOfferteDiUtente(profiloToReturn));
+				
+				profiloToReturn.setOfferteUtente(offerteDiUtente);
 				
 				return profiloToReturn;
 			}

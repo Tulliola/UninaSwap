@@ -8,15 +8,20 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import database.dao.interfacce.OffertaDAO;
 import database.dao.interfacce.OffertaScambioDAO;
 import dto.Annuncio;
+import dto.Offerta;
 import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
+import dto.SedeUniversita;
+import dto.UfficioPostale;
+import utilities.GiornoEnum;
 import utilities.ModConsegnaEnum;
 import utilities.StatoOffertaEnum;
 
-public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
+public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO{
 
 	private Connection connessioneDB;
 	
@@ -26,8 +31,8 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	
 	
 	@Override
-	public ArrayList<OffertaScambio> recuperaOfferteDiUtente(ProfiloUtente utenteLoggato) throws SQLException {
-		ArrayList<OffertaScambio> toReturn = new ArrayList<OffertaScambio>();
+	public ArrayList<Offerta> recuperaOfferteDiUtente(ProfiloUtente utenteLoggato) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 		
@@ -49,8 +54,22 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 					offertaToAdd = new OffertaScambio(offerente, idOfferta, momentoProposta, modConsegnaScelta,
 							stato, annuncioRiferito, oggettiOfferti);
 					
-					if(rs.getString("Messaggio_motivazionale") != null) {
-						offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
+
+					if(modConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta)) {
+						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+						UfficioPostale ufficioScelto = ufficioDAO.recuperaUfficioPostaleConId(rs.getInt("idUfficio"));
+						offertaToAdd.setUfficioRitiro(ufficioScelto);
+						
+					}
+					else if(modConsegnaScelta.equals(ModConsegnaEnum.Spedizione))
+						offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
+					else {
+						SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
+						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
+						offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
+						offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
+						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
 					
 					toReturn.add(offertaToAdd);
@@ -61,8 +80,8 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	}
 
 	@Override
-	public ArrayList<OffertaScambio> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException {
-		ArrayList<OffertaScambio> toReturn = new ArrayList<OffertaScambio>();
+	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException {
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
@@ -85,6 +104,23 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 					offertaToAdd = new OffertaScambio(offerente, idOfferta, momentoProposta, modConsegnaScelta,
 							stato, annuncioRiferito, oggettiOfferti);
 					
+					if(modConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta)) {
+						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+						UfficioPostale ufficioScelto = ufficioDAO.recuperaUfficioPostaleConId(rs.getInt("idUfficio"));
+						offertaToAdd.setUfficioRitiro(ufficioScelto);
+						
+					}
+					else if(modConsegnaScelta.equals(ModConsegnaEnum.Spedizione))
+						offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
+					else {
+						SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
+						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
+						offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
+						offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
+						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
+					}
+					
 					toReturn.add(offertaToAdd);
 				}
 				return toReturn;
@@ -93,7 +129,7 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	}
 
 	@Override
-	public void inserisciOfferta(OffertaScambio offertaDaInserire) throws SQLException {
+	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException {
 		String inserisciOffertaScambio = "INSERT INTO Offerta_scambio(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
 				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta) "
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
@@ -174,7 +210,7 @@ public class OffertaScambioDAO_Postgres implements OffertaScambioDAO{
 	}
 
 	@Override
-	public void updateStatoOfferta(OffertaScambio offerta, StatoOffertaEnum stato) throws SQLException {
+	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
 			ps.setString(1, stato.toString());
 			ps.setString(2, offerta.getUtenteProprietario().getEmail());
