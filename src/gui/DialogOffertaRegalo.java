@@ -567,7 +567,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 				checkResidenza(this.inserisciIndirizzoTextField.getText());
 			
 			OffertaRegalo newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
-			mainController.onConfermaOffertaButtonClicked(newOfferta);
+			mainController.onConfermaOffertaRegaloButtonClicked(newOfferta);
 		}
 		catch(ResidenzaException exc2) {
 			this.settaLabelETextFieldDiErrore(lblErroreSpedizione, exc2.getMessage(), this.inserisciIndirizzoTextField);

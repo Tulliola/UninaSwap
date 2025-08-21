@@ -163,7 +163,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 				
 		
 			psInserisciOffertaAcquisto.setString(10, modalitaConsegnaScelta);;
-			psInserisciOffertaAcquisto.setDouble(11, 0);
+			psInserisciOffertaAcquisto.setDouble(11, offertaDaInserire.getPrezzoOfferto());
 			psInserisciOffertaAcquisto.setString(12, offertaDaInserire.getMessaggioMotivazionale());
 			
 			psInserisciOffertaAcquisto.executeUpdate();

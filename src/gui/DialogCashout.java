@@ -79,8 +79,8 @@ public class DialogCashout extends JDialog {
 		lblErroreImporto.setForeground(Color.red);
 		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
-		MyJButton versaButton = new MyJButton("Versa");
-		versaButton.setDefaultAction(() -> {
+		MyJButton prelevaButton = new MyJButton("Versa");
+		prelevaButton.setDefaultAction(() -> {
 			try{
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				lblErroreImporto.setVisible(false);
@@ -103,12 +103,12 @@ public class DialogCashout extends JDialog {
 			}
 		});
 		
-		tornaIndietroButton.setDefaultAction(() ->{
-			mainController.chiudiDialogVersamento();
+		tornaIndietroButton.setDefaultAction(() -> {
+			mainController.chiudiDialogCashout();
 		});
 		
 		panelInferiore.add(tornaIndietroButton);
-		panelInferiore.add(versaButton);
+		panelInferiore.add(prelevaButton);
 	}
 	
 	private void checkImporto(String importo, ProfiloUtente utente) {

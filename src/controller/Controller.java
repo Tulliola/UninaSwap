@@ -3,6 +3,8 @@ package controller;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.*;
@@ -179,7 +181,27 @@ public class Controller {
 		if(frameHomePage == null || frameDiPartenza == this.frameDiLogin)
 			frameHomePage = new FrameHomePage(this, utenteLoggato, annunciInBacheca);
 		
+		
+//		JPanel panelCaricamento = new JPanel(new GridBagLayout());	
+//		panelCaricamento.setOpaque(true);
+//		panelCaricamento.setBackground(new Color(0, 0, 0, 150));
+//		
+//		JFrame frameCaricamento = new JFrame();
+//		frameCaricamento.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+//		frameCaricamento.add(panelCaricamento);
+//		
+//		MyJLabel lblCaricamento = new MyJLabel("Caricamento...");
+//		lblCaricamento.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
+//		panelCaricamento.add(lblCaricamento);
+//		
+//		frameCaricamento.setVisible(true);
+//		new Timer(2000, evento->{
+//			frameCaricamento.dispose();
+//			((Timer) evento.getSource()).stop();
+//        }).start();
+
 		frameHomePage.setVisible(true);
+		
 	}
 	
 	public void passaAFrameHomePage(JDialog frameDiPartenza) {
@@ -312,20 +334,31 @@ public class Controller {
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
-	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
-		OffertaRegaloDAO_Postgres offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
+	public void onConfermaOffertaAcquistoButtonClicked(Offerta offertaToAdd) throws SQLException {
+		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);		
 
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
-		else if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
-			for(int i = 0; i < 3; i++)
-				if(frameCaricaOggetto[i] != null)
-					frameCaricaOggetto[i].dispose();
+		
+		utenteLoggato.setSaldo(utenteLoggato.getSaldo()-offertaToAdd.getPrezzoOfferto());
+	}
+	
+	public void onConfermaOffertaScambioButtonClicked(Offerta offertaToAdd) throws SQLException{
+		OffertaScambioDAO_Postgres offertaDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+		offertaDAO.inserisciOfferta(offertaToAdd);
+		utenteLoggato.aggiungiOfferta(offertaToAdd);
+		
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
 			dialogOffertaScambio.dispose();
-		}
-		else
+	}
+	
+	public void onConfermaOffertaRegaloButtonClicked(Offerta offertaToAdd) throws SQLException{
+		OffertaRegaloDAO_Postgres offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
+		offertaDAO.inserisciOfferta(offertaToAdd);
+		
+		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
 	}
 	
