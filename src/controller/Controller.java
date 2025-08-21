@@ -20,6 +20,7 @@ import utilities.MapAnnuncioDAOToOffertaDAO;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
+import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
 //Import dal package DTO
 import dto.*;
@@ -61,6 +62,7 @@ public class Controller {
 	private ArrayList<Annuncio> annunciInBacheca;
 	private ArrayList<SedeUniversita> sediPresenti;
 	private ArrayList<UfficioPostale> ufficiPresenti;
+	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
@@ -415,6 +417,29 @@ public class Controller {
 			utenteLoggato.aggiornaSaldo(importo);
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void passaADialogConfermaRimozioneAnnuncio(Annuncio annuncioToRemove) {
+		dialogConfermaRimozioneAnnuncio = new DialogConfermaRimozioneAnnuncio(this, frameProfiloUtente, annuncioToRemove);
+		dialogConfermaRimozioneAnnuncio.setVisible(true);
+	}
+
+
+	public void chiudDialogConfermaRimozioneAnnuncio() {
+		dialogConfermaRimozioneAnnuncio.dispose();
+	}
+
+
+	public void aggiornaStatoAnnuncio(Annuncio annuncio, StatoAnnuncioEnum stato) {
+		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
+		try {
+			annuncioDAO.aggiornaStatoAnnuncio(annuncio, stato);
+			annuncio.setStatoEnum(stato);
+			passaAFrameHomePage(frameProfiloUtente);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
