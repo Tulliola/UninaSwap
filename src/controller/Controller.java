@@ -63,6 +63,7 @@ public class Controller {
 	private ArrayList<SedeUniversita> sediPresenti;
 	private ArrayList<UfficioPostale> ufficiPresenti;
 	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
+	private DialogCashout dialogCashout;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
@@ -378,6 +379,7 @@ public class Controller {
 
 	public void chiudiDialogVersamento() {
 		dialogVersamento.dispose();
+		this.passaAFrameHomePage(frameProfiloUtente);
 	}
 	
 	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
@@ -442,5 +444,17 @@ public class Controller {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	public void passaADialogCashout() {
+		dialogCashout = new DialogCashout(this, utenteLoggato, frameProfiloUtente);
+		dialogCashout.setVisible(true);
+	}
+
+
+	public void chiudiDialogCashout() {
+		dialogCashout.dispose();
+		this.passaAFrameHomePage(frameProfiloUtente);
 	}
 }

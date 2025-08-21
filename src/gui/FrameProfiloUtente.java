@@ -451,7 +451,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		MyJButton cashoutButton = new MyJButton("Cashout");
 		cashoutButton.setDefaultAction(()->{
-//			mainController.passaADialogCashout;
+			mainController.passaADialogCashout();
 		});
 		
 		MyJPanel panelVersaCashout = new MyJPanel();

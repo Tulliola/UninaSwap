@@ -36,6 +36,7 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 	public DialogConfermaRimozioneAnnuncio(Controller controller, MyJFrame parent, Annuncio annuncio) {
 		this.mainController = controller;
 		
+		this.setModal(true);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
 		this.setSize(700, 400);

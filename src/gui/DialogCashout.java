@@ -16,28 +16,30 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import dto.ProfiloUtente;
+import eccezioni.SaldoException;
 import utilities.MyJButton;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 
-public class DialogVersamento extends JDialog {
+public class DialogCashout extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	private Controller mainController;
+	
+	Controller mainController;
 	
 	MyJPanel panelSx = new MyJPanel();
 	MyJPanel panelDx = new MyJPanel();
-	PanelHomePageSuperiore panelSuperiore;
 	MyJPanel panelCentrale = new MyJPanel();
 	MyJPanel panelInferiore = new MyJPanel();
+	PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
 	
-	MyJTextField textFieldImporto;
+	MyJLabel lblErroreImporto = new MyJLabel("Inserire un importo valido");
 	
-	MyJLabel lblErroreImporto;
-	
-	public DialogVersamento(Controller controller, JFrame parentFrame) {
+	MyJTextField textFieldImporto = new MyJTextField();
+	public DialogCashout(Controller controller, ProfiloUtente utenteLoggato, JFrame parentFrame) {
 		this.mainController = controller;
 		
 		this.setModal(true);
@@ -45,7 +47,7 @@ public class DialogVersamento extends JDialog {
 		this.setLayout(new BorderLayout());
 		this.setSize(500, 300);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setTitle("UninaSwap - Versa");
+		this.setTitle("UninaSwap - Cashout");
 		
 		panelSx.setSize(new Dimension(50, this.getHeight()));
 		panelSx.setBackground(MyJPanel.uninaColor);
@@ -55,7 +57,7 @@ public class DialogVersamento extends JDialog {
 		
 		panelSuperiore = new PanelHomePageSuperiore(this);
 		
-		settaPanelInferiore();
+		settaPanelInferiore(utenteLoggato);
 		settaPanelCentrale();
 		
 		
@@ -67,14 +69,13 @@ public class DialogVersamento extends JDialog {
 		this.setLocationRelativeTo(parentFrame);
 	}
 
-	private void settaPanelInferiore() {
+	private void settaPanelInferiore(ProfiloUtente utente) {
 		panelInferiore.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelInferiore.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
 		panelInferiore.setPreferredSize(new Dimension(600, 50));
 		panelInferiore.setMaximumSize(new Dimension(600, 50));
 		
 		lblErroreImporto = new MyJLabel("Inserire un importo valido");
-		lblErroreImporto.setText("Inserire un importo valido");
 		lblErroreImporto.setForeground(Color.red);
 		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
@@ -84,14 +85,20 @@ public class DialogVersamento extends JDialog {
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				lblErroreImporto.setVisible(false);
 				
-				checkImporto(textFieldImporto.getText());
+				checkImporto(textFieldImporto.getText(), utente);
 				Double importo = Double.parseDouble(textFieldImporto.getText());
 				
-				mainController.aggiornaSaldoUtente(importo);
-				mainController.chiudiDialogVersamento();
+				mainController.aggiornaSaldoUtente(-importo);
+				mainController.chiudiDialogCashout();
 			}
 			catch(NumberFormatException e) {
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				lblErroreImporto.setText("Importo non valido");
+				lblErroreImporto.setVisible(true);
+			}
+			catch(SaldoException e) {
+				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				lblErroreImporto.setText(e.getMessage());
 				lblErroreImporto.setVisible(true);
 			}
 		});
@@ -104,20 +111,33 @@ public class DialogVersamento extends JDialog {
 		panelInferiore.add(versaButton);
 	}
 	
-	private void checkImporto(String importo) {
-		int decimalIndex = importo.indexOf('.');
+	private void checkImporto(String importo, ProfiloUtente utente) {
 		
-		String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
-		for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
-			if(!carattere.equals('0'))
+		if(importo.contains(".")) {
+			int decimalIndex = importo.indexOf('.');
+			if(importo.endsWith(".") || importo.startsWith(".")) {
 				throw new NumberFormatException();
+			}
+			try {
+				String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
+				for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
+					if(!carattere.equals('0'))
+						throw new NumberFormatException();
+				}
+			}
+			
+			catch(StringIndexOutOfBoundsException e) {}
+		}	
+		if(Double.parseDouble(importo) > utente.getSaldo()) {
+			lblErroreImporto.setText("Non puoi fare prelevare più di quanto possiedi");
+			throw new SaldoException("Non puoi fare prelevare più di quanto possiedi");
 		}
 	}
 
 	private void settaPanelCentrale() {
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		
-		MyJLabel lblImporto = new MyJLabel("Importo da versare");
+		MyJLabel lblImporto = new MyJLabel("Importo da prelevare");
 		lblImporto.setFont(new Font("Ubuntu Sans", Font.BOLD, 16));
 		lblImporto.setAlignmentX(CENTER_ALIGNMENT);
 		textFieldImporto = new MyJTextField();
