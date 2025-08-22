@@ -266,7 +266,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		
 		if(annuncio.getDataScadenza() != null) {
 			lblDataScadenza.setText("Affrettati, questo annuncio scade tra ");
-			
+			lblDataScadenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 13));
 			long giorniRimasti = ChronoUnit.DAYS.between(LocalDate.now(), annuncio.getDataScadenza().toLocalDate());
 			
 			if(giorniRimasti == 1)

@@ -45,7 +45,6 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		offertaPanel.add(this.creaPanelInfoOfferta(offertaToAdd), BorderLayout.CENTER);
 		
 		offertaPanel.add(this.creaPanelAccettaRifiuta(offertaToAdd), BorderLayout.SOUTH);
-
 		
 		return offertaPanel;
 
@@ -75,7 +74,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		
 		panelInfoOfferta.add(creaPanelModalitaConsegnaScelta(offertaToAdd));
 		panelInfoOfferta.add(creaPanelNota(offertaToAdd));
-		
+		panelInfoOfferta.add(creaPanelSpecifico());
 		
 		return panelInfoOfferta;
 	}
@@ -96,8 +95,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		
 		
 		MyJLabel lblModalita = new MyJLabel(offertaToAdd.getUtenteProprietario().getUsername()+" ha scelto come modalità di consegna: ",
-				new Font("Ubuntu Sans", Font.PLAIN, 14));
-		
+				new Font("Ubuntu Sans", Font.PLAIN, 16));
 			
 		
 		
@@ -119,6 +117,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		luogoTextArea.setLineWrap(true);
 		luogoTextArea.setWrapStyleWord(true);
 		luogoTextArea.setAlignmentX(LEFT_ALIGNMENT);
+		luogoTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 16));
 		
 		if(offertaToAdd.getModalitaConsegnaScelta().equals("Spedizione")) {
 			lblModalita.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
@@ -166,7 +165,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		notaTextArea.setLineWrap(true);
 		notaTextArea.setWrapStyleWord(true);
 		notaTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		notaTextArea.setFont(new Font("Ubuntu Sans", Font.BOLD, 18));
+		notaTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 16));
 		if(nota != null)
 			notaTextArea.setText(nota);
 		
@@ -182,13 +181,11 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		panelAccettaRifiuta.setMaximumSize(new Dimension(larghezza, 100));
 		
 		MyJButton rifiutaButton = new MyJButton("Rifiuta");
-//		rifiutaButton.setBackground(Color.red);
 		rifiutaButton.setDefaultAction(() -> settaAzioneRifiutaButton());
 		rifiutaButton.setUpAction(()->{});
 		rifiutaButton.setDownAction(()->{});
 		
 		MyJButton accettaButton = new MyJButton("Accetta");
-//		accettaButton.setBackground(Color.green);
 		accettaButton.setDefaultAction(() -> settaAzioneAccettaButton());
 		accettaButton.setUpAction(()->{});
 		accettaButton.setDownAction(()->{});
@@ -220,4 +217,6 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 	public abstract void settaAzioneRifiutaButton();
 	
 	public abstract void settaAzioneAccettaButton();
+	
+	public abstract MyJPanel creaPanelSpecifico();
 }
