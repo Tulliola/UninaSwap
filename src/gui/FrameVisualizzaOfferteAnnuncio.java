@@ -72,7 +72,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 	private void settaPanelCentrale(ArrayList<Offerta> offerte) {
 		panelCentrale.setLayout(new BorderLayout());
 		panelCentrale.setPreferredSize(new Dimension(1100, 900));
-		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Offerte accettate");
+		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
 		panelLaterale.add(lblTornaAllaHomePage, 0);
 		

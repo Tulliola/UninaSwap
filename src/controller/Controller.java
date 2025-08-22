@@ -432,7 +432,7 @@ public class Controller {
 		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		try {
 			offertaDAO.updateStatoOfferta(offerta, stato);
-			
+			offerta.setStato(stato);
 			if(stato.equals(StatoOffertaEnum.Accettata)) {
 				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
 			}

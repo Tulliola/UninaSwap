@@ -105,6 +105,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		if(!sezioneScelta.contains("profilo"))
 			toReturn+= " - "+sezione;
+		
 		return toReturn;
 	}
 
