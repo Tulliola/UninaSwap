@@ -418,7 +418,7 @@ public class Controller {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offerta, connessioneDB);
 		
 		try {
-			offertaDAO.updateStatoOfferta(offerta, stato);
+			offertaDAO.updateStatoOfferta(offerta, stato, utenteLoggato);
 			offerta.setStato(stato);
 		} 
 		catch (SQLException e) {

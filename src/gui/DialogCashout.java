@@ -19,11 +19,12 @@ import controller.Controller;
 import dto.ProfiloUtente;
 import eccezioni.SaldoException;
 import utilities.MyJButton;
+import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 
-public class DialogCashout extends JDialog {
+public class DialogCashout extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -82,9 +83,6 @@ public class DialogCashout extends JDialog {
 		MyJButton prelevaButton = new MyJButton("Preleva");
 		prelevaButton.setDefaultAction(() -> {
 			try{
-				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				lblErroreImporto.setVisible(false);
-				
 				checkImporto(textFieldImporto.getText(), utente);
 				Double importo = Double.parseDouble(textFieldImporto.getText());
 				
@@ -92,14 +90,10 @@ public class DialogCashout extends JDialog {
 				mainController.chiudiDialogCashout(true);
 			}
 			catch(NumberFormatException e) {
-				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
-				lblErroreImporto.setText("Importo non valido");
-				lblErroreImporto.setVisible(true);
+				this.settaLabelETextFieldDiErrore(lblErroreImporto, e.getMessage(), textFieldImporto);
 			}
 			catch(SaldoException e) {
-				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
-				lblErroreImporto.setText(e.getMessage());
-				lblErroreImporto.setVisible(true);
+				this.settaLabelETextFieldDiErrore(lblErroreImporto, e.getMessage(), textFieldImporto);
 			}
 		});
 		
@@ -116,21 +110,25 @@ public class DialogCashout extends JDialog {
 		if(importo.contains(".")) {
 			int decimalIndex = importo.indexOf('.');
 			if(importo.endsWith(".") || importo.startsWith(".")) {
-				throw new NumberFormatException();
+				throw new NumberFormatException("Importo non valido");
 			}
 			try {
 				String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
 				for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
 					if(!carattere.equals('0'))
-						throw new NumberFormatException();
+						throw new NumberFormatException("Importo non valido");
 				}
 			}
 			
 			catch(StringIndexOutOfBoundsException e) {}
 		}	
-		if(Double.parseDouble(importo) > utente.getSaldo()) {
-			lblErroreImporto.setText("Non puoi fare prelevare più di quanto possiedi");
+		try {
+			
+		if(Double.parseDouble(importo) > utente.getSaldo()) 
 			throw new SaldoException("Non puoi fare prelevare più di quanto possiedi");
+		}
+		catch(NumberFormatException e) {
+			throw new NumberFormatException("Importo non valido");
 		}
 	}
 

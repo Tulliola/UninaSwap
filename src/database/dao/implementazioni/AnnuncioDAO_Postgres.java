@@ -52,7 +52,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			
 			try(ResultSet rs = ps.executeQuery()){
 				while(rs.next()) {
-					toReturn.add(annuncioCorrenteRecuperato(rs));
+					toReturn.add(annuncioCorrenteRecuperato(rs, utenteLoggato));
 				}
 				return toReturn;
 			}
@@ -68,7 +68,9 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			
 			try(ResultSet rs = ps.executeQuery()){
 				while(rs.next()) {
-					toReturn.add(annuncioCorrenteRecuperato(rs));
+					ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+					ProfiloUtente utenteCorrente = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("Email"));
+					toReturn.add(annuncioCorrenteRecuperato(rs, utenteCorrente));
 				}
 				return toReturn;
 			}
@@ -154,20 +156,21 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 	}	
 
+	
 	@Override
 	public Annuncio recuperaAnnuncioConId(int idAnnuncio) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE idAnnuncio = ?")){
 			ps.setInt(1, idAnnuncio);
 			try(ResultSet rs = ps.executeQuery()){
 				rs.next();
-				return annuncioCorrenteRecuperato(rs);
+				ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+				return annuncioCorrenteRecuperato(rs, utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("Email")));
 			}
 		}
 	}
-	
 /******************** METODI AUSILIARI NON EREDITATI DALL'INTERFACCIA *****************/
 	
-	private Annuncio annuncioCorrenteRecuperato(ResultSet rs) throws SQLException{
+	private Annuncio annuncioCorrenteRecuperato(ResultSet rs, ProfiloUtente utente) throws SQLException{
 		Annuncio annuncioRecuperato;
 		
 		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
@@ -181,14 +184,13 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		Timestamp momentoPubblicazione = rs.getTimestamp("Momento_pubblicazione");
 		String nome = rs.getString("Nome");
 		Oggetto oggettoInAnnuncio = oggettoDAO.recuperaOggettoConId(rs.getInt("idOggetto"));
-		ProfiloUtente utenteProprietario = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("Email"));
 
 //		OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
 
 		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
 			OffertaAcquistoDAO_Postgres offerteDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
-				stato, momentoPubblicazione, nome, utenteProprietario, 
+				stato, momentoPubblicazione, nome, utente, 
 				oggettoInAnnuncio, rs.getDouble("Prezzo_iniziale"));
 			
 			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
@@ -197,7 +199,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			OffertaScambioDAO_Postgres offerteDAO = new OffertaScambioDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioScambio(
 				idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
-				stato, momentoPubblicazione, nome, utenteProprietario, 
+				stato, momentoPubblicazione, nome, utente, 
 				oggettoInAnnuncio, rs.getString("Nota_scambio")	
 			);
 			
@@ -209,7 +211,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
-				utenteProprietario, oggettoInAnnuncio
+				utente, oggettoInAnnuncio
 			);
 			ArrayList<Offerta> offerte = new ArrayList<Offerta>();
 			offerte.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));

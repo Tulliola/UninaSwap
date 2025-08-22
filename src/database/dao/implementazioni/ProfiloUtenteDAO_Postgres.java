@@ -138,17 +138,23 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn);
 				
-				for(Annuncio annuncioCorrente : annunciDiUtente)
-					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
-				
 				OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 				OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
 				OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
+				
+				ArrayList<Offerta> offerteDiAnnuncio = new ArrayList<Offerta>();
+				for(Annuncio annuncioCorrente : annunciDiUtente) {
+					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
+					offerteDiAnnuncio.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
+					offerteDiAnnuncio.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
+					offerteDiAnnuncio.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
+				}
 				
 				ArrayList<Offerta> offerteDiUtente = new ArrayList<Offerta>();
 				offerteDiUtente.addAll(offerteAcquistoDAO.recuperaOfferteDiUtente(profiloToReturn));
 				offerteDiUtente.addAll(offerteScambioDAO.recuperaOfferteDiUtente(profiloToReturn));
 				offerteDiUtente.addAll(offerteRegaloDAO.recuperaOfferteDiUtente(profiloToReturn));
+				
 				
 				profiloToReturn.setOfferteUtente(offerteDiUtente);
 				

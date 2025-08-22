@@ -161,7 +161,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		}
 		else {
 			lblModalita.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
-			luogoTextArea.setText("\"L'ufficio postale in cui ritirerei l'articolo è "+offertaToAdd.getUfficioRitiro().getNome() + "\"");
+			luogoTextArea.setText("\"L'ufficio postale in cui ritirerei l'articolo è "+offertaToAdd.getUfficioRitiro()+"\"");
 		}
 		
 		lblModalita.setHorizontalTextPosition(SwingConstants.RIGHT);

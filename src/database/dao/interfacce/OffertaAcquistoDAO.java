@@ -1,5 +1,11 @@
 package database.dao.interfacce;
 
-public interface OffertaAcquistoDAO extends OffertaDAO{
+import java.sql.SQLException;
 
+import dto.Offerta;
+import dto.ProfiloUtente;
+import utilities.StatoOffertaEnum;
+
+public interface OffertaAcquistoDAO extends OffertaDAO{
+	
 }
