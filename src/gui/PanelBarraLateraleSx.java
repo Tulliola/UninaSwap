@@ -18,7 +18,7 @@ import utilities.MyJPanel;
 
 public class PanelBarraLateraleSx extends MyJPanel {
 
-private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	private MyJPanel panelChiamante;
 	private Controller mainController;

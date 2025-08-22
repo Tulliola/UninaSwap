@@ -48,7 +48,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	private PanelVisualizzaOfferteUtente panelOfferteRifiutate;
 	private PanelVisualizzaOfferteUtente panelOfferteInAttesa;
 	private PanelVisualizzaOfferteUtente panelOfferteRitirate;
-//	private PanelVisualizzaReportOfferteUtente panelReportOfferteUtente();
+	private PanelVisualizzaReport panelReport;
 	
 	//Buttons
 	private MyJButton bottoneSalvaModifiche;
@@ -80,7 +80,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	boolean isPasswordVisibile = false;
 
 	private Controller mainController;
-	
+
 	public FrameProfiloUtente(Controller controller, String sezioneScelta, ProfiloUtente utenteLoggato) {
 		mainController = controller;
 		
@@ -121,7 +121,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelAnnunciCard.add(panelAnnunciScaduti, "        Annunci scaduti");
 		panelAnnunciCard.add(panelAnnunciRimossi, "        Annunci rimossi");
 		((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneScelta);
-		
+	
 		panelOfferteCard.setLayout(new CardLayout());
 		
 		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteAccettate(), "Qui troverai tutte le tue offerte accettate", this);
@@ -133,6 +133,8 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelOfferteCard.add(panelOfferteInAttesa, "        Offerte in attesa");
 		panelOfferteCard.add(panelOfferteRitirate, "        Offerte ritirate");
 		((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneScelta);
+		
+		panelReport = new PanelVisualizzaReport(utenteLoggato);
 		
 		lblTornaAHomePage.setOnMouseClickedAction(() -> 
 		{
@@ -183,6 +185,10 @@ public class FrameProfiloUtente extends MyJFrame {
 			setClickedActions(panelLateraleSx.getLblOfferteRitirate(),"        Offerte ritirate");
 		});
 		
+		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
+			setClickedActions(panelLateraleSx.getLblReportOfferte(), "        Report");
+		});
+		
 		panelProfilo = new JPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setBackground(Color.white);
@@ -202,7 +208,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		else if(sezioneScelta.startsWith("        Offerte"))
 			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
 		else if(sezioneScelta.startsWith(panelLateraleSx.getLblReportOfferte().getText())) {
-//			contentPane.add(panelReport, BorderLayout.CENTER);
+			contentPane.add(panelReport, BorderLayout.CENTER);
 		}
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
@@ -228,7 +234,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		else if(sezioneCard.startsWith("        Offerte")) {
 			contentPane.add(panelOfferteCard, BorderLayout.CENTER);
 			((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneCard);
-		}	
+		}
+		else
+			contentPane.add(panelReport, BorderLayout.CENTER);
+		
 	}
 
 	private void settaBandaLaterale(JPanel bandaLaterale) {

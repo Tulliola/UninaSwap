@@ -237,7 +237,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 	}
 
 
-	//copied
+	//TODO da aggiustare
 	private MyJPanel creaPanelAnnuncio(Annuncio annuncioToAdd) {
 		MyJPanel annuncioPanel = new MyJPanel();
 		annuncioPanel.setLayout(new BorderLayout());
