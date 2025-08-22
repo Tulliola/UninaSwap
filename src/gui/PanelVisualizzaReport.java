@@ -14,6 +14,8 @@ import javax.swing.JScrollPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel; 
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -255,20 +257,20 @@ public class PanelVisualizzaReport extends MyJPanel {
 
 	    DefaultCategoryDataset dataSet = new DefaultCategoryDataset( );  
 	    
+	    dataSet.addValue(this.numOfferteAcquistoAccettate, rowKeyOfferteAccettate , colKeyOfferteVendita );        
         dataSet.addValue(this.numOfferteScambioAccettate , rowKeyOfferteAccettate , colKeyOfferteScambio );        
-        dataSet.addValue(this.numOfferteAcquistoAccettate, rowKeyOfferteAccettate , colKeyOfferteVendita );        
         dataSet.addValue(this.numOfferteRegaloAccettate, rowKeyOfferteAccettate , colKeyOfferteRegalo ); 
 
-        dataSet.addValue(this.numOfferteScambioInAttesa, rowKeyOfferteInAttesa , colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteAcquistoInAttesa, rowKeyOfferteInAttesa , colKeyOfferteVendita );       
+        dataSet.addValue(this.numOfferteScambioInAttesa, rowKeyOfferteInAttesa , colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteRegaloInAttesa, rowKeyOfferteInAttesa , colKeyOfferteRegalo );        	
       
-        dataSet.addValue(this.numOfferteScambioRifiutate, rowKeyOfferteRifiutate , colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteAcquistoRifiutate, rowKeyOfferteRifiutate, colKeyOfferteVendita );        
+        dataSet.addValue(this.numOfferteScambioRifiutate, rowKeyOfferteRifiutate , colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteRegaloRifiutate, rowKeyOfferteRifiutate , colKeyOfferteRegalo ); 
       
-        dataSet.addValue(this.numOfferteScambioRitirate, rowKeyOfferteRitirate, colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteAcquistoRitirate, rowKeyOfferteRitirate, colKeyOfferteVendita );        
+        dataSet.addValue(this.numOfferteScambioRitirate, rowKeyOfferteRitirate, colKeyOfferteScambio );        
         dataSet.addValue(this.numOfferteRegaloRitirate, rowKeyOfferteRitirate , colKeyOfferteRegalo );  
 	
 	    return dataSet;
@@ -277,7 +279,11 @@ public class PanelVisualizzaReport extends MyJPanel {
 	private void impostaSettingsPerBarChart() {
 		CategoryPlot plotBarChart = graficoReportOfferte.getCategoryPlot();
 		plotBarChart.setBackgroundPaint(uninaLightColor);
-
+		
+		NumberAxis rangeAxis = (NumberAxis)plotBarChart.getRangeAxis();
+		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		rangeAxis.setTickUnit(new NumberTickUnit(1));
+		
 		BarRenderer barRenderedBarChart = (BarRenderer) plotBarChart.getRenderer();
 		barRenderedBarChart.setShadowVisible(true);
 	    barRenderedBarChart.setBarPainter(new StandardBarPainter());
@@ -291,6 +297,7 @@ public class PanelVisualizzaReport extends MyJPanel {
 	private void filtraInformazioni(ProfiloUtente utenteLoggato) {
 		minimaOfferta = 0;
 		massimaOfferta = 0;
+		mediaOfferta = 0;
 		double prezzoTotaleAccettato = 0;
 		
 		for(Offerta offerta : utenteLoggato.getOfferteUtente()) {
@@ -339,7 +346,8 @@ public class PanelVisualizzaReport extends MyJPanel {
 			}
 		}
 		
-		mediaOfferta = prezzoTotaleAccettato / numOfferteAcquistoAccettate;
+		if(numOfferteAcquistoAccettate != 0 && prezzoTotaleAccettato != 0)
+			mediaOfferta = prezzoTotaleAccettato / numOfferteAcquistoAccettate;
 	}
 }
 

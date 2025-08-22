@@ -323,12 +323,13 @@ public class FrameProfiloUtente extends MyJFrame {
 		lblModificheEffettuate.setAlignmentX(CENTER_ALIGNMENT);
 		
 		panelRiepilogoInfoUtente = new MyJPanel();
-		
+		panelRiepilogoInfoUtente.setBackground(Color.white);
 		panelRiepilogoInfoUtente.setLayout(new BoxLayout(panelRiepilogoInfoUtente, BoxLayout.Y_AXIS));
 		panelRiepilogoInfoUtente.setAlignmentX(CENTER_ALIGNMENT);
 		
 		MyJLabel modificaUsername = new MyJLabel();
 		modificaUsername.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
+		modificaUsername.setOpaque(false);
 		modificaUsername.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 				usernameTextField.cambiaStatoEnabled();
@@ -351,6 +352,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 				
 		MyJLabel modificaPassword = new MyJLabel();
+		modificaPassword.setOpaque(false);
 		modificaPassword.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaPassword.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -377,6 +379,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		MyJLabel modificaResidenza = new MyJLabel();
+		modificaResidenza.setOpaque(false);
 		modificaResidenza.aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		modificaResidenza.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
@@ -402,6 +405,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
 		emailTextField.setEnabled(false);
 		MyJLabel lblEmail = new MyJLabel("La tua email istituzionale");
+		lblEmail.setOpaque(false);
 		lblEmail.aggiungiImmagineScalata("images/iconaEmail.png", 30, 30, false);
 		lblEmail.setAlignmentX(LEFT_ALIGNMENT);
 		
@@ -450,10 +454,12 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		//Settaggio di un panel orizzontale per mettere l'icona di modifica
 		MyJPanel panelUsername = new MyJPanel();
+		panelUsername.setBackground(Color.white);
 		panelUsername.setLayout(new BoxLayout(panelUsername, BoxLayout.X_AXIS));
 		panelUsername.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJLabel lblUsername = new MyJLabel("Il tuo username");
+		lblUsername.setOpaque(false);
 		lblUsername.aggiungiImmagineScalata("images/iconaNomeUtente.png", 30, 30, false);
 		panelUsername.add(lblUsername);
 		panelUsername.add(Box.createRigidArea(new Dimension(15, 0)));
@@ -461,6 +467,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		//Settaggio di un panel orizzontale per mettere l'icona di modifica e di nascondi/mostra password
 		MyJPanel panelPassword = new MyJPanel();
+		panelPassword.setBackground(Color.white);
 		panelPassword.setLayout(new BoxLayout(panelPassword, BoxLayout.X_AXIS));
 		panelPassword.setAlignmentX(LEFT_ALIGNMENT);
 		
@@ -471,6 +478,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelPassword.add(modificaPassword);
 		
 		MyJPanel panelSaldo = new MyJPanel();
+		panelSaldo.setBackground(Color.white);
 		panelSaldo.setLayout(new BoxLayout(panelSaldo, BoxLayout.X_AXIS));
 		panelSaldo.setAlignmentX(LEFT_ALIGNMENT);
 		panelSaldo.add(lblSaldo);
@@ -484,13 +492,16 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		MyJPanel panelVersaCashout = new MyJPanel();
+		panelVersaCashout.setBackground(Color.white);
 		panelVersaCashout.setLayout(new BoxLayout(panelVersaCashout, BoxLayout.X_AXIS));
+		panelVersaCashout.setPreferredSize(new Dimension(residenzaTextField.getPreferredSize().width, 30));
+		panelVersaCashout.setMaximumSize(new Dimension(residenzaTextField.getMaximumSize().width, 30));
 		panelVersaCashout.setAlignmentX(LEFT_ALIGNMENT);
-		panelVersaCashout.setPreferredSize(new Dimension(200, 30));
-		panelVersaCashout.setMaximumSize(new Dimension(200, 30));
+		panelVersaCashout.add(Box.createHorizontalGlue());
 		panelVersaCashout.add(versaButton);
-		panelVersaCashout.add(Box.createHorizontalStrut(20));
+		panelVersaCashout.add(Box.createHorizontalGlue());
 		panelVersaCashout.add(cashoutButton);
+		panelVersaCashout.add(Box.createHorizontalGlue());
 		
 //		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
 //		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
@@ -524,6 +535,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		//Settaggio di un panel orizzontale per mettere l'icona di modifica
 		MyJPanel panelResidenza = new MyJPanel();
+		panelResidenza.setBackground(Color.white);
 		panelResidenza.setLayout(new BoxLayout(panelResidenza, BoxLayout.X_AXIS));
 		panelResidenza.setAlignmentX(LEFT_ALIGNMENT);
 		
