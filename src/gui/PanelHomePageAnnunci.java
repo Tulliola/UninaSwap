@@ -657,7 +657,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelModalitaConsegna;
 	}
 	
-	private void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
+	protected void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
 		int larghezza = panelAnnunci.getWidth();
 		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
 		int altezza = (annunciInBacheca.size() / 2 == 0) ? (annunciInBacheca.size()/2 * 610) : ((annunciInBacheca.size()/2+1) * 610);
@@ -665,7 +665,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelAnnunci.setPreferredSize(new Dimension(larghezza, altezza));
 		panelAnnunci.setMaximumSize(new Dimension(larghezza, altezza));
 	}
-	
+
 	private void mostraAnnunciInBacheca(ArrayList<Annuncio> tuttiGliAnnunci) {
 		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
 		panelRisultatiDiRicerca.setVisible(false);

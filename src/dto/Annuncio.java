@@ -215,15 +215,13 @@ public abstract class Annuncio {
 		return offerteRicevute;
 	}
 
-	public ArrayList<Offerta> getOfferteAcecttate(){
-		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
-		
+	public Offerta getOffertaAccettata(){
 		for(Offerta offerta: offerteRicevute) {
 			if(offerta.getStato().equals("Accettata"))
-				toReturn.add(offerta);
+				return offerta;
 		}
 		
-		return toReturn;
+		return null;
 	}
 	
 	public ArrayList<Offerta> getOfferteInAttesa(){

@@ -122,10 +122,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx.add(lblLogout);
 		
 		panelAnnunciCard.setLayout(new CardLayout());
-		panelAnnunciDisponibili = new PanelVisualizzaAnnunciUtente(mainController, utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi", this);
-		panelAnnunciUltimati = new PanelVisualizzaAnnunciUtente(mainController, utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare", this);
-		panelAnnunciScaduti = new PanelVisualizzaAnnunciUtente(mainController, utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti", this);
-		panelAnnunciRimossi = new PanelVisualizzaAnnunciUtente(mainController, utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata", this);
+		panelAnnunciDisponibili = new PanelVisualizzaAnnunciDisponibiliUtente(mainController, utenteLoggato.getAnnunciDisponibili(), "Qui troverai tutti i tuoi annunci ancora attivi", this);
+		panelAnnunciUltimati = new PanelVisualizzaAnnunciUltimatiUtente(mainController, utenteLoggato.getAnnunciUltimati(), "Qui troverai tutti i tuoi annunci che sei riuscito ad ultimare", this);
+		panelAnnunciScaduti = new PanelVisualizzaAnnunciScadutiUtente(mainController, utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti", this);
+		panelAnnunciRimossi = new PanelVisualizzaAnnunciRimossiUtente(mainController, utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata", this);
 		
 		panelAnnunciCard.add(panelAnnunciDisponibili, "        Annunci disponibili");
 		panelAnnunciCard.add(panelAnnunciUltimati, "        Annunci andati a buon fine");
