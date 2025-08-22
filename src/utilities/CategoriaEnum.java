@@ -3,7 +3,7 @@ package utilities;
 import javax.swing.ImageIcon;
 
 public enum CategoriaEnum {
-	Libri_di_testo("Libri di testo", new ImageIcon("images/iconaLibriDitesto.png")),
+	Libri_di_testo("Libri di testo", new ImageIcon("images/iconaLibriDiTesto.png")),
 	Appunti("Appunti", new ImageIcon("images/iconaAppunti.png")),
 	Elettronica_e_Informatica("Elettronica e Informatica", new ImageIcon("images/iconaElettronicaEInformatica.png")),
 	Libri("Libri", new ImageIcon("images/iconaLibri.png")),
