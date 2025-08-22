@@ -135,6 +135,7 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
 		
 		try(PreparedStatement psInserisciOffertaScambio = connessioneDB.prepareStatement(inserisciOffertaScambio)){
+			connessioneDB.setAutoCommit(false);
 			
 			String emailOfferente = offertaDaInserire.getUtenteProprietario().getEmail();
 			int idAnnuncioRiferito = offertaDaInserire.getAnnuncioRiferito().getIdAnnuncio();
