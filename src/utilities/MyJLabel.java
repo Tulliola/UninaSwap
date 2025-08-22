@@ -102,7 +102,11 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		}
 	}
 	
-
+	public MyJLabel(String testo, Color colore) {
+		this(testo);
+		
+		this.setForeground(colore);
+	}
 
 	public void aggiungiEffettoCliccabilitaPerTesto() {
 		Font oldFont = this.getFont();

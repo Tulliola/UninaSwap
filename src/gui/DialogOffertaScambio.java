@@ -663,7 +663,7 @@ public class DialogOffertaScambio extends MyJDialog {
 				this.checkResidenza(this.inserisciIndirizzoTextField.getText());
 			
 			OffertaScambio newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
-			mainController.onConfermaOffertaScambioButtonClicked(newOfferta);
+			mainController.onConfermaOffertaButtonClicked(newOfferta);
 			
 		}
 		catch(OffertaScambioException exc1) {

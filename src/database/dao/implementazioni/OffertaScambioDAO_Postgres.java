@@ -72,6 +72,9 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
 					
+					offertaToAdd.setNota(rs.getString("Nota"));
+					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
+					
 					toReturn.add(offertaToAdd);
 				}
 				return toReturn;
@@ -120,6 +123,9 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
+					
+					offertaToAdd.setNota(rs.getString("Nota"));
+					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 					
 					toReturn.add(offertaToAdd);
 				}
@@ -217,7 +223,7 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 
 	@Override
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_scambio SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
 			ps.setString(1, stato.toString());
 			ps.setString(2, offerta.getUtenteProprietario().getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
