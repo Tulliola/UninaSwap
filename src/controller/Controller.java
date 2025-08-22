@@ -19,6 +19,7 @@ import database.dao.interfacce.*;
 import gui.*;
 import utilities.ImmagineDiSistemaDAO;
 import utilities.MapAnnuncioDAOToOffertaDAO;
+import utilities.MapOffertaToOffertaDAO;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -336,32 +337,17 @@ public class Controller {
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
 	}
 	
-	public void onConfermaOffertaAcquistoButtonClicked(Offerta offertaToAdd) throws SQLException {
-		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
-		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
+		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaToAdd, connessioneDB);
+
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);		
-		
-		utenteDAO.aggiornaSaldoUtente(utenteLoggato, -offertaToAdd.getPrezzoOfferto());
-		utenteLoggato.aggiornaSaldo(-offertaToAdd.getPrezzoOfferto());
 
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
 		
-	}
-	
-	public void onConfermaOffertaScambioButtonClicked(Offerta offertaToAdd) throws SQLException{
-		OffertaScambioDAO_Postgres offertaDAO = new OffertaScambioDAO_Postgres(connessioneDB);
-		offertaDAO.inserisciOfferta(offertaToAdd);
-		utenteLoggato.aggiungiOfferta(offertaToAdd);
-		
 		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
 			dialogOffertaScambio.dispose();
-	}
-	
-	public void onConfermaOffertaRegaloButtonClicked(Offerta offertaToAdd) throws SQLException{
-		OffertaRegaloDAO_Postgres offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
-		offertaDAO.inserisciOfferta(offertaToAdd);
 		
 		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
@@ -428,14 +414,12 @@ public class Controller {
 	}
 
 
-	public void aggiornaStatoOffertaAcquisto(OffertaAcquisto offerta, StatoOffertaEnum stato) {
-		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+	public void aggiornaStatoOfferta(Offerta offerta, StatoOffertaEnum stato) {
+		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offerta, connessioneDB);
+		
 		try {
 			offertaDAO.updateStatoOfferta(offerta, stato);
 			offerta.setStato(stato);
-			if(stato.equals(StatoOffertaEnum.Accettata)) {
-				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
-			}
 		} 
 		catch (SQLException e) {
 			System.out.println(e.getMessage());

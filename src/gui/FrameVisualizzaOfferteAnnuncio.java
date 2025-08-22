@@ -20,10 +20,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import controller.Controller;
 import dto.Offerta;
 import dto.OffertaAcquisto;
+import dto.OffertaScambio;
+import dto.Oggetto;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -104,12 +107,33 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 
 				@Override
 				public void settaAzioneRifiutaButton() {
-					mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Rifiutata);
+					mainController.aggiornaStatoOfferta(offerta, StatoOffertaEnum.Rifiutata);
 				}
 
 				@Override
 				public void settaAzioneAccettaButton() {
-					mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Accettata);
+					mainController.aggiornaStatoOfferta(offerta, StatoOffertaEnum.Accettata);
+				}
+				
+				@Override
+				public MyJPanel creaPanelSpecifico(Offerta offerta) {
+					MyJPanel panelSpecifico = new MyJPanel();
+					panelSpecifico.setLayout(new FlowLayout(FlowLayout.CENTER));
+					panelSpecifico.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 60));
+					panelSpecifico.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 60));		
+					panelSpecifico.setBackground(coloreCasualePerBG);
+					
+					if(offerta.getPrezzoOfferto() != null) {
+						MyJLabel lblPrezzoOfferto = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto " + offerta.getPrezzoOfferto() + "€!");
+						lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
+						lblPrezzoOfferto.setHorizontalTextPosition(SwingConstants.RIGHT);
+						
+						panelSpecifico.add(lblPrezzoOfferto);
+					}
+					else if(offerta.getOggettiOfferti().size() != 0)
+						settaPanelSpecificoToOggettiInScambio(offerta, panelSpecifico);
+						
+					return panelSpecifico;
 				}
 
 				@Override
@@ -141,6 +165,26 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		return this.panelOfferte;
 	}
 
+	private void settaPanelSpecificoToOggettiInScambio(Offerta offerta, MyJPanel panelSpecifico) {
+		MyJLabel lblOggettiInCambio = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto ");
+		lblOggettiInCambio.aggiungiImmagineScalata("images/iconaFrecceScambio.png", 25, 25, false);
+		lblOggettiInCambio.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		MyJLabel lblCliccabile =  new MyJLabel(String.valueOf(offerta.getOggettiOfferti().size()), Color.red);
+		lblCliccabile.aggiungiEffettoCliccabilitaPerTesto();
+		lblCliccabile.rendiLabelInteragibile();
+		
+		lblCliccabile.setOnMouseExitedAction(() -> {});
+		lblCliccabile.setOnMouseEnteredAction(() -> {});
+		lblCliccabile.setOnMouseClickedAction(() -> {/* TODO bisogna passare al frame visualizza oggetti */});
+		
+		MyJLabel lblOggetti = new MyJLabel(" oggetti!");
+		
+		panelSpecifico.add(lblOggettiInCambio);
+		panelSpecifico.add(lblCliccabile);
+		panelSpecifico.add(lblOggetti);
+	}
+	
 	private PanelBarraLateraleSx settaPanelLaterale() {
 		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");

@@ -69,6 +69,9 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
+			
+					offertaToAdd.setNota(rs.getString("Nota"));
+					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 					
 					toReturn.add(offertaToAdd);
 				}
@@ -114,6 +117,9 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
 					
+					offertaToAdd.setNota(rs.getString("Nota"));
+					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
+					
 					toReturn.add(offertaToAdd);
 				}
 				return toReturn;
@@ -131,8 +137,11 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 		String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
 				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, "
 				+ "Prezzo_offerto, Messaggio_motivazionale) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		connessioneDB.setAutoCommit(false);
 					
 		try(PreparedStatement psInserisciOffertaAcquisto = connessioneDB.prepareStatement(inserisciOffertaAcquisto)){
+			
 			psInserisciOffertaAcquisto.setString(1, emailOfferente);
 			psInserisciOffertaAcquisto.setInt(2, idAnnuncioRiferito);
 			
@@ -162,7 +171,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			}
 				
 		
-			psInserisciOffertaAcquisto.setString(10, modalitaConsegnaScelta);;
+			psInserisciOffertaAcquisto.setString(10, modalitaConsegnaScelta);
 			psInserisciOffertaAcquisto.setDouble(11, offertaDaInserire.getPrezzoOfferto());
 			
 			if(offertaDaInserire.getMessaggioMotivazionale() == null)
@@ -171,6 +180,20 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 				psInserisciOffertaAcquisto.setString(12, offertaDaInserire.getMessaggioMotivazionale());
 			
 			psInserisciOffertaAcquisto.executeUpdate();
+			
+			ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+			utenteDAO.aggiornaSaldoUtente(offertaDaInserire.getUtenteProprietario(), -offertaDaInserire.getPrezzoOfferto());
+			
+			offertaDaInserire.getUtenteProprietario().aggiornaSaldo(-offertaDaInserire.getPrezzoOfferto());
+		}
+		catch(SQLException exc) {
+			System.out.println(exc.getMessage());
+			System.out.println(exc.getSQLState());
+			exc.printStackTrace();
+			throw exc;
+		}
+		finally {
+			connessioneDB.setAutoCommit(true);
 		}
 	}
 

@@ -44,7 +44,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
 				+ " modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO "
 				+ " NATURAL JOIN ANNUNCIO WHERE email = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
-			
+		
 			ps.setString(1, utenteLoggato.getEmail());
 			ps.setString(2, utenteLoggato.getEmail());
 			
@@ -96,6 +96,9 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 							SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
 							offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 						}
+						
+						offertaToAdd.setNota(rs.getString("Nota"));
+						offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 						
 						offerteUtente.add(offertaToAdd);
 					} while(rs.next());
@@ -159,6 +162,9 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
+					
+					offertaToAdd.setNota(rs.getString("Nota"));
+					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 					
 					toReturn.add(offertaToAdd);
 				}
