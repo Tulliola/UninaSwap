@@ -15,6 +15,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -255,7 +256,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelInfoAnnuncio.setLayout(new BorderLayout());
 		panelInfoAnnuncio.add(this.creaPanelUsernamePubblicante(annuncioToAdd), BorderLayout.NORTH);
 		panelInfoAnnuncio.add(this.creaPanelDescrizioneAnnuncio(annuncioToAdd), BorderLayout.CENTER);
-		panelInfoAnnuncio.add(this.creaPanelFaiOfferta(annuncioToAdd), BorderLayout.SOUTH);
+//		panelInfoAnnuncio.add(this.creaPanelFaiOfferta(annuncioToAdd), BorderLayout.SOUTH);
 
 		annuncioPanel.add(panelInfoAnnuncio, BorderLayout.CENTER);
 		
@@ -465,20 +466,12 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		
 		return panelDescrizioneAnnuncio;
 	}
-
-	
-	
-	private MyJPanel creaPanelFaiOfferta(Annuncio annuncio) {
-		MyJPanel panelFaiOfferta = new MyJPanel();
-		
-		return panelFaiOfferta;
-	}
 	
 	private MyJPanel creaPanelModalitaConsegna(Annuncio annuncio) {
 		MyJPanel panelModalitaConsegna = new MyJPanel();
 		panelModalitaConsegna.setPreferredSize(new Dimension(425, 50));
 		panelModalitaConsegna.setMaximumSize(new Dimension(425, 50));
-		panelModalitaConsegna.setLayout(new BoxLayout(panelModalitaConsegna, BoxLayout.Y_AXIS));
+		panelModalitaConsegna.setLayout(new BoxLayout(panelModalitaConsegna, BoxLayout.X_AXIS));
 		panelModalitaConsegna.setAlignmentX(CENTER_ALIGNMENT);
 		panelModalitaConsegna.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, MyJPanel.uninaColorClicked));
 		panelModalitaConsegna.setBackground(Color.white);
@@ -492,8 +485,18 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		visualizzaOfferteButton.setUpAction(() ->{});
 		visualizzaOfferteButton.setDownAction(() ->{});
 		
-		panelModalitaConsegna.add(Box.createVerticalStrut(panelModalitaConsegna.getHeight()/2));
+		MyJButton rimuoviAnnuncioButton = new MyJButton("Rimuovi Annuncio");
+		rimuoviAnnuncioButton.setDefaultAction(() ->{
+			mainController.passaADialogConfermaRimozioneAnnuncio(annuncio);
+		});
+		rimuoviAnnuncioButton.setUpAction(()->{});
+		rimuoviAnnuncioButton.setDownAction(()->{});
+		
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
 		panelModalitaConsegna.add(visualizzaOfferteButton);
+		panelModalitaConsegna.add(Box.createHorizontalStrut(20));
+		panelModalitaConsegna.add(rimuoviAnnuncioButton);
+		panelModalitaConsegna.add(Box.createHorizontalGlue());
 //		MyJPanel panelSpedizione = new MyJPanel();
 //		panelSpedizione.setPreferredSize(new Dimension(60, 30));
 //		panelSpedizione.setMaximumSize(new Dimension(60, 30));

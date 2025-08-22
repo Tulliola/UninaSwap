@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -45,9 +46,11 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 	public FrameVisualizzaOfferte(ArrayList<Offerta> offerte, Controller mainController) {
 		this.mainController = mainController;
 		this.setSize(1100, 900);
-		this.setTitle("Le offerte al tuo annuncio - "+offerte.get(0).getAnnuncioRiferito().getNome());
+		if(!offerte.isEmpty())
+			this.setTitle("Le offerte al tuo annuncio - "+offerte.get(0).getAnnuncioRiferito().getNome());
+		
 		this.setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		settaContentPane(offerte);
 	}
 
@@ -118,7 +121,16 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 		});
 		
 		contentPane.add(panelLaterale, BorderLayout.WEST);
-		panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);
+		if(offerte.isEmpty()) {
+			this.setTitle("Non ci sono offerte per questo annuncio");
+			MyJLabel noOfferte = new MyJLabel();
+			noOfferte.setText("Non ci sono offerte attive per questo annuncio");
+			noOfferte.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
+			noOfferte.setAlignmentX(CENTER_ALIGNMENT);
+			panelOfferte.add(noOfferte);
+		}
+		else
+			panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);
 	}
 
 	private MyJPanel settaPanelOfferte(ArrayList<Offerta> offerte) {
@@ -132,7 +144,7 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 	}
 
 	private PanelBarraLateraleSx settaPanelLaterale() {
-		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Offerte accettate");
+		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
 		panelLaterale.add(lblTornaAllaHomePage, 0);
 		
@@ -238,15 +250,6 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 		panelInfoAnnunci.setBackground(Color.WHITE);
 		panelInfoAnnunci.setBorder(BorderFactory.createMatteBorder(0,  1, 0, 1, Color.BLACK));
 		
-		JTextArea textNomeAnnuncio = new JTextArea();
-		textNomeAnnuncio.setText("Offerta al tuo annuncio "+offertaToAdd.getAnnuncioRiferito().getNome());
-		textNomeAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 14));
-		textNomeAnnuncio.setFocusable(false);
-		textNomeAnnuncio.setEditable(false);
-		textNomeAnnuncio.setLineWrap(true);
-		textNomeAnnuncio.setWrapStyleWord(true);
-		textNomeAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
-		
 		JTextArea textPrezzoAnnuncio = new JTextArea();
 		textPrezzoAnnuncio.setText("Prezzo iniziale: €"+offertaToAdd.getAnnuncioRiferito().getPrezzoIniziale());
 		textPrezzoAnnuncio.setFont(new Font("Ubuntu Sans", Font.BOLD, 14));
@@ -255,9 +258,64 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 		textPrezzoAnnuncio.setLineWrap(true);
 		textPrezzoAnnuncio.setWrapStyleWord(true);
 		textPrezzoAnnuncio.setAlignmentX(CENTER_ALIGNMENT);
+	
+		MyJPanel panelModalitaMesseADisposizione = new MyJPanel();
+		panelModalitaMesseADisposizione.setBackground(Color.white);
+		panelModalitaMesseADisposizione.setLayout(new BoxLayout(panelModalitaMesseADisposizione, BoxLayout.X_AXIS));
+		MyJLabel lblSpedizione = new MyJLabel();
+		lblSpedizione.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
+		panelModalitaMesseADisposizione.add(lblSpedizione);
+		if(offertaToAdd.getAnnuncioRiferito().isSpedizione()) {
+			MyJLabel lblNonOfferta = new MyJLabel();
+			lblNonOfferta.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblNonOfferta);
+		}
+		else {
+			MyJLabel lblOfferta = new MyJLabel();
+			lblOfferta.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+		}
 		
-		panelInfoAnnunci.add(textNomeAnnuncio);
+		panelModalitaMesseADisposizione.add(Box.createHorizontalStrut(10));
+		
+		MyJLabel lblRitiroInPosta = new MyJLabel();
+		lblRitiroInPosta.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
+		panelModalitaMesseADisposizione.add(lblRitiroInPosta);
+		if(offertaToAdd.getAnnuncioRiferito().isRitiroInPosta()) {
+			MyJLabel lblNonOfferta = new MyJLabel();
+			lblNonOfferta.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblNonOfferta);
+		}
+		else {
+			MyJLabel lblOfferta = new MyJLabel();
+			lblOfferta.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+		}
+		
+		panelModalitaMesseADisposizione.add(Box.createHorizontalStrut(10));
+		
+		MyJLabel lblIncontro = new MyJLabel();
+		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
+		panelModalitaMesseADisposizione.add(lblIncontro);
+		if(offertaToAdd.getAnnuncioRiferito().isIncontro()) {
+			MyJLabel lblNonOfferta = new MyJLabel();
+			lblNonOfferta.aggiungiImmagineScalata("images/iconaXRossa.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblNonOfferta);
+		}
+		else {
+			MyJLabel lblOfferta = new MyJLabel();
+			lblOfferta.aggiungiImmagineScalata("images/iconaCheckVerde.png", 25, 25, false);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+			panelModalitaMesseADisposizione.add(lblOfferta);
+		}
+
+//		panelInfoAnnunci.add(Box.createVerticalGlue());
 		panelInfoAnnunci.add(textPrezzoAnnuncio);
+//		panelInfoAnnunci.add(Box.createVerticalGlue());
+		panelInfoAnnunci.add(panelModalitaMesseADisposizione);
+		panelInfoAnnunci.add(Box.createVerticalGlue());
 		return panelInfoAnnunci;
 	}
 

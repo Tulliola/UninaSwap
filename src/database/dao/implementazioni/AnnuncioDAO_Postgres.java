@@ -248,5 +248,15 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		
 		return annuncioRecuperato;
 	}
+
+	@Override
+	public void aggiornaStatoAnnuncio(Annuncio annuncio, StatoAnnuncioEnum stato) throws SQLException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Annuncio SET Stato = ? WHERE idAnnuncio = ?")){
+			ps.setString(1, stato.toString());
+			ps.setInt(2, annuncio.getIdAnnuncio());
+			
+			ps.executeUpdate();
+		}
+	}
 }
 
