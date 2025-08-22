@@ -42,7 +42,7 @@ public class Controller {
 	private FrameHomePage frameHomePage;
 	private FramePubblicaAnnuncio framePubblicaAnnuncio;
 	private FrameCaricaOggettoScambio[] frameCaricaOggetto = new FrameCaricaOggettoScambio[3];
-	private FrameVisualizzaOfferte frameVisualizzaOfferte;
+	private FrameVisualizzaOfferteAnnuncio frameVisualizzaOfferteAnnuncio;
 	
 	// Dialogs
 	private DialogConfermaLogout dialogConfermaLogout;
@@ -163,9 +163,9 @@ public class Controller {
 
 	public void passaASezioneInFrameProfiloUtente(String sezioneSelezionata) {
 		frameHomePage.setVisible(false);
-		if(frameVisualizzaOfferte != null && frameVisualizzaOfferte.isDisplayable()) {
-			frameVisualizzaOfferte.dispose();
-			frameVisualizzaOfferte = null;
+		if(frameVisualizzaOfferteAnnuncio != null && frameVisualizzaOfferteAnnuncio.isDisplayable()) {
+			frameVisualizzaOfferteAnnuncio.dispose();
+			frameVisualizzaOfferteAnnuncio = null;
 		}
 		frameProfiloUtente = new FrameProfiloUtente(this, sezioneSelezionata, utenteLoggato);
 		frameProfiloUtente.setVisible(true);
@@ -423,8 +423,8 @@ public class Controller {
 	
 	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
 		frameProfiloUtente.setVisible(false);
-		frameVisualizzaOfferte = new FrameVisualizzaOfferte(offerte, this);
-		frameVisualizzaOfferte.setVisible(true);
+		frameVisualizzaOfferteAnnuncio = new FrameVisualizzaOfferteAnnuncio(offerte, this);
+		frameVisualizzaOfferteAnnuncio.setVisible(true);
 	}
 
 

@@ -121,10 +121,6 @@ public class DialogVersamento extends JDialog {
 			}
 			
 			catch(StringIndexOutOfBoundsException e) {}
-		}	
-		if(Double.parseDouble(importo) > utente.getSaldo()) {
-			lblErroreImporto.setText("Non puoi fare prelevare più di quanto possiedi");
-			throw new SaldoException("Non puoi fare prelevare più di quanto possiedi");
 		}
 	}
 

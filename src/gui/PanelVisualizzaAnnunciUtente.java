@@ -477,10 +477,10 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		panelModalitaConsegna.setBackground(Color.white);
 		
 		MyJButton visualizzaOfferteButton = new MyJButton("Visualizza offerte");
-		visualizzaOfferteButton.rendiNotificabile(annuncio.getOfferteRicevute().size());
+		visualizzaOfferteButton.rendiNotificabile(annuncio.getOfferteInAttesa().size());
 		visualizzaOfferteButton.setAlignmentX(CENTER_ALIGNMENT);
 		visualizzaOfferteButton.setDefaultAction(() -> {
-			mainController.passaAFrameVisualizzaOfferte(annuncio.getOfferteRicevute());
+			mainController.passaAFrameVisualizzaOfferte(annuncio.getOfferteInAttesa());
 		});
 		visualizzaOfferteButton.setUpAction(() ->{});
 		visualizzaOfferteButton.setDownAction(() ->{});

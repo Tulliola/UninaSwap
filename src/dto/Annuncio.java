@@ -215,7 +215,50 @@ public abstract class Annuncio {
 		return offerteRicevute;
 	}
 
-
+	public ArrayList<Offerta> getOfferteAcecttate(){
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
+		
+		for(Offerta offerta: offerteRicevute) {
+			if(offerta.getStato().equals("Accettata"))
+				toReturn.add(offerta);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteInAttesa(){
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
+		
+		for(Offerta offerta: offerteRicevute) {
+			if(offerta.getStato().equals("In attesa"))
+				toReturn.add(offerta);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteRifiutate(){
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
+		
+		for(Offerta offerta: offerteRicevute) {
+			if(offerta.getStato().equals("Rifiutata"))
+				toReturn.add(offerta);
+		}
+		
+		return toReturn;
+	}
+	
+	public ArrayList<Offerta> getOfferteRitirate(){
+		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
+		
+		for(Offerta offerta: offerteRicevute) {
+			if(offerta.getStato().equals("Ritirata"))
+				toReturn.add(offerta);
+		}
+		
+		return toReturn;
+	}
+	
 	public void setOfferteRicevute(ArrayList<Offerta> offerteRicevute) {
 		this.offerteRicevute = offerteRicevute;
 	}

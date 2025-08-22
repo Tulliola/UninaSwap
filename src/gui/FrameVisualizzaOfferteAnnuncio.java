@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -29,7 +30,7 @@ import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.StatoOffertaEnum;
 
-public class FrameVisualizzaOfferte extends MyJFrame {
+public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -43,9 +44,9 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 	private MyJPanel panelOfferte = new MyJPanel();
 	private MyJLabel lblTornaAllaHomePage = new MyJLabel("   Torna alla home page");
 	
-	public FrameVisualizzaOfferte(ArrayList<Offerta> offerte, Controller mainController) {
+	public FrameVisualizzaOfferteAnnuncio(ArrayList<Offerta> offerte, Controller mainController) {
 		this.mainController = mainController;
-		this.setSize(1100, 900);
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		if(!offerte.isEmpty())
 			this.setTitle("Le offerte al tuo annuncio - "+offerte.get(0).getAnnuncioRiferito().getNome());
 		
@@ -80,45 +81,6 @@ public class FrameVisualizzaOfferte extends MyJFrame {
 			mainController.passaAFrameHomePage(this);
 		});
 		
-		panelLaterale.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente("   Il mio profilo");
-		});
-		
-		panelLaterale.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci disponibili");
-		});
-		
-		panelLaterale.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci andati a buon fine");
-		});
-		
-		panelLaterale.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci scaduti");
-		});
-		
-		panelLaterale.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
-		{        
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
-		});
-		
-		panelLaterale.getLblOfferteAccettate().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte accettate");
-		});
-		
-		panelLaterale.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte rifiutate");
-		});
-		
-		panelLaterale.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte in attesa");
-		});
-		
-		panelLaterale.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte ritirate");
-		});
 		
 		contentPane.add(panelLaterale, BorderLayout.WEST);
 		if(offerte.isEmpty()) {

@@ -84,20 +84,30 @@ public class FrameProfiloUtente extends MyJFrame {
 	public FrameProfiloUtente(Controller controller, String sezioneScelta, ProfiloUtente utenteLoggato) {
 		mainController = controller;
 		
-		this.impostaSettingsPerFrame();
+		this.impostaSettingsPerFrame(sezioneScelta);
 		this.impostaContentPane(utenteLoggato, sezioneScelta);
 
 	}
 	
-	private void impostaSettingsPerFrame() {
+	private void impostaSettingsPerFrame(String sezioneScelta) {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Il tuo profilo utente");
-		this.setSize(1000, 900);
+		this.setTitle(settaTitolo(sezioneScelta));
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
 		
 	}
 	
+	private String settaTitolo(String sezioneScelta) {
+		String toReturn = "Il tuo profilo";
+		
+		String sezione = sezioneScelta.trim();
+		
+		if(!sezioneScelta.contains("profilo"))
+			toReturn+= " - "+sezione;
+		return toReturn;
+	}
+
 	private void impostaContentPane(ProfiloUtente utenteLoggato, String sezioneScelta) {
 		contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());
@@ -146,46 +156,56 @@ public class FrameProfiloUtente extends MyJFrame {
 		});
 		
 		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo");
 			setClickedActions(panelLateraleSx.getLblIlMioProfilo(), null);
 		});
 		
 		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
 		{
+			this.setTitle("Il tuo profilo - Annunci disponibili");
 			setClickedActions(panelLateraleSx.getLblAnnunciDisponibili(), "        Annunci disponibili");
 		});
 		
 		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
 		{
+			this.setTitle("Il tuo profilo - Annunci ultimati");
 			setClickedActions(panelLateraleSx.getLblAnnunciUltimati(), "        Annunci andati a buon fine");
 		});
 		
 		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
 		{
+			this.setTitle("Il tuo profilo - Annunci scaduti");
 			setClickedActions(panelLateraleSx.getLblAnnunciScaduti(), "        Annunci scaduti");
 		});
 		
 		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
 		{        
+			this.setTitle("Il tuo profilo - Annunci rimossi");
 			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Annunci rimossi");
 		});
 		
 		panelLateraleSx.getLblOfferteAccettate().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo - Offerte accettate");
 			setClickedActions(panelLateraleSx.getLblOfferteAccettate(),"        Offerte accettate");
 		});
 		
 		panelLateraleSx.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo - Offerte rifiutate");
 			setClickedActions(panelLateraleSx.getLblOfferteRifiutate(),"        Offerte rifiutate");
 		});
 		
 		panelLateraleSx.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo - Offerte in attesa");
 			setClickedActions(panelLateraleSx.getLblOfferteInAttesa(),"        Offerte in attesa");
 		});
 		
 		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo - Offerte ritirate");
 			setClickedActions(panelLateraleSx.getLblOfferteRitirate(),"        Offerte ritirate");
 		});
 		
 		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
+			this.setTitle("Il tuo profilo - Report offerte");
 			setClickedActions(panelLateraleSx.getLblReportOfferte(), "        Report");
 		});
 		

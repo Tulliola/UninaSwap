@@ -30,6 +30,7 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
 	private MyJLabel lblIlTuoProfiloUtente = new MyJLabel("   Il mio profilo");
 	
+	
 	private MyJLabel lblLeMieOfferte = new MyJLabel("   Le mie offerte");
 	private MyJLabel lblOfferteAccettate = new MyJLabel("        Offerte accettate");
 	private MyJLabel lblOfferteInAttesa = new MyJLabel("        Offerte in attesa");
@@ -50,6 +51,9 @@ public class PanelBarraLateraleSx extends MyJPanel {
 		
 		
 		aggiungiRigaNelPanel(lblIlTuoProfiloUtente, true, "images/iconaProfiloUtente.png");
+		lblIlTuoProfiloUtente.setOnMouseClickedAction(() -> {
+			mainController.passaASezioneInFrameProfiloUtente("   Il mio profilo");
+		});
 		
 		aggiungiRigheAnnunciNelPanel();
 		aggiungiRigheOfferteNelPanel();
@@ -59,6 +63,21 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	
 	private void aggiungiRigheAnnunciNelPanel() {
 		
+		lblAnnunciDisponibili.setOnMouseClickedAction(() ->{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci disponibili");
+		});
+		
+		lblAnnunciUltimati.setOnMouseClickedAction(() ->{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci andati a buon fine");
+		});
+		
+		lblAnnunciScaduti.setOnMouseClickedAction(() ->{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci scaduti");
+		});
+		
+		lblAnnunciRimossi.setOnMouseClickedAction(() ->{
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
+		});
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
 		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png");
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
@@ -67,8 +86,31 @@ public class PanelBarraLateraleSx extends MyJPanel {
 		
 	}
 	
-	//TODO Una volta fatti i panel per le offerte
 	private void aggiungiRigheOfferteNelPanel() {
+		
+		lblOfferteAccettate.setOnMouseClickedAction(()->{
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte accettate");
+		});
+		
+		lblOfferteInAttesa.setOnMouseClickedAction(()->{
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte in attesa");
+			
+		});
+		
+		lblOfferteRifiutate.setOnMouseClickedAction(()->{
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte rifiutate");
+			
+		});
+		
+		lblOfferteRitirate.setOnMouseClickedAction(()->{
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte ritirate");
+			
+		});
+		
+		lblReportOfferte.setOnMouseClickedAction(()->{
+			mainController.passaASezioneInFrameProfiloUtente("        Report offerte");
+			
+		});
 		
 		aggiungiRigaNelPanel(lblLeMieOfferte, false, null);
 		aggiungiRigaNelPanel(lblOfferteAccettate, true, "images/iconaOffertaAccettata.png");

@@ -47,52 +47,7 @@ public class FrameHomePage extends MyJFrame {
 		
 		panelAnnunci = new PanelHomePageAnnunci(mainController, annunci);
 		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, null);
-		
-		panelLateraleSx.getLblIlMioProfilo().setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblIlMioProfilo().getText());
-		});
-		
-		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciDisponibili().getText());
-		});
-		
-		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciUltimati().getText());
-		});
-		
-		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciScaduti().getText());
-		});
-		
-		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblAnnunciRimossi().getText());
-		});
-		
-		panelLateraleSx.getLblOfferteAccettate().setOnMouseClickedAction(() -> 
-		{
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteAccettate().getText());
-		});
-		
-		panelLateraleSx.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteRifiutate().getText());
-		});
-		
-		panelLateraleSx.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteInAttesa().getText());
-		});
-		
-		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblOfferteRitirate().getText());
-		});
 		panelSuperiore = new PanelHomePageSuperiore(this);
-		
-		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
-			mainController.passaASezioneInFrameProfiloUtente(panelLateraleSx.getLblReportOfferte().getText());
-		});
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		contentPane.add(panelAnnunci, BorderLayout.CENTER);
