@@ -37,7 +37,7 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelFaiOfferta(annuncio);
+					return creaPanelVisualizzaOfferte(annuncio);
 				}
 				
 			});
@@ -69,7 +69,7 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelFaiOfferta(annuncio);
+					return creaPanelVisualizzaOfferte(annuncio);
 				}
 		
 			});
@@ -99,7 +99,7 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelFaiOfferta(annuncio);
+					return creaPanelVisualizzaOfferte(annuncio);
 				}
 		
 			});
@@ -120,14 +120,14 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 		}
 	}
 
-	private MyJPanel creaPanelFaiOfferta(Annuncio annuncio) {
-		MyJPanel panelFaiOfferta = new MyJPanel();
-		panelFaiOfferta.setPreferredSize(new Dimension(425, 50));
-		panelFaiOfferta.setMaximumSize(new Dimension(425, 50));
-		panelFaiOfferta.setLayout(new BoxLayout(panelFaiOfferta, BoxLayout.X_AXIS));
-		panelFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
-		panelFaiOfferta.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));
-		panelFaiOfferta.setBackground(Color.white);
+	private MyJPanel creaPanelVisualizzaOfferte(Annuncio annuncio) {
+		MyJPanel panelVisualizzaOfferta = new MyJPanel();
+		panelVisualizzaOfferta.setPreferredSize(new Dimension(425, 50));
+		panelVisualizzaOfferta.setMaximumSize(new Dimension(425, 50));
+		panelVisualizzaOfferta.setLayout(new BoxLayout(panelVisualizzaOfferta, BoxLayout.X_AXIS));
+		panelVisualizzaOfferta.setAlignmentX(CENTER_ALIGNMENT);
+		panelVisualizzaOfferta.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));
+		panelVisualizzaOfferta.setBackground(Color.white);
 		
 		MyJButton visualizzaOfferteButton = new MyJButton("Visualizza offerte");
 		visualizzaOfferteButton.rendiNotificabile(annuncio.getOfferteInAttesa().size());
@@ -145,12 +145,12 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 		rimuoviAnnuncioButton.setUpAction(()->{});
 		rimuoviAnnuncioButton.setDownAction(()->{});
 		
-		panelFaiOfferta.add(Box.createHorizontalGlue());
-		panelFaiOfferta.add(visualizzaOfferteButton);
-		panelFaiOfferta.add(Box.createHorizontalStrut(20));
-		panelFaiOfferta.add(rimuoviAnnuncioButton);
-		panelFaiOfferta.add(Box.createHorizontalGlue());
+		panelVisualizzaOfferta.add(Box.createHorizontalGlue());
+		panelVisualizzaOfferta.add(visualizzaOfferteButton);
+		panelVisualizzaOfferta.add(Box.createHorizontalStrut(20));
+		panelVisualizzaOfferta.add(rimuoviAnnuncioButton);
+		panelVisualizzaOfferta.add(Box.createHorizontalGlue());
 		
-		return panelFaiOfferta;
+		return panelVisualizzaOfferta;
 	}
 }

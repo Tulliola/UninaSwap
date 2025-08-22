@@ -105,6 +105,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		
 		if(!sezioneScelta.contains("profilo"))
 			toReturn+= " - "+sezione;
+		
 		return toReturn;
 	}
 
@@ -134,10 +135,10 @@ public class FrameProfiloUtente extends MyJFrame {
 	
 		panelOfferteCard.setLayout(new CardLayout());
 		
-		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteAccettate(), "Qui troverai tutte le tue offerte accettate", this);
-		panelOfferteRifiutate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRifiutate(), "Qui troverai tutte le tue offerte rifiutate", this);
-		panelOfferteInAttesa = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteInAttesa(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate", this);
-		panelOfferteRitirate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRitirate(), "Qui troverai tutte le tue offerte che hai ritirato", this);
+		panelOfferteAccettate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteAccettate(), "Qui troverai tutte le tue offerte accettate", this, mainController);
+		panelOfferteRifiutate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRifiutate(), "Qui troverai tutte le tue offerte rifiutate", this, mainController);
+		panelOfferteInAttesa = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteInAttesa(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate", this, mainController);
+		panelOfferteRitirate = new PanelVisualizzaOfferteUtente(utenteLoggato.getOfferteRitirate(), "Qui troverai tutte le tue offerte che hai ritirato", this, mainController);
 		panelOfferteCard.add(panelOfferteAccettate, "        Offerte accettate");
 		panelOfferteCard.add(panelOfferteRifiutate, "        Offerte rifiutate");
 		panelOfferteCard.add(panelOfferteInAttesa, "        Offerte in attesa");

@@ -27,6 +27,7 @@ import dto.OffertaAcquisto;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
+import utilities.MyJOffertaPanel;
 import utilities.MyJPanel;
 import utilities.StatoOffertaEnum;
 
@@ -72,7 +73,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 	private void settaPanelCentrale(ArrayList<Offerta> offerte) {
 		panelCentrale.setLayout(new BorderLayout());
 		panelCentrale.setPreferredSize(new Dimension(1100, 900));
-		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Offerte accettate");
+		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
 		panelLaterale.add(lblTornaAllaHomePage, 0);
 		
@@ -99,8 +100,19 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		panelOfferte.setBackground(MyJPanel.uninaLightColor);
 		panelOfferte.setPreferredSize(getDimension(offerte));
 		for(Offerta offerta: offerte) {
-			panelOfferte.add(aggiungiPanelOfferta(offerta));
-			panelOfferte.add(new JSeparator(JSeparator.HORIZONTAL));
+			panelOfferte.add(new MyJOffertaPanel(offerta, mainController) {
+
+				@Override
+				public void settaAzioneRifiutaButton() {
+					mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Rifiutata);
+				}
+
+				@Override
+				public void settaAzioneAccettaButton() {
+					mainController.aggiornaStatoOffertaAcquisto((OffertaAcquisto)offerta, StatoOffertaEnum.Accettata);
+				}
+				
+			});
 		}
 		return this.panelOfferte;
 	}

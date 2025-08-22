@@ -29,17 +29,21 @@ import dto.OffertaRegalo;
 import dto.OffertaScambio;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
+import utilities.MyJOffertaPanel;
 import utilities.MyJPanel;
+import utilities.StatoOffertaEnum;
 
 public class PanelVisualizzaOfferteUtente extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
 	
 	private JScrollPane scrollPane;
+	private Controller mainController;
 	private MyJPanel panelSuperiore = new MyJPanel();
 	private MyJPanel panelCentrale = new MyJPanel();
 	
-	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
+	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame, Controller controller) {
+		this.mainController = controller;
 		this.setLayout(new BorderLayout());
 		
 		
@@ -200,6 +204,7 @@ public class PanelVisualizzaOfferteUtente extends MyJPanel {
 	private void mostraOfferteDiAcquistoSulCentrale(ArrayList<Offerta> offerteToDisplay) {
 		ricalcolaAltezzaConOfferte(offerteToDisplay);
 		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
+			final int index = i;
 			if(offerteToDisplay.get(i) instanceof OffertaAcquisto) {
 				panelCentrale.add(creaPanelOfferta(offerteToDisplay.get(i)));
 			}

@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -177,6 +178,7 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 	protected abstract void mostraAnnunciDiRegaloSulCentrale(ArrayList<Annuncio> annunciToDisplay);
 	
 	protected void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciMostrati) {
+
 		int larghezza = panelCentrale.getWidth();
 		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
 		int altezza = (annunciMostrati.size() / 2 == 0) ? (annunciMostrati.size()/2 * 610) : ((annunciMostrati.size()/2+1) * 610);
