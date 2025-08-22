@@ -485,7 +485,7 @@ public class PanelVisualizzaAnnunciUtente extends JPanel {
 		visualizzaOfferteButton.setUpAction(() ->{});
 		visualizzaOfferteButton.setDownAction(() ->{});
 		
-		MyJButton rimuoviAnnuncioButton = new MyJButton("Rimuovi Annuncio");
+		MyJButton rimuoviAnnuncioButton = new MyJButton("Rimuovi annuncio");
 		rimuoviAnnuncioButton.setDefaultAction(() ->{
 			mainController.passaADialogConfermaRimozioneAnnuncio(annuncio);
 		});
