@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +90,14 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
             graficaConBadgeRosso.dispose();
         }
     }
+	
+	public void aggiungiImmagineScalata(String stringPath, int larghezza, int altezza) {
+		ImageIcon img = new ImageIcon(stringPath);	
+		Image resizedImage = img.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
+		ImageIcon resizeResult = new ImageIcon(resizedImage);
+		
+		this.setIcon(resizeResult);
+	}
 	
 	public void setDefaultAction(Runnable defaultAction) {
 		this.defaultAction = defaultAction;

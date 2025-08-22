@@ -131,8 +131,10 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 	@Override
 	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException {
 		String inserisciOffertaScambio = "INSERT INTO Offerta_scambio(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
-				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta) "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
+				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, Messaggio_Motivazionale) "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
+		
+		connessioneDB.setAutoCommit(false);
 		
 		try(PreparedStatement psInserisciOffertaScambio = connessioneDB.prepareStatement(inserisciOffertaScambio)){
 			
@@ -171,7 +173,10 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 				
 			psInserisciOffertaScambio.setString(10, modalitaConsegnaScelta);;
 			
-			psInserisciOffertaScambio.setNull(11, Types.VARCHAR);
+			if(offertaDaInserire.getMessaggioMotivazionale() == null)
+				psInserisciOffertaScambio.setNull(11, Types.VARCHAR);
+			else
+				psInserisciOffertaScambio.setString(11, offertaDaInserire.getMessaggioMotivazionale());
 			
 			int idOffertaInserita;
 			
