@@ -58,14 +58,14 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 		panelInferiore.setSize(this.WIDTH, 100);
 		
 		annullaButton.setDefaultAction(() -> {
-			mainController.chiudDialogConfermaRimozioneAnnuncio();
+			mainController.chiudDialogConfermaRimozioneAnnuncio(false);
 		});
 		annullaButton.setUpAction(()->{});
 		annullaButton.setDownAction(()->{});
 		
 		siButton.setDefaultAction(() -> {
 			mainController.aggiornaStatoAnnuncio(annuncioToRemove, StatoAnnuncioEnum.Rimosso);
-			mainController.chiudDialogConfermaRimozioneAnnuncio();
+			mainController.chiudDialogConfermaRimozioneAnnuncio(true);
 		});
 		
 		panelInferiore.add(Box.createHorizontalGlue());

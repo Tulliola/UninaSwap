@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import dto.ProfiloUtente;
+import eccezioni.SaldoException;
 import utilities.MyJButton;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
@@ -37,7 +39,7 @@ public class DialogVersamento extends JDialog {
 	
 	MyJLabel lblErroreImporto;
 	
-	public DialogVersamento(Controller controller, JFrame parentFrame) {
+	public DialogVersamento(Controller controller, ProfiloUtente utenteLoggato, JFrame parentFrame) {
 		this.mainController = controller;
 		
 		this.setModal(true);
@@ -55,7 +57,7 @@ public class DialogVersamento extends JDialog {
 		
 		panelSuperiore = new PanelHomePageSuperiore(this);
 		
-		settaPanelInferiore();
+		settaPanelInferiore(utenteLoggato);
 		settaPanelCentrale();
 		
 		
@@ -67,7 +69,7 @@ public class DialogVersamento extends JDialog {
 		this.setLocationRelativeTo(parentFrame);
 	}
 
-	private void settaPanelInferiore() {
+	private void settaPanelInferiore(ProfiloUtente utenteLoggato) {
 		panelInferiore.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelInferiore.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
 		panelInferiore.setPreferredSize(new Dimension(600, 50));
@@ -84,11 +86,11 @@ public class DialogVersamento extends JDialog {
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				lblErroreImporto.setVisible(false);
 				
-				checkImporto(textFieldImporto.getText());
+				checkImporto(textFieldImporto.getText(), utenteLoggato);
 				Double importo = Double.parseDouble(textFieldImporto.getText());
 				
 				mainController.aggiornaSaldoUtente(importo);
-				mainController.chiudiDialogVersamento();
+				mainController.chiudiDialogVersamento(true);
 			}
 			catch(NumberFormatException e) {
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
@@ -97,20 +99,32 @@ public class DialogVersamento extends JDialog {
 		});
 		
 		tornaIndietroButton.setDefaultAction(() ->{
-			mainController.chiudiDialogVersamento();
+			mainController.chiudiDialogVersamento(false);
 		});
 		
 		panelInferiore.add(tornaIndietroButton);
 		panelInferiore.add(versaButton);
 	}
 	
-	private void checkImporto(String importo) {
-		int decimalIndex = importo.indexOf('.');
-		
-		String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
-		for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
-			if(!carattere.equals('0'))
+	private void checkImporto(String importo, ProfiloUtente utente) {
+		if(importo.contains(".")) {
+			int decimalIndex = importo.indexOf('.');
+			if(importo.endsWith(".") || importo.startsWith(".")) {
 				throw new NumberFormatException();
+			}
+			try {
+				String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
+				for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
+					if(!carattere.equals('0'))
+						throw new NumberFormatException();
+				}
+			}
+			
+			catch(StringIndexOutOfBoundsException e) {}
+		}	
+		if(Double.parseDouble(importo) > utente.getSaldo()) {
+			lblErroreImporto.setText("Non puoi fare prelevare più di quanto possiedi");
+			throw new SaldoException("Non puoi fare prelevare più di quanto possiedi");
 		}
 	}
 

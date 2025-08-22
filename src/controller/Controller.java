@@ -195,7 +195,7 @@ public class Controller {
 //		panelCaricamento.add(lblCaricamento);
 //		
 //		frameCaricamento.setVisible(true);
-//		new Timer(2000, evento->{
+//		new Timer(1000, evento->{
 //			frameCaricamento.dispose();
 //			((Timer) evento.getSource()).stop();
 //        }).start();
@@ -336,13 +336,16 @@ public class Controller {
 	
 	public void onConfermaOffertaAcquistoButtonClicked(Offerta offertaToAdd) throws SQLException {
 		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);		
+		
+		utenteDAO.aggiornaSaldoUtente(utenteLoggato, -offertaToAdd.getPrezzoOfferto());
+		utenteLoggato.aggiornaSaldo(-offertaToAdd.getPrezzoOfferto());
 
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
 		
-		utenteLoggato.setSaldo(utenteLoggato.getSaldo()-offertaToAdd.getPrezzoOfferto());
 	}
 	
 	public void onConfermaOffertaScambioButtonClicked(Offerta offertaToAdd) throws SQLException{
@@ -410,9 +413,10 @@ public class Controller {
 		dialogConfermaLogout.dispose();
 	}
 
-	public void chiudiDialogVersamento() {
+	public void chiudiDialogVersamento(boolean hasVersato) {
 		dialogVersamento.dispose();
-		this.passaAFrameHomePage(frameProfiloUtente);
+		if(hasVersato)
+			this.passaAFrameHomePage(frameProfiloUtente);
 	}
 	
 	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
@@ -426,9 +430,9 @@ public class Controller {
 		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		try {
 			offertaDAO.updateStatoOfferta(offerta, stato);
+			
 			if(stato.equals(StatoOffertaEnum.Accettata)) {
 				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
-				offerta.getUtenteProprietario().aggiornaSaldo(-offerta.getPrezzoOfferto());
 			}
 		} 
 		catch (SQLException e) {
@@ -439,7 +443,7 @@ public class Controller {
 
 
 	public void passaADialogVersamento() {
-		dialogVersamento = new DialogVersamento(this, frameProfiloUtente);
+		dialogVersamento = new DialogVersamento(this, utenteLoggato, frameProfiloUtente);
 		dialogVersamento.setVisible(true);
 	}
 
@@ -463,7 +467,7 @@ public class Controller {
 	}
 
 
-	public void chiudDialogConfermaRimozioneAnnuncio() {
+	public void chiudDialogConfermaRimozioneAnnuncio(boolean prelevatoOVersato) {
 		dialogConfermaRimozioneAnnuncio.dispose();
 	}
 
@@ -486,8 +490,9 @@ public class Controller {
 	}
 
 
-	public void chiudiDialogCashout() {
+	public void chiudiDialogCashout(boolean hasPrelevato) {
 		dialogCashout.dispose();
-		this.passaAFrameHomePage(frameProfiloUtente);
+		if(hasPrelevato)
+			this.passaAFrameHomePage(frameProfiloUtente);
 	}
 }

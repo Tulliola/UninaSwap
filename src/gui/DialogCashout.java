@@ -79,7 +79,7 @@ public class DialogCashout extends JDialog {
 		lblErroreImporto.setForeground(Color.red);
 		
 		MyJButton tornaIndietroButton = new MyJButton("Torna indietro");
-		MyJButton prelevaButton = new MyJButton("Versa");
+		MyJButton prelevaButton = new MyJButton("Preleva");
 		prelevaButton.setDefaultAction(() -> {
 			try{
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -89,7 +89,7 @@ public class DialogCashout extends JDialog {
 				Double importo = Double.parseDouble(textFieldImporto.getText());
 				
 				mainController.aggiornaSaldoUtente(-importo);
-				mainController.chiudiDialogCashout();
+				mainController.chiudiDialogCashout(true);
 			}
 			catch(NumberFormatException e) {
 				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
@@ -104,7 +104,7 @@ public class DialogCashout extends JDialog {
 		});
 		
 		tornaIndietroButton.setDefaultAction(() -> {
-			mainController.chiudiDialogCashout();
+			mainController.chiudiDialogCashout(false);
 		});
 		
 		panelInferiore.add(tornaIndietroButton);
