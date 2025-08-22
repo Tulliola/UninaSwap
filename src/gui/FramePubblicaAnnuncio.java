@@ -171,8 +171,20 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
-		panelCentrale.setPreferredSize(new Dimension(1225, 3500));
-		panelCentrale.setMaximumSize(new Dimension(1225, 3500));
+		
+		if(tipoAnnuncio.equals("Scambio")) {
+			panelCentrale.setPreferredSize(new Dimension(1225, 3200));
+			panelCentrale.setMaximumSize(new Dimension(1225, 3200));
+		}
+		else if (tipoAnnuncio.equals("Vendita")){
+			panelCentrale.setPreferredSize(new Dimension(1225, 2900));
+			panelCentrale.setMaximumSize(new Dimension(1225, 2900));
+		}
+		else {
+			panelCentrale.setPreferredSize(new Dimension(1225, 2800));
+			panelCentrale.setMaximumSize(new Dimension(1225, 2800));
+		}
+		
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
 		this.creaPanelAggiungiFoto();
@@ -180,8 +192,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(panelNomeAnnuncio);
-		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelCentrale.add(panelAggiungiFoto);
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(creaPanelInserimentoDati(sediPresenti));
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -277,11 +287,11 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 	}
 
-	private void creaPanelAggiungiFoto() {
+	private MyJPanel creaPanelAggiungiFoto() {
 		panelAggiungiFoto = new MyJPanel();
 		panelAggiungiFoto.setLayout(new BorderLayout());
-		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 660));
-		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 660));
+		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 580));
+		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 580));
 		
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
 		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
@@ -380,7 +390,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 
 		lblErroreFoto = new MyJLabel(true);
 		lblErroreFoto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		lblErroreFoto.setText("prova");
 		lblErroreFoto.setVisible(true);
 		lblErroreFoto.setBorder(new EmptyBorder(0, 10, 0, 0));
 		lblErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
@@ -390,6 +399,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelAggiungiFoto.add(panelContieniFoto, BorderLayout.CENTER);
 		panelAggiungiFoto.add(panelErroreFoto, BorderLayout.SOUTH);
 		
+		return panelAggiungiFoto;
 	}
 	
 	private MyJPanel creaPanelInserimentoDati(ArrayList<SedeUniversita> sediPresenti) {
@@ -414,6 +424,8 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		prezzoInizialeTextField.setPreferredSize(new Dimension(300, 30));
 		prezzoInizialeTextField.setMaximumSize(new Dimension(300, 30));
 		
+		panelInserimentoDati.add(this.creaPanelAggiungiFoto());
+		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
 				lblErroreDescrizione, panelErroreDescrizione));
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
@@ -1160,7 +1172,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private MyJPanel creaPanelBottoni() {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
-		panelBottoni.setBackground(Color.red);
+		panelBottoni.setBackground(Color.white);
 		panelBottoni.setPreferredSize(new Dimension(1225, 100));
 		panelBottoni.setMaximumSize(new Dimension(1225, 100));
 		

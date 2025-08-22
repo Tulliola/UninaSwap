@@ -22,7 +22,7 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private Controller mainController;
 	
-	MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler rimuovere l'annuncio");
+	MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler rimuovere l'annuncio?");
 	
 	PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
 	MyJPanel panelDx = new MyJPanel();
@@ -39,7 +39,7 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 		this.setModal(true);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
-		this.setSize(700, 400);
+		this.setSize(400, 200);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Rimuovere annuncio?");
 
