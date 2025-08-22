@@ -157,6 +157,22 @@ public abstract class Offerta {
 	public void setMessaggioMotivazionale(String messaggioMotivazionale) {
 		this.messaggioMotivazionale = messaggioMotivazionale;
 	}
+	
+	public boolean isAccettata() {
+		return this.getStato().equals("Accettata") ? true : false; 
+	}
+	
+	public boolean isInAttesa() {
+		return this.getStato().equals("In attesa") ? true : false; 
+	}
+	
+	public boolean isRifiutata() {
+		return this.getStato().equals("Rifiutata") ? true : false; 
+	}
+	
+	public boolean isRitirata() {
+		return this.getStato().equals("Ritirata") ? true : false; 
+	}
 	@Override
 	public String toString() {
 		String toReturn = "OFFERTA\n--------------------------------------\n";

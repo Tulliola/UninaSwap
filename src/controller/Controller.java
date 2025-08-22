@@ -39,7 +39,6 @@ public class Controller {
 	private FrameHomePage frameHomePage;
 	private FramePubblicaAnnuncio framePubblicaAnnuncio;
 	private FrameCaricaOggettoScambio[] frameCaricaOggetto = new FrameCaricaOggettoScambio[3];
-	private FrameReport frameReport;
 	private FrameVisualizzaOfferte frameVisualizzaOfferte;
 	
 	// Dialogs
@@ -67,6 +66,9 @@ public class Controller {
 		
 //		dialogSegnalaUtente = new DialogSegnalaUtente(this);
 //		dialogSegnalaUtente.setVisible(true);
+		
+//		PanelVisualizzaReport panel = new PanelVisualizzaReport();
+//		panel.setVisible(true);
 		
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
