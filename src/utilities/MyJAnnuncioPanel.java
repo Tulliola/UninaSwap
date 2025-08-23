@@ -43,6 +43,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		MyJPanel annuncioPanel = new MyJPanel();
 		annuncioPanel.putClientProperty("idAnnuncio", annuncioToAdd.getIdAnnuncio());
 		annuncioPanel.setLayout(new BorderLayout());
+		annuncioPanel.setMinimumSize(new Dimension(800, 600));
 		annuncioPanel.setPreferredSize(new Dimension(800, 600));
 		annuncioPanel.setMaximumSize(new Dimension(800, 600));
 		annuncioPanel.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 2));

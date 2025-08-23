@@ -10,6 +10,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -48,6 +51,7 @@ import dto.OffertaScambio;
 import eccezioni.OffertaAcquistoException;
 import eccezioni.OffertaRegaloException;
 import eccezioni.OffertaScambioException;
+import net.miginfocom.swing.MigLayout;
 import utilities.CategoriaEnum;
 import utilities.MyJAnnuncioPanel;
 import utilities.MyJAnnuncioSegnalabilePanel;
@@ -87,12 +91,29 @@ public class PanelHomePageAnnunci extends JPanel{
 		this.settaBordoSuperiore(annunci);
 		this.settaBordoInferiore();
 
-		panelAnnunci.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		panelAnnunci.setLayout(new FlowLayout(FlowLayout.CENTER));
+		MigLayout layoutPanelAnnunci = new MigLayout("wrap 2", "[]", "");
+		panelAnnunci.setLayout(layoutPanelAnnunci);
 		
 		scrollPanelAnnunci = new JScrollPane(panelAnnunci);
 		scrollPanelAnnunci.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPanelAnnunci.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPanelAnnunci.getVerticalScrollBar().setUnitIncrement(30);
+		scrollPanelAnnunci.getVerticalScrollBar().setUnitIncrement(20);
+		scrollPanelAnnunci.getHorizontalScrollBar().setUnitIncrement(20);
+		
+		scrollPanelAnnunci.addMouseWheelListener(e -> {
+			JScrollBar barraVerticale = scrollPanelAnnunci.getVerticalScrollBar();
+			JScrollBar barraOrizzontale = scrollPanelAnnunci.getHorizontalScrollBar();
+			
+		    if (e.isShiftDown()) {
+		        barraOrizzontale.setValue(barraOrizzontale.getValue() + e.getUnitsToScroll() * barraOrizzontale.getUnitIncrement());
+		    } else {
+		        barraVerticale.setValue(barraVerticale.getValue() + e.getUnitsToScroll() * barraVerticale.getUnitIncrement());
+		    }
+		    e.consume();
+		});
+
+
 		
 		this.settaPanelAnnunciEPanelRisultatiRicerca(annunci, scrollPanelAnnunci);
 		
@@ -338,17 +359,17 @@ public class PanelHomePageAnnunci extends JPanel{
 		return panelFaiOfferta;
 	}
 	
-		protected void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
-		int larghezza = panelAnnunci.getWidth();
-		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
-		int altezza = (annunciInBacheca.size() / 2 == 0) ? (annunciInBacheca.size()/2 * 610) : ((annunciInBacheca.size()/2+1) * 610);
-		
-		panelAnnunci.setPreferredSize(new Dimension(larghezza, altezza));
-		panelAnnunci.setMaximumSize(new Dimension(larghezza, altezza));
-	}
+//		protected void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
+//		int larghezza = panelAnnunci.getWidth();
+//		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
+//		int altezza = (annunciInBacheca.size() / 2 == 0) ? (annunciInBacheca.size()/2 * 610) : ((annunciInBacheca.size()/2+1) * 610);
+//		
+//		panelAnnunci.setPreferredSize(new Dimension(larghezza, altezza));
+//		panelAnnunci.setMaximumSize(new Dimension(larghezza, altezza));
+//	}
 
 	private void mostraAnnunciInBacheca(ArrayList<Annuncio> tuttiGliAnnunci) {
-		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
+//		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
 		panelRisultatiDiRicerca.setVisible(false);
 		
 		panelAnnunci.removeAll();
@@ -379,7 +400,7 @@ public class PanelHomePageAnnunci extends JPanel{
 			if((annuncioCorrente.getNome().toLowerCase()).contains(stringaIn.toLowerCase()))
 				annunciFiltratiPerRicerca.add(annuncioCorrente);
 		
-		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerRicerca);
+//		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerRicerca);
 		this.mostraAnnunciInBacheca(annunciFiltratiPerRicerca);
 		
 		panelRisultatiDiRicerca.setVisible(true);
@@ -433,7 +454,7 @@ public class PanelHomePageAnnunci extends JPanel{
 			}
 		}
 		
-		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerTipo);
+//		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerTipo);
 		this.mostraAnnunciInBacheca(annunciFiltratiPerTipo);
 	
 		panelRisultatiDiRicerca.setVisible(true);

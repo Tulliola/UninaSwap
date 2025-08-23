@@ -8,5 +8,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="jdbc_library/postgresql-42.7.7.jar"/>
 	<classpathentry kind="lib" path="jfreechart_library/jfreechart-1.5.5.jar"/>
+	<classpathentry kind="lib" path="miglayout_library/miglayout-core-11.4.2.jar" sourcepath="miglayout_library/miglayout-core-11.4.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/UninaSwap/miglayout_library/miglayout-core-11.4.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="miglayout_library/miglayout-swing-11.4.2.jar" sourcepath="miglayout_library/miglayout-swing-11.4.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/UninaSwap/miglayout_library/miglayout-swing-11.4.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
