@@ -72,16 +72,8 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelFotoOggetto.setMaximumSize(new Dimension(375, 500));
 		panelFotoOggetto.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
 				
-		ImageIcon fotoToAdd;
-		MyJPanel panelInterno;
-		if(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0) != null) {
-			fotoToAdd = new ImageIcon(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0));
-			panelInterno = new MyJPanel(fotoToAdd.getImage());
-		}
-		else {
-			fotoToAdd = new ImageIcon("images/logo_uninaswap.png");
-			panelInterno = new MyJPanel(fotoToAdd.getImage());
-		}
+		ImageIcon fotoToAdd = new ImageIcon(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0));
+		MyJPanel panelInterno = new MyJPanel(fotoToAdd.getImage());
 		
 		panelFotoOggetto.add(panelInterno, BorderLayout.CENTER);
 		

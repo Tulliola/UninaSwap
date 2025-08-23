@@ -176,7 +176,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		
 		lblCliccabile.setOnMouseExitedAction(() -> {});
 		lblCliccabile.setOnMouseEnteredAction(() -> {});
-		lblCliccabile.setOnMouseClickedAction(() -> {/* TODO bisogna passare al frame visualizza oggetti */});
+		lblCliccabile.setOnMouseClickedAction(() -> {mainController.passaADialogVisualizzaOggetti(offerta.getOggettiOfferti());});
 		
 		MyJLabel lblOggetti = new MyJLabel(" oggetti!");
 		

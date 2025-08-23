@@ -150,7 +150,7 @@ public class PanelVisualizzaAnnunciScadutiUtente extends PanelVisualizzaAnnunciU
 		if(annuncio.getDataScadenza() != null) {
 			DateTimeFormatter formatterPerData = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			
-			lblDataScadenza.setText("Questo annuncio sarebbe dovuto scadere il " + annuncio.getDataScadenza().toLocalDate().format(formatterPerData));
+			lblDataScadenza.setText("Questo annuncio è scaduto il " + annuncio.getDataScadenza().toLocalDate().format(formatterPerData));
 		}
 		else 
 			lblDataScadenza.setText("Questo annuncio non prevedeva una data di scadenza");

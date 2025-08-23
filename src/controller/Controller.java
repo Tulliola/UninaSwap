@@ -54,7 +54,7 @@ public class Controller {
 	private DialogOffertaRegalo dialogOffertaRegalo;
 	private DialogVersamento dialogVersamento;
 	private DialogSegnalaUtente dialogSegnalaUtente;
-
+	private DialogVisualizzaOggetti dialogVisualizzaOggetti;
 	
 	private static Connection connessioneDB;
 	
@@ -266,6 +266,12 @@ public class Controller {
 		dialogOffertaRegalo = new DialogOffertaRegalo(annuncio, this);
 		dialogOffertaRegalo.setVisible(true);
 	}
+	
+	public void passaADialogVisualizzaOggetti(ArrayList<Oggetto> oggettiDaMostrare) {
+		dialogVisualizzaOggetti = new DialogVisualizzaOggetti(this, oggettiDaMostrare, frameVisualizzaOfferteAnnuncio);
+		dialogVisualizzaOggetti.setVisible(true);
+	}
+	
 	
 	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{

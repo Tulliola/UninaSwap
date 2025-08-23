@@ -127,13 +127,17 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0], 
 							isOggettoDisponibile(rs.getInt("idOggetto")));
 					
-					toReturn.add(oggettoDaAggiungere);
-					
 					if(immaginiOggetto[1] != null)
 						oggettoDaAggiungere.aggiungiImmagine(1, immaginiOggetto[1]);
-
+					
 					if(immaginiOggetto[2] != null)
 						oggettoDaAggiungere.aggiungiImmagine(2, immaginiOggetto[2]);
+					
+					if(rs.getString("Descrizione") != null) {
+						oggettoDaAggiungere.setDescrizione(rs.getString("Descrizione"));
+					
+						toReturn.add(oggettoDaAggiungere);
+					}
 				}
 			}
 		}
