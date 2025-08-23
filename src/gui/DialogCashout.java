@@ -35,7 +35,7 @@ public class DialogCashout extends MyJDialog {
 	MyJPanel panelDx = new MyJPanel();
 	MyJPanel panelCentrale = new MyJPanel();
 	MyJPanel panelInferiore = new MyJPanel();
-	PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
+	PanelHomePageSuperiore panelSuperiore;
 	
 	MyJLabel lblErroreImporto = new MyJLabel("Inserire un importo valido");
 	
@@ -56,7 +56,7 @@ public class DialogCashout extends MyJDialog {
 		panelDx.setSize(new Dimension(50, this.getHeight()));
 		panelDx.setBackground(MyJPanel.uninaColor);
 		
-		panelSuperiore = new PanelHomePageSuperiore(this);
+		panelSuperiore = new PanelHomePageSuperiore(this, "ATM UninaSwap");
 		
 		settaPanelInferiore(utenteLoggato);
 		settaPanelCentrale();
@@ -89,11 +89,8 @@ public class DialogCashout extends MyJDialog {
 				mainController.aggiornaSaldoUtente(-importo);
 				mainController.chiudiDialogCashout(true);
 			}
-			catch(NumberFormatException e) {
-				this.settaLabelETextFieldDiErrore(lblErroreImporto, e.getMessage(), textFieldImporto);
-			}
-			catch(SaldoException e) {
-				this.settaLabelETextFieldDiErrore(lblErroreImporto, e.getMessage(), textFieldImporto);
+			catch(NumberFormatException | SaldoException throwables) {
+				this.settaLabelETextFieldDiErrore(lblErroreImporto, throwables.getMessage(), textFieldImporto);
 			}
 		});
 		
@@ -110,25 +107,25 @@ public class DialogCashout extends MyJDialog {
 		if(importo.contains(".")) {
 			int decimalIndex = importo.indexOf('.');
 			if(importo.endsWith(".") || importo.startsWith(".")) {
-				throw new NumberFormatException("Importo non valido");
+				throw new NumberFormatException("Importo non valido.");
 			}
 			try {
 				String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
 				for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
 					if(!carattere.equals('0'))
-						throw new NumberFormatException("Importo non valido");
+						throw new NumberFormatException("Importo non valido.");
 				}
 			}
 			
 			catch(StringIndexOutOfBoundsException e) {}
 		}	
 		try {
-			
-		if(Double.parseDouble(importo) > utente.getSaldo()) 
-			throw new SaldoException("Non puoi fare prelevare più di quanto possiedi");
-		}
-		catch(NumberFormatException e) {
-			throw new NumberFormatException("Importo non valido");
+			if(Double.parseDouble(importo) > utente.getSaldo()) 
+				throw new SaldoException("Non puoi fare prelevare più di quanto possiedi.");
+			else if(Double.parseDouble(importo) < 0)
+				throw new SaldoException("L'importo non può essere negativo.");
+		}catch(NumberFormatException e) {
+			throw new NumberFormatException("Importo non valido.");
 		}
 	}
 

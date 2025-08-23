@@ -24,7 +24,7 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 	
 	MyJLabel lblMessaggio = new MyJLabel("Sei sicuro di voler rimuovere l'annuncio?");
 	
-	PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
+	PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this, "UninaSwap");
 	MyJPanel panelDx = new MyJPanel();
 	MyJPanel panelSx = new MyJPanel();
 	MyJPanel panelCentrale = new MyJPanel();

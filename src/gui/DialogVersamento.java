@@ -19,11 +19,12 @@ import controller.Controller;
 import dto.ProfiloUtente;
 import eccezioni.SaldoException;
 import utilities.MyJButton;
+import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
 
-public class DialogVersamento extends JDialog {
+public class DialogVersamento extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -55,7 +56,7 @@ public class DialogVersamento extends JDialog {
 		panelDx.setSize(new Dimension(50, this.getHeight()));
 		panelDx.setBackground(MyJPanel.uninaColor);
 		
-		panelSuperiore = new PanelHomePageSuperiore(this);
+		panelSuperiore = new PanelHomePageSuperiore(this, "ATM UninaSwap");
 		
 		settaPanelInferiore(utenteLoggato);
 		settaPanelCentrale();
@@ -83,18 +84,14 @@ public class DialogVersamento extends JDialog {
 		MyJButton versaButton = new MyJButton("Versa");
 		versaButton.setDefaultAction(() -> {
 			try{
-				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				lblErroreImporto.setVisible(false);
-				
 				checkImporto(textFieldImporto.getText(), utenteLoggato);
 				Double importo = Double.parseDouble(textFieldImporto.getText());
 				
 				mainController.aggiornaSaldoUtente(importo);
 				mainController.chiudiDialogVersamento(true);
 			}
-			catch(NumberFormatException e) {
-				textFieldImporto.setBorder(BorderFactory.createLineBorder(Color.red, 2));
-				lblErroreImporto.setVisible(true);
+			catch(NumberFormatException | SaldoException throwables) {
+				this.settaLabelETextFieldDiErrore(lblErroreImporto, throwables.getMessage(), textFieldImporto);
 			}
 		});
 		
@@ -121,6 +118,13 @@ public class DialogVersamento extends JDialog {
 			}
 			
 			catch(StringIndexOutOfBoundsException e) {}
+		}
+		try {
+			if(Double.parseDouble(importo) < 0) 
+				throw new SaldoException("L'importo non può essere negativo.");
+		}
+		catch(NumberFormatException e) {
+			throw new NumberFormatException("Importo non valido.");
 		}
 	}
 

@@ -268,7 +268,7 @@ public class Controller {
 	}
 	
 	public void passaADialogVisualizzaOggetti(ArrayList<Oggetto> oggettiDaMostrare) {
-		dialogVisualizzaOggetti = new DialogVisualizzaOggetti(this, oggettiDaMostrare, frameVisualizzaOfferteAnnuncio);
+		dialogVisualizzaOggetti = new DialogVisualizzaOggetti(this, oggettiDaMostrare);
 		dialogVisualizzaOggetti.setVisible(true);
 	}
 	

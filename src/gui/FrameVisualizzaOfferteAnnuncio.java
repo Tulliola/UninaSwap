@@ -41,7 +41,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 	private Controller mainController;
 	
 	private MyJPanel contentPane;
-	private PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this);
+	private PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this, "UninaSwap");
 	private MyJPanel panelCentrale = new MyJPanel();
 	private PanelBarraLateraleSx panelLaterale;
 	private JScrollPane scrollPane;

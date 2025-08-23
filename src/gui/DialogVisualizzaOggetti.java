@@ -27,7 +27,6 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 	private static final long serialVersionUID = 1L;
 	private final MyJPanel contentPane = new MyJPanel();
 	private Controller mainController;
-	private JFrame framePadre;
 	private Color coloreCasualePerBG;
 	private MyJPanel panelFrecciaSx;
 	private MyJPanel panelCentrale;
@@ -37,15 +36,18 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 	private int panelCorrente;
 	
 	private int larghezza = 1400;
-	private int altezza = 700;
+	private int altezza = 680;
 	
-	public DialogVisualizzaOggetti(Controller controller, ArrayList<Oggetto> oggettiDaMostrare, JFrame framePadre) {
-		this.framePadre = framePadre;
+	public DialogVisualizzaOggetti(Controller controller, ArrayList<Oggetto> oggettiDaMostrare) {
 		mainController = controller;
+		
 		this.setSize(new Dimension(larghezza, altezza));
+		this.setBackground(coloreCasualePerBG);
 		this.setModal(true);
+		this.setTitle("Questi sono gli oggetti che ti sono stati offerti. Prenditi il tempo per valutare e decidere se accettare o rifiutare l'offerta!");
 		
 		contentPane.setLayout(new BorderLayout());
+		contentPane.setBackground(coloreCasualePerBG);
 		contentPane.add(this.creaPanelFrecciaSx(oggettiDaMostrare.size()), BorderLayout.WEST);
 		contentPane.add(this.creaPanelCentrale(oggettiDaMostrare), BorderLayout.CENTER);
 		contentPane.add(this.creaPanelFrecciaDx(oggettiDaMostrare.size()), BorderLayout.EAST);
@@ -56,14 +58,16 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 	
 	private MyJPanel creaPanelFrecciaSx(int numOggettiCaricati) {
 		panelFrecciaSx = new MyJPanel();
+		panelFrecciaSx.setBackground(Color.white);
 		panelFrecciaSx.setLayout(new BoxLayout(panelFrecciaSx, BoxLayout.Y_AXIS));
 		panelFrecciaSx.setPreferredSize(new Dimension(100, altezza));
 		panelFrecciaSx.setMaximumSize(new Dimension(100, altezza));
 		
 		MyJLabel lblFrecciaSx = new MyJLabel();
 		lblFrecciaSx.aggiungiImmagineScalata("images/iconaTornaIndietroFoto.png", 50, 50, true);
-//		if(numOggettiCaricati == 1)
-//			lblFrecciaSx.setVisible(false);		
+		if(numOggettiCaricati == 1)
+			lblFrecciaSx.setVisible(false);		
+		lblFrecciaSx.setAlignmentX(CENTER_ALIGNMENT);
 		
 		lblFrecciaSx.rendiLabelInteragibile();
 		lblFrecciaSx.setOnMouseEnteredAction(() -> {});
@@ -78,9 +82,7 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 		});
 		
 		panelFrecciaSx.add(Box.createVerticalGlue());
-		panelFrecciaSx.add(Box.createHorizontalGlue());
 		panelFrecciaSx.add(lblFrecciaSx);
-		panelFrecciaSx.add(Box.createHorizontalGlue());
 		panelFrecciaSx.add(Box.createVerticalGlue());
 		
 		return panelFrecciaSx;
@@ -88,6 +90,7 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 
 	private MyJPanel creaPanelCentrale(ArrayList<Oggetto> oggettiDaMostrare) {
 		panelCentrale = new MyJPanel();
+		panelCentrale.setBackground(coloreCasualePerBG);
 		panelCentrale.setPreferredSize(new Dimension(larghezza - 200, altezza));
 		panelCentrale.setMaximumSize(new Dimension(larghezza - 200, altezza));
 		
@@ -108,14 +111,16 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 	
 	private MyJPanel creaPanelFrecciaDx(int numOggettiCaricati) {
 		panelFrecciaDx = new MyJPanel();
+		panelFrecciaDx.setBackground(Color.white);
 		panelFrecciaDx.setLayout(new BoxLayout(panelFrecciaDx, BoxLayout.Y_AXIS));
 		panelFrecciaDx.setPreferredSize(new Dimension(100, altezza));
 		panelFrecciaDx.setMaximumSize(new Dimension(100, altezza));
 		
 		MyJLabel lblFrecciaDx = new MyJLabel();
 		lblFrecciaDx.aggiungiImmagineScalata("images/iconaVaiAvantiFoto.png", 50, 50, true);
-//		if(numOggettiCaricati == 1)
-//			lblFrecciaDx.setVisible(false);
+		if(numOggettiCaricati == 1)
+			lblFrecciaDx.setVisible(false);
+		lblFrecciaDx.setAlignmentX(CENTER_ALIGNMENT);
 		
 		lblFrecciaDx.rendiLabelInteragibile();
 		lblFrecciaDx.setOnMouseEnteredAction(() -> {});
@@ -130,9 +135,7 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 		});
 		
 		panelFrecciaDx.add(Box.createVerticalGlue());
-		panelFrecciaDx.add(Box.createHorizontalGlue());
 		panelFrecciaDx.add(lblFrecciaDx);
-		panelFrecciaDx.add(Box.createHorizontalGlue());
 		panelFrecciaDx.add(Box.createVerticalGlue());
 		
 		return panelFrecciaDx;

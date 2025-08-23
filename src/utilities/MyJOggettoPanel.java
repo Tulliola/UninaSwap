@@ -21,23 +21,15 @@ import dto.Oggetto;
 public class MyJOggettoPanel extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final Color[] tonalitaDiUninaLightColor = new Color[5]; 
-	protected Color coloreCasualePerBG;
 	protected int larghezza = 1200;
 	protected int distanzaDalBordo = 10;
-	protected int altezza = 700;
-	
-	static {
-		tonalitaDiUninaLightColor[0] = new Color(118, 146, 175);
-		tonalitaDiUninaLightColor[1] = new Color(158, 178, 198);
-		tonalitaDiUninaLightColor[2] = new Color(198, 209, 221);
-	}	
+	protected int altezza = 680;	
 	
 	public MyJOggettoPanel(Oggetto oggettoDaMostrare) {
 		
 		Random generatore = new Random();
-		coloreCasualePerBG = tonalitaDiUninaLightColor[generatore.nextInt(5)];
 		
+		this.setBackground(uninaLightColor);
 		this.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.add(this.creaPanelOggetto(oggettoDaMostrare));
@@ -62,7 +54,7 @@ public class MyJOggettoPanel extends MyJPanel {
 		panelFotoOggetto.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelFotoOggetto.setPreferredSize(new Dimension(larghezza, 510));
 		panelFotoOggetto.setMaximumSize(new Dimension(larghezza, 510));
-		panelFotoOggetto.setBackground(coloreCasualePerBG);
+		panelFotoOggetto.setBackground(uninaColorClicked);
 		
 		for(int i = 0; i < 3; i++) {
 			MyJPanel panelFoto;
@@ -93,17 +85,17 @@ public class MyJOggettoPanel extends MyJPanel {
 	}
 	
 	private MyJPanel creaPanelCondizioniECategoria(CondizioneEnum condizioneOggetto, CategoriaEnum categoriaOggetto) {
-		MyJPanel panelWrapper = new MyJPanel();
-		panelWrapper.setLayout(new BoxLayout(panelWrapper, BoxLayout.X_AXIS));
-		panelWrapper.setPreferredSize(new Dimension(larghezza, 35));
-		panelWrapper.setMaximumSize(new Dimension(larghezza, 35));
-		panelWrapper.setBackground(Color.white);
+		MyJPanel panelCondizioniECategoria = new MyJPanel();
+		panelCondizioniECategoria.setLayout(new BorderLayout());
+		panelCondizioniECategoria.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 35));
+		panelCondizioniECategoria.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 35));
+		panelCondizioniECategoria.setBackground(Color.white);
 		
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setBackground(Color.white);
 		panelCondizioni.setLayout(new BoxLayout(panelCondizioni, BoxLayout.X_AXIS));
-		panelCondizioni.setPreferredSize(new Dimension(250, 30));
-		panelCondizioni.setMaximumSize(new Dimension(250, 30));
+		panelCondizioni.setPreferredSize(new Dimension(panelCondizioniECategoria.getPreferredSize().width/2, panelCondizioniECategoria.getPreferredSize().height));
+		panelCondizioni.setMaximumSize(new Dimension(panelCondizioniECategoria.getMaximumSize().width/2, panelCondizioniECategoria.getMaximumSize().height));
 		
 		MyJLabel lblCondizioni = new MyJLabel(condizioneOggetto.toString(), condizioneOggetto.getColoreCondizione());
 
@@ -120,37 +112,41 @@ public class MyJOggettoPanel extends MyJPanel {
 			panelStelleCondizioni.add(lblStella1);
 			panelStelleCondizioni.add(lblStella2);
 			panelStelleCondizioni.add(lblStella3);
+			panelStelleCondizioni.add(lblCondizioni);
 			
 			panelCondizioni.add(panelStelleCondizioni);
 		}
 		else {
 			lblCondizioni.aggiungiImmagineScalata(condizioneOggetto.getFixPerRicondizionato(), 25, 25, false);
 			lblCondizioni.setHorizontalTextPosition(SwingConstants.RIGHT);
+			panelCondizioni.add(lblCondizioni);
 		}
-		panelCondizioni.add(lblCondizioni);
+		
+		MyJPanel panelCategoria = new MyJPanel();
+		panelCategoria.setLayout(new FlowLayout(FlowLayout.CENTER));
+		panelCategoria.setBackground(Color.white);
+		panelCategoria.setPreferredSize(new Dimension(panelCondizioniECategoria.getPreferredSize().width/2, panelCondizioniECategoria.getPreferredSize().height));
+		panelCategoria.setMaximumSize(new Dimension(panelCondizioniECategoria.getMaximumSize().width/2, panelCondizioniECategoria.getMaximumSize().height));
 		
 		MyJLabel lblCategoria = new MyJLabel(categoriaOggetto.toString());
 		lblCategoria.aggiungiImmagineScalata(categoriaOggetto.getImmagineCategoria(), 25, 25, false);
 		lblCategoria.setHorizontalTextPosition(SwingConstants.RIGHT);
+		panelCategoria.add(lblCategoria);
 		
-		panelWrapper.add(Box.createVerticalGlue());
-		panelWrapper.add(Box.createHorizontalGlue());
-		panelWrapper.add(panelCondizioni);
-		panelWrapper.add(Box.createHorizontalGlue());
-		panelWrapper.add(lblCategoria);
-		panelWrapper.add(Box.createHorizontalGlue());
-		panelWrapper.add(Box.createVerticalGlue());
+		panelCondizioniECategoria.add(panelCondizioni, BorderLayout.WEST);
+		panelCondizioniECategoria.add(panelCategoria, BorderLayout.CENTER);
 		
-		return panelWrapper;
+		return panelCondizioniECategoria;
 	}
 	
 	private MyJPanel creaPanelDescrizioneOggetto(String descrizioneOggetto) {
 		MyJPanel panelDescrizioneOggetto = new MyJPanel();
+		panelDescrizioneOggetto.setBackground(uninaLightColor);
 		panelDescrizioneOggetto.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
 		panelDescrizioneOggetto.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));
 		
 		JTextArea descrizioneOggettoTextArea = new JTextArea(descrizioneOggetto);
-		descrizioneOggettoTextArea.setBackground(coloreCasualePerBG);
+		descrizioneOggettoTextArea.setBackground(uninaLightColor);
 		descrizioneOggettoTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 		descrizioneOggettoTextArea.setPreferredSize(new Dimension(panelDescrizioneOggetto.getPreferredSize().width, 100));
 		descrizioneOggettoTextArea.setMaximumSize(new Dimension(panelDescrizioneOggetto.getPreferredSize().width, 100));

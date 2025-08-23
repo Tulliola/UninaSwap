@@ -47,7 +47,7 @@ public class FrameHomePage extends MyJFrame {
 		
 		panelAnnunci = new PanelHomePageAnnunci(mainController, annunci);
 		panelLateraleSx = new PanelBarraLateraleSx(contentPane, mainController, this, null);
-		panelSuperiore = new PanelHomePageSuperiore(this);
+		panelSuperiore = new PanelHomePageSuperiore(this, "UninaSwap");
 		
 		contentPane.add(panelLateraleSx, BorderLayout.WEST);
 		contentPane.add(panelAnnunci, BorderLayout.CENTER);

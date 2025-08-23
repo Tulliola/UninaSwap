@@ -34,7 +34,7 @@ public class PanelHomePageSuperiore extends MyJPanel {
 	
 	private Window frameChiamante;
 	
-	public PanelHomePageSuperiore(Window parentFrame) {
+	public PanelHomePageSuperiore(Window parentFrame, String testo) {
 		frameChiamante = parentFrame;
 		
 		this.setPreferredSize(new Dimension(parentFrame.getWidth(), 45));
@@ -44,7 +44,7 @@ public class PanelHomePageSuperiore extends MyJPanel {
 		MyJPanel barraBlu = new MyJPanel();
 		barraBlu.setBackground(uninaColor);
 		barraBlu.setPreferredSize(new Dimension(parentFrame.getWidth(), 45));
-		barraBlu.add(new MyJLabel("UninaSwap", new Font("Ubuntu Sans", Font.BOLD, 25), Color.white));
+		barraBlu.add(new MyJLabel(testo, new Font("Ubuntu Sans", Font.BOLD, 25), Color.white));
 			
 		this.add(barraBlu, BorderLayout.NORTH);
 		
