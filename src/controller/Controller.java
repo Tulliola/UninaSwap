@@ -500,4 +500,10 @@ public class Controller {
 	public void chiudiDialogConfermaRitiroOfferta() {
 		dialogConfermaRitiroOfferte.dispose();
 	}
+
+
+	public void passaADialogSegnalaUtente(Annuncio annuncio) {
+		dialogSegnalaUtente = new DialogSegnalaUtente(this, frameHomePage, utenteLoggato, annuncio.getUtenteProprietario());
+		dialogSegnalaUtente.setVisible(true);
+	}
 }

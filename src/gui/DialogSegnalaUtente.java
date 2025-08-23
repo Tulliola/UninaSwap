@@ -29,6 +29,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
+import dto.ProfiloUtente;
 import eccezioni.MotivoSegnalazioneException;
 import utilities.MyJButton;
 import utilities.MyJDialog;
@@ -45,37 +46,39 @@ public class DialogSegnalaUtente extends MyJDialog {
 	private JTextArea inserisciMotivoSegnalazione;
 	private MyJLabel lblErroreSegnalazione;
 	
-	public DialogSegnalaUtente(Controller controller) {
+	public DialogSegnalaUtente(Controller controller, JFrame framePadre, ProfiloUtente utenteSegnalante, ProfiloUtente utenteSegnalato) {
 		mainController = controller;
 		this.framePadre = framePadre;
 		
-		this.impostaSettingsPerDialog();
+		this.impostaSettingsPerDialog(utenteSegnalante, utenteSegnalato);
 	}
 	
 	
-	private void impostaSettingsPerDialog() {
+	private void impostaSettingsPerDialog(ProfiloUtente utenteSegnalante, ProfiloUtente utenteSegnalato) {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setSize(1000, 400);
-		this.setLocationRelativeTo(null);
 		this.setResizable(false);
-
+		this.setModal(true);
+		this.setTitle("Segnala "+utenteSegnalato.getUsername());
+		
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.white);
 		
 		contentPane.add(new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(50, this.getHeight())), BorderLayout.WEST);
-		contentPane.add(this.creaPanelCentrale(), BorderLayout.CENTER);
+		contentPane.add(this.creaPanelCentrale(utenteSegnalante, utenteSegnalato), BorderLayout.CENTER);
 		contentPane.add(new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(50, this.getHeight())), BorderLayout.EAST);
 
 		this.setContentPane(contentPane);
+		this.setLocationRelativeTo(framePadre);
 	}
 	
-	private MyJPanel creaPanelCentrale() {
+	private MyJPanel creaPanelCentrale(ProfiloUtente utenteSegnalante, ProfiloUtente utenteSegnalato) {
 		MyJPanel panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		panelCentrale.setBackground(new Color(220, 220, 220));
 		
-		MyJLabel lblAiutaciACapire = new MyJLabel("nome utente loggato, aiutaci a capire cosa è successo e perchè vuoi segnalare altro nome utente");
+		MyJLabel lblAiutaciACapire = new MyJLabel(utenteSegnalante.getUsername()+", aiutaci a capire cosa è successo e perché vuoi segnalare "+utenteSegnalato.getUsername());
 		lblAiutaciACapire.setAlignmentX(CENTER_ALIGNMENT);
 		
 		inserisciMotivoSegnalazione = new JTextArea();
@@ -109,12 +112,12 @@ public class DialogSegnalaUtente extends MyJDialog {
 		panelCentrale.add(inserisciMotivoSegnalazione);
 		panelCentrale.add(lblErroreSegnalazione);
 		panelCentrale.add(Box.createVerticalGlue());
-		panelCentrale.add(this.creaPanelBottoni());
+		panelCentrale.add(this.creaPanelBottoni(utenteSegnalante, utenteSegnalato));
 		
 		return panelCentrale;
 	}
 	
-	private MyJPanel creaPanelBottoni() {
+	private MyJPanel creaPanelBottoni(ProfiloUtente utenteSegnalante, ProfiloUtente utenteSegnalato) {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelBottoni.setBackground(MyJPanel.uninaLightColor);
@@ -129,12 +132,13 @@ public class DialogSegnalaUtente extends MyJDialog {
 			try {
 				this.nascondiLabelErrore(this.lblErroreSegnalazione);
 				this.checkMotivoSegnalazione();
-				this.mainController.onConfermaSegnalazioneButtonClicked("ant.con@studenti.unina.it", "flv.cop@studenti.unina.it", this.inserisciMotivoSegnalazione.getText());
+				this.mainController.onConfermaSegnalazioneButtonClicked(utenteSegnalante.getEmail(), utenteSegnalato.getEmail(), this.inserisciMotivoSegnalazione.getText());
 			}
 			catch(MotivoSegnalazioneException exc1) {
 				this.settaLabelETextAreaDiErrore(this.lblErroreSegnalazione, exc1.getMessage(), this.inserisciMotivoSegnalazione);
 			}
 			catch(SQLException exc2) {
+				System.out.println(exc2.getMessage());
 				JOptionPane.showMessageDialog(this, "Hai già segnalato questo utente.");
 			}
 		});

@@ -18,6 +18,7 @@ import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
 import dto.OffertaScambio;
 import utilities.MyJAnnuncioPanel;
+import utilities.MyJAnnuncioSegnalabilePanel;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -103,7 +104,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 	}
 	
 	public MyJAnnuncioPanel settaPanel(Controller mainController, Offerta offerta) {
-		return new MyJAnnuncioPanel(mainController, offerta.getAnnuncioRiferito()) {
+		return new MyJAnnuncioSegnalabilePanel(mainController, offerta.getAnnuncioRiferito()) {
 
 			@Override
 			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {

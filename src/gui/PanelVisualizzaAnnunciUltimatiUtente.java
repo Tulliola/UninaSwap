@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import controller.Controller;
 import dto.Annuncio;
 import utilities.MyJAnnuncioPanel;
+import utilities.MyJAnnuncioSegnalabilePanel;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -34,7 +35,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelCentrale.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
+			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
@@ -69,7 +70,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {			
-			panelCentrale.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
+			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
@@ -104,7 +105,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		
 		ricalcolaAltezzaConAnnunci(annunciToDisplay);
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelCentrale.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
+			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {

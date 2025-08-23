@@ -29,7 +29,7 @@ import eccezioni.OffertaScambioException;
 abstract public class MyJAnnuncioPanel extends MyJPanel {
 
 	private static final long serialVersionUID = 1L;
-	private Controller mainController;
+	protected Controller mainController;
 	
 	public MyJAnnuncioPanel(Controller controller, Annuncio annuncioToAdd) {
 		mainController = controller;
@@ -274,6 +274,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 	}
 	
 	public abstract MyJPanel creaPanelSottoDescrizione(Annuncio annuncio);
+	
 	
 	protected MyJPanel creaPanelModalitaConsegna(Annuncio annuncio) {
 		MyJPanel panelModalitaConsegna = new MyJPanel();

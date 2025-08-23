@@ -50,6 +50,7 @@ import eccezioni.OffertaRegaloException;
 import eccezioni.OffertaScambioException;
 import utilities.CategoriaEnum;
 import utilities.MyJAnnuncioPanel;
+import utilities.MyJAnnuncioSegnalabilePanel;
 //import dto.AnnuncioRegalo;
 //import dto.AnnuncioScambio;
 import utilities.MyJButton;
@@ -353,13 +354,12 @@ public class PanelHomePageAnnunci extends JPanel{
 		panelAnnunci.removeAll();
 		
 		for(int i = tuttiGliAnnunci.size()-1; i >= 0; i--) {
-			this.panelAnnunci.add(new MyJAnnuncioPanel(mainController, tuttiGliAnnunci.get(i)) {
+			this.panelAnnunci.add(new MyJAnnuncioSegnalabilePanel(mainController, tuttiGliAnnunci.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 					return creaPanelFaiOfferta(annuncio);
 				}
-				
 			});
 		}
 		
