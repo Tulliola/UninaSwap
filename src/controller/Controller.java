@@ -55,6 +55,7 @@ public class Controller {
 	private DialogVersamento dialogVersamento;
 	private DialogSegnalaUtente dialogSegnalaUtente;
 	private DialogVisualizzaOggetti dialogVisualizzaOggetti;
+	private DialogConfermaRitiroOfferta dialogConfermaRitiroOfferte;
 	
 	private static Connection connessioneDB;
 	
@@ -426,6 +427,7 @@ public class Controller {
 		try {
 			offertaDAO.updateStatoOfferta(offerta, stato, utenteLoggato);
 			offerta.setStato(stato);
+			passaAFrameHomePage(frameProfiloUtente);
 		} 
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -486,5 +488,16 @@ public class Controller {
 		dialogCashout.dispose();
 		if(hasPrelevato)
 			this.passaAFrameHomePage(frameProfiloUtente);
+	}
+
+
+	public void passaADialogConfermaRitiroOfferta(Offerta offerta) {
+		dialogConfermaRitiroOfferte = new DialogConfermaRitiroOfferta(this, frameProfiloUtente, offerta);
+		dialogConfermaRitiroOfferte.setVisible(true);
+	}
+
+
+	public void chiudiDialogConfermaRitiroOfferta() {
+		dialogConfermaRitiroOfferte.dispose();
 	}
 }

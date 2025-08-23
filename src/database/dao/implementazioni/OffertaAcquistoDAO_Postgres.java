@@ -38,7 +38,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto WHERE Email = ?")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto WHERE Email = ? AND Prezzo_offerto > 0")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){

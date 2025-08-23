@@ -35,15 +35,16 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	public ArrayList<Offerta> recuperaOfferteDiUtente(ProfiloUtente utenteLoggato) throws SQLException {
 		ArrayList<Offerta> offerteUtente = new ArrayList();
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT "
-				+ " email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
+		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ " modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO "
-				+ " NATURAL JOIN ANNUNCIO WHERE email = ? AND Tipo_annuncio = 'Regalo') UNION (SELECT "
-				+ " email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
+				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO AS O"
+				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio "
+				+ " WHERE O.email = ? AND Tipo_annuncio = 'Regalo') UNION (SELECT"
+				+ " O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ " modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO "
-				+ " NATURAL JOIN ANNUNCIO WHERE email = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
+				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO AS O"
+				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio"
+				+ " WHERE O.email = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
 		
 			ps.setString(1, utenteLoggato.getEmail());
 			ps.setString(2, utenteLoggato.getEmail());
@@ -73,9 +74,9 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 							
 							offertaToAdd = new OffertaScambio(utenteLoggato, idOfferta, momentoProposta, modConsegna, stato, annuncioRiferito, oggettiOfferti);
 						}
-						else 
+						else {
 							offertaToAdd = new OffertaRegalo(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito);
-						
+						}
 						if(rs.getString("Messaggio_motivazionale") != null) {
 							offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 						}
@@ -116,15 +117,16 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 		
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT "
-				+ " email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
+		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ " modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO "
-				+ " NATURAL JOIN ANNUNCIO WHERE idAnnuncio = ? AND Tipo_annuncio = 'Regalo') UNION (SELECT "
-				+ " email, idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
+				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO AS O"
+				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio "
+				+ " WHERE O.idAnnuncio = ? AND Tipo_annuncio = 'Regalo') UNION (SELECT"
+				+ " O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
 				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-				+ " modalita_consegna_scelta, stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO "
-				+ " NATURAL JOIN ANNUNCIO WHERE idAnnuncio = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
+				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO AS O"
+				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio"
+				+ " WHERE O.idAnnuncio = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
 			
 			ps.setInt(1, annuncio.getIdAnnuncio());
 			ps.setInt(2, annuncio.getIdAnnuncio());

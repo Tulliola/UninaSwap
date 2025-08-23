@@ -31,11 +31,11 @@ public class DialogCashout extends MyJDialog {
 	
 	Controller mainController;
 	
-	MyJPanel panelSx = new MyJPanel();
-	MyJPanel panelDx = new MyJPanel();
-	MyJPanel panelCentrale = new MyJPanel();
-	MyJPanel panelInferiore = new MyJPanel();
-	PanelHomePageSuperiore panelSuperiore;
+	private MyJPanel panelSx = new MyJPanel();
+	private MyJPanel panelDx = new MyJPanel();
+	private MyJPanel panelCentrale = new MyJPanel();
+	private MyJPanel panelInferiore = new MyJPanel();
+	private PanelHomePageSuperiore panelSuperiore;
 	
 	MyJLabel lblErroreImporto = new MyJLabel("Inserire un importo valido");
 	

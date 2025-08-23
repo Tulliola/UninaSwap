@@ -21,6 +21,7 @@ import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
+import utilities.StatoOffertaEnum;
 
 public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferteUtente {
 
@@ -37,29 +38,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 		ricalcolaAltezzaConOfferte(offerteToDisplay);
 		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 			if(offerteToDisplay.get(i) instanceof OffertaRegalo) {
-				panelCentrale.add(new MyJAnnuncioPanel(mainController, offerteToDisplay.get(i).getAnnuncioRiferito()) {
-
-					@Override
-					public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-						MyJPanel panelSottoDescrizione = new MyJPanel();
-						panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-						panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-						panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
-						panelSottoDescrizione.setBackground(Color.white);
-						
-						MyJButton modificaOffertaButton = new MyJButton("Modifica offerta");
-						
-						MyJButton ritiraOffertaButton = new MyJButton("Ritira offerta");
-						
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(modificaOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(ritiraOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						
-						return panelSottoDescrizione;
-					}	
-				});
+				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
 			}
 		}
 		
@@ -82,29 +61,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 		ricalcolaAltezzaConOfferte(offerteToDisplay);
 		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 			if(offerteToDisplay.get(i) instanceof OffertaScambio) {
-				panelCentrale.add(new MyJAnnuncioPanel(mainController, offerteToDisplay.get(i).getAnnuncioRiferito()) {
-
-					@Override
-					public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-						MyJPanel panelSottoDescrizione = new MyJPanel();
-						panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-						panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-						panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
-						panelSottoDescrizione.setBackground(Color.white);
-						
-						MyJButton modificaOffertaButton = new MyJButton("Modifica offerta");
-						
-						MyJButton ritiraOffertaButton = new MyJButton("Ritira offerta");
-						
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(modificaOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(ritiraOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						
-						return panelSottoDescrizione;
-					}
-				});
+				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
 			}
 		}
 		
@@ -127,29 +84,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 		ricalcolaAltezzaConOfferte(offerteToDisplay);
 		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 			if(offerteToDisplay.get(i) instanceof OffertaAcquisto) {
-				panelCentrale.add(new MyJAnnuncioPanel(mainController, offerteToDisplay.get(i).getAnnuncioRiferito()) {
-
-					@Override
-					public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-						MyJPanel panelSottoDescrizione = new MyJPanel();
-						panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-						panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-						panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
-						panelSottoDescrizione.setBackground(Color.white);
-
-						MyJButton modificaOffertaButton = new MyJButton("Modifica offerta");
-						
-						MyJButton ritiraOffertaButton = new MyJButton("Ritira offerta");
-						
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(modificaOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						panelSottoDescrizione.add(ritiraOffertaButton);
-						panelSottoDescrizione.add(Box.createHorizontalGlue());
-						
-						return panelSottoDescrizione;
-					}
-				});
+				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
 			}
 		}
 		
@@ -166,4 +101,34 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 		}
 	}
 
+	private MyJAnnuncioPanel settaPanel(Controller mainController, Offerta offerta) {
+		return new MyJAnnuncioPanel(mainController, offerta.getAnnuncioRiferito()) {
+
+			@Override
+			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
+				MyJPanel panelSottoDescrizione = new MyJPanel();
+				panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
+				panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
+				panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
+				panelSottoDescrizione.setBackground(Color.white);
+
+				MyJButton modificaOffertaButton = new MyJButton("Modifica offerta");
+				
+				MyJButton ritiraOffertaButton = new MyJButton("Ritira offerta");
+				ritiraOffertaButton.setUpAction(()->{});
+				ritiraOffertaButton.setDownAction(()->{});
+				ritiraOffertaButton.setDefaultAction(()->{
+					mainController.passaADialogConfermaRitiroOfferta(offerta);
+				});
+				
+				panelSottoDescrizione.add(Box.createHorizontalGlue());
+				panelSottoDescrizione.add(modificaOffertaButton);
+				panelSottoDescrizione.add(Box.createHorizontalGlue());
+				panelSottoDescrizione.add(ritiraOffertaButton);
+				panelSottoDescrizione.add(Box.createHorizontalGlue());
+				
+				return panelSottoDescrizione;
+			}
+		};
+	}
 }
