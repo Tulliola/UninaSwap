@@ -112,7 +112,9 @@ public class PanelVisualizzaOfferteRifiutateUtente extends PanelVisualizzaOffert
 				panelSottoDescrizione.setBackground(Color.white);
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta rifiutata");
-				
+				visualizzaOffertaButton.setDefaultAction(() -> {
+					mainController.passaADialogVisualizzaOffertaSpecificaUtente(offerta, mainController, this.getTopLevelAncestor());
+				});
 				
 				panelSottoDescrizione.add(Box.createHorizontalGlue());
 				panelSottoDescrizione.add(visualizzaOffertaButton);

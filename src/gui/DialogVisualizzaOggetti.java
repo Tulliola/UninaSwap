@@ -44,7 +44,7 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 		this.setSize(new Dimension(larghezza, altezza));
 		this.setBackground(coloreCasualePerBG);
 		this.setModal(true);
-		this.setTitle("Questi sono gli oggetti che ti sono stati offerti. Prenditi il tempo per valutare e decidere se accettare o rifiutare l'offerta!");
+		this.setTitle("Questi sono gli oggetti che sono stati offerti!");
 		
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(coloreCasualePerBG);

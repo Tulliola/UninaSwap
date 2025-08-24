@@ -58,7 +58,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		});
 		
 		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.BOLD, 15));
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 15));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
 			panelCentrale.add(lblNonCiSonoAnnunci);
 		}
@@ -146,7 +146,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		MyJButton visualizzaOffertaAccettata = new MyJButton("Visualizza offerta accettata");
 		visualizzaOffertaAccettata.setAlignmentX(CENTER_ALIGNMENT);
 		visualizzaOffertaAccettata.setDefaultAction(() -> {
-//			mainController.passaAFrameVisualizzaOfferte(annuncio.getOffertaAccettata());
+			mainController.passaADialogOffertaAccettataAnnuncio(annuncio.getOffertaAccettata());
 		});
 		visualizzaOffertaAccettata.setUpAction(() ->{});
 		visualizzaOffertaAccettata.setDownAction(() ->{});

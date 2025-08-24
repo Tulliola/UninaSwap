@@ -51,7 +51,7 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 		});
 		
 		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.BOLD, 16));
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
 			
 			panelCentrale.add(lblNonCiSonoAnnunci);

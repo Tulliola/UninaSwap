@@ -17,9 +17,13 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
+import utilities.DialogOffertaAccettataAnnuncio;
+import utilities.DialogOffertaSpecificaUtente;
 import utilities.ImmagineDiSistemaDAO;
 import utilities.MapAnnuncioDAOToOffertaDAO;
 import utilities.MapOffertaToOffertaDAO;
+import utilities.MyJAnnuncioPanel;
+import utilities.MyJAnnuncioSegnalabilePanel;
 import utilities.MyJDialog;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -56,6 +60,10 @@ public class Controller {
 	private DialogSegnalaUtente dialogSegnalaUtente;
 	private DialogVisualizzaOggetti dialogVisualizzaOggetti;
 	private DialogConfermaRitiroOfferta dialogConfermaRitiroOfferte;
+	private DialogOffertaSpecificaUtente dialogOffertaSpecifica;
+	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
+	private DialogCashout dialogCashout;
+	private DialogOffertaAccettataAnnuncio dialogOffertaAccettataAnnuncio;
 	
 	private static Connection connessioneDB;
 	
@@ -65,8 +73,6 @@ public class Controller {
 	private ArrayList<Annuncio> annunciInBacheca;
 	private ArrayList<SedeUniversita> sediPresenti;
 	private ArrayList<UfficioPostale> ufficiPresenti;
-	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
-	private DialogCashout dialogCashout;
 	
 	public Controller() {
 		this.definisciConnessioneAlDB();
@@ -505,5 +511,18 @@ public class Controller {
 	public void passaADialogSegnalaUtente(Annuncio annuncio) {
 		dialogSegnalaUtente = new DialogSegnalaUtente(this, frameHomePage, utenteLoggato, annuncio.getUtenteProprietario());
 		dialogSegnalaUtente.setVisible(true);
+	}
+
+
+	public void passaADialogVisualizzaOffertaSpecificaUtente(Offerta offerta, Controller mainController,
+			Container container) {
+		dialogOffertaSpecifica = new DialogOffertaSpecificaUtente(offerta, this, container);
+		dialogOffertaSpecifica.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaAccettataAnnuncio(Offerta offertaAccettata) {
+		dialogOffertaAccettataAnnuncio = new DialogOffertaAccettataAnnuncio(offertaAccettata, this, frameProfiloUtente);
+		dialogOffertaAccettataAnnuncio.setVisible(true);
 	}
 }

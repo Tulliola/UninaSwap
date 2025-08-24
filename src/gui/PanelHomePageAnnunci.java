@@ -110,7 +110,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		    } else {
 		        barraVerticale.setValue(barraVerticale.getValue() + e.getUnitsToScroll() * barraVerticale.getUnitIncrement());
 		    }
-		    e.consume();
+//		    e.consume();
 		});
 
 
@@ -126,19 +126,23 @@ public class PanelHomePageAnnunci extends JPanel{
 	}
 	
 	private void settaBordoSuperiore(ArrayList<Annuncio> annunci) {
-		bordoSuperiore.setLayout(new FlowLayout(FlowLayout.LEFT));
+		bordoSuperiore.setLayout(new BoxLayout(bordoSuperiore, BoxLayout.X_AXIS));
 		bordoSuperiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoSuperiore.setPreferredSize(new Dimension(500, 50));
 		bordoSuperiore.setBackground(MyJPanel.uninaColorClicked);
 		
 		barraDiRicerca.setLayout(new BorderLayout());
 		barraDiRicerca.setAlignmentX(CENTER_ALIGNMENT);
+		barraDiRicerca.setMaximumSize(new Dimension(450, 35));
 		barraDiRicerca.setPreferredSize(new Dimension(450, 35));
 		barraDiRicerca.setMaximumSize(new Dimension(450, 35));
 
 		JTextField campoDiTestoTextField = new JTextField("Cerca ora!");
 		campoDiTestoTextField.setBorder(new EmptyBorder(0, 10, 0, 0));
 		campoDiTestoTextField.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
+		campoDiTestoTextField.setMinimumSize(new Dimension(450, 35));
+		campoDiTestoTextField.setPreferredSize(new Dimension(450, 35));
+		campoDiTestoTextField.setMaximumSize(new Dimension(450, 35));
 		campoDiTestoTextField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent fe) {
@@ -193,6 +197,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		JComboBox<String> tipologiaAnnunciCB = new JComboBox();
 		tipologiaAnnunciCB.setBackground(Color.white);
+		tipologiaAnnunciCB.setMinimumSize(new Dimension(450, 35));
 		tipologiaAnnunciCB.setPreferredSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setMaximumSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
@@ -205,6 +210,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		JComboBox<String> categoriaOggettoInAnnuncioCB = new JComboBox();
 		categoriaOggettoInAnnuncioCB.setBackground(Color.white);
+		categoriaOggettoInAnnuncioCB.setMinimumSize(new Dimension(450, 35));
 		categoriaOggettoInAnnuncioCB.setPreferredSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setMaximumSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
@@ -399,8 +405,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		for(Annuncio annuncioCorrente: tuttiGliAnnunci)
 			if((annuncioCorrente.getNome().toLowerCase()).contains(stringaIn.toLowerCase()))
 				annunciFiltratiPerRicerca.add(annuncioCorrente);
-		
-//		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerRicerca);
+
 		this.mostraAnnunciInBacheca(annunciFiltratiPerRicerca);
 		
 		panelRisultatiDiRicerca.setVisible(true);
@@ -454,7 +459,6 @@ public class PanelHomePageAnnunci extends JPanel{
 			}
 		}
 		
-//		this.ricalcolaAltezzaConAnnunci(annunciFiltratiPerTipo);
 		this.mostraAnnunciInBacheca(annunciFiltratiPerTipo);
 	
 		panelRisultatiDiRicerca.setVisible(true);

@@ -112,7 +112,9 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 				panelSottoDescrizione.setBackground(Color.white);
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta ritirata");
-				
+				visualizzaOffertaButton.setDefaultAction(()->{
+					mainController.passaADialogVisualizzaOffertaSpecificaUtente(offerta, mainController, this.getTopLevelAncestor());
+				});
 				
 				panelSottoDescrizione.add(Box.createHorizontalGlue());
 				panelSottoDescrizione.add(visualizzaOffertaButton);

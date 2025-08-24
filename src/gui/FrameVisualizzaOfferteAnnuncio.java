@@ -130,7 +130,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 						
 						panelSpecifico.add(lblPrezzoOfferto);
 					}
-					else if(offerta.getOggettiOfferti().size() != 0)
+					else if(offerta.getOggettiOfferti() != null && offerta.getOggettiOfferti().size() != 0)
 						settaPanelSpecificoToOggettiInScambio(offerta, panelSpecifico);
 						
 					return panelSpecifico;
