@@ -1,11 +1,13 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,6 +29,7 @@ import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
 import dto.OffertaScambio;
+import net.miginfocom.swing.MigLayout;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJOffertaPanel;
@@ -41,6 +44,9 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 	protected Controller mainController;
 	protected MyJPanel panelSuperiore = new MyJPanel();
 	protected MyJPanel panelCentrale = new MyJPanel();
+	protected MyJPanel panelOfferteAcquisto = new MyJPanel();
+	protected MyJPanel panelOfferteScambio = new MyJPanel();
+	protected MyJPanel panelOfferteRegalo = new MyJPanel();
 	
 	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame, Controller controller) {
 		this.mainController = controller;
@@ -51,18 +57,39 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 		scrollPane = new JScrollPane(panelCentrale);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
 		parentFrame.add(scrollPane);
 		
 		settaPanelSuperiore(offerteToDisplay);
-		settaPanelCentrale(messaggioAllUtente);
+		settaPanelCentrale(messaggioAllUtente, offerteToDisplay);
 		
 		this.add(panelSuperiore, BorderLayout.NORTH);
 		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
-	private void settaPanelCentrale(String messaggioAllUtente) {
-		panelCentrale.setLayout(new FlowLayout(FlowLayout.CENTER));
+	private void settaPanelCentrale(String messaggioAllUtente, ArrayList<Offerta> offerteToDisplay) {
+		panelCentrale.setLayout(new CardLayout());
+		
+		panelOfferteAcquisto = new MyJPanel();
+		panelOfferteAcquisto.setBackground(uninaLightColor);
+		panelOfferteScambio = new MyJPanel();
+		panelOfferteScambio.setBackground(uninaLightColor);
+		panelOfferteRegalo = new MyJPanel();
+		panelOfferteRegalo.setBackground(uninaLightColor);
+		
+		panelOfferteAcquisto.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelOfferteScambio.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelOfferteRegalo.setLayout(new MigLayout("wrap 2", "[]", ""));
+		
+		settaPanelOfferteAcquisto(offerteToDisplay);
+		settaPanelOfferteScambio(offerteToDisplay);
+		settaPanelOfferteRegalo(offerteToDisplay);
+		
+		panelCentrale.add(panelOfferteAcquisto, "Offerte acquisto");
+		panelCentrale.add(panelOfferteScambio, "Offerte scambio");
+		panelCentrale.add(panelOfferteRegalo, "Offerte regalo");
+		
 		MyJLabel messaggio = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
 		messaggio.setForeground(Color.BLACK);
 		panelCentrale.add(messaggio);
@@ -94,10 +121,8 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 			panelAcquisto.setBackground(MyJPanel.uninaLightColor);
 			panelScambio.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraOfferteDiAcquistoSulCentrale(offerteToDisplay);
+			((CardLayout)panelCentrale.getLayout()).show(panelCentrale, "Offerte acquisto");
+			scrollPane.getViewport().setViewPosition(new Point(0, 0));
 		});
 		
 		lblOffertaAnnuncioVendita.setOnMouseEnteredAction(() -> {
@@ -115,10 +140,8 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 			panelScambio.setBackground(MyJPanel.uninaLightColor);
 			panelAcquisto.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraOfferteDiScambioSulCentrale(offerteToDisplay);
+			((CardLayout)panelCentrale.getLayout()).show(panelCentrale, "Offerte scambio");
+			scrollPane.getViewport().setViewPosition(new Point(0, 0));
 		});
 		lblOffertaAnnuncioScambio.setOnMouseEnteredAction(() -> {
 			if(panelScambio.getBackground().equals(Color.WHITE)) {
@@ -135,10 +158,8 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 			panelRegalo.setBackground(MyJPanel.uninaLightColor);
 			panelAcquisto.setBackground(Color.WHITE);
 			panelScambio.setBackground(Color.WHITE);
-			panelCentrale.removeAll();
-			panelCentrale.revalidate();
-			panelCentrale.repaint();
-			mostraOfferteDiRegaloSulCentrale(offerteToDisplay);
+			((CardLayout)panelCentrale.getLayout()).show(panelCentrale, "Offerte regalo");
+			scrollPane.getViewport().setViewPosition(new Point(0, 0));
 		});
 		lblOffertaAnnuncioRegalo.setOnMouseEnteredAction(() -> {
 			if(panelRegalo.getBackground().equals(Color.WHITE)) {
@@ -160,7 +181,7 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 		panelSuperiore.add(panelRegalo);
 	}
 
-	protected abstract void mostraOfferteDiRegaloSulCentrale(ArrayList<Offerta> offerteToDisplay); //{
+//	protected abstract void mostraOfferteDiRegaloSulCentrale(ArrayList<Offerta> offerteToDisplay); //{
 //		ricalcolaAltezzaConOfferte(offerteToDisplay);
 //		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 //			if(offerteToDisplay.get(i) instanceof OffertaRegalo) {
@@ -181,7 +202,7 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 //		}
 //	}
 
-	protected abstract void mostraOfferteDiScambioSulCentrale(ArrayList<Offerta> offerteToDisplay);// {
+//	protected abstract void mostraOfferteDiScambioSulCentrale(ArrayList<Offerta> offerteToDisplay);// {
 //		ricalcolaAltezzaConOfferte(offerteToDisplay);
 //		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 //			if(offerteToDisplay.get(i) instanceof OffertaScambio) {
@@ -201,7 +222,7 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 //		}
 //	}
 
-	protected abstract void mostraOfferteDiAcquistoSulCentrale(ArrayList<Offerta> offerteToDisplay);// {
+//	protected abstract void mostraOfferteDiAcquistoSulCentrale(ArrayList<Offerta> offerteToDisplay);// {
 //		ricalcolaAltezzaConOfferte(offerteToDisplay);
 //		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
 //			final int index = i;
@@ -223,6 +244,10 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 //		}
 //	}
 
+	protected abstract void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteToDisplay);
+	protected abstract void settaPanelOfferteScambio(ArrayList<Offerta> offerteToDisplay);
+	protected abstract void settaPanelOfferteRegalo(ArrayList<Offerta> offerteToDisplay);
+	
 	private MyJPanel creaPanelOfferta(Offerta offerta) {
 		MyJPanel offertaPanel = new MyJPanel();
 		offertaPanel.setLayout(new BorderLayout());

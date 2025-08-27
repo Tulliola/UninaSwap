@@ -12,4 +12,5 @@ public interface OggettoDAO{
 	public Oggetto recuperaOggettoConId(int idOggetto) throws SQLException;
 	public boolean isOggettoDisponibile(int idOggetto) throws SQLException;
 	public byte[][] recuperaImmagini(int idOggetto) throws SQLException;
+	public Oggetto deleteOggetto(Oggetto oggettoDaModificare) throws SQLException;
 }

@@ -27,111 +27,10 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 	
 	public PanelVisualizzaAnnunciUltimatiUtente(Controller controller, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		super(controller, annunciToDisplay, messaggioAllUtente, parentFrame);
-	}
-
-	@Override
-	protected void mostraAnnunciDiVenditaSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		panelCentrale.removeAll();
-
-		ricalcolaAltezzaConAnnunci(annunciToDisplay);
-		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
-
-				@Override
-				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelVisualizzaOffertaAccettata(annuncio);
-				}
-				
-				@Override
-				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
-					return creaPanelRiepilogoScadenza(annuncio);
-				}
-				
-			});
-		}
-		
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-		
-		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0);
-		});
-		
-		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 15));
-			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelCentrale.add(lblNonCiSonoAnnunci);
-		}
-	}
-
-	@Override
-	protected void mostraAnnunciDiScambioSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		panelCentrale.removeAll();
-		
-		ricalcolaAltezzaConAnnunci(annunciToDisplay);
-		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {			
-			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
-
-				@Override
-				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelVisualizzaOffertaAccettata(annuncio);
-				}
-				
-				@Override
-				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
-					return creaPanelRiepilogoScadenza(annuncio);
-				}
-		
-			});
-		}
-
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-		
-		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0); 
-		});
-		
-		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelCentrale.add(lblNonCiSonoAnnunci);
-		}
-	}
-
-	@Override
-	protected void mostraAnnunciDiRegaloSulCentrale(ArrayList<Annuncio> annunciToDisplay) {
-		panelCentrale.removeAll();
-		
-		ricalcolaAltezzaConAnnunci(annunciToDisplay);
-		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelCentrale.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
-
-				@Override
-				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
-					return creaPanelVisualizzaOffertaAccettata(annuncio);
-				}
-				
-				@Override
-				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
-					return creaPanelRiepilogoScadenza(annuncio);
-				}
-		
-			});
-		}
-
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-		
-		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0);
-		});
-		
-		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelCentrale.add(lblNonCiSonoAnnunci);
-		}
+		MyJLabel lblMessaggio = new MyJLabel("Qui troverai tutti i tuoi annunci andati a buon fine"
+				, new Font("Ubuntu Sans", Font.ITALIC, 16));
+		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
+		panelDefault.add(lblMessaggio);
 	}
 
 	private MyJPanel creaPanelVisualizzaOffertaAccettata(Annuncio annuncio) {
@@ -184,5 +83,90 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		panelRiepilogoScadenza.add(Box.createHorizontalGlue());
 		
 		return panelRiepilogoScadenza;
+	}
+
+	@Override
+	protected void settaPanelAnnunciVendita(ArrayList<Annuncio> annunciToDisplay) {
+
+//		panelAnnunciVendita.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
+		
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			panelAnnunciVendita.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+
+				@Override
+				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
+					return creaPanelVisualizzaOffertaAccettata(annuncio);
+				}
+				
+				@Override
+				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
+					return creaPanelRiepilogoScadenza(annuncio);
+				}
+		
+			});
+		}
+
+		
+		if(!panelAnnunciVendita.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelAnnunciVendita.add(lblNonCiSonoAnnunci);
+		}
+	}
+
+	@Override
+	protected void settaPanelAnnunciScambio(ArrayList<Annuncio> annunciToDisplay) {
+
+//		panelAnnunciScambio.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			panelAnnunciScambio.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+
+				@Override
+				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
+					return creaPanelVisualizzaOffertaAccettata(annuncio);
+				}
+				
+				@Override
+				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
+					return creaPanelRiepilogoScadenza(annuncio);
+				}
+		
+			});
+		}
+		
+		
+		if(!panelAnnunciScambio.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelAnnunciScambio.add(lblNonCiSonoAnnunci);
+		}
+	}
+
+	@Override
+	protected void settaPanelAnnunciRegalo(ArrayList<Annuncio> annunciToDisplay) {
+
+//		panelAnnunciRegalo.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
+		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
+			panelAnnunciRegalo.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+
+				@Override
+				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
+					return creaPanelVisualizzaOffertaAccettata(annuncio);
+				}
+				
+				@Override
+				public MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
+					return creaPanelRiepilogoScadenza(annuncio);
+				}
+		
+			});
+		}
+		
+		
+		if(!panelAnnunciRegalo.hasPanels()) {
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			panelAnnunciRegalo.add(lblNonCiSonoAnnunci);
+		}
 	}
 }

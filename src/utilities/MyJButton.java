@@ -81,7 +81,7 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
             graficaConBadgeRosso.fillOval(x, y, size, size);
 
             graficaConBadgeRosso.setColor(Color.WHITE);
-            graficaConBadgeRosso.setFont(graficaConBadgeRosso.getFont().deriveFont(Font.BOLD, 11f));
+            graficaConBadgeRosso.setFont(graficaConBadgeRosso.getFont().deriveFont(Font.BOLD, 11));
             FontMetrics fm = graficaConBadgeRosso.getFontMetrics();
             int textWidth = fm.stringWidth(badgeText.toString());
             int textHeight = fm.getAscent();

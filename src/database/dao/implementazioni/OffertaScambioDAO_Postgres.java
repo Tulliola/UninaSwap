@@ -231,4 +231,96 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 			ps.executeUpdate();
 		}
 	}
+
+
+	@Override
+	public Offerta updateOfferta(Offerta offertaModificata) throws SQLException {
+//		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+//		connessioneDB.setAutoCommit(false);
+//		
+//		for(Oggetto oggetto: offertaModificata.getOggettiOfferti()) {
+//			oggettoDAO.deleteOggetto(oggetto);
+//		}
+//		
+//		for(Oggetto oggetto: offertaModificata.getOggettiOfferti()) {
+//			int idOggettoCorrente = oggettoDAO.inserisciOggetto(oggetto, offertaModificata.getUtenteProprietario().getEmail());
+//			
+//			try(PreparedStatement ps = connessioneDB.prepareStatement("INSERT INTO Oggetto_offerto VALUES(?, ?)")){
+//				ps.setInt(1, idOggettoCorrente);
+//				ps.setInt(2, offertaModificata.getIdOfferta());
+//				
+//				ps.executeUpdate();
+//			}
+//		}
+//		
+//		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(offertaModificata.getModalitaConsegnaScelta());
+//		int idUfficio = offertaModificata.getUfficioRitiro().getIdUfficio();
+//		String nota = offertaModificata.getNota();
+//		String indirizzoSpedizione = offertaModificata.getIndirizzoSpedizione();
+//		String oraInizioIncontro = null;
+//		String oraFineIncontro = null;
+//		GiornoEnum giornoIncontro = null;
+//		SedeUniversita sedeIncontro = null;
+//		
+//		if(offertaModificata.getSedeDIncontroScelta() != null) {
+//			oraInizioIncontro = offertaModificata.getOraInizioIncontro();
+//			oraFineIncontro = offertaModificata.getOraFineIncontro();
+//			giornoIncontro = GiornoEnum.confrontaConStringa(offertaModificata.getGiornoIncontro());
+//			sedeIncontro = offertaModificata.getSedeDIncontroScelta();
+//		}
+//		String messaggioMotivazionale = offertaModificata.getMessaggioMotivazionale();
+//		
+//		try(PreparedStatement psUpdate = connessioneDB.prepareStatement("UPDATE Offerta_scambio SET"
+//				+ " idUfficio = ?, Nota = ?, Indirizzo_Spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?,"
+//				+ " Giorno_incontro = ?, sede_incontro = ?, Messaggio_motivazionale = ?"
+//				+ " WHERE idOfferta = ?")){
+//			
+//			if(modalitaConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta))
+//				psUpdate.setInt(1, idUfficio);
+//			else 
+//				psUpdate.setNull(1, Types.INTEGER);
+//			
+//			
+//			if(nota != null)
+//				psUpdate.setString(2, nota);
+//			else
+//				psUpdate.setNull(2, Types.VARCHAR);
+//			
+//			
+//			if(modalitaConsegnaScelta.equals(ModConsegnaEnum.Spedizione)) {
+//				psUpdate.setString(3, indirizzoSpedizione);
+//			}
+//			else {
+//				psUpdate.setNull(3, Types.VARCHAR);
+//			}
+//			
+//			if(modalitaConsegnaScelta.equals(ModConsegnaEnum.Incontro)) {
+//				psUpdate.setString(4, oraInizioIncontro);
+//				psUpdate.setString(5, oraFineIncontro);
+//				psUpdate.setString(6, giornoIncontro.toString());
+//				psUpdate.setString(7, sedeIncontro.getNome());
+//			}
+//			else {
+//				psUpdate.setNull(4, Types.VARCHAR);
+//				psUpdate.setNull(5, Types.VARCHAR);
+//				psUpdate.setNull(6, Types.VARCHAR);
+//				psUpdate.setNull(7, Types.INTEGER);
+//			}
+//			
+//			if(messaggioMotivazionale != null)
+//				psUpdate.setString(8, messaggioMotivazionale);
+//			else {
+//				psUpdate.setNull(8, Types.VARCHAR);
+//			}
+//			
+//			psUpdate.setInt(9, offertaModificata.getIdOfferta());
+//			
+//			psUpdate.executeQuery();
+//			connessioneDB.commit();
+//		}
+//		finally {
+//			connessioneDB.setAutoCommit(true);
+//		}
+		return offertaModificata;
+	}
 }

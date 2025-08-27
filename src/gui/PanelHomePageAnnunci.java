@@ -91,9 +91,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		this.settaBordoSuperiore(annunci);
 		this.settaBordoInferiore();
 
-//		panelAnnunci.setLayout(new FlowLayout(FlowLayout.CENTER));
-		MigLayout layoutPanelAnnunci = new MigLayout("wrap 2", "[]", "");
-		panelAnnunci.setLayout(layoutPanelAnnunci);
+		panelAnnunci.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelAnnunci.setBackground(MyJPanel.uninaLightColor);
 		
 		scrollPanelAnnunci = new JScrollPane(panelAnnunci);
 		scrollPanelAnnunci.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -107,10 +106,10 @@ public class PanelHomePageAnnunci extends JPanel{
 			
 		    if (e.isShiftDown()) {
 		        barraOrizzontale.setValue(barraOrizzontale.getValue() + e.getUnitsToScroll() * barraOrizzontale.getUnitIncrement());
-		    } else {
+		    } 
+		    else {
 		        barraVerticale.setValue(barraVerticale.getValue() + e.getUnitsToScroll() * barraVerticale.getUnitIncrement());
 		    }
-//		    e.consume();
 		});
 
 
@@ -256,7 +255,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.setLayout(new BoxLayout(bordoInferiore, BoxLayout.X_AXIS));
 		bordoInferiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoInferiore.setPreferredSize(new Dimension(500, 100));
-		bordoInferiore.setBackground(new Color(220, 220, 220));	
+		bordoInferiore.setBackground(MyJPanel.uninaLightColor);	
 		
 		MyJButton bottonePubblicaAnnuncioVendita = new MyJButton("Pubblica un nuovo annuncio di vendita!");
 		bottonePubblicaAnnuncioVendita.setAlignmentX(CENTER_ALIGNMENT);

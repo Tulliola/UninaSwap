@@ -40,6 +40,11 @@ public class OffertaScambio extends Offerta {
 		return this.oggettiOfferti;
 	}
 	
+
+	public void setOggettiOfferti(ArrayList<Oggetto> oggettiOfferti) {
+		this.oggettiOfferti = oggettiOfferti;
+	}
+	
 	@Override
 	public Integer getIdOfferta() {
 		return this.idOfferta;

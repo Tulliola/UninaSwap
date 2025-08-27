@@ -210,4 +210,101 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			ps.executeUpdate();
 		}
 	}
+
+	@Override
+	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
+				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
+				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, Prezzo_offerto = ?, idUfficio = ?"
+				+ " WHERE email = ? AND Momento_proposta = ?")){
+			String nota = offertaDaModificare.getNota();
+			String indirizzoSpedizione = offertaDaModificare.getIndirizzoSpedizione();
+			String oraInizioIncontro = null;
+			String oraFineIncontro = null;
+			String giornoIncontro = null;
+			SedeUniversita sede = null;
+			if(offertaDaModificare.getSedeDIncontroScelta() != null) {
+				oraInizioIncontro = offertaDaModificare.getOraInizioIncontro();
+				oraFineIncontro = offertaDaModificare.getOraFineIncontro();
+				giornoIncontro = offertaDaModificare.getGiornoIncontro();
+				sede = offertaDaModificare.getSedeDIncontroScelta();
+			}
+			String modalitaConsegna = offertaDaModificare.getModalitaConsegnaScelta();
+			String messaggioMotivazionale = offertaDaModificare.getMessaggioMotivazionale();
+			Double prezzoOfferto = offertaDaModificare.getPrezzoOfferto();
+			
+			if(offertaDaModificare.getNota() != null) {
+				ps.setString(1, nota);
+			}
+			else
+				ps.setNull(1, Types.VARCHAR);
+			
+			if(indirizzoSpedizione != null) {
+				ps.setString(2, indirizzoSpedizione);
+			}
+			else
+				ps.setNull(2, Types.VARCHAR);
+			
+			if(oraInizioIncontro != null) {
+				ps.setString(3, oraInizioIncontro);
+			}
+			else
+				ps.setNull(3, Types.VARCHAR);
+			
+			if(oraFineIncontro != null) {
+				ps.setString(4, oraFineIncontro);
+			}
+			else
+				ps.setNull(4, Types.VARCHAR);
+			
+			if(giornoIncontro != null) {
+				ps.setString(5, giornoIncontro);
+			}
+			else
+				ps.setNull(5, Types.VARCHAR);
+			
+			if(sede != null) {
+				ps.setString(6, sede.getNome());
+			}
+			else
+				ps.setNull(6, Types.VARCHAR);
+			
+			ps.setString(7, modalitaConsegna);
+			
+			if(messaggioMotivazionale != null) {
+				ps.setString(8, messaggioMotivazionale);
+			}
+			else
+				ps.setNull(8, Types.VARCHAR);
+			
+			ps.setDouble(9, prezzoOfferto);
+			
+			if(modalitaConsegna.equals("Ritiro in posta")) {
+				ps.setInt(10, recuperaIdUfficio(offertaDaModificare.getUfficioRitiro().getNome()));
+				ps.setNull(2, Types.VARCHAR);
+			}
+			else
+				ps.setNull(10, Types.INTEGER);
+			
+			ps.setString(11, offertaDaModificare.getUtenteProprietario().getEmail());
+			ps.setTimestamp(12, offertaDaModificare.getMomentoProposta());
+			
+			ps.executeUpdate();
+			
+			return offertaDaModificare;
+		}
+	}
+
+	private Integer recuperaIdUfficio(String nome) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idUfficio FROM Ufficio_postale WHERE nome = ?")){
+				ps.setString(1, nome);
+				try(ResultSet rs = ps.executeQuery()){
+					if(rs.next()) {
+						return rs.getInt("idUfficio");
+					}
+					else
+						return null;
+				}
+		}
+	}
 }

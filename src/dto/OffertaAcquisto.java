@@ -27,6 +27,9 @@ public class OffertaAcquisto extends Offerta{
 		return prezzoOfferto;
 	}
 	
+	public void setPrezzoOfferto(Double newPrezzo) {
+		this.prezzoOfferto = newPrezzo;
+	}
 	@Override 
 	public String toString() {
 		String toReturn = super.toString();

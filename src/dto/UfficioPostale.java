@@ -69,4 +69,15 @@ public class UfficioPostale {
 	public String toString() {
 		return nome+" - " +via+ ", "+civico+", "+comune+", "+cap;
 	}
+	
+	@Override 
+	public boolean equals(Object ufficio) {
+		int idUfficio = ((UfficioPostale)ufficio).idUfficio;
+		if(this.idUfficio == idUfficio) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }

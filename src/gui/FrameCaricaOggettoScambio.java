@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -96,14 +97,14 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	public int indiceNellArrayDeiFrame;
 	private boolean isOggettoCaricato = false;
 	
-	public FrameCaricaOggettoScambio(Controller controller, int indiceNellArrayDeiFrame) {
+	public FrameCaricaOggettoScambio(Controller controller, int indiceNellArrayDeiFrame, Oggetto oggettoCaricato) {
 		mainController = controller;
 		this.indiceNellArrayDeiFrame = indiceNellArrayDeiFrame;
 		
-		this.settaContentPane();
+		this.settaContentPane(oggettoCaricato);
 	}
 
-	private void settaContentPane() {
+	private void settaContentPane(Oggetto oggettoCaricato) {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setTitle("Carica ora il tuo oggetto!");
@@ -116,14 +117,14 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		contentPane.add(scrittaUninaSwap, BorderLayout.NORTH);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.WEST);
-		contentPane.add(this.creaPanelCentrale(), BorderLayout.CENTER);
+		contentPane.add(this.creaPanelCentrale(oggettoCaricato), BorderLayout.CENTER);
 		contentPane.add(new MyJPanel(MyJPanel.uninaLightColor, new Dimension(100, contentPane.getHeight())), BorderLayout.EAST);
 		contentPane.add(new MyJPanel(MyJPanel.uninaColorClicked, new Dimension(Integer.MAX_VALUE, 25)), BorderLayout.SOUTH);
 
 		this.setContentPane(contentPane);
 	}
 	
-	private JScrollPane creaPanelCentrale() {
+	private JScrollPane creaPanelCentrale(Oggetto oggettoCaricato) {
 		panelCentrale = new MyJPanel();
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		panelCentrale.setBackground(Color.white);
@@ -131,13 +132,13 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelCentrale.setMaximumSize(new Dimension(1225, 2000));
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
-		this.creaPanelAggiungiFoto();
+		this.creaPanelAggiungiFoto(oggettoCaricato);
 		this.creaPanelNomeOggetto();
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelCentrale.add(panelNomeOggetto);
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
-		panelCentrale.add(creaPanelInserimentoDati());
+		panelCentrale.add(creaPanelInserimentoDati(oggettoCaricato));
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		
@@ -231,7 +232,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 	}
 
-	private MyJPanel creaPanelAggiungiFoto() {
+	private MyJPanel creaPanelAggiungiFoto(Oggetto oggettoCaricato) {
 		panelAggiungiFoto = new MyJPanel();
 		panelAggiungiFoto.setLayout(new BorderLayout());
 		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 580));
@@ -266,7 +267,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelFoto1.setLayout(new BoxLayout(panelFoto1, BoxLayout.Y_AXIS));
 		panelFoto1.setAlignmentX(CENTER_ALIGNMENT);
 		lblAggiungiFoto1 = new MyJLabel();
-		lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		if(oggettoCaricato == null)
+			lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
+		}
 		lblAggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto1.add(Box.createVerticalGlue());
 		panelFoto1.add(Box.createHorizontalGlue());
@@ -285,7 +290,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelFoto2.setLayout(new BoxLayout(panelFoto2, BoxLayout.Y_AXIS));
 		panelFoto2.setAlignmentX(CENTER_ALIGNMENT);
 		lblAggiungiFoto2 = new MyJLabel();
-		lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		if(oggettoCaricato == null || oggettoCaricato.getImmagine(1) == null)
+			lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
+		}
 		lblAggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto2.add(Box.createVerticalGlue());
 		panelFoto2.add(Box.createHorizontalGlue());
@@ -304,7 +313,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelFoto3.setLayout(new BoxLayout(panelFoto3, BoxLayout.Y_AXIS));
 		panelFoto3.setAlignmentX(CENTER_ALIGNMENT);
 		lblAggiungiFoto3 = new MyJLabel();
-		lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		if(oggettoCaricato == null || oggettoCaricato.getImmagine(2) == null)
+			lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
+		}
 		lblAggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto3.add(Box.createVerticalGlue());
 		panelFoto3.add(Box.createHorizontalGlue());
@@ -346,7 +359,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		return panelAggiungiFoto;
 	}
 	
-	private MyJPanel creaPanelInserimentoDati() {
+	private MyJPanel creaPanelInserimentoDati(Oggetto oggettoOfferto) {
 		panelInserimentoDati = new MyJPanel();
 		panelInserimentoDati.setBackground(Color.white);
 		panelInserimentoDati.setLayout(new BoxLayout(panelInserimentoDati, BoxLayout.Y_AXIS));
@@ -360,14 +373,19 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		
 		panelInserimentoDati.add(Box.createVerticalGlue());
-		panelInserimentoDati.add(this.creaPanelAggiungiFoto());
+		panelInserimentoDati.add(this.creaPanelAggiungiFoto(oggettoOfferto));
 		panelInserimentoDati.add(Box.createVerticalGlue());
-		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
+		if(oggettoOfferto == null)
+			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
 				lblErroreDescrizione, panelErroreDescrizione));
+		else
+			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", oggettoOfferto.getDescrizione(), inserisciDescrizioneTextA, 
+					lblErroreDescrizione, panelErroreDescrizione));
+			
 		panelInserimentoDati.add(Box.createVerticalGlue());
-		panelInserimentoDati.add(this.creaPanelCategoria());
+		panelInserimentoDati.add(this.creaPanelCategoria(oggettoOfferto));
 		panelInserimentoDati.add(Box.createVerticalGlue());
-		panelInserimentoDati.add(this.creaPanelCondizioni());
+		panelInserimentoDati.add(this.creaPanelCondizioni(oggettoOfferto));
 		panelInserimentoDati.add(Box.createVerticalGlue());
 		panelInserimentoDati.add(this.creaPanelBottoni());
 		panelInserimentoDati.add(Box.createVerticalGlue());
@@ -457,7 +475,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		});
 	}
 	
-	private MyJPanel creaPanelCategoria() {
+	private MyJPanel creaPanelCategoria(Oggetto oggettoCaricato) {
 		MyJPanel panelCategoria = new MyJPanel();
 		panelCategoria.setLayout(new BorderLayout());
 		panelCategoria.setPreferredSize(new Dimension(1225, 115));
@@ -484,7 +502,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		categorieOggettoComboBox = this.creaCBCategorieOggetto();
+		categorieOggettoComboBox = this.creaCBCategorieOggetto(oggettoCaricato);
 		categorieOggettoComboBox.setSelectedIndex(0);
 		categorieOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(categorieOggettoComboBox);
@@ -497,7 +515,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		return panelCategoria;
 	}
 	
-	private MyJPanel creaPanelCondizioni() {
+	private MyJPanel creaPanelCondizioni(Oggetto oggettoCaricato) {
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setLayout(new BorderLayout());
 		panelCondizioni.setPreferredSize(new Dimension(1225, 115));
@@ -524,7 +542,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelPerComboBox.setLayout(new BoxLayout(panelPerComboBox, BoxLayout.X_AXIS));
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
-		condizioniOggettoComboBox = this.creaCBCondizioniOggetto();
+		condizioniOggettoComboBox = this.creaCBCondizioniOggetto(oggettoCaricato);
 		condizioniOggettoComboBox.setSelectedIndex(0);
 		condizioniOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(condizioniOggettoComboBox);
@@ -563,7 +581,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		});
 	}
 		
-	private JComboBox creaCBCategorieOggetto() {
+	private JComboBox creaCBCategorieOggetto(Oggetto oggettoCaricato) {
 		JComboBox categorieOggetto = new JComboBox();
 		categorieOggetto.setBackground(Color.white);
 		categorieOggetto.setPreferredSize(new Dimension(300, 30));
@@ -582,11 +600,21 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		categorieOggetto.addItem("Film");
 		categorieOggetto.addItem("Collezionismo");
 		
+		ComboBoxModel<String> model = categorieOggetto.getModel();
+		if(oggettoCaricato != null) {
+			for (int i = 0; i < model.getSize(); i++) {
+			    if(model.getElementAt(i).equals(oggettoCaricato.getCategoria())) {
+			    	categorieOggetto.setSelectedIndex(i);
+			    	break;
+			    }
+			}
+		}
+		
 		return categorieOggetto;
 	}
 	
 
-	private JComboBox creaCBCondizioniOggetto() {
+	private JComboBox creaCBCondizioniOggetto(Oggetto oggettoCaricato) {
 		JComboBox condizioniOggetto = new JComboBox();
 		condizioniOggetto.setBackground(Color.white);
 		condizioniOggetto.setPreferredSize(new Dimension(300, 30));
@@ -600,6 +628,16 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		condizioniOggetto.addItem("Usato - condizioni accettabili");
 		condizioniOggetto.addItem("Usato - usurato");
 		condizioniOggetto.addItem("Ricondizionato");
+		
+		ComboBoxModel<String> model = condizioniOggetto.getModel();
+		if(oggettoCaricato != null) {
+			for (int i = 0; i < model.getSize(); i++) {
+			    if(model.getElementAt(i).equals(oggettoCaricato.getCondizioni())) {
+			    	condizioniOggetto.setSelectedIndex(i);
+			    	break;
+			    }
+			}
+		}
 	
 		return condizioniOggetto;
 	}

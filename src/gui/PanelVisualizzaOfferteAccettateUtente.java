@@ -35,74 +35,49 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 
 
 	@Override
-	protected void mostraOfferteDiRegaloSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		ricalcolaAltezzaConOfferte(offerteToDisplay);
-		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
-			if(offerteToDisplay.get(i) instanceof OffertaRegalo) {
-				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
+	protected void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteVendita) {
+		for(int i = offerteVendita.size() - 1; i >= 0; i--) {
+			if(offerteVendita.get(i) instanceof OffertaAcquisto) {
+				panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
 			}
 		}
 		
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-
-		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0);
-		});
-		
-		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-			panelCentrale.add(lblNoOfferte);
+		if(!panelOfferteAcquisto.hasPanels()) {
+			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di acquisto da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			panelOfferteAcquisto.add(lblNoOfferte);
 		}
 	}
 
 
 	@Override
-	protected void mostraOfferteDiScambioSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		ricalcolaAltezzaConOfferte(offerteToDisplay);
-		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
-			if(offerteToDisplay.get(i) instanceof OffertaScambio) {
-				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
+	protected void settaPanelOfferteScambio(ArrayList<Offerta> offerteScambio) {
+		for(int i = offerteScambio.size() - 1; i >= 0; i--) {
+			if(offerteScambio.get(i) instanceof OffertaScambio) {
+				panelOfferteScambio.add(settaPanel(mainController, offerteScambio.get(i)));
 			}
 			
 		}
-		
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-		
-		SwingUtilities.invokeLater(() -> {
-			scrollPane.getVerticalScrollBar().setValue(0);
-		});
-		
-		if(!panelCentrale.hasPanels()) {
+		if(!panelOfferteScambio.hasPanels()) {
 			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-			panelCentrale.add(lblNoOfferte);
+			panelOfferteScambio.add(lblNoOfferte);
 		}
 	}
 
 
 	@Override
-	protected void mostraOfferteDiAcquistoSulCentrale(ArrayList<Offerta> offerteToDisplay) {
-		ricalcolaAltezzaConOfferte(offerteToDisplay);
-		for(int i = offerteToDisplay.size() - 1; i >= 0; i--) {
-			if(offerteToDisplay.get(i) instanceof OffertaAcquisto) {
-				panelCentrale.add(settaPanel(mainController, offerteToDisplay.get(i)));
+	protected void settaPanelOfferteRegalo(ArrayList<Offerta> offerteRegalo) {
+		for(int i = offerteRegalo.size() - 1; i >= 0; i--) {
+			if(offerteRegalo.get(i) instanceof OffertaRegalo) {
+				panelOfferteRegalo.add(settaPanel(mainController, offerteRegalo.get(i)));
 			}
 		}
 		
-		panelCentrale.revalidate();
-		panelCentrale.repaint();
-
-		SwingUtilities.invokeLater(() -> {
-		    scrollPane.getVerticalScrollBar().setValue(0);
-		});
-		
-		if(!panelCentrale.hasPanels()) {
-			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di acquisto da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-			panelCentrale.add(lblNoOfferte);
+		if(!panelOfferteRegalo.hasPanels()) {
+			MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			panelOfferteRegalo.add(lblNoOfferte);
 		}
 	}
-	
+
 	public MyJAnnuncioPanel settaPanel(Controller mainController, Offerta offerta) {
 		return new MyJAnnuncioSegnalabilePanel(mainController, offerta.getAnnuncioRiferito()) {
 

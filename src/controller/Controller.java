@@ -215,6 +215,10 @@ public class Controller {
 	}
 	
 	public void passaAFrameHomePage(JDialog frameDiPartenza) {
+		for(FrameCaricaOggettoScambio frameCaricaOggetti: frameCaricaOggetto) {
+			if(frameCaricaOggetti != null)
+				frameCaricaOggetti.dispose();
+		}
 		frameDiPartenza.dispose();
 	}
 
@@ -224,13 +228,13 @@ public class Controller {
 		framePubblicaAnnuncio.setVisible(true);
 	}
 	
-	public void passaAFrameCaricaOggetto(int frameOggettoIesimo) {
+	public void passaAFrameCaricaOggetto(int frameOggettoIesimo, Oggetto oggettoCaricato) {
 		if(dialogOffertaScambio != null)
 			dialogOffertaScambio.setVisible(false);
 		
 		//Se sto creando l'oggetto per la prima volta o se ho chiamato la dispose sul frame
 		if(frameCaricaOggetto[frameOggettoIesimo] == null || !frameCaricaOggetto[frameOggettoIesimo].isDisplayable())
-			frameCaricaOggetto[frameOggettoIesimo] = new FrameCaricaOggettoScambio(this, frameOggettoIesimo);
+			frameCaricaOggetto[frameOggettoIesimo] = new FrameCaricaOggettoScambio(this, frameOggettoIesimo, oggettoCaricato);
 		
 		frameCaricaOggetto[frameOggettoIesimo].setVisible(true);
 	}
@@ -359,8 +363,13 @@ public class Controller {
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
 		
-		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
 			dialogOffertaScambio.dispose();
+			for(FrameCaricaOggettoScambio frameCaricaOggetti: frameCaricaOggetto) {
+				if(frameCaricaOggetti.isDisplayable())
+					frameCaricaOggetti.dispose();
+			}
+		}
 		
 		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
@@ -524,5 +533,74 @@ public class Controller {
 	public void passaADialogOffertaAccettataAnnuncio(Offerta offertaAccettata) {
 		dialogOffertaAccettataAnnuncio = new DialogOffertaAccettataAnnuncio(offertaAccettata, this, frameProfiloUtente);
 		dialogOffertaAccettataAnnuncio.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaAcquistoDaModificare(Offerta offertaDaModificare) {
+		dialogOffertaAcquisto = new DialogOffertaAcquisto(offertaDaModificare.getAnnuncioRiferito(), this, offertaDaModificare);
+		dialogOffertaAcquisto.setVisible(true);
+	}
+
+
+	public void onModificaOffertaAcquistoButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaModificata) throws SQLException {
+		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaModificata, connessioneDB);
+		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		
+		offertaModificata = offertaDAO.updateOfferta(offertaModificata);
+		offertaModificata.getUtenteProprietario().aggiornaSaldo(-offertaModificata.getPrezzoOfferto());
+		utenteDAO.aggiornaSaldoUtente(offertaModificata.getUtenteProprietario(), 0);
+		
+		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
+			dialogOffertaAcquisto.dispose();
+		
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
+			dialogOffertaScambio.dispose();
+		
+		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
+			dialogOffertaRegalo.dispose();
+	}
+
+
+	public void onModificaOffertaScambioButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) throws SQLException {
+		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
+		
+		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare);
+		
+		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
+			dialogOffertaAcquisto.dispose();
+		
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
+			dialogOffertaScambio.dispose();
+		
+		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
+			dialogOffertaRegalo.dispose();
+	}
+
+
+	public void passaADialogOffertaScambioDaModificare(Offerta offerta) {
+		dialogOffertaScambio = new DialogOffertaScambio(offerta.getAnnuncioRiferito(), this, offerta);
+		dialogOffertaScambio.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaRegaloDaModificare(Offerta offerta) {
+		dialogOffertaRegalo = new DialogOffertaRegalo(offerta.getAnnuncioRiferito(), this, offerta);
+		dialogOffertaRegalo.setVisible(true);
+	}
+
+
+	public void onModificaOffertaRegaloButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) throws SQLException {
+		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
+		
+		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare);
+		
+		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
+			dialogOffertaAcquisto.dispose();
+		
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
+			dialogOffertaScambio.dispose();
+		
+		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
+			dialogOffertaRegalo.dispose();
 	}
 }

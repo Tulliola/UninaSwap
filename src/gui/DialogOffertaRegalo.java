@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -32,6 +33,7 @@ import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioVendita;
+import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
 import dto.SedeUniversita;
@@ -86,14 +88,27 @@ public class DialogOffertaRegalo extends MyJDialog {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle(mainController.getUtenteLoggato().getUsername() + ", crea ora la tua offerta!");
 		this.setModal(true);
-		this.settaContentPane(annuncioPerOfferta);
+		this.settaContentPane(annuncioPerOfferta, null);
 	}
 	
-	private void settaContentPane(Annuncio annuncioPerOfferta) {
+	
+	public DialogOffertaRegalo(Annuncio annuncioPerOfferta, Controller controller, Offerta offertaDaModificare) {
+		mainController = controller;
+		
+		this.setSize(1200, 800);
+		this.setResizable(false);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setTitle(mainController.getUtenteLoggato().getUsername() + ", crea ora la tua offerta!");
+		this.setModal(true);
+		this.settaContentPane(annuncioPerOfferta, offertaDaModificare);
+	}
+	
+	private void settaContentPane(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		contentPane.setLayout(new BorderLayout());
 		
 		this.settaPanelProposteVenditore(annuncioPerOfferta);
-		this.settaPanelLaMiaOfferta(annuncioPerOfferta);
+		this.settaPanelLaMiaOfferta(annuncioPerOfferta, offertaDaModificare);
 		
 		contentPane.add(panelProposteVenditore, BorderLayout.WEST);
 		contentPane.add(panelLaMiaOfferta, BorderLayout.CENTER);
@@ -255,7 +270,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 		return panelModalitaConsegnaProposte;
 	}
 	
-	private void settaPanelLaMiaOfferta(Annuncio annuncioPerOfferta) {
+	private void settaPanelLaMiaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		panelLaMiaOfferta.setBackground(MyJPanel.uninaLightColor);
 		panelLaMiaOfferta.setLayout(new BorderLayout());
 		panelLaMiaOfferta.setPreferredSize(new Dimension(this.getWidth()/2, this.getHeight()));
@@ -270,23 +285,23 @@ public class DialogOffertaRegalo extends MyJDialog {
 		panelSuperiore.add(lblLaMiaOfferta);
 		
 		panelLaMiaOfferta.add(panelSuperiore, BorderLayout.NORTH);
-		panelLaMiaOfferta.add(this.creaPanelMieProposte(annuncioPerOfferta), BorderLayout.CENTER);
-		panelLaMiaOfferta.add(this.creaPanelBottoni(annuncioPerOfferta), BorderLayout.SOUTH);
+		panelLaMiaOfferta.add(this.creaPanelMieProposte(annuncioPerOfferta, offertaDaModificare), BorderLayout.CENTER);
+		panelLaMiaOfferta.add(this.creaPanelBottoni(annuncioPerOfferta, offertaDaModificare), BorderLayout.SOUTH);
 	}
 	
 
-	private MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta) {
+	private MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		panelMieProposte = new MyJPanel();
 		panelMieProposte.setLayout(new BorderLayout());
 		
-		panelMieProposte.add(this.creaPanelMessaggioMotivazionale(), BorderLayout.NORTH);
-		panelMieProposte.add(this.creaPanelModalitaConsegnaScelta(annuncioPerOfferta), BorderLayout.CENTER);
-		panelMieProposte.add(this.creaPanelNotaOfferta(annuncioPerOfferta), BorderLayout.SOUTH);
+		panelMieProposte.add(this.creaPanelMessaggioMotivazionale(offertaDaModificare), BorderLayout.NORTH);
+		panelMieProposte.add(this.creaPanelModalitaConsegnaScelta(annuncioPerOfferta, offertaDaModificare), BorderLayout.CENTER);
+		panelMieProposte.add(this.creaPanelNotaOfferta(annuncioPerOfferta, offertaDaModificare), BorderLayout.SOUTH);
 		
 		return panelMieProposte;
 	}
 	
-	private MyJPanel creaPanelMessaggioMotivazionale() {
+	private MyJPanel creaPanelMessaggioMotivazionale(Offerta offertaDaModificare) {
 		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
 		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
 		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
@@ -301,6 +316,8 @@ public class DialogOffertaRegalo extends MyJDialog {
 		inserisciMessaggioTextField.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-20, 30));
 		inserisciMessaggioTextField.setAlignmentX(CENTER_ALIGNMENT);
 		inserisciMessaggioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
+		if(offertaDaModificare != null)
+			inserisciMessaggioTextField.setText(offertaDaModificare.getMessaggioMotivazionale());
 		inserisciMessaggioTextField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent ke) {
@@ -316,7 +333,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 		return panelMessaggioMotivazionale;
 	}
 	
-	private MyJPanel creaPanelModalitaConsegnaScelta(Annuncio annuncioPerOfferta) {
+	private MyJPanel creaPanelModalitaConsegnaScelta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		MyJPanel panelModalitaConsegnaScelta = new MyJPanel();
 		panelModalitaConsegnaScelta.setBackground(MyJPanel.uninaLightColor);
 		panelModalitaConsegnaScelta.setLayout(new BoxLayout(panelModalitaConsegnaScelta, BoxLayout.Y_AXIS));
@@ -366,15 +383,21 @@ public class DialogOffertaRegalo extends MyJDialog {
 		}
 	
 		if(annuncioPerOfferta.isRitiroInPosta()) {
-			if(primaModalitaInserita == null)
-				primaModalitaInserita = ritiroInPostaRB;
+			if(offertaDaModificare != null) {
+				if(offertaDaModificare.getModalitaConsegnaScelta().equals("Ritiro in posta") || primaModalitaInserita == null) {
+					primaModalitaInserita = ritiroInPostaRB;
+				}
+			}
 			modalitaSceltaBG.add(ritiroInPostaRB);		
 			sottoPanelModalitaScelta.add(ritiroInPostaRB);
 		}
 	
 		if(annuncioPerOfferta.isIncontro()) {
-			if(primaModalitaInserita == null)
-				primaModalitaInserita = incontroRB;
+			if(offertaDaModificare != null) {
+				if(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") || primaModalitaInserita == null) {
+					primaModalitaInserita = incontroRB;
+				}
+			}
 			modalitaSceltaBG.add(incontroRB);
 			sottoPanelModalitaScelta.add(incontroRB);
 		}		
@@ -392,6 +415,11 @@ public class DialogOffertaRegalo extends MyJDialog {
 		inserisciIndirizzoTextField.setPreferredSize(new Dimension (300, 25));		
 		inserisciIndirizzoTextField.setMaximumSize(new Dimension (300, 25));
 		inserisciIndirizzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
+		if(offertaDaModificare != null && offertaDaModificare.getModalitaConsegnaScelta().equals("Spedizione"))
+			inserisciIndirizzoTextField.setText(offertaDaModificare.getIndirizzoSpedizione());
+		else
+			inserisciIndirizzoTextField.setText(mainController.getUtenteLoggato().getResidenza());
+		
 		lblErroreSpedizione = new MyJLabel(true);
 		lblErroreSpedizione.setAlignmentX(LEFT_ALIGNMENT);
 		sottoPanelSpedizione.setVisible(false);
@@ -415,10 +443,19 @@ public class DialogOffertaRegalo extends MyJDialog {
 		ufficiPostaliCB.setPreferredSize(new Dimension(500, 30));
 		ufficiPostaliCB.setMaximumSize(new Dimension(500, 30));
 		
-		for(UfficioPostale ufficioCorrente: mainController.getUfficiPostali())
+		for(UfficioPostale ufficioCorrente: mainController.getUfficiPostali()) {
 			ufficiPostaliCB.addItem(ufficioCorrente);
+		}
 		
-		ufficiPostaliCB.setSelectedIndex(0);
+		if(offertaDaModificare != null && offertaDaModificare.getModalitaConsegnaScelta().equals("Ritiro in posta")) {
+			for(UfficioPostale ufficio: mainController.getUfficiPostali()) {
+				if(ufficio.equals(offertaDaModificare.getUfficioRitiro())) {
+					ufficiPostaliCB.setSelectedItem(ufficio);
+				}
+			}
+		}
+		else
+			ufficiPostaliCB.setSelectedIndex(0);
 				
 		sottoPanelRitiroInPosta.add(lblRitiroInPosta);
 		sottoPanelRitiroInPosta.add(ufficiPostaliCB);
@@ -454,11 +491,41 @@ public class DialogOffertaRegalo extends MyJDialog {
 				primoIncontroInserito = incontro;
 			sottoPanelIncontro.add(incontro);
 		}
+		
+		if(offertaDaModificare != null) {
+			String oraInizioScelta = null;
+			String oraFineScelta = null;
+			GiornoEnum giornoScelto = null;
+			SedeUniversita sedeScelta = null;
+			if(offertaDaModificare.getSedeDIncontroScelta() != null) {
+				oraInizioScelta = offertaDaModificare.getOraInizioIncontro();
+				System.out.println(offertaDaModificare.getOraInizioIncontro());
+				oraFineScelta = offertaDaModificare.getOraFineIncontro();
+				offertaDaModificare.getOraFineIncontro();
+				giornoScelto = GiornoEnum.confrontaConStringa(offertaDaModificare.getGiornoIncontro());
+				offertaDaModificare.getGiornoIncontro();
+				sedeScelta = offertaDaModificare.getSedeDIncontroScelta();
+				offertaDaModificare.getSedeDIncontroScelta();
+			}
+			for(AbstractButton radioButton: Collections.list(incontriBG.getElements())) {
+				
+				String oraInizioRBCorrente = (String)radioButton.getClientProperty("Ora inizio");
+				String oraFineRBCorrente = (String)radioButton.getClientProperty("Ora fine");
+				GiornoEnum giornoRBCorrente = (GiornoEnum)radioButton.getClientProperty("Giorno");
+				SedeUniversita sedeRBCorrente = (SedeUniversita)radioButton.getClientProperty("Sede");
+				if(oraInizioRBCorrente.equals(oraInizioScelta) &&	oraFineRBCorrente.equals(oraFineScelta) && 
+						giornoRBCorrente.equals(giornoScelto) && sedeRBCorrente.equals(sedeScelta)) {
+					radioButton.setSelected(true);
+					break;
+				}
+			}
+		}
+		
 		sottoPanelIncontro.setVisible(false);
 				
 		primaModalitaInserita.doClick();
 		
-		if(annuncioPerOfferta.isIncontro())
+		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro"))))
 			primoIncontroInserito.doClick();
 		
 		panelModalitaConsegnaScelta.add(lblModalitaScelta);
@@ -474,7 +541,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 		return panelModalitaConsegnaScelta;
 	}
 	
-	private MyJPanel creaPanelNotaOfferta(Annuncio annuncioPerOfferta) {
+	private MyJPanel creaPanelNotaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		MyJPanel panelNotaOfferta = new MyJPanel();
 		panelNotaOfferta.setLayout(new BorderLayout());
 		
@@ -495,6 +562,8 @@ public class DialogOffertaRegalo extends MyJDialog {
 		inserisciNotaTextArea.setWrapStyleWord(true);
 		inserisciNotaTextArea.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-50, 200));
 		inserisciNotaTextArea.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-50, 200));
+		if(offertaDaModificare != null)
+			inserisciNotaTextArea.setText(offertaDaModificare.getNota());
 		
 		inserisciNotaTextArea.addKeyListener(new KeyAdapter() {
 			@Override
@@ -536,7 +605,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 	}
 	
 
-	private MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta) {
+	private MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelBottoni.setBackground(Color.orange);
@@ -544,8 +613,16 @@ public class DialogOffertaRegalo extends MyJDialog {
 		panelBottoni.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 50));
 		panelBottoni.setBackground(new Color(220, 220, 220));
 		
-		MyJButton bottoneConfermaOfferta = new MyJButton("Conferma la mia offerta!");
-		bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta);});
+		MyJButton bottoneConfermaOfferta;
+		
+		if(offertaDaModificare == null) {
+			bottoneConfermaOfferta = new MyJButton("Conferma la mia offerta!");
+			bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta, null);});
+		}
+		else {
+			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
+			bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);});
+		}
 		
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
 		bottoneCiHoRipensato.setDefaultAction(() -> {mainController.passaAFrameHomePage(this);});
@@ -558,7 +635,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 		return panelBottoni;
 	}
 	
-	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta) {
+	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		try {
 			this.nascondiLabelErrore(this.lblErroreSpedizione);
 			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField);
@@ -566,8 +643,14 @@ public class DialogOffertaRegalo extends MyJDialog {
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
 				checkResidenza(this.inserisciIndirizzoTextField.getText());
 			
-			OffertaRegalo newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta);
-			mainController.onConfermaOffertaButtonClicked(newOfferta);
+			if(offertaDaModificare == null) {
+				OffertaRegalo newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta, null);
+				mainController.onConfermaOffertaButtonClicked(newOfferta);
+			}
+			else {
+				offertaDaModificare = organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
+				mainController.onModificaOffertaRegaloButtonClicked(annuncioPerOfferta, offertaDaModificare);
+			}
 		}
 		catch(ResidenzaException exc2) {
 			this.settaLabelETextFieldDiErrore(lblErroreSpedizione, exc2.getMessage(), this.inserisciIndirizzoTextField);
@@ -595,11 +678,17 @@ public class DialogOffertaRegalo extends MyJDialog {
 
 	}
 
-	private OffertaRegalo organizzaDatiDaPassareAlController(Annuncio annuncioRiferito) {
+	private OffertaRegalo organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offertaDaModificare) {
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 		
-		OffertaRegalo offertaToAdd = new OffertaRegalo(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito);
-				
+		OffertaRegalo offertaToAdd;
+		if(offertaDaModificare == null)
+			offertaToAdd = new OffertaRegalo(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito);
+		else {
+			offertaToAdd = (OffertaRegalo)offertaDaModificare;
+			offertaToAdd.setModalitaConsegnaScelta(modalitaConsegnaScelta);
+		}
+			
 		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
 			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
 		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))

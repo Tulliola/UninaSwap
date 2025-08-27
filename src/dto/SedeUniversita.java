@@ -25,4 +25,9 @@ public class SedeUniversita {
 	public String toString() {
 		return nome;
 	}
+	
+	@Override
+	public boolean equals(Object sede) {
+		return this.nome.equals(((SedeUniversita)sede).getNome());
+	}
 }

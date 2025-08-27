@@ -163,4 +163,14 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 		}
 	}
 
+	@Override
+	public Oggetto deleteOggetto(Oggetto oggettoDaModificare) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("DELETE FROM Oggetto WHERE idOggetto = ?")){
+			ps.setInt(1, oggettoDaModificare.getIdOggetto());
+			
+			ps.executeUpdate();
+		}
+		return oggettoDaModificare;
+	}
+
 }

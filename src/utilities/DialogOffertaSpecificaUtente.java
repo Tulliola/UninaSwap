@@ -117,7 +117,7 @@ public class DialogOffertaSpecificaUtente extends MyJDialog {
 			settaPanelSpecificoToOggettiInScambio(offertaToDisplay, panelSpecifico);
 		
 		else {
-			MyJLabel lblRegalo = new MyJLabel("Hai chiesti l'oggetto è stato chiesto in regalo");
+			MyJLabel lblRegalo = new MyJLabel("Hai chiesto l'oggetto è stato chiesto in regalo");
 			lblRegalo.setAlignmentX(LEFT_ALIGNMENT);
 			panelSpecifico.add(lblRegalo);
 		}
