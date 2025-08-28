@@ -127,21 +127,24 @@ public class PanelHomePageAnnunci extends JPanel{
 	private void settaBordoSuperiore(ArrayList<Annuncio> annunci) {
 		bordoSuperiore.setLayout(new BoxLayout(bordoSuperiore, BoxLayout.X_AXIS));
 		bordoSuperiore.setAlignmentX(CENTER_ALIGNMENT);
-		bordoSuperiore.setPreferredSize(new Dimension(500, 50));
-		bordoSuperiore.setBackground(MyJPanel.uninaColorClicked);
+		bordoSuperiore.setMinimumSize(new Dimension(1050, 50));
+		bordoSuperiore.setMaximumSize(new Dimension(1050, 50));
+		bordoSuperiore.setPreferredSize(new Dimension(1050, 50));
+		bordoSuperiore.setBackground(Color.white);
 		
 		barraDiRicerca.setLayout(new BorderLayout());
 		barraDiRicerca.setAlignmentX(CENTER_ALIGNMENT);
 		barraDiRicerca.setMaximumSize(new Dimension(450, 35));
 		barraDiRicerca.setPreferredSize(new Dimension(450, 35));
 		barraDiRicerca.setMaximumSize(new Dimension(450, 35));
+		barraDiRicerca.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
 		JTextField campoDiTestoTextField = new JTextField("Cerca ora!");
 		campoDiTestoTextField.setBorder(new EmptyBorder(0, 10, 0, 0));
 		campoDiTestoTextField.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
-		campoDiTestoTextField.setMinimumSize(new Dimension(450, 35));
-		campoDiTestoTextField.setPreferredSize(new Dimension(450, 35));
-		campoDiTestoTextField.setMaximumSize(new Dimension(450, 35));
+		campoDiTestoTextField.setMinimumSize(new Dimension(390, 35));
+		campoDiTestoTextField.setPreferredSize(new Dimension(390, 35));
+		campoDiTestoTextField.setMaximumSize(new Dimension(390, 35));
 		campoDiTestoTextField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent fe) {
@@ -166,6 +169,20 @@ public class PanelHomePageAnnunci extends JPanel{
 		lblIconaDiRicerca.aggiungiImmagineScalata("images/iconaDiRicerca.png", 30, 30, false);
 		lblIconaDiRicerca.setOpaque(true);
 		lblIconaDiRicerca.setBackground(Color.white);
+		lblIconaDiRicerca.rendiLabelInteragibile();
+		
+		lblIconaDiRicerca.setOnMouseClickedAction(() -> {
+			filtraAnnunciPerRicerca(annunci, campoDiTestoTextField.getText());
+		});
+		lblIconaDiRicerca.setOnMouseEnteredAction(() -> {
+			lblIconaDiRicerca.setBackground(new Color(220, 220, 220));
+			lblIconaDiRicerca.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		});
+		
+		lblIconaDiRicerca.setOnMouseExitedAction(() -> {
+			lblIconaDiRicerca.setBackground(Color.white);
+			lblIconaDiRicerca.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		});
 		
 		MyJLabel lblIconaDiEliminaTesto = new MyJLabel();
 		lblIconaDiEliminaTesto.aggiungiImmagineScalata("images/iconaRimuovi.png", 30, 30, true);
@@ -196,7 +213,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		JComboBox<String> tipologiaAnnunciCB = new JComboBox();
 		tipologiaAnnunciCB.setBackground(Color.white);
-		tipologiaAnnunciCB.setMinimumSize(new Dimension(450, 35));
+		tipologiaAnnunciCB.setMinimumSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setPreferredSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setMaximumSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
@@ -209,7 +226,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		JComboBox<String> categoriaOggettoInAnnuncioCB = new JComboBox();
 		categoriaOggettoInAnnuncioCB.setBackground(Color.white);
-		categoriaOggettoInAnnuncioCB.setMinimumSize(new Dimension(450, 35));
+		categoriaOggettoInAnnuncioCB.setMinimumSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setPreferredSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setMaximumSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setFont(new Font("Ubuntu Sans", Font.PLAIN, 20));
@@ -243,11 +260,13 @@ public class PanelHomePageAnnunci extends JPanel{
 		});
 		
 		bordoSuperiore.add(Box.createVerticalGlue());
+		bordoSuperiore.add(Box.createHorizontalGlue());
 		bordoSuperiore.add(tipologiaAnnunciCB);
 		bordoSuperiore.add(Box.createRigidArea(new Dimension(10, 0)));
 		bordoSuperiore.add(barraDiRicerca);
 		bordoSuperiore.add(Box.createRigidArea(new Dimension(10, 0)));
 		bordoSuperiore.add(categoriaOggettoInAnnuncioCB);
+		bordoSuperiore.add(Box.createHorizontalGlue());
 		bordoSuperiore.add(Box.createVerticalGlue());
 	}
 	
@@ -255,7 +274,9 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.setLayout(new BoxLayout(bordoInferiore, BoxLayout.X_AXIS));
 		bordoInferiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoInferiore.setPreferredSize(new Dimension(500, 100));
-		bordoInferiore.setBackground(MyJPanel.uninaLightColor);	
+//		bordoInferiore.setBackground(MyJPanel.uninaLightColor);
+		bordoInferiore.setBackground(Color.white);
+		bordoInferiore.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 		
 		MyJButton bottonePubblicaAnnuncioVendita = new MyJButton("Pubblica un nuovo annuncio di vendita!");
 		bottonePubblicaAnnuncioVendita.setAlignmentX(CENTER_ALIGNMENT);
@@ -307,8 +328,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		MyJPanel panelFaiOfferta = new MyJPanel();
 		panelFaiOfferta.setLayout(new BoxLayout(panelFaiOfferta, BoxLayout.X_AXIS));
 		panelFaiOfferta.setAlignmentX(CENTER_ALIGNMENT);
-		panelFaiOfferta.setPreferredSize(new Dimension(425, 50));
-		panelFaiOfferta.setMaximumSize(new Dimension(425, 50));
+		panelFaiOfferta.setPreferredSize(new Dimension(425, 46));
+		panelFaiOfferta.setMaximumSize(new Dimension(425, 46));
 		panelFaiOfferta.setBackground(Color.white);
 		
 		MyJButton bottoneFaiOfferta = new MyJButton("Fai un'offerta!");

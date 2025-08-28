@@ -722,7 +722,12 @@ public class DialogOffertaAcquisto extends MyJDialog {
 			bottoneConfermaOfferta.setDefaultAction(() -> {
 				double vecchiaOfferta = offertaDaModificare.getPrezzoOfferto();
 				offertaDaModificare.getUtenteProprietario().aggiornaSaldo(vecchiaOfferta);
-				((OffertaAcquisto)offertaDaModificare).setPrezzoOfferto(Double.parseDouble(inserisciPrezzoTextField.getText()));
+				
+				double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
+				prezzoOfferto = Math.ceil(prezzoOfferto);
+				prezzoOfferto /= 100;
+				
+				((OffertaAcquisto)offertaDaModificare).setPrezzoOfferto(prezzoOfferto);
 				ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 				offertaDaModificare.setModalitaConsegnaScelta(modalitaConsegnaScelta);		
 				if(modalitaConsegnaScelta.toString().equals("Spedizione")) {
@@ -795,8 +800,8 @@ public class DialogOffertaAcquisto extends MyJDialog {
 			if(annuncioPerOfferta instanceof AnnuncioVendita) {
 				double offertaMinima = annuncioPerOfferta.getPrezzoIniziale() * 100;
 				offertaMinima = Math.ceil(offertaMinima);
-				offertaMinima /= 100;
 				offertaMinima *= 0.4;
+				offertaMinima /= 100;
 				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), offertaMinima, annuncioPerOfferta.getPrezzoIniziale());
 			}
 			else if(annuncioPerOfferta instanceof AnnuncioRegalo)
@@ -866,8 +871,12 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 		
 		OffertaAcquisto offertaToAdd;
-		if(offertaDaModificare == null)
-			offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, Double.valueOf(this.inserisciPrezzoTextField.getText()));
+		if(offertaDaModificare == null) {
+			double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
+			prezzoOfferto = Math.ceil(prezzoOfferto);
+			prezzoOfferto /= 100;
+			offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, prezzoOfferto);
+		}
 		else {
 			offertaToAdd = (OffertaAcquisto)offertaDaModificare;
 			offertaToAdd.setModalitaConsegnaScelta(modalitaConsegnaScelta);

@@ -53,8 +53,8 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 
 	private MyJPanel creaPanelVisualizzaOffertaAccettata(Annuncio annuncio) {
 		MyJPanel panelVisualizzaOffertaAccettata = new MyJPanel();
-		panelVisualizzaOffertaAccettata.setPreferredSize(new Dimension(425, 50));
-		panelVisualizzaOffertaAccettata.setMaximumSize(new Dimension(425, 50));
+		panelVisualizzaOffertaAccettata.setPreferredSize(new Dimension(425, 46));
+		panelVisualizzaOffertaAccettata.setMaximumSize(new Dimension(425, 46));
 		panelVisualizzaOffertaAccettata.setLayout(new BoxLayout(panelVisualizzaOffertaAccettata, BoxLayout.X_AXIS));
 		panelVisualizzaOffertaAccettata.setAlignmentX(CENTER_ALIGNMENT);
 		panelVisualizzaOffertaAccettata.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));
@@ -83,7 +83,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		panelRiepilogoScadenza.setLayout(new BoxLayout(panelRiepilogoScadenza, BoxLayout.X_AXIS));
 		panelRiepilogoScadenza.setAlignmentX(CENTER_ALIGNMENT);
 		panelRiepilogoScadenza.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));
-		panelRiepilogoScadenza.setBackground(Color.white);
+		panelRiepilogoScadenza.setBackground(new Color(220, 220, 220));
 		
 		MyJLabel lblDataScadenza = new MyJLabel();
 		lblDataScadenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));

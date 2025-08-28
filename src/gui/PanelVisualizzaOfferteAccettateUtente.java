@@ -155,8 +155,8 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 				MyJPanel panelSottoDescrizione = new MyJPanel();
 				panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-				panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-				panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
+				panelSottoDescrizione.setPreferredSize(new Dimension(425, 46));
+				panelSottoDescrizione.setMaximumSize(new Dimension(425, 46));
 				panelSottoDescrizione.setBackground(Color.white);
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta accettata");
@@ -175,7 +175,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 			@Override
 			protected MyJPanel creaPanelDataScadenza(Annuncio annuncio){
 				MyJPanel panelDataScadenza = new MyJPanel();
-				panelDataScadenza.setBackground(new Color(123, 183, 237));
+				panelDataScadenza.setBackground(new Color(220, 220, 220));
 				panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.Y_AXIS));
 				
 				MyJLabel lblOffertaAccettata = new MyJLabel("Congratulazioni! La tua offerta a questo annuncio è stata accettata", new Font("Ubuntu Sans", Font.BOLD, 13));

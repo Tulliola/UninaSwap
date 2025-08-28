@@ -415,7 +415,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		usernameTextField.setEnabled(false);
 		usernameTextField.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
 
-		saldoTextField = new MyJTextField(String.valueOf(utenteLoggato.getSaldo())+" $");
+		double saldoUtente = utenteLoggato.getSaldo()*100;
+		saldoUtente = Math.floor(saldoUtente);
+		saldoUtente /= 100;
+		saldoTextField = new MyJTextField((saldoUtente)+" €");
 		saldoTextField.setAlignmentX(LEFT_ALIGNMENT);
 		saldoTextField.setDisabledTextColor(Color.BLACK);
 		saldoTextField.setEnabled(false);

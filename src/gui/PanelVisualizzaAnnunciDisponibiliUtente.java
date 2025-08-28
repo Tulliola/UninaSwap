@@ -51,8 +51,8 @@ public class PanelVisualizzaAnnunciDisponibiliUtente extends PanelVisualizzaAnnu
 
 	private MyJPanel creaPanelVisualizzaOfferte(Annuncio annuncio) {
 		MyJPanel panelVisualizzaOfferta = new MyJPanel();
-		panelVisualizzaOfferta.setPreferredSize(new Dimension(425, 50));
-		panelVisualizzaOfferta.setMaximumSize(new Dimension(425, 50));
+		panelVisualizzaOfferta.setPreferredSize(new Dimension(425, 46));
+		panelVisualizzaOfferta.setMaximumSize(new Dimension(425, 46));
 		panelVisualizzaOfferta.setLayout(new BoxLayout(panelVisualizzaOfferta, BoxLayout.X_AXIS));
 		panelVisualizzaOfferta.setAlignmentX(CENTER_ALIGNMENT);
 		panelVisualizzaOfferta.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));

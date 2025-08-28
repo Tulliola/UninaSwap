@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
+import com.formdev.flatlaf.ui.FlatTextFieldUI;
+
 public class MyJTextField extends JTextField implements ActionListener, KeyListener, MouseListener, FocusListener{
 
 	public static final Border blackBorder = new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), new EmptyBorder(0, 5, 0, 0));
@@ -44,7 +46,7 @@ public class MyJTextField extends JTextField implements ActionListener, KeyListe
 		this.setBorder(blackBorder);
 		this.setMaximumSize(new Dimension(300, 30));
 		this.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		}
+	}
 
 	public MyJTextField(String stringaDiDefault) {
 		this();

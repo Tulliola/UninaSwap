@@ -95,6 +95,8 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		this.setForeground(color);
 	}
 	
+	
+	
 	public MyJLabel(String stringaDiDefault, Font font, boolean isLabelDiErrore) {
 		this.setText(stringaDiDefault);
 		this.setFont(font);
@@ -109,7 +111,7 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		
 		this.setForeground(colore);
 	}
-
+	
 	public void aggiungiEffettoCliccabilitaPerTesto() {
 		Font oldFont = this.getFont();
 		this.addMouseListener(new MouseAdapter() {

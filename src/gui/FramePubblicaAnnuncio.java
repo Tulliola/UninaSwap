@@ -1329,7 +1329,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		if(this.prezzoInizialeTextField.getText().isEmpty())
 			throw new PrezzoInizialeException("Inserisci il prezzo iniziale per il tuo articolo.");
 		
-		double prezzoIniziale = Double.valueOf(prezzoInizialeTextField.getText());
+		double prezzoIniziale = Double.valueOf(prezzoInizialeTextField.getText()) * 100;
+		prezzoIniziale = Math.ceil(prezzoIniziale);
+		prezzoIniziale /= 100;
 		
 		if(prezzoIniziale <= 0.50)
 			throw new PrezzoInizialeException("Il prezzo iniziale deve essere di almeno 0.50€");
@@ -1352,7 +1354,10 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 
 		Annuncio annuncioDaPassare;
 		if(tipoAnnuncio == "Vendita") {	
-			double prezzoIniziale = Double.valueOf(this.prezzoInizialeTextField.getText());
+			double prezzoIniziale = Double.valueOf(this.prezzoInizialeTextField.getText()) * 100;
+			prezzoIniziale = Math.ceil(prezzoIniziale);
+			prezzoIniziale /= 100;
+			
 			annuncioDaPassare = new AnnuncioVendita(this.spedizioneCheckBox.isSelected(), this.ritiroInPostaCheckBox.isSelected(), this.incontroCheckBox.isSelected(),
 				StatoAnnuncioEnum.Disponibile, this.nomeAnnuncioTextField.getText(), mainController.getUtenteLoggato(), oggettoDaPassare, prezzoIniziale);
 		}

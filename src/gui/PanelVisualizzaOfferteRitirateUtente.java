@@ -80,7 +80,7 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 			@Override
 			protected MyJPanel creaPanelDataScadenza(Annuncio annuncio){
 				MyJPanel panelDataScadenza = new MyJPanel();
-				panelDataScadenza.setBackground(new Color(123, 183, 237));
+				panelDataScadenza.setBackground(new Color(220, 220, 220));
 				panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.Y_AXIS));
 				
 				MyJLabel lblOffertaRitirata = new MyJLabel("Hai ritirato quest'offerta", new Font("Ubuntu Sans", Font.BOLD, 13));

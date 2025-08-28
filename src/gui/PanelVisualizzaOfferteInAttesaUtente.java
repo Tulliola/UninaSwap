@@ -62,8 +62,8 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 				MyJPanel panelSottoDescrizione = new MyJPanel();
 				panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-				panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-				panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
+				panelSottoDescrizione.setPreferredSize(new Dimension(425, 46));
+				panelSottoDescrizione.setMaximumSize(new Dimension(425, 46));
 				panelSottoDescrizione.setBackground(Color.white);
 
 				MyJButton modificaOffertaButton = new MyJButton("Modifica offerta");

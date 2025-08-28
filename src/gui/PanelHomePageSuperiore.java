@@ -43,6 +43,7 @@ public class PanelHomePageSuperiore extends MyJPanel {
 		
 		MyJPanel barraBlu = new MyJPanel();
 		barraBlu.setBackground(uninaColor);
+//		barraBlu.setBackground(Color.white);
 		barraBlu.setPreferredSize(new Dimension(parentFrame.getWidth(), 45));
 		barraBlu.add(new MyJLabel(testo, new Font("Ubuntu Sans", Font.BOLD, 25), Color.white));
 			

@@ -61,7 +61,7 @@ public class PanelVisualizzaAnnunciScadutiUtente extends PanelVisualizzaAnnunciU
 		panelRiepilogoScadenza.setLayout(new BoxLayout(panelRiepilogoScadenza, BoxLayout.X_AXIS));
 		panelRiepilogoScadenza.setAlignmentX(CENTER_ALIGNMENT);
 		panelRiepilogoScadenza.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));
-		panelRiepilogoScadenza.setBackground(Color.white);
+		panelRiepilogoScadenza.setBackground(new Color(220, 220, 220));
 		
 		MyJLabel lblDataScadenza = new MyJLabel();
 		lblDataScadenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 15));

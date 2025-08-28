@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.IOException;
@@ -92,6 +93,9 @@ public class Controller {
 		UIManager.put("ToolTip.background", Color.white);
 		 try {
 	            UIManager.setLookAndFeel(new FlatMacLightLaf());
+	            UIManager.put("TextComponent.arc", 20); // angoli stondati
+	            UIManager.put("TextComponent.padding", new Insets(5, 10, 5, 10)); // padding interno opzionale
+
 //	            FlatMacLightLaf.setup();
 //	            UIManager.put("Panel.border", BorderFactory.createLineBorder(Color.GRAY, 1));
 	        } catch (UnsupportedLookAndFeelException e) {

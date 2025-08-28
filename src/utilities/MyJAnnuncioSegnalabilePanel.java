@@ -38,7 +38,7 @@ public abstract class MyJAnnuncioSegnalabilePanel extends MyJAnnuncioPanel{
 		
 		MyJLabel lblSegnala = new MyJLabel();
 		lblSegnala.rendiLabelInteragibile();
-		lblSegnala.aggiungiImmagineScalata("images/iconaSegnalazione.png", 50, 50, true);
+		lblSegnala.aggiungiImmagineScalata("images/iconaSegnalazioneWhite.png", 50, 50, true);
 		lblSegnala.setOnMouseClickedAction(() -> {
 			mainController.passaADialogSegnalaUtente(annuncio);
 		});
@@ -46,21 +46,21 @@ public abstract class MyJAnnuncioSegnalabilePanel extends MyJAnnuncioPanel{
 		lblSegnala.setOnMouseExitedAction(() -> {});
 		
 		if(annuncio instanceof AnnuncioVendita) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVendita.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, false);
 			lblIconaTipoAnnuncio.setToolTipText("Prezzo iniziale - "+annuncio.getPrezzoIniziale()+"€");
 		}
 		else if(annuncio instanceof AnnuncioScambio) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambio.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, false);
 			lblIconaTipoAnnuncio.setToolTipText(annuncio.getNotaScambio());
 		}
 		else if(annuncio instanceof AnnuncioRegalo)
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioRegalo.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioRegaloWhite.png", 50, 50, false);
 
 		panelUsernamePubblicante.add(Box.createVerticalGlue());
 		panelUsernamePubblicante.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelUsernamePubblicante.add(lblUsername);
-		panelUsernamePubblicante.add(Box.createHorizontalGlue());
 		panelUsernamePubblicante.add(lblSegnala);
+		panelUsernamePubblicante.add(Box.createHorizontalGlue());
 		panelUsernamePubblicante.add(lblIconaTipoAnnuncio);
 		panelUsernamePubblicante.add(Box.createRigidArea(new Dimension(10, 0)));
 		panelUsernamePubblicante.add(Box.createVerticalGlue());

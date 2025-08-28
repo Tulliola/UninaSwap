@@ -23,19 +23,19 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private MyJPanel panelChiamante;
 	private Controller mainController;
 	
-	private MyJLabel lblIMieiAnnunci = new MyJLabel("   I miei annunci");
-	private MyJLabel lblAnnunciDisponibili = new MyJLabel("        Annunci disponibili");
-	private MyJLabel lblAnnunciUltimati = new MyJLabel("        Annunci andati a buon fine");
-	private MyJLabel lblAnnunciScaduti = new MyJLabel("        Annunci scaduti");
-	private MyJLabel lblAnnunciRimossi = new MyJLabel("        Annunci rimossi");
+	private MyJLabel lblIMieiAnnunci = new MyJLabel("   Annunci", Color.white);
+	private MyJLabel lblAnnunciDisponibili = new MyJLabel("        Disponibili");
+	private MyJLabel lblAnnunciUltimati = new MyJLabel("        Andati a buon fine");
+	private MyJLabel lblAnnunciScaduti = new MyJLabel("        Scaduti");
+	private MyJLabel lblAnnunciRimossi = new MyJLabel("        Rimossi");
 	private MyJLabel lblIlTuoProfiloUtente = new MyJLabel("   Il mio profilo");
 	
 	
-	private MyJLabel lblLeMieOfferte = new MyJLabel("   Le mie offerte");
-	private MyJLabel lblOfferteAccettate = new MyJLabel("        Offerte accettate");
-	private MyJLabel lblOfferteInAttesa = new MyJLabel("        Offerte in attesa");
-	private MyJLabel lblOfferteRifiutate = new MyJLabel("        Offerte rifiutate");
-	private MyJLabel lblOfferteRitirate = new MyJLabel("        Offerte ritirate");
+	private MyJLabel lblLeMieOfferte = new MyJLabel("   Offerte", Color.white);
+	private MyJLabel lblOfferteAccettate = new MyJLabel("        Accettate");
+	private MyJLabel lblOfferteInAttesa = new MyJLabel("        In attesa");
+	private MyJLabel lblOfferteRifiutate = new MyJLabel("        Rifiutate");
+	private MyJLabel lblOfferteRitirate = new MyJLabel("        Ritirate");
 	private MyJLabel lblReportOfferte = new MyJLabel("        Report offerte");
 	
 	private MyJLabel lblSelezionata = null;
@@ -79,8 +79,8 @@ public class PanelBarraLateraleSx extends MyJPanel {
 			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
 		});
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
-		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png");
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
+		aggiungiRigaNelPanel(lblAnnunciDisponibili, true, "images/iconaAnnuncio.png");
 		aggiungiRigaNelPanel(lblAnnunciScaduti, true, "images/iconaScaduto.png");
 		aggiungiRigaNelPanel(lblAnnunciRimossi, true, "images/iconaCestino.png");
 		

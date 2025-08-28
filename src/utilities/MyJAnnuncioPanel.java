@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 
 import com.formdev.flatlaf.FlatClientProperties;
 
@@ -172,15 +173,15 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		MyJLabel lblIconaTipoAnnuncio = new MyJLabel();
 		
 		if(annuncio instanceof AnnuncioVendita) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVendita.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, false);
 			lblIconaTipoAnnuncio.setToolTipText("Prezzo iniziale - "+annuncio.getPrezzoIniziale()+"€");
 		}
 		else if(annuncio instanceof AnnuncioScambio) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambio.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, false);
 			lblIconaTipoAnnuncio.setToolTipText(annuncio.getNotaScambio());
 		}
 		else if(annuncio instanceof AnnuncioRegalo)
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioRegalo.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioRegaloWhite.png", 50, 50, false);
 
 		panelUsernamePubblicante.add(Box.createVerticalGlue());
 		panelUsernamePubblicante.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -206,10 +207,12 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelNomeAnnuncio.setLayout(new BoxLayout(panelNomeAnnuncio, BoxLayout.PAGE_AXIS));
 		panelNomeAnnuncio.setPreferredSize(new Dimension(425, 100));
 		panelNomeAnnuncio.setMaximumSize(new Dimension(425, 100));
-		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
+//		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
+		panelNomeAnnuncio.setBackground(Color.white);
+		panelNomeAnnuncio.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, uninaColor));
 		JTextArea nomeAnnuncioTextArea = new JTextArea(annuncio.getNome());
-		nomeAnnuncioTextArea.setBackground(new Color(98, 145, 188));
-		nomeAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+		nomeAnnuncioTextArea.setBackground(Color.white);
+		nomeAnnuncioTextArea.setBorder(new EmptyBorder(10, 5, 5, 5));
 		nomeAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setEditable(false);
@@ -225,8 +228,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelDescrizione.setPreferredSize(new Dimension(425, 300));
 		panelDescrizione.setMaximumSize(new Dimension(425, 300));
 		JTextArea descrizioneAnnuncioTextArea = new JTextArea(annuncio.getOggettoInAnnuncio().getDescrizione());
-		descrizioneAnnuncioTextArea.setBackground(new Color(110, 164, 213));
-		descrizioneAnnuncioTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+		descrizioneAnnuncioTextArea.setBackground(Color.white);
 		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setEditable(false);
@@ -235,6 +237,9 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		descrizioneAnnuncioTextArea.setWrapStyleWord(true);
 		descrizioneAnnuncioTextArea.setAlignmentX(LEFT_ALIGNMENT);
 		descrizioneAnnuncioTextArea.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
+		Border spaziatura = new EmptyBorder(5, 5, 5, 5);
+		Border bordoColorato = BorderFactory.createMatteBorder(0, 0, 2, 0, uninaColor);
+		descrizioneAnnuncioTextArea.setBorder(new CompoundBorder(bordoColorato, spaziatura));
 		panelDescrizione.add(descrizioneAnnuncioTextArea, BorderLayout.NORTH);
 		panelDescrizione.add(this.creaPanelDataScadenza(annuncio), BorderLayout.CENTER);
 		
@@ -252,7 +257,8 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 	protected MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
 		MyJPanel panelDataScadenza = new MyJPanel();
 		panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.X_AXIS));
-		panelDataScadenza.setBackground(new Color(123, 183, 237));
+//		panelDataScadenza.setBackground(new Color(123, 183, 237));
+		panelDataScadenza.setBackground(Color.white);
 		panelDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
 		MyJLabel lblDataScadenza = new MyJLabel("Data scadenza - N/A");
 		lblDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
@@ -276,7 +282,6 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 	}
 	
 	public abstract MyJPanel creaPanelSottoDescrizione(Annuncio annuncio);
-	
 	
 	protected MyJPanel creaPanelModalitaConsegna(Annuncio annuncio) {
 		MyJPanel panelModalitaConsegna = new MyJPanel();
