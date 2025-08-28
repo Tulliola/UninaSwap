@@ -417,8 +417,6 @@ public class DialogOffertaRegalo extends MyJDialog {
 		inserisciIndirizzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
 		if(offertaDaModificare != null && offertaDaModificare.getModalitaConsegnaScelta().equals("Spedizione"))
 			inserisciIndirizzoTextField.setText(offertaDaModificare.getIndirizzoSpedizione());
-		else
-			inserisciIndirizzoTextField.setText(mainController.getUtenteLoggato().getResidenza());
 		
 		lblErroreSpedizione = new MyJLabel(true);
 		lblErroreSpedizione.setAlignmentX(LEFT_ALIGNMENT);

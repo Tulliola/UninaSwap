@@ -520,8 +520,6 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		inserisciIndirizzoTextField.setBorder(new EmptyBorder(5, 5, 5, 5));
 		if(offertaDaModificare != null && offertaDaModificare.getModalitaConsegnaScelta().equals("Spedizione"))
 			inserisciIndirizzoTextField.setText(offertaDaModificare.getIndirizzoSpedizione());
-		else
-			inserisciIndirizzoTextField.setText(mainController.getUtenteLoggato().getResidenza());
 		
 		lblErroreSpedizione = new MyJLabel(true);
 		lblErroreSpedizione.setAlignmentX(LEFT_ALIGNMENT);
@@ -600,7 +598,6 @@ public class DialogOffertaAcquisto extends MyJDialog {
 			SedeUniversita sedeScelta = null;
 			if(offertaDaModificare.getSedeDIncontroScelta() != null) {
 				oraInizioScelta = offertaDaModificare.getOraInizioIncontro();
-				System.out.println(offertaDaModificare.getOraInizioIncontro());
 				oraFineScelta = offertaDaModificare.getOraFineIncontro();
 				offertaDaModificare.getOraFineIncontro();
 				giornoScelto = GiornoEnum.confrontaConStringa(offertaDaModificare.getGiornoIncontro());

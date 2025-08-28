@@ -173,4 +173,16 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 		return oggettoDaModificare;
 	}
 
+	@Override
+	public void updateOggetto(Oggetto oggettoDaModificare) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Oggetto SET"
+				+ " Descrizione = ?, Categoria = ?, Condizioni = ? WHERE idOggetto = ?")){
+			ps.setString(1, oggettoDaModificare.getDescrizione());
+			ps.setString(2, oggettoDaModificare.getCategoria());
+			ps.setString(3, oggettoDaModificare.getCondizioni());
+			ps.setInt(4, oggettoDaModificare.getIdOggetto());
+			
+			ps.executeUpdate();
+		}
+	}
 }

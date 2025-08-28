@@ -151,6 +151,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 		
 		this.aggiungiTextField(panelTextELabel, emailTextField, lblErroreEmail, "Inserisci la tua email istituzionale", passwordTextField, usernameTextField);
 		
+		
 		passwordTextField.setDefaultAction(() -> {
 			residenzaTextField.requestFocus();
 		});
@@ -178,14 +179,16 @@ public class FrameDiRegistrazione extends MyJFrame {
 		panelInserimentoDati.add(panelTextELabel);
 	}
 	
-	private void aggiungiTextField(MyJPanel panelInput, MyJTextField textFieldInput, MyJLabel labelDiErrore, String stringaPerLabel, JComponent nextComponent, JComponent	previousComponent) {
+	private void aggiungiTextField(MyJPanel panelInput, MyJTextField textFieldInput, MyJLabel labelDiErrore, String stringaPerLabel, JComponent nextComponent, JComponent previousComponent) {
 		MyJLabel label = new MyJLabel(stringaPerLabel, new Font("Ubuntu Sans", Font.BOLD, 15));
 		label.setForeground(Color.black);
 		label.setAlignmentX(LEFT_ALIGNMENT);
-		
 		textFieldInput.setAlignmentX(LEFT_ALIGNMENT);
 		textFieldInput.setBorder(MyJTextField.blackBorder);
-			
+		textFieldInput.rendiTextFieldActionListenable();
+		textFieldInput.rendiTextFieldKeyListenable();
+		textFieldInput.rendiTextFieldMouseListenable();
+		
 		textFieldInput.setDefaultAction(() -> {
 			if(nextComponent != null) {
 				nextComponent.setFocusable(true);
@@ -207,6 +210,8 @@ public class FrameDiRegistrazione extends MyJFrame {
 			}
 		});
 
+		textFieldInput.setKeyTypedAction(()->{});
+		
 		labelDiErrore.setForeground(Color.red); 
 		labelDiErrore.setVisible(false);
 		

@@ -12,7 +12,7 @@ public class OffertaScambio extends Offerta {
 	Integer idOfferta;
 	
 	//Attributi derivati da relazioni
-	private ArrayList<Oggetto> oggettiOfferti = new ArrayList()	;
+	private ArrayList<Oggetto> oggettiOfferti = new ArrayList<>();
 
 	public OffertaScambio(ProfiloUtente offerente, int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito, ArrayList<Oggetto> oggettiOfferti) {

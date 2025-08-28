@@ -356,7 +356,6 @@ public class Controller {
 	
 	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaToAdd, connessioneDB);
-
 		offertaDAO.inserisciOfferta(offertaToAdd);
 		utenteLoggato.aggiungiOfferta(offertaToAdd);		
 
@@ -391,8 +390,9 @@ public class Controller {
 	
 	// Metodi di recupero
 	
-	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame) {
-		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
+	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame, Oggetto oggettoEventualmenteModificato) {
+		System.out.println(indiceDelFrame);
+		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController(oggettoEventualmenteModificato);
 		
 		return oggettoRecuperato;
 	}
@@ -546,7 +546,8 @@ public class Controller {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaModificata, connessioneDB);
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
-		offertaModificata = offertaDAO.updateOfferta(offertaModificata);
+		
+		offertaModificata = offertaDAO.updateOfferta(offertaModificata, null);
 		offertaModificata.getUtenteProprietario().aggiornaSaldo(-offertaModificata.getPrezzoOfferto());
 		utenteDAO.aggiornaSaldoUtente(offertaModificata.getUtenteProprietario(), 0);
 		
@@ -561,10 +562,10 @@ public class Controller {
 	}
 
 
-	public void onModificaOffertaScambioButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) throws SQLException {
+	public void onModificaOffertaScambioButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
-		
-		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare);
+
+		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare, oggettiPrecedentementeOfferti);
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -592,7 +593,7 @@ public class Controller {
 	public void onModificaOffertaRegaloButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) throws SQLException {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
 		
-		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare);
+		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare, null);
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();

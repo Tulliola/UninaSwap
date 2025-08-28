@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import dto.Annuncio;
 import dto.Offerta;
 import dto.OffertaAcquisto;
+import dto.Oggetto;
 import dto.ProfiloUtente;
 import utilities.StatoOffertaEnum;
 
@@ -15,6 +16,6 @@ public interface OffertaDAO {
 	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException;
 	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException;
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException;
-	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException;
+	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException;
 }
 

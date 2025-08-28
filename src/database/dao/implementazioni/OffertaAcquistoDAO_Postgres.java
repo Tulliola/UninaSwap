@@ -18,6 +18,7 @@ import dto.AnnuncioVendita;
 import dto.Offerta;
 
 import dto.OffertaAcquisto;
+import dto.Oggetto;
 import dto.ProfiloUtente;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
@@ -212,7 +213,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 	}
 
 	@Override
-	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException {
+	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, Prezzo_offerto = ?, idUfficio = ?"

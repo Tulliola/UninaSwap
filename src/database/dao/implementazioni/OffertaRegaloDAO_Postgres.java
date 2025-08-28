@@ -268,7 +268,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	}
 
 	@Override
-	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException {
+	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, idUfficio = ?"

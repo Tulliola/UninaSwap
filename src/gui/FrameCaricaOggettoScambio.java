@@ -269,9 +269,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto1 = new MyJLabel();
 		if(oggettoCaricato == null)
 			lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
-		}
+		
 		lblAggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto1.add(Box.createVerticalGlue());
 		panelFoto1.add(Box.createHorizontalGlue());
@@ -284,6 +282,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto1.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto1.setOnMouseExitedAction(() -> {});
 
+		if(oggettoCaricato != null) {
+			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
+			foto1Caricata = true;
+		}
+		
 		MyJPanel panelFoto2 = new MyJPanel(Color.white);
 		panelFoto2.setPreferredSize(new Dimension(375, 500));
 		panelFoto2.setMaximumSize(new Dimension(375, 500));
@@ -292,9 +295,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto2 = new MyJLabel();
 		if(oggettoCaricato == null || oggettoCaricato.getImmagine(1) == null)
 			lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
-		}
 		lblAggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto2.add(Box.createVerticalGlue());
 		panelFoto2.add(Box.createHorizontalGlue());
@@ -307,6 +307,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto2.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto2.setOnMouseExitedAction(() -> {});
 		
+		if(oggettoCaricato != null && oggettoCaricato.getImmagine(1) != null) {
+			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
+			foto2Caricata = true;
+		}
+		
 		MyJPanel panelFoto3 = new MyJPanel(Color.white);
 		panelFoto3.setPreferredSize(new Dimension(375, 500));
 		panelFoto3.setMaximumSize(new Dimension(375, 500));
@@ -315,9 +320,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto3 = new MyJLabel();
 		if(oggettoCaricato == null || oggettoCaricato.getImmagine(2) == null)
 			lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
-		}
+		
 		lblAggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto3.add(Box.createVerticalGlue());
 		panelFoto3.add(Box.createHorizontalGlue());
@@ -329,6 +332,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = lblAggiungiFoto3.aggiungiImmagineDaFileSystem();});
 		lblAggiungiFoto3.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto3.setOnMouseExitedAction(() -> {});
+		
+		if(oggettoCaricato != null && oggettoCaricato.getImmagine(2) != null) {
+			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
+			foto3Caricata = true;
+		}
 		
 		panelDelleFoto.add(panelFoto1);
 		panelDelleFoto.add(panelFoto2);
@@ -503,7 +511,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
 		categorieOggettoComboBox = this.creaCBCategorieOggetto(oggettoCaricato);
-		categorieOggettoComboBox.setSelectedIndex(0);
 		categorieOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(categorieOggettoComboBox);
 		
@@ -543,7 +550,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelPerComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.setBackground(MyJPanel.uninaLightColor);
 		condizioniOggettoComboBox = this.creaCBCondizioniOggetto(oggettoCaricato);
-		condizioniOggettoComboBox.setSelectedIndex(0);
 		condizioniOggettoComboBox.setAlignmentX(LEFT_ALIGNMENT);
 		panelPerComboBox.add(condizioniOggettoComboBox);
 		
@@ -609,6 +615,8 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 			    }
 			}
 		}
+		else
+			categorieOggetto.setSelectedIndex(0);
 		
 		return categorieOggetto;
 	}
@@ -638,7 +646,8 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 			    }
 			}
 		}
-	
+		else
+			condizioniOggetto.setSelectedIndex(0);
 		return condizioniOggetto;
 	}
 	
@@ -746,12 +755,20 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		}
 	}
 
-	public Oggetto passaOggettoAlController() {
+	public Oggetto passaOggettoAlController(Oggetto oggettoDaModificare) {
 		CategoriaEnum categoriaSelezionata = CategoriaEnum.confrontaConStringa(this.categorieOggettoComboBox.getSelectedItem().toString());
 		CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggettoComboBox.getSelectedItem().toString());
 		
-		Oggetto oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
-				this.lblAggiungiFoto1.getImmagineInByte(), true);
+		Oggetto oggettoDaPassare;
+		if(oggettoDaModificare == null)
+			oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
+					this.lblAggiungiFoto1.getImmagineInByte(), true);
+		else {
+			oggettoDaModificare.setCategoria(categoriaSelezionata);
+			oggettoDaModificare.setCondizioni(condizioneSelezionata);
+			oggettoDaModificare.setDescrizione(this.inserisciDescrizioneTextA.getText());
+			oggettoDaPassare = oggettoDaModificare;
+		}
 		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
 		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
 		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
