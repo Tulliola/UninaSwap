@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
+import net.miginfocom.swing.MigLayout;
 import utilities.MyJAnnuncioPanel;
 import utilities.MyJAnnuncioSegnalabilePanel;
 import utilities.MyJButton;
@@ -27,10 +28,27 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 	
 	public PanelVisualizzaAnnunciUltimatiUtente(Controller controller, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		super(controller, annunciToDisplay, messaggioAllUtente, parentFrame);
+		
+		MyJPanel panelInternoCentrale = new MyJPanel();
+		panelInternoCentrale.setLayout(new BoxLayout(panelInternoCentrale, BoxLayout.Y_AXIS));
+		panelInternoCentrale.setAlignmentX(CENTER_ALIGNMENT);
+		panelInternoCentrale.setBackground(uninaLightColor);
+		
 		MyJLabel lblMessaggio = new MyJLabel("Qui troverai tutti i tuoi annunci andati a buon fine"
-				, new Font("Ubuntu Sans", Font.ITALIC, 16));
+				, new Font("Ubuntu Sans", Font.ITALIC, 20));
 		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
-		panelDefault.add(lblMessaggio);
+		
+		MyJLabel lblIcona = new MyJLabel();
+		lblIcona.setAlignmentX(CENTER_ALIGNMENT);
+		lblIcona.aggiungiImmagineScalata("images/iconaAnnunciUltimati.png", 100, 100, false);
+		
+		panelInternoCentrale.add(lblMessaggio);
+		panelInternoCentrale.add(Box.createVerticalStrut(20));
+		panelInternoCentrale.add(lblIcona);
+		
+		panelDefault.add(Box.createVerticalGlue());
+		panelDefault.add(panelInternoCentrale);
+		panelDefault.add(Box.createVerticalGlue());
 	}
 
 	private MyJPanel creaPanelVisualizzaOffertaAccettata(Annuncio annuncio) {
@@ -108,9 +126,25 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 
 		
 		if(!panelAnnunciVendita.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			panelAnnunciVendita.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setAlignmentX(CENTER_ALIGNMENT);
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelAnnunciVendita.add(lblNonCiSonoAnnunci);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+
+			panelAnnunciVendita.add(panelInterno, "align center center");
 		}
 	}
 
@@ -136,9 +170,25 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		
 		
 		if(!panelAnnunciScambio.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			panelAnnunciScambio.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setAlignmentX(CENTER_ALIGNMENT);
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelAnnunciScambio.add(lblNonCiSonoAnnunci);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+
+			panelAnnunciScambio.add(panelInterno, "align center center");
 		}
 	}
 
@@ -164,9 +214,25 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		
 		
 		if(!panelAnnunciRegalo.hasPanels()) {
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
+			panelAnnunciRegalo.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setAlignmentX(CENTER_ALIGNMENT);
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
-			panelAnnunciRegalo.add(lblNonCiSonoAnnunci);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+
+			panelAnnunciRegalo.add(panelInterno, "align center center");
 		}
 	}
 }

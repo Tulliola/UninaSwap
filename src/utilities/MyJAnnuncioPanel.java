@@ -17,6 +17,8 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
@@ -33,7 +35,6 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 	
 	public MyJAnnuncioPanel(Controller controller, Annuncio annuncioToAdd) {
 		mainController = controller;
-
 		this.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.add(this.creaPanelAnnuncio(annuncioToAdd));

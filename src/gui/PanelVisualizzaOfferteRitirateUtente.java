@@ -16,6 +16,7 @@ import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
 import dto.OffertaScambio;
+import net.miginfocom.swing.MigLayout;
 import utilities.MyJAnnuncioPanel;
 import utilities.MyJButton;
 import utilities.MyJFrame;
@@ -29,6 +30,27 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 
 	public PanelVisualizzaOfferteRitirateUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame, Controller controller) {
 		super(offerteToDisplay, messaggioAllUtente, parentFrame, controller);
+		
+		MyJPanel panelInternoCentrale = new MyJPanel();
+		panelInternoCentrale.setLayout(new BoxLayout(panelInternoCentrale, BoxLayout.Y_AXIS));
+		panelInternoCentrale.setAlignmentX(CENTER_ALIGNMENT);
+		panelInternoCentrale.setBackground(uninaLightColor);
+		
+		MyJLabel lblMessaggio = new MyJLabel("Qui troverai tutti le tue offerte che hai ritirato"
+				, new Font("Ubuntu Sans", Font.ITALIC, 20));
+		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
+		
+		MyJLabel lblIcona = new MyJLabel();
+		lblIcona.setAlignmentX(CENTER_ALIGNMENT);
+		lblIcona.aggiungiImmagineScalata("images/iconaCancellato.png", 100, 100, false);
+		
+		panelInternoCentrale.add(lblMessaggio);
+		panelInternoCentrale.add(Box.createVerticalStrut(20));
+		panelInternoCentrale.add(lblIcona);
+		
+		panelDefault.add(Box.createVerticalGlue());
+		panelDefault.add(panelInternoCentrale);
+		panelDefault.add(Box.createVerticalGlue());
 	}
 	
 	private MyJAnnuncioPanel settaPanel(Controller mainController, Offerta offerta) {
@@ -77,14 +99,32 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 	protected void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteVendita) {
 		for(int i = offerteVendita.size() - 1; i >= 0; i--) {
 			if(offerteVendita.get(i) instanceof OffertaRegalo) {
+				System.out.print(i);
 				panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
 			}
 
 
-			if(!panelOfferteAcquisto.hasPanels()) {
-				MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di acquisto da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-				panelOfferteAcquisto.add(lblNoOfferte);
-			}
+		}
+		
+		if(!panelOfferteAcquisto.hasPanels()) {
+			panelOfferteAcquisto.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono offerte di acquisto da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+			
+			panelOfferteAcquisto.add(panelInterno, "align center center");
 		}
 	}
 
@@ -96,10 +136,27 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 				panelOfferteScambio.add(settaPanel(mainController, offerteScambio.get(i)));
 			}
 
-			if(!panelOfferteScambio.hasPanels()) {
-				MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-				panelOfferteScambio.add(lblNoOfferte);
-			}
+		}
+		
+		if(!panelOfferteScambio.hasPanels()) {
+			panelOfferteScambio.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono offerte di scambio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+			
+			panelOfferteScambio.add(panelInterno, "align center center");
 		}
 	}
 
@@ -110,11 +167,27 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 			if(offerteRegalo.get(i) instanceof OffertaRegalo) {
 				panelOfferteRegalo.add(settaPanel(mainController, offerteRegalo.get(i)));
 			}
+		}
+		
+		if(!panelOfferteRegalo.hasPanels()) {
+			panelOfferteRegalo.setLayout(new MigLayout("fill, align center center"));
 			
-			if(!panelOfferteRegalo.hasPanels()) {
-				MyJLabel lblNoOfferte = new MyJLabel("Non ci sono offerte di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 16));
-				panelOfferteRegalo.add(lblNoOfferte);
-			}
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setBackground(uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono offerte di regalo da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+			
+			panelOfferteRegalo.add(panelInterno, "align center center");
 		}
 	}
 }

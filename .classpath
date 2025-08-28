@@ -18,5 +18,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/UninaSwap/miglayout_library/miglayout-swing-11.4.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="flatlaf_library/flatlaf-3.6.1.jar"/>
+	<classpathentry kind="lib" path="flatlaf_library/flatlaf-intellij-themes-3.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

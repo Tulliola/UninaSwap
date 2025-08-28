@@ -175,9 +175,9 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		panelAnnunciVendita.setLayout(new MigLayout("wrap 2", "[]", ""));
 		panelAnnunciVendita.setBackground(uninaLightColor);
 		panelAnnunciScambio.setLayout(new MigLayout("wrap 2", "[]", ""));
-		panelAnnunciVendita.setBackground(uninaLightColor);
+		panelAnnunciScambio.setBackground(uninaLightColor);
 		panelAnnunciRegalo.setLayout(new MigLayout("wrap 2", "[]", ""));
-		panelAnnunciVendita.setBackground(uninaLightColor);
+		panelAnnunciRegalo.setBackground(uninaLightColor);
 		
 		panelDefault.setLayout(new BoxLayout(panelDefault, BoxLayout.Y_AXIS));
 		panelDefault.setPreferredSize(scrollPane.getViewport().getSize());

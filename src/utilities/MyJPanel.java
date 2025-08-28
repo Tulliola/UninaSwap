@@ -13,6 +13,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 public class MyJPanel extends JPanel {
 	public static final Color uninaColor = new Color(65, 106, 144);
 	public static final Color uninaLightColor = new Color(198, 210, 222);

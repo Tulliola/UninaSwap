@@ -47,6 +47,7 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 	protected MyJPanel panelOfferteAcquisto = new MyJPanel();
 	protected MyJPanel panelOfferteScambio = new MyJPanel();
 	protected MyJPanel panelOfferteRegalo = new MyJPanel();
+	protected MyJPanel panelDefault = new MyJPanel();
 	
 	public PanelVisualizzaOfferteUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame, Controller controller) {
 		this.mainController = controller;
@@ -82,10 +83,16 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 		panelOfferteScambio.setLayout(new MigLayout("wrap 2", "[]", ""));
 		panelOfferteRegalo.setLayout(new MigLayout("wrap 2", "[]", ""));
 		
+		panelDefault.setLayout(new BoxLayout(panelDefault, BoxLayout.Y_AXIS));
+		panelDefault.setPreferredSize(scrollPane.getViewport().getSize());
+		panelDefault.setBackground(uninaLightColor);
+		
 		settaPanelOfferteAcquisto(offerteToDisplay);
 		settaPanelOfferteScambio(offerteToDisplay);
 		settaPanelOfferteRegalo(offerteToDisplay);
 		
+		panelCentrale.add(panelDefault, "Default");
+		((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Default");
 		panelCentrale.add(panelOfferteAcquisto, "Offerte acquisto");
 		panelCentrale.add(panelOfferteScambio, "Offerte scambio");
 		panelCentrale.add(panelOfferteRegalo, "Offerte regalo");

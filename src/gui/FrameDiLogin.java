@@ -2,10 +2,13 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -85,8 +88,9 @@ public class FrameDiLogin extends MyJFrame {
 		this.setSize(new Dimension(500, 800));
 		
 		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
-		Image iconaFinestra = iconaFinestraPartenza.getImage();
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
 		this.setIconImage(iconaFinestra);
+		
 		
 		contentPane = new MyJPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

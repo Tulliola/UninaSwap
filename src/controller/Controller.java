@@ -12,6 +12,11 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+
 import database.dao.implementazioni.*;
 import database.dao.interfacce.*;
 
@@ -77,12 +82,6 @@ public class Controller {
 	public Controller() {
 		this.definisciConnessioneAlDB();
 		
-//		dialogSegnalaUtente = new DialogSegnalaUtente(this);
-//		dialogSegnalaUtente.setVisible(true);
-		
-//		PanelVisualizzaReport panel = new PanelVisualizzaReport();
-//		panel.setVisible(true);
-		
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
 			
@@ -91,6 +90,13 @@ public class Controller {
 	static {
 		UIManager.put("ToolTip.font", new Font("Ubuntu Sans", Font.BOLD, 16));
 		UIManager.put("ToolTip.background", Color.white);
+		 try {
+	            UIManager.setLookAndFeel(new FlatMacLightLaf());
+//	            FlatMacLightLaf.setup();
+//	            UIManager.put("Panel.border", BorderFactory.createLineBorder(Color.GRAY, 1));
+	        } catch (UnsupportedLookAndFeelException e) {
+	            e.printStackTrace();
+	        }
 	}
 	
 	public static void main(String[] args) {
@@ -210,7 +216,10 @@ public class Controller {
 //			((Timer) evento.getSource()).stop();
 //        }).start();
 
-		frameHomePage.setVisible(true);
+		SwingUtilities.invokeLater(() -> {
+			frameHomePage.setVisible(true);
+		});
+
 		
 	}
 	
