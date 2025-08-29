@@ -410,8 +410,8 @@ public class PanelHomePageAnnunci extends JPanel{
 			});
 		}
 		
-		panelAnnunci.revalidate();
-		panelAnnunci.repaint();
+//		panelAnnunci.revalidate();
+//		panelAnnunci.repaint();
 		
 		SwingUtilities.invokeLater(() -> {
 			JScrollBar scrollBarDelPanel = scrollPanelAnnunci.getVerticalScrollBar();

@@ -18,6 +18,7 @@ import dto.AnnuncioVendita;
 import dto.Offerta;
 
 import dto.OffertaAcquisto;
+import dto.OffertaRegalo;
 import dto.Oggetto;
 import dto.ProfiloUtente;
 import dto.SedeUniversita;
@@ -98,8 +99,13 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 					Annuncio annuncioRiferito = annuncio;
 					double prezzoOfferto = rs.getDouble("Prezzo_offerto");
 					
-					OffertaAcquisto offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegnaScelta, stato,
+					Offerta offertaToAdd;
+					if(prezzoOfferto > 0)
+						offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegnaScelta, stato,
 							annuncioRiferito, prezzoOfferto);
+					else
+						offertaToAdd = new OffertaRegalo(offerente, momentoProposta, modConsegnaScelta, stato,
+								annuncioRiferito);
 					
 					if(modConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta)) {
 						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);

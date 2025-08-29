@@ -517,6 +517,8 @@ public class DialogOffertaRegalo extends MyJDialog {
 					break;
 				}
 			}
+			if(incontriBG.getSelection() == null && primoIncontroInserito != null)
+				primoIncontroInserito.setSelected(true);
 		}
 		
 		sottoPanelIncontro.setVisible(false);

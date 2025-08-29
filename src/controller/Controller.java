@@ -93,8 +93,8 @@ public class Controller {
 		UIManager.put("ToolTip.background", Color.white);
 		 try {
 	            UIManager.setLookAndFeel(new FlatMacLightLaf());
-	            UIManager.put("TextComponent.arc", 20); // angoli stondati
-	            UIManager.put("TextComponent.padding", new Insets(5, 10, 5, 10)); // padding interno opzionale
+	            UIManager.put("TextComponent.arc", 20); 
+	            UIManager.put("TextComponent.padding", new Insets(5, 10, 5, 10)); 
 
 //	            FlatMacLightLaf.setup();
 //	            UIManager.put("Panel.border", BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -378,7 +378,7 @@ public class Controller {
 		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
 			dialogOffertaScambio.dispose();
 			for(FrameCaricaOggettoScambio frameCaricaOggetti: frameCaricaOggetto) {
-				if(frameCaricaOggetti.isDisplayable())
+				if(frameCaricaOggetti != null && frameCaricaOggetti.isDisplayable())
 					frameCaricaOggetti.dispose();
 			}
 		}

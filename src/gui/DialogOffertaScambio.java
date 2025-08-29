@@ -662,6 +662,8 @@ public class DialogOffertaScambio extends MyJDialog {
 					break;
 				}
 			}
+			if(incontriBG.getSelection() == null && primoIncontroInserito != null)
+				primoIncontroInserito.setSelected(true);
 		}
 		
 		sottoPanelIncontro.setVisible(false);
@@ -883,8 +885,10 @@ public class DialogOffertaScambio extends MyJDialog {
 	}
 	
 	private OffertaScambio organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offerta) {
-		
-		ArrayList<Oggetto> oggettiPrecedentementeOfferti = offerta.getOggettiOfferti();
+		ArrayList<Oggetto> oggettiPrecedentementeOfferti = new ArrayList<Oggetto>();
+		if(offerta != null) {
+			oggettiPrecedentementeOfferti = offerta.getOggettiOfferti();
+		}
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 		ArrayList<Oggetto> oggettiCaricati = new ArrayList<Oggetto>();
 		oggettiCaricati.addAll(oggettiPrecedentementeOfferti);

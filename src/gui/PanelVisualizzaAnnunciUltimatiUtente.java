@@ -106,7 +106,6 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 	@Override
 	protected void settaPanelAnnunciVendita(ArrayList<Annuncio> annunciToDisplay) {
 
-//		panelAnnunciVendita.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
 		
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciVendita.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {

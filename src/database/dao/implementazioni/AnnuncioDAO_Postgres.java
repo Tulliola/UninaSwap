@@ -216,7 +216,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			ArrayList<Offerta> offerte = new ArrayList<Offerta>();
 			offerte.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 			offerte.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
-			offerte.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 			
 			annuncioRecuperato.setOfferteRicevute(offerte);
 		}

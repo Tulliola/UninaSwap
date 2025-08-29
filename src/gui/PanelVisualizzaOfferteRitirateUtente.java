@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
@@ -60,8 +61,8 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 				MyJPanel panelSottoDescrizione = new MyJPanel();
 				panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-				panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-				panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
+				panelSottoDescrizione.setPreferredSize(new Dimension(425, 46));
+				panelSottoDescrizione.setMaximumSize(new Dimension(425, 46));
 				panelSottoDescrizione.setBackground(Color.white);
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta ritirata");
@@ -85,6 +86,7 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 				
 				MyJLabel lblOffertaRitirata = new MyJLabel("Hai ritirato quest'offerta", new Font("Ubuntu Sans", Font.BOLD, 13));
 				lblOffertaRitirata.setAlignmentX(LEFT_ALIGNMENT);
+				lblOffertaRitirata.setBorder(new EmptyBorder(5, 5, 5, 5));
 				
 				panelDataScadenza.add(Box.createVerticalGlue());
 				panelDataScadenza.add(lblOffertaRitirata);
@@ -98,7 +100,7 @@ public class PanelVisualizzaOfferteRitirateUtente extends PanelVisualizzaOfferte
 	@Override
 	protected void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteVendita) {
 		for(int i = offerteVendita.size() - 1; i >= 0; i--) {
-			if(offerteVendita.get(i) instanceof OffertaRegalo) {
+			if(offerteVendita.get(i) instanceof OffertaAcquisto) {
 				System.out.print(i);
 				panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
 			}

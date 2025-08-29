@@ -10,6 +10,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
@@ -180,6 +181,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 				
 				MyJLabel lblOffertaAccettata = new MyJLabel("Congratulazioni! La tua offerta a questo annuncio è stata accettata", new Font("Ubuntu Sans", Font.BOLD, 13));
 				lblOffertaAccettata.setAlignmentX(LEFT_ALIGNMENT);
+				lblOffertaAccettata.setBorder(new EmptyBorder(5, 5, 5, 5));
 				
 				panelDataScadenza.add(Box.createVerticalGlue());
 				panelDataScadenza.add(lblOffertaAccettata);

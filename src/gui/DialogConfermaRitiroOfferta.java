@@ -73,6 +73,7 @@ public class DialogConfermaRitiroOfferta extends JDialog {
 		siButton.setDownAction(()->{});
 		siButton.setDefaultAction(()->{
 			mainController.aggiornaStatoOfferta(offerta, StatoOffertaEnum.Ritirata);
+			mainController.passaAFrameHomePage(this);
 		});
 		
 		panelBottoni.add(annullaButton);

@@ -51,6 +51,7 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		coloreCasualePerBG = tonalitaDiUninaLightColor[generatore.nextInt(5)];
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.add(this.creaPanelOfferta(offertaToAdd));
+		this.setTitle("Offerta accettata per "+offertaToAdd.getAnnuncioRiferito().getNome());
 		
 		this.pack();
 		this.setLocationRelativeTo(parentFrame);

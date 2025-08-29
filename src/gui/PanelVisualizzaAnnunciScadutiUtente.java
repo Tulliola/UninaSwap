@@ -56,8 +56,8 @@ public class PanelVisualizzaAnnunciScadutiUtente extends PanelVisualizzaAnnunciU
 
 	private MyJPanel creaPanelRiepilogoScadenza(Annuncio annuncio) {
 		MyJPanel panelRiepilogoScadenza = new MyJPanel();
-		panelRiepilogoScadenza.setPreferredSize(new Dimension(425, 50));
-		panelRiepilogoScadenza.setMaximumSize(new Dimension(425, 50));
+		panelRiepilogoScadenza.setPreferredSize(new Dimension(425, 46));
+		panelRiepilogoScadenza.setMaximumSize(new Dimension(425, 46));
 		panelRiepilogoScadenza.setLayout(new BoxLayout(panelRiepilogoScadenza, BoxLayout.X_AXIS));
 		panelRiepilogoScadenza.setAlignmentX(CENTER_ALIGNMENT);
 		panelRiepilogoScadenza.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, MyJPanel.uninaColorClicked));

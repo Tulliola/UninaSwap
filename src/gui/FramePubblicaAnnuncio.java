@@ -501,10 +501,11 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		});
 		componentToAdd.setText(stringaDiDefaultPerTextA);
 		
-		JScrollPane scrollPaneTesto = new JScrollPane(componentToAdd);
-		scrollPaneTesto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPaneTesto.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panelCentrale.add(scrollPaneTesto, BorderLayout.CENTER);
+//		JScrollPane scrollPaneTesto = new JScrollPane(componentToAdd);
+//		scrollPaneTesto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+//		scrollPaneTesto.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		panelCentrale.add(scrollPaneTesto, BorderLayout.CENTER);
+		panelCentrale.add(componentToAdd, BorderLayout.CENTER);	
 		
 		panelDiErrore.setPreferredSize(new Dimension(1225, 30));
 		panelDiErrore.setMaximumSize(new Dimension(1225, 30));

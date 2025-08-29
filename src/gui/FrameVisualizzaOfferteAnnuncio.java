@@ -10,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -21,17 +22,20 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import controller.Controller;
 import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaScambio;
 import dto.Oggetto;
+import net.miginfocom.swing.MigLayout;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJOffertaPanel;
 import utilities.MyJPanel;
+import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
 
 public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
@@ -68,14 +72,18 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		scrollPane = new JScrollPane(panelOfferte);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		SwingUtilities.invokeLater(() -> {
+			scrollPane.getViewport().setViewPosition(new Point(0, 0));
+		});
 		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
 		contentPane.add(scrollPane);
 		this.setContentPane(contentPane);
 	}
 
 	private void settaPanelCentrale(ArrayList<Offerta> offerte) {
-		panelCentrale.setLayout(new BorderLayout());
-		panelCentrale.setPreferredSize(new Dimension(1100, 900));
+		panelCentrale.setLayout(new MigLayout("wrap 2", "[]", ""));
+//		panelCentrale.setPreferredSize(new Dimension(1100, 900));
+		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
 		panelLaterale.add(lblTornaAllaHomePage, 0);
@@ -89,11 +97,24 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		contentPane.add(panelLaterale, BorderLayout.WEST);
 		if(offerte.isEmpty()) {
 			this.setTitle("Non ci sono offerte per questo annuncio");
-			MyJLabel noOfferte = new MyJLabel();
-			noOfferte.setText("Non ci sono offerte attive per questo annuncio");
-			noOfferte.setFont(new Font("Ubuntu Sans", Font.ITALIC, 16));
-			noOfferte.setAlignmentX(CENTER_ALIGNMENT);
-			panelOfferte.add(noOfferte);
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setAlignmentX(CENTER_ALIGNMENT);
+			panelInterno.setBackground(MyJPanel.uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+
+			panelOfferte.add(panelInterno, "align center center");
 		}
 		else
 			panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);
@@ -101,7 +122,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 
 	private MyJPanel settaPanelOfferte(ArrayList<Offerta> offerte) {
 		panelOfferte.setBackground(MyJPanel.uninaLightColor);
-		panelOfferte.setPreferredSize(getDimension(offerte));
+		panelOfferte.setLayout(new MigLayout("wrap 2", "[]", ""));
 		for(Offerta offerta: offerte) {
 			panelOfferte.add(new MyJOffertaPanel(offerta, mainController) {
 
@@ -113,6 +134,12 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 				@Override
 				public void settaAzioneAccettaButton() {
 					mainController.aggiornaStatoOfferta(offerta, StatoOffertaEnum.Accettata);
+					if(offerta instanceof OffertaAcquisto)
+						offerta.getAnnuncioRiferito().setStatoEnum(StatoAnnuncioEnum.Venduto);
+					else if(offerta instanceof OffertaScambio)
+						offerta.getAnnuncioRiferito().setStatoEnum(StatoAnnuncioEnum.Scambiato);
+					else
+						offerta.getAnnuncioRiferito().setStatoEnum(StatoAnnuncioEnum.Regalato);
 				}
 				
 				@Override
@@ -124,7 +151,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 					panelSpecifico.setBackground(coloreCasualePerBG);
 					
 					if(offerta.getPrezzoOfferto() != null) {
-						MyJLabel lblPrezzoOfferto = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto " + offerta.getPrezzoOfferto() + "€!");
+						MyJLabel lblPrezzoOfferto = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto " + offerta.getPrezzoOfferto() + " €!");
 						lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
 						lblPrezzoOfferto.setHorizontalTextPosition(SwingConstants.RIGHT);
 						
@@ -133,6 +160,13 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 					else if(offerta.getOggettiOfferti() != null && offerta.getOggettiOfferti().size() != 0)
 						settaPanelSpecificoToOggettiInScambio(offerta, panelSpecifico);
 						
+					else {
+						MyJLabel lblRegalo = new MyJLabel(offerta.getUtenteProprietario().getUsername()+ " ha chiesto l'oggetto in regalo");
+						lblRegalo.aggiungiImmagineScalata("images/iconaAnnuncioRegaloColored.png", 25, 25, false);
+						lblRegalo.setHorizontalTextPosition(SwingConstants.RIGHT);
+						
+						panelSpecifico.add(lblRegalo);
+					}
 					return panelSpecifico;
 				}
 

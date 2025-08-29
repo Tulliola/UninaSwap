@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
@@ -61,8 +62,8 @@ public class PanelVisualizzaOfferteRifiutateUtente extends PanelVisualizzaOffert
 			public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 				MyJPanel panelSottoDescrizione = new MyJPanel();
 				panelSottoDescrizione.setLayout(new BoxLayout(panelSottoDescrizione, BoxLayout.X_AXIS));
-				panelSottoDescrizione.setPreferredSize(new Dimension(425, 50));
-				panelSottoDescrizione.setMaximumSize(new Dimension(425, 50));
+				panelSottoDescrizione.setPreferredSize(new Dimension(425, 46));
+				panelSottoDescrizione.setMaximumSize(new Dimension(425, 46));
 				panelSottoDescrizione.setBackground(Color.white);
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta rifiutata");
@@ -87,6 +88,7 @@ public class PanelVisualizzaOfferteRifiutateUtente extends PanelVisualizzaOffert
 				
 				MyJLabel lblOffertaRifiutata = new MyJLabel("Ci dispiace! Questa tua offerta è stata rifiutata", new Font("Ubuntu Sans", Font.BOLD, 13));
 				lblOffertaRifiutata.setAlignmentX(LEFT_ALIGNMENT);
+				lblOffertaRifiutata.setBorder(new EmptyBorder(5, 5, 5, 5));
 				
 				panelDataScadenza.add(Box.createVerticalGlue());
 				panelDataScadenza.add(lblOffertaRifiutata);

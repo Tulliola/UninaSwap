@@ -326,7 +326,9 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		inserisciPrezzoTextField = new MyJTextField();
 		
 		if(annuncioPerOfferta instanceof AnnuncioVendita) {
-			Double prezzoOffertaMinimo = annuncioPerOfferta.getPrezzoIniziale() * 0.4;
+			Double prezzoOffertaMinimo = annuncioPerOfferta.getPrezzoIniziale() * 100;
+			prezzoOffertaMinimo = Math.ceil(prezzoOffertaMinimo);
+			prezzoOffertaMinimo /= 100;
 			inserisciPrezzoTextField.setText(prezzoOffertaMinimo.toString());
 		}
 		inserisciPrezzoTextField.setPreferredSize(new Dimension (100, 25));		
@@ -617,14 +619,17 @@ public class DialogOffertaAcquisto extends MyJDialog {
 					break;
 				}
 			}
+			if(incontriBG.getSelection() == null && primoIncontroInserito != null)
+				primoIncontroInserito.setSelected(true);
 		}
 
 		sottoPanelIncontro.setVisible(false);
 				
 		primaModalitaInserita.doClick();
 		
-		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro"))))
-			primoIncontroInserito.doClick();
+//		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro()))) {
+//			primoIncontroInserito.doClick();
+//		}
 		
 		panelModalitaConsegnaScelta.add(lblModalitaScelta);
 		panelModalitaConsegnaScelta.add(sottoPanelModalitaScelta);
