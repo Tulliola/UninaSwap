@@ -219,7 +219,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 	}
 
 	@Override
-	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
+	public void updateOfferta(Offerta offertaDaModificare) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, Prezzo_offerto = ?, idUfficio = ?"
@@ -287,7 +287,8 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			ps.setDouble(9, prezzoOfferto);
 			
 			if(modalitaConsegna.equals("Ritiro in posta")) {
-				ps.setInt(10, recuperaIdUfficio(offertaDaModificare.getUfficioRitiro().getNome()));
+				UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+				ps.setInt(10, ufficioDAO.recuperaIdUfficio(offertaDaModificare.getUfficioRitiro().getNome()));
 				ps.setNull(2, Types.VARCHAR);
 			}
 			else
@@ -298,20 +299,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			
 			ps.executeUpdate();
 			
-			return offertaDaModificare;
 		}
 	}
 
-	private Integer recuperaIdUfficio(String nome) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idUfficio FROM Ufficio_postale WHERE nome = ?")){
-				ps.setString(1, nome);
-				try(ResultSet rs = ps.executeQuery()){
-					if(rs.next()) {
-						return rs.getInt("idUfficio");
-					}
-					else
-						return null;
-				}
-		}
-	}
 }

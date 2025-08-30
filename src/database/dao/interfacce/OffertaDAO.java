@@ -16,6 +16,5 @@ public interface OffertaDAO {
 	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException;
 	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException;
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException;
-	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException;
 }
 

@@ -2,6 +2,7 @@ package dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import utilities.GiornoEnum;
 import utilities.ModConsegnaEnum;
@@ -12,8 +13,10 @@ public class OffertaScambio extends Offerta {
 	Integer idOfferta;
 	
 	//Attributi derivati da relazioni
+	private int numOggettiOffribili = 3;
 	private ArrayList<Oggetto> oggettiOfferti = new ArrayList<>();
-
+	
+	
 	public OffertaScambio(ProfiloUtente offerente, int idOfferta, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito, ArrayList<Oggetto> oggettiOfferti) {
 		super(offerente, momentoProposta, modalitaConsegnaScelta, stato, annuncioRiferito);
@@ -43,6 +46,10 @@ public class OffertaScambio extends Offerta {
 
 	public void setOggettiOfferti(ArrayList<Oggetto> oggettiOfferti) {
 		this.oggettiOfferti = oggettiOfferti;
+	}
+	
+	public int getNumOggettiOffribili() {
+		return numOggettiOffribili;
 	}
 	
 	@Override

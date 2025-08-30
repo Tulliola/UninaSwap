@@ -84,8 +84,8 @@ public abstract class PanelVisualizzaOfferteUtente extends MyJPanel {
 		panelOfferteRegalo.setLayout(new MigLayout("wrap 2", "[]", ""));
 		
 		panelDefault.setLayout(new BoxLayout(panelDefault, BoxLayout.Y_AXIS));
-		panelDefault.setPreferredSize(scrollPane.getViewport().getSize());
-		panelDefault.setBackground(uninaLightColor);
+		panelDefault.revalidate();
+		panelDefault.setBackground(uninaLightColor);			
 		
 		settaPanelOfferteAcquisto(offerteToDisplay);
 		settaPanelOfferteScambio(offerteToDisplay);

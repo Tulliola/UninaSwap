@@ -232,107 +232,100 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 		}
 	}
 
-
-	@Override
-	public Offerta updateOfferta(Offerta offertaModificata, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
-		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
-
-		
-		int n = oggettiPrecedentementeOfferti.size();
-		int m = offertaModificata.getOggettiOfferti().size();
-		
-		if(n == m) {
-			for(int i = 0; i < n; i++) {
-				oggettoDAO.updateOggetto(offertaModificata.getOggettiOfferti().get(i));
-			}
-		}
-		else if(n < m) {
-			for(int i = 0; i < n; i++) {
-				oggettoDAO.updateOggetto(offertaModificata.getOggettiOfferti().get(i));
-			}
-			
-			for(int i = n; i < m; i++) {
-				Integer idOggetto = oggettoDAO.inserisciOggetto(offertaModificata.getOggettiOfferti().get(i), offertaModificata.getUtenteProprietario().getEmail());
-				try(PreparedStatement psInserisciOggettoOfferto = connessioneDB.prepareStatement("INSERT INTO Oggetto_offerto VALUES (?, ?)")){
-					psInserisciOggettoOfferto.setInt(1, idOggetto);
-					psInserisciOggettoOfferto.setInt(2, offertaModificata.getIdOfferta());
-					psInserisciOggettoOfferto.executeUpdate();
-				}
-			}
-		}
-		else {
-			for(int i = 0; i < m; i++) {
-				oggettoDAO.updateOggetto(offertaModificata.getOggettiOfferti().get(i));
-			}
-			
-			for(int i = m; i < n; i++) {
-				oggettoDAO.deleteOggetto(offertaModificata.getOggettiOfferti().get(i));
-			}
-		}
-			
-		String newNota = offertaModificata.getNota();
-		String newModalitaConsegnaScelta = offertaModificata.getModalitaConsegnaScelta();
-		String newMessaggioMotivazionale = offertaModificata.getMessaggioMotivazionale();
-		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_scambio SET "
-				+ " idUfficio = ?, Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?,"
-				+ " Giorno_incontro = ?, Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?"
-				+ " WHERE idOfferta = ?")){
-			
-			if(newModalitaConsegnaScelta.equals("Ritiro in posta")) 
-				ps.setInt(1, recuperaIdUfficio(offertaModificata.getUfficioRitiro().getNome()));
-			else 
-				ps.setNull(1, Types.INTEGER);
-			
-			if(newNota != null)
-				ps.setString(2, newNota);
-			else
-				ps.setNull(2, Types.VARCHAR);
-			
-			if(newModalitaConsegnaScelta.equals("Spedizione"))
-				ps.setString(3, offertaModificata.getIndirizzoSpedizione());
-			else
-				ps.setNull(3, Types.VARCHAR);
-			
-			if(newModalitaConsegnaScelta.equals("Incontro")) {
-				ps.setString(4, offertaModificata.getOraInizioIncontro());
-				ps.setString(5, offertaModificata.getOraFineIncontro());
-				ps.setString(6, offertaModificata.getGiornoIncontro());
-				ps.setString(7, offertaModificata.getSedeDIncontroScelta().getNome());
-			}
-			else {
-				ps.setNull(4, Types.VARCHAR);
-				ps.setNull(5, Types.VARCHAR);
-				ps.setNull(6, Types.VARCHAR);
-				ps.setNull(7, Types.VARCHAR);
-			}
-			
-			ps.setString(8, newModalitaConsegnaScelta);
-			
-			if(newMessaggioMotivazionale != null)
-				ps.setString(9, newMessaggioMotivazionale);
-			else
-				ps.setNull(9, Types.VARCHAR);
-			
-			ps.setInt(10, offertaModificata.getIdOfferta());
-			
-			ps.executeUpdate();
-		}
-		
-		
-		return offertaModificata;
-	}
 	
-	private Integer recuperaIdUfficio(String nome) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idUfficio FROM Ufficio_postale WHERE nome = ?")){
-				ps.setString(1, nome);
-				try(ResultSet rs = ps.executeQuery()){
-					if(rs.next()) {
-						return rs.getInt("idUfficio");
+	@Override
+	public void updateOfferta(Offerta offertaModificata, ArrayList<String> operazioniDaEseguire) throws SQLException {
+		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
+		
+		try {
+			connessioneDB.setAutoCommit(false);
+
+			for(int i = 0; i < offertaModificata.getOggettiOfferti().size(); i++) {
+				
+				if(operazioniDaEseguire.get(i).equals("UPDATE"))
+					oggettoDAO.updateOggetto(offertaModificata.getOggettiOfferti().get(i));
+				else if(operazioniDaEseguire.get(i).equals("INSERT")) {
+					Integer idOggetto = oggettoDAO.inserisciOggetto(offertaModificata.getOggettiOfferti().get(i), offertaModificata.getUtenteProprietario().getEmail());
+					
+					try(PreparedStatement psInserisciOggettoOfferto = connessioneDB.prepareStatement("INSERT INTO Oggetto_offerto VALUES (?, ?)")){
+						psInserisciOggettoOfferto.setInt(1, idOggetto);
+						psInserisciOggettoOfferto.setInt(2, offertaModificata.getIdOfferta());
+						psInserisciOggettoOfferto.executeUpdate();
 					}
-					else
-						return null;
+					
+					offertaModificata.getOggettiOfferti().get(i).setIdOggetto(idOggetto);
 				}
+				else
+					oggettoDAO.deleteOggetto(offertaModificata.getOggettiOfferti().get(i).getIdOggetto());
+			}
+			
+			for(int i = offertaModificata.getOggettiOfferti().size()-1; i >= 0; i--)
+				if(operazioniDaEseguire.get(i).equals("DELETE"))
+					offertaModificata.getOggettiOfferti().remove(i);
+			
+			String newNota = offertaModificata.getNota();
+			String newModalitaConsegnaScelta = offertaModificata.getModalitaConsegnaScelta();
+			String newMessaggioMotivazionale = offertaModificata.getMessaggioMotivazionale();
+			
+			try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_scambio SET "
+					+ " idUfficio = ?, Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?,"
+					+ " Giorno_incontro = ?, Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?"
+					+ " WHERE idOfferta = ?")){
+				
+				if(newModalitaConsegnaScelta.equals("Ritiro in posta")) {
+					UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+					ps.setInt(1, ufficioDAO.recuperaIdUfficio(offertaModificata.getUfficioRitiro().getNome()));
+				}
+				else 
+					ps.setNull(1, Types.INTEGER);
+				
+				if(newNota != null)
+					ps.setString(2, newNota);
+				else
+					ps.setNull(2, Types.VARCHAR);
+				
+				if(newModalitaConsegnaScelta.equals("Spedizione"))
+					ps.setString(3, offertaModificata.getIndirizzoSpedizione());
+				else
+					ps.setNull(3, Types.VARCHAR);
+				
+				if(newModalitaConsegnaScelta.equals("Incontro")) {
+					ps.setString(4, offertaModificata.getOraInizioIncontro());
+					ps.setString(5, offertaModificata.getOraFineIncontro());
+					ps.setString(6, offertaModificata.getGiornoIncontro());
+					ps.setString(7, offertaModificata.getSedeDIncontroScelta().getNome());
+				}
+				else {
+					ps.setNull(4, Types.VARCHAR);
+					ps.setNull(5, Types.VARCHAR);
+					ps.setNull(6, Types.VARCHAR);
+					ps.setNull(7, Types.VARCHAR);
+				}
+				
+				ps.setString(8, newModalitaConsegnaScelta);
+				
+				if(newMessaggioMotivazionale != null)
+					ps.setString(9, newMessaggioMotivazionale);
+				else
+					ps.setNull(9, Types.VARCHAR);
+				
+				ps.setInt(10, offertaModificata.getIdOfferta());
+				
+				ps.executeUpdate();
+			}
 		}
+		catch(SQLException exc) {
+			connessioneDB.rollback();
+
+			System.out.println(exc.getErrorCode());
+			System.out.println(exc.getMessage());
+			System.out.println(exc.getSQLState());
+			throw exc;
+		}
+		finally {
+			connessioneDB.setAutoCommit(true);
+		}
+		
 	}
+
 }

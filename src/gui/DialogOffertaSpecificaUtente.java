@@ -1,4 +1,4 @@
-package utilities;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,7 +7,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,8 +21,12 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Offerta;
+import utilities.MyJDialog;
+import utilities.MyJLabel;
+import utilities.MyJPanel;
 
-public class DialogOffertaAccettataAnnuncio extends MyJDialog {
+
+public class DialogOffertaSpecificaUtente extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
 	private static final Color[] tonalitaDiUninaLightColor = new Color[5]; 
@@ -39,25 +42,21 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		tonalitaDiUninaLightColor[2] = new Color(198, 209, 221);
 		tonalitaDiUninaLightColor[3] = new Color(237, 241, 245);
 		tonalitaDiUninaLightColor[4] = new Color(255, 255, 255);
-	}	
-		
+	}
 	
-	public DialogOffertaAccettataAnnuncio(Offerta offertaToAdd, Controller controller, JFrame parentFrame) {
-		mainController = controller;
-
-		
+	public DialogOffertaSpecificaUtente(Offerta offertaToDisplay, Controller controller, Container container) {
 		this.setModal(true);
-		Random generatore = new Random();
-		coloreCasualePerBG = tonalitaDiUninaLightColor[generatore.nextInt(5)];
-		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		this.add(this.creaPanelOfferta(offertaToAdd));
-		this.setTitle("Offerta accettata per "+offertaToAdd.getAnnuncioRiferito().getNome());
+		this.setSize(new Dimension(800, 400));
+		this.setTitle("Dettagli offerta");
+		this.mainController = controller;
 		
-		this.pack();
-		this.setLocationRelativeTo(parentFrame);
+		this.add(creaPanelOfferta(offertaToDisplay));
+		this.setLocationRelativeTo(container);
 	}
 
-	protected MyJPanel creaPanelOfferta(Offerta offertaToAdd) {
+
+
+	private MyJPanel creaPanelOfferta(Offerta offertaToDisplay) {
 		MyJPanel offertaPanel = new MyJPanel();
 		offertaPanel.setLayout(new BorderLayout());
 		offertaPanel.setPreferredSize(new Dimension(larghezza, altezza));
@@ -65,20 +64,22 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		offertaPanel.setBorder(BorderFactory.createLineBorder(MyJPanel.uninaColorClicked, 2));
 		offertaPanel.setBackground(coloreCasualePerBG);
 
-		offertaPanel.add(this.creaPanelSuperiore(offertaToAdd), BorderLayout.NORTH);
-		offertaPanel.add(this.creaPanelInfoOfferta(offertaToAdd), BorderLayout.CENTER);
+		offertaPanel.add(this.creaPanelSuperiore(offertaToDisplay), BorderLayout.NORTH);
+		offertaPanel.add(this.creaPanelInfoOfferta(offertaToDisplay), BorderLayout.CENTER);
 		
 		return offertaPanel;
 	}
 
-	private MyJPanel creaPanelSuperiore(Offerta offertaToAdd) {
+
+
+	private MyJPanel creaPanelSuperiore(Offerta offertaToDisplay) {
 		MyJPanel panelSuperiore = new MyJPanel();
 		panelSuperiore.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelSuperiore.setBackground(MyJPanel.uninaColorClicked);
 		panelSuperiore.setPreferredSize(new Dimension(larghezza, 35));
 		panelSuperiore.setMaximumSize(new Dimension(larghezza, 35));
 		
-		MyJLabel lblOfferente = new MyJLabel("Offerta di "+offertaToAdd.getUtenteProprietario().getUsername());
+		MyJLabel lblOfferente = new MyJLabel("Tua offerta all'annuncio "+offertaToDisplay.getAnnuncioRiferito().getNome());
 		lblOfferente.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		lblOfferente.setForeground(Color.white);
 		
@@ -87,56 +88,40 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 	}
 
 
-	private MyJPanel creaPanelInfoOfferta(Offerta offertaToAdd) {
+
+	private MyJPanel creaPanelInfoOfferta(Offerta offertaToDisplay) {
 		MyJPanel panelInfoOfferta = new MyJPanel();
 		panelInfoOfferta.setLayout(new BoxLayout(panelInfoOfferta, BoxLayout.Y_AXIS));
 		panelInfoOfferta.setBackground(coloreCasualePerBG);
 		
-		if(offertaToAdd.getMessaggioMotivazionale() != null) {
-			JTextArea messaggioMotivazionaleTextArea = new JTextArea(offertaToAdd.getMessaggioMotivazionale());
-			messaggioMotivazionaleTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-			messaggioMotivazionaleTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
-			messaggioMotivazionaleTextArea.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));
-			messaggioMotivazionaleTextArea.setEditable(false);
-			messaggioMotivazionaleTextArea.setEnabled(false);
-			messaggioMotivazionaleTextArea.setDisabledTextColor(Color.black);
-			messaggioMotivazionaleTextArea.setOpaque(false);
-			messaggioMotivazionaleTextArea.setLineWrap(true);
-			messaggioMotivazionaleTextArea.setWrapStyleWord(true);
-			messaggioMotivazionaleTextArea.setAlignmentX(LEFT_ALIGNMENT);
-			
-			messaggioMotivazionaleTextArea.setFont(messaggioMotivazionaleTextArea.getFont().deriveFont(Font.ITALIC));
-			panelInfoOfferta.add(messaggioMotivazionaleTextArea);
-		}
-		
-		panelInfoOfferta.add(creaPanelModalitaConsegnaScelta(offertaToAdd));
-		panelInfoOfferta.add(creaPanelNota(offertaToAdd));
-		panelInfoOfferta.add(creaPanelSpecifico(offertaToAdd));
+		panelInfoOfferta.add(creaPanelModalitaConsegnaScelta(offertaToDisplay));
+		panelInfoOfferta.add(creaPanelNota(offertaToDisplay));
+		panelInfoOfferta.add(creaPanelSpecifico(offertaToDisplay));
 
-		
 		return panelInfoOfferta;
 	}
 
 
-	private MyJPanel creaPanelSpecifico(Offerta offertaToAdd) {
+
+	private MyJPanel creaPanelSpecifico(Offerta offertaToDisplay) {
 		MyJPanel panelSpecifico = new MyJPanel();
 		panelSpecifico.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelSpecifico.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 60));
 		panelSpecifico.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 60));		
 		panelSpecifico.setBackground(coloreCasualePerBG);
 		
-		if(offertaToAdd.getPrezzoOfferto() != null) {
-			MyJLabel lblPrezzoOfferto = new MyJLabel("Prezzo offerto: €"+offertaToAdd.getPrezzoOfferto());
+		if(offertaToDisplay.getPrezzoOfferto() != null) {
+			MyJLabel lblPrezzoOfferto = new MyJLabel("Hai offerto " + offertaToDisplay.getPrezzoOfferto() + "€!");
 			lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
 			lblPrezzoOfferto.setHorizontalTextPosition(SwingConstants.RIGHT);
 			
 			panelSpecifico.add(lblPrezzoOfferto);
 		}
-		else if(offertaToAdd.getOggettiOfferti() != null && offertaToAdd.getOggettiOfferti().size() != 0)
-			settaPanelSpecificoToOggettiInScambio(offertaToAdd, panelSpecifico);
+		else if(offertaToDisplay.getOggettiOfferti() != null && offertaToDisplay.getOggettiOfferti().size() != 0)
+			settaPanelSpecificoToOggettiInScambio(offertaToDisplay, panelSpecifico);
 		
 		else {
-			MyJLabel lblRegalo = new MyJLabel("L'oggetto è stato chiesto in regalo");
+			MyJLabel lblRegalo = new MyJLabel("Hai chiesto l'oggetto in regalo");
 			lblRegalo.setAlignmentX(LEFT_ALIGNMENT);
 			panelSpecifico.add(lblRegalo);
 		}
@@ -144,18 +129,20 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		return panelSpecifico;
 	}
 
-	private void settaPanelSpecificoToOggettiInScambio(Offerta offertaToAdd, MyJPanel panelSpecifico) {
-		MyJLabel lblOggettiInCambio = new MyJLabel(offertaToAdd.getUtenteProprietario().getUsername()+" ti ha offerto ");
+
+
+	private void settaPanelSpecificoToOggettiInScambio(Offerta offertaToDisplay, MyJPanel panelSpecifico) {
+		MyJLabel lblOggettiInCambio = new MyJLabel("Hai offerto ");
 		lblOggettiInCambio.aggiungiImmagineScalata("images/iconaFrecceScambio.png", 25, 25, false);
 		lblOggettiInCambio.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		MyJLabel lblCliccabile =  new MyJLabel(String.valueOf(offertaToAdd.getOggettiOfferti().size()), Color.red);
+		MyJLabel lblCliccabile =  new MyJLabel(String.valueOf(offertaToDisplay.getOggettiOfferti().size()), Color.red);
 		lblCliccabile.aggiungiEffettoCliccabilitaPerTesto();
 		lblCliccabile.rendiLabelInteragibile();
 		
 		lblCliccabile.setOnMouseExitedAction(() -> {});
 		lblCliccabile.setOnMouseEnteredAction(() -> {});
-		lblCliccabile.setOnMouseClickedAction(() -> {mainController.passaADialogVisualizzaOggetti(offertaToAdd.getOggettiOfferti());});
+		lblCliccabile.setOnMouseClickedAction(() -> {mainController.passaADialogVisualizzaOggetti(offertaToDisplay.getOggettiOfferti());});
 		
 		MyJLabel lblOggetti = new MyJLabel(" oggetti!");
 		
@@ -164,76 +151,10 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		panelSpecifico.add(lblOggetti);
 	}
 
-	private MyJPanel creaPanelModalitaConsegnaScelta(Offerta offertaToAdd) {
-		MyJPanel panelWrapper = new MyJPanel();
-		panelWrapper.setLayout(new BoxLayout(panelWrapper, BoxLayout.Y_AXIS));
-		panelWrapper.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 120));
-		panelWrapper.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 120));
-		panelWrapper.setBackground(coloreCasualePerBG);
-		
-		MyJPanel panelModalitaConsegnaScelta = new MyJPanel();
-		panelModalitaConsegnaScelta.setBackground(coloreCasualePerBG);
-		panelModalitaConsegnaScelta.setLayout(new FlowLayout(FlowLayout.CENTER));
-		panelModalitaConsegnaScelta.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
-		panelModalitaConsegnaScelta.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
-		
-		MyJLabel lblModalita = new MyJLabel(offertaToAdd.getUtenteProprietario().getUsername()+" ha scelto " + offertaToAdd.getModalitaConsegnaScelta() + " come modalità di consegna!",
-				new Font("Ubuntu Sans", Font.PLAIN, 18));
 
-		
-		MyJPanel panelLuogoRitiro = new MyJPanel();
-		panelLuogoRitiro.setBackground(coloreCasualePerBG);
-		panelLuogoRitiro.setLayout(new BoxLayout(panelLuogoRitiro, BoxLayout.X_AXIS));
-		panelLuogoRitiro.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
-		panelLuogoRitiro.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
-		
-		MyJLabel lblIconaUomoParlante = new MyJLabel();
-		lblIconaUomoParlante.aggiungiImmagineScalata("images/iconaUomoParlante.png", 25, 25, false);
-		
-		JTextArea luogoTextArea = new JTextArea();
-		luogoTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-		luogoTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
-		luogoTextArea.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));
-		luogoTextArea.setFont(new Font("Ubuntu Sans", Font.ITALIC, 18));
-		luogoTextArea.setEditable(false);
-		luogoTextArea.setEnabled(false);
-		luogoTextArea.setDisabledTextColor(Color.black);
-		luogoTextArea.setOpaque(false);
-		luogoTextArea.setLineWrap(true);
-		luogoTextArea.setWrapStyleWord(true);
-		luogoTextArea.setAlignmentX(LEFT_ALIGNMENT);
-		luogoTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 16));
-		
-		if(offertaToAdd.getModalitaConsegnaScelta().equals("Spedizione")) {
-			lblModalita.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
-			luogoTextArea.setText("\"L'indirizzo a cui spedire l'articolo è "+offertaToAdd.getIndirizzoSpedizione() + "\"");
-		}
-		else if(offertaToAdd.getModalitaConsegnaScelta().equals("Incontro")) {
-			lblModalita.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
-			luogoTextArea.setText("\"Preferirei un incontro presso "+offertaToAdd.getSedeDIncontroScelta().getNome()+" alle "+offertaToAdd.getOraInizioIncontro()
-			+"-"+offertaToAdd.getOraFineIncontro()+" il "+offertaToAdd.getGiornoIncontro() + "\"");
-		}
-		else {
-			lblModalita.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
-			luogoTextArea.setText("\"L'ufficio postale in cui ritirerei l'articolo è "+offertaToAdd.getUfficioRitiro()+"\"");
-		}
-		
-		lblModalita.setHorizontalTextPosition(SwingConstants.RIGHT);
-		
-		panelModalitaConsegnaScelta.add(Box.createVerticalGlue());
-		panelModalitaConsegnaScelta.add(lblModalita);
-		panelModalitaConsegnaScelta.add(Box.createVerticalGlue());
-		panelLuogoRitiro.add(lblIconaUomoParlante);
-		panelLuogoRitiro.add(luogoTextArea);
-		
-		panelWrapper.add(panelModalitaConsegnaScelta);
-		panelWrapper.add(panelLuogoRitiro);
-		
-		return panelWrapper;
-	}
 
-	private MyJPanel creaPanelNota(Offerta offertaToAdd) {
-		String nota = offertaToAdd.getNota();
+	private MyJPanel creaPanelNota(Offerta offertaToDisplay) {
+		String nota = offertaToDisplay.getNota();
 		
 		MyJPanel panelNota = new MyJPanel();
 		panelNota.setLayout(new BoxLayout(panelNota, BoxLayout.X_AXIS));
@@ -260,5 +181,75 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 		
 		panelNota.add(notaTextArea);
 		return panelNota;
+	}
+
+
+
+	private MyJPanel creaPanelModalitaConsegnaScelta(Offerta offertaToDisplay) {
+		MyJPanel panelWrapper = new MyJPanel();
+		panelWrapper.setLayout(new BoxLayout(panelWrapper, BoxLayout.Y_AXIS));
+		panelWrapper.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 120));
+		panelWrapper.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 120));
+		panelWrapper.setBackground(coloreCasualePerBG);
+		
+		MyJPanel panelModalitaConsegnaScelta = new MyJPanel();
+		panelModalitaConsegnaScelta.setBackground(coloreCasualePerBG);
+		panelModalitaConsegnaScelta.setLayout(new FlowLayout(FlowLayout.CENTER));
+		panelModalitaConsegnaScelta.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
+		panelModalitaConsegnaScelta.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
+		
+		MyJLabel lblModalita = new MyJLabel("Hai scelto " + offertaToDisplay.getModalitaConsegnaScelta() + " come modalità di consegna!",
+				new Font("Ubuntu Sans", Font.PLAIN, 18));
+
+		
+		MyJPanel panelLuogoRitiro = new MyJPanel();
+		panelLuogoRitiro.setBackground(coloreCasualePerBG);
+		panelLuogoRitiro.setLayout(new BoxLayout(panelLuogoRitiro, BoxLayout.X_AXIS));
+		panelLuogoRitiro.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
+		panelLuogoRitiro.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
+		
+		MyJLabel lblIconaUomoParlante = new MyJLabel();
+		lblIconaUomoParlante.aggiungiImmagineScalata("images/iconaUomoParlante.png", 25, 25, false);
+		
+		JTextArea luogoTextArea = new JTextArea();
+		luogoTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+		luogoTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
+		luogoTextArea.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));
+		luogoTextArea.setFont(new Font("Ubuntu Sans", Font.ITALIC, 18));
+		luogoTextArea.setEditable(false);
+		luogoTextArea.setEnabled(false);
+		luogoTextArea.setDisabledTextColor(Color.black);
+		luogoTextArea.setOpaque(false);
+		luogoTextArea.setLineWrap(true);
+		luogoTextArea.setWrapStyleWord(true);
+		luogoTextArea.setAlignmentX(LEFT_ALIGNMENT);
+		luogoTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 16));
+		
+		if(offertaToDisplay.getModalitaConsegnaScelta().equals("Spedizione")) {
+			lblModalita.aggiungiImmagineScalata("images/iconaSpedizione.png", 25, 25, false);
+			luogoTextArea.setText("\"L'indirizzo a cui spedire l'articolo è "+offertaToDisplay.getIndirizzoSpedizione() + "\"");
+		}
+		else if(offertaToDisplay.getModalitaConsegnaScelta().equals("Incontro")) {
+			lblModalita.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
+			luogoTextArea.setText("\"Preferirei un incontro presso "+offertaToDisplay.getSedeDIncontroScelta().getNome()+" alle "+offertaToDisplay.getOraInizioIncontro()
+			+"-"+offertaToDisplay.getOraFineIncontro()+" il "+offertaToDisplay.getGiornoIncontro() + "\"");
+		}
+		else {
+			lblModalita.aggiungiImmagineScalata("images/iconaRitiroInPosta.png", 25, 25, false);
+			luogoTextArea.setText("\"L'ufficio postale in cui ritirerei l'articolo è "+offertaToDisplay.getUfficioRitiro()+"\"");
+		}
+		
+		lblModalita.setHorizontalTextPosition(SwingConstants.RIGHT);
+		
+		panelModalitaConsegnaScelta.add(Box.createVerticalGlue());
+		panelModalitaConsegnaScelta.add(lblModalita);
+		panelModalitaConsegnaScelta.add(Box.createVerticalGlue());
+		panelLuogoRitiro.add(lblIconaUomoParlante);
+		panelLuogoRitiro.add(luogoTextArea);
+		
+		panelWrapper.add(panelModalitaConsegnaScelta);
+		panelWrapper.add(panelLuogoRitiro);
+		
+		return panelWrapper;
 	}
 }

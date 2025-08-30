@@ -23,8 +23,8 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 		String descrizioneOggetto = oggettoToAdd.getDescrizione();
 		String categoriaOggetto = oggettoToAdd.getCategoria();
 		String condizioniOggetto = oggettoToAdd.getCondizioni();
+		int idOggettoInserito; 
 		
-
 		String inserimentoOggetto = "INSERT INTO Oggetto (Email, Descrizione, Categoria, Condizioni) VALUES (?, ?, ?, ?) RETURNING idOggetto";
 		
 		try (PreparedStatement psInserimentoOggetto = connessioneDB.prepareStatement(inserimentoOggetto)){
@@ -33,9 +33,8 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 			psInserimentoOggetto.setString(2, descrizioneOggetto);
 			psInserimentoOggetto.setString(3, categoriaOggetto);
 			psInserimentoOggetto.setString(4, condizioniOggetto);
-
-			int idOggettoInserito; 
 			
+
 			try(ResultSet rsInserimentoOggetto = psInserimentoOggetto.executeQuery()){
 				rsInserimentoOggetto.next();
 				idOggettoInserito = rsInserimentoOggetto.getInt("idOggetto");
@@ -53,9 +52,10 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 					}
 				}
 			}
-						
-			return idOggettoInserito;
 		}
+
+		
+		return idOggettoInserito;
 	}
 	
 	@Override
@@ -164,25 +164,35 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 	}
 
 	@Override
-	public Oggetto deleteOggetto(Oggetto oggettoDaModificare) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("DELETE FROM Oggetto WHERE idOggetto = ?")){
-			ps.setInt(1, oggettoDaModificare.getIdOggetto());
+	public void deleteOggetto(int idOggetto) throws SQLException {
+		try(PreparedStatement psEliminaOggetto = connessioneDB.prepareStatement("DELETE FROM Oggetto WHERE idOggetto = ?")){
+						
+			psEliminaOggetto.setInt(1, idOggetto);
 			
-			ps.executeUpdate();
+			psEliminaOggetto.executeUpdate();
 		}
-		return oggettoDaModificare;
 	}
 
 	@Override
 	public void updateOggetto(Oggetto oggettoDaModificare) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Oggetto SET"
+		
+		
+		try(PreparedStatement psAggiornaOggetto = connessioneDB.prepareStatement("UPDATE Oggetto SET"
 				+ " Descrizione = ?, Categoria = ?, Condizioni = ? WHERE idOggetto = ?")){
-			ps.setString(1, oggettoDaModificare.getDescrizione());
-			ps.setString(2, oggettoDaModificare.getCategoria());
-			ps.setString(3, oggettoDaModificare.getCondizioni());
-			ps.setInt(4, oggettoDaModificare.getIdOggetto());
+			psAggiornaOggetto.setString(1, oggettoDaModificare.getDescrizione());
+			psAggiornaOggetto.setString(2, oggettoDaModificare.getCategoria());
+			psAggiornaOggetto.setString(3, oggettoDaModificare.getCondizioni());
+			psAggiornaOggetto.setInt(4, oggettoDaModificare.getIdOggetto());
 			
-			ps.executeUpdate();
+			psAggiornaOggetto.executeUpdate();
+
+//			
+//			for(int i = 0; i < 3; i++) {
+//				try(PreparedStatement psAggiornaFotoOggetto = connessioneDB.prepareStatement("UPDATE Immagine SET"
+//						+ "File_immagine = ? WHERE idOggetto = ?")) {
+//					
+//				}
+//			}
 		}
 	}
 }

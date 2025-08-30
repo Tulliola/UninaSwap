@@ -115,63 +115,12 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	public ArrayList<Offerta> recuperaOfferteDiAnnuncio(Annuncio annuncio) throws SQLException {
 		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
-//		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-//		
-//		try(PreparedStatement ps = connessioneDB.prepareStatement("((SELECT O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
-//				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-//				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_ACQUISTO AS O"
-//				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio "
-//				+ " WHERE O.idAnnuncio = ? AND Tipo_annuncio = 'Regalo') UNION (SELECT"
-//				+ " O.email, O.idannuncio, idufficio, momento_proposta, nota, indirizzo_spedizione,"
-//				+ " ora_inizio_incontro, ora_fine_incontro, giorno_incontro, sede_incontro,"
-//				+ " modalita_consegna_scelta, O.stato, messaggio_motivazionale FROM OFFERTA_SCAMBIO AS O"
-//				+ " JOIN ANNUNCIO AS A ON O.idAnnuncio = A.idAnnuncio"
-//				+ " WHERE O.idAnnuncio = ? AND Tipo_annuncio = 'Regalo') ORDER BY momento_proposta DESC)")){
-//			
-//			ps.setInt(1, annuncio.getIdAnnuncio());
-//			ps.setInt(2, annuncio.getIdAnnuncio());
-//			
-//			try(ResultSet rs = ps.executeQuery()){
-//				while(rs.next()) {
-//					Offerta offertaToAdd;
-//					
-//					ProfiloUtente utenteOfferente = utenteDAO.recuperaUtenteNonLoggatoConEmail(rs.getString("Email"));
-//					Timestamp momentoProposta = rs.getTimestamp("Momento_proposta");
-//					ModConsegnaEnum modConsegnaScelta = ModConsegnaEnum.confrontaConStringa(rs.getString("Modalita_consegna_scelta"));
-//					StatoOffertaEnum stato = StatoOffertaEnum.confrontaConDB(rs.getString("Stato"));
-//					Annuncio annuncioRiferito = annuncio;
-//					
-//					offertaToAdd = new OffertaRegalo(utenteOfferente, momentoProposta, modConsegnaScelta, stato,
-//							annuncioRiferito);
-//					
-//					if(rs.getString("Messaggio_motivazionale") != null) {
-//						offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
-//					}
-//					
-//					if(modConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta)) {
-//						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-//						UfficioPostale ufficioScelto = ufficioDAO.recuperaUfficioPostaleConId(rs.getInt("idUfficio"));
-//						offertaToAdd.setUfficioRitiro(ufficioScelto);
-//						
-//					}
-//					else if(modConsegnaScelta.equals(ModConsegnaEnum.Spedizione))
-//						offertaToAdd.setIndirizzoSpedizione(rs.getString("Indirizzo_spedizione"));
-//					else {
-//						SedeUniversitaDAO_Postgres sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
-//						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
-//						offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
-//						offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
-//						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
-//						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
-//					}
-//					
-//					offertaToAdd.setNota(rs.getString("Nota"));
-//					offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
-//					
-//					toReturn.add(offertaToAdd);
-//				}
-//			}
-//		}
+		OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+		OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+		
+		toReturn.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncio));
+		toReturn.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncio));
+		
 		return toReturn;				
 	}
 
@@ -268,7 +217,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	}
 
 	@Override
-	public Offerta updateOfferta(Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
+	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, idUfficio = ?"
@@ -335,7 +284,8 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 			
 			
 			if(modalitaConsegna.equals("Ritiro in posta")) {
-				ps.setInt(9, recuperaIdUfficio(offertaDaModificare.getUfficioRitiro().getNome()));
+				UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
+				ps.setInt(9, ufficioDAO.recuperaIdUfficio(offertaDaModificare.getUfficioRitiro().getNome()));
 				ps.setNull(2, Types.VARCHAR);
 			}
 			else
@@ -347,19 +297,6 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 			ps.executeUpdate();
 			
 			return offertaDaModificare;
-		}
-	}
-	
-	private Integer recuperaIdUfficio(String nome) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idUfficio FROM Ufficio_postale WHERE nome = ?")){
-				ps.setString(1, nome);
-				try(ResultSet rs = ps.executeQuery()){
-					if(rs.next()) {
-						return rs.getInt("idUfficio");
-					}
-					else
-						return null;
-				}
 		}
 	}
 		

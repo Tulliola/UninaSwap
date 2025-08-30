@@ -23,8 +23,6 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
-import utilities.DialogOffertaAccettataAnnuncio;
-import utilities.DialogOffertaSpecificaUtente;
 import utilities.ImmagineDiSistemaDAO;
 import utilities.MapAnnuncioDAOToOffertaDAO;
 import utilities.MapOffertaToOffertaDAO;
@@ -403,9 +401,8 @@ public class Controller {
 	
 	// Metodi di recupero
 	
-	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame, Oggetto oggettoEventualmenteModificato) {
-		System.out.println(indiceDelFrame);
-		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController(oggettoEventualmenteModificato);
+	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame) {
+		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
 		
 		return oggettoRecuperato;
 	}
@@ -556,11 +553,10 @@ public class Controller {
 
 
 	public void onModificaOffertaAcquistoButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaModificata) throws SQLException {
-		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaModificata, connessioneDB);
+		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
-		
-		offertaModificata = offertaDAO.updateOfferta(offertaModificata, null);
+		offertaDAO.updateOfferta(offertaModificata);
 		offertaModificata.getUtenteProprietario().aggiornaSaldo(-offertaModificata.getPrezzoOfferto());
 		utenteDAO.aggiornaSaldoUtente(offertaModificata.getUtenteProprietario(), 0);
 		
@@ -575,24 +571,34 @@ public class Controller {
 	}
 
 
-	public void onModificaOffertaScambioButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare, ArrayList<Oggetto> oggettiPrecedentementeOfferti) throws SQLException {
-		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
-
-		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare, oggettiPrecedentementeOfferti);
+	public void onModificaOffertaScambioButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare, ArrayList<String> operazioniDaEseguire) throws SQLException {
+		OffertaScambioDAO_Postgres offertaDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+		
+		offertaDAO.updateOfferta(offertaDaModificare, operazioniDaEseguire);
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
 		
-		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable())
+		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
 			dialogOffertaScambio.dispose();
+			for(FrameCaricaOggettoScambio frameCaricaOggetti: frameCaricaOggetto) {
+				if(frameCaricaOggetti != null && frameCaricaOggetti.isDisplayable())
+					frameCaricaOggetti.dispose();
+			}
+		}
 		
 		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
 	}
 
 
-	public void passaADialogOffertaScambioDaModificare(Offerta offerta) {
+	public void passaADialogOffertaScambioDaModificare(OffertaScambio offerta) {
+		
 		dialogOffertaScambio = new DialogOffertaScambio(offerta.getAnnuncioRiferito(), this, offerta);
+		
+		for(int i = 0; i < offerta.getOggettiOfferti().size(); i++)
+			frameCaricaOggetto[i] = new FrameCaricaOggettoScambio(this, i, offerta.getOggettiOfferti().get(i));
+		
 		dialogOffertaScambio.setVisible(true);
 	}
 
@@ -604,9 +610,9 @@ public class Controller {
 
 
 	public void onModificaOffertaRegaloButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) throws SQLException {
-		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaDaModificare, connessioneDB);
+		OffertaRegaloDAO_Postgres offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 		
-		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare, null);
+		offertaDaModificare = offertaDAO.updateOfferta(offertaDaModificare);
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -617,4 +623,5 @@ public class Controller {
 		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
 	}
+	
 }

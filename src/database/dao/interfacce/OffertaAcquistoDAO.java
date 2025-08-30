@@ -7,5 +7,5 @@ import dto.ProfiloUtente;
 import utilities.StatoOffertaEnum;
 
 public interface OffertaAcquistoDAO extends OffertaDAO{
-	
+	public void updateOfferta(Offerta offertaDaModificare) throws SQLException;
 }

@@ -1,5 +1,9 @@
 package database.dao.interfacce;
 
-public interface OffertaRegaloDAO {
+import java.sql.SQLException;
 
+import dto.Offerta;
+
+public interface OffertaRegaloDAO {
+	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException;
 }

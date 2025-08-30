@@ -185,8 +185,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		String nome = rs.getString("Nome");
 		Oggetto oggettoInAnnuncio = oggettoDAO.recuperaOggettoConId(rs.getInt("idOggetto"));
 
-//		OffertaDAO_Postgres offerteDAO = new OffertaDAO_Postgres(connessioneDB);
-
 		if(rs.getString("Tipo_annuncio").equals("Vendita")) {
 			OffertaAcquistoDAO_Postgres offerteDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioVendita(idAnnuncioRecuperato, spedizione, ritiroInPosta, incontro, 
@@ -206,16 +204,13 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 			annuncioRecuperato.setOfferteRicevute(offerteDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 		}
 		else {
-			OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
-			OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
 			OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utente, oggettoInAnnuncio
 			);
 			ArrayList<Offerta> offerte = new ArrayList<Offerta>();
-			offerte.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
-			offerte.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			offerte.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 			
 			annuncioRecuperato.setOfferteRicevute(offerte);
 		}

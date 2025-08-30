@@ -158,6 +158,7 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		ImageIcon img = new ImageIcon(immagine);
 		Image resizedImage = img.getImage().getScaledInstance(larghezza, altezza, Image.SCALE_SMOOTH);
 		ImageIcon resizeResult = new ImageIcon(resizedImage);
+		this.immagineInByte = immagine;
 		
 		if(isCliccabile)
 			this.aggiungiEffettoCliccabilitaPerImmagine();

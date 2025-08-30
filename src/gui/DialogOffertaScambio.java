@@ -12,6 +12,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -34,7 +35,7 @@ import javax.swing.border.EmptyBorder;
 import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
-import dto.Offerta;
+import dto.OffertaScambio;
 import dto.OffertaScambio;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
@@ -87,8 +88,10 @@ public class DialogOffertaScambio extends MyJDialog {
 	private String defaultStringPerCaricaOggettoLbl = "Carica il tuo oggetto!";
 	
 	private boolean isOggettoCaricato[] = new boolean[3];
+	private boolean isOggettoCaricatoPrimaDellaModifica[] = new boolean[3];
+	private ArrayList<String> operazioniDaEseguire;
 	private MyJTextField inserisciMessaggioTextField;
-	
+		
 	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
 		
@@ -101,7 +104,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		this.settaContentPane(annuncioPerOfferta, null);
 	}
 	
-	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller, Offerta offertaDaModificare) {
+	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller, OffertaScambio offertaDaModificare) {
 		
 		this.mainController = controller;
 		this.setSize(1200, 800);
@@ -113,7 +116,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		this.settaContentPane(annuncioPerOfferta, offertaDaModificare);
 	}
 	
-	private void settaContentPane(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private void settaContentPane(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		contentPane.setLayout(new BorderLayout());
 		
 		this.settaPanelProposteVenditore(annuncioPerOfferta);
@@ -305,7 +308,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelModalitaConsegnaProposte;
 	}
 	
-	private void settaPanelLaMiaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private void settaPanelLaMiaOfferta(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		panelLaMiaOfferta.setBackground(MyJPanel.uninaLightColor);
 		panelLaMiaOfferta.setLayout(new BorderLayout());
 		panelLaMiaOfferta.setPreferredSize(new Dimension(this.getWidth()/2, this.getHeight()));
@@ -325,7 +328,7 @@ public class DialogOffertaScambio extends MyJDialog {
 	}
 	
 
-	private MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		panelMieProposte = new MyJPanel();
 		panelMieProposte.setLayout(new BorderLayout());
 		
@@ -336,7 +339,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelMieProposte;
 	}
 	
-	private MyJPanel creaPanelCaricamentoOggetti(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private MyJPanel creaPanelCaricamentoOggetti(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		MyJPanel panelCaricamentoOggetti = new MyJPanel();
 		panelCaricamentoOggetti.setLayout(new BoxLayout(panelCaricamentoOggetti, BoxLayout.Y_AXIS));
 		panelCaricamentoOggetti.setAlignmentX(CENTER_ALIGNMENT);
@@ -356,17 +359,9 @@ public class DialogOffertaScambio extends MyJDialog {
 		lblCaricaOggetto[0].rendiLabelInteragibile();
 		lblCaricaOggetto[0].setOnMouseEnteredAction(() -> {});
 		lblCaricaOggetto[0].setOnMouseExitedAction(() -> {});
-		if(offertaDaModificare != null) {
-			if(offertaDaModificare.getOggettiOfferti().size() > 0 && offertaDaModificare.getOggettiOfferti().get(0) == null)
-				lblCaricaOggetto[0].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(0, null);});
-			else
-				lblCaricaOggetto[0].setOnMouseClickedAction(() -> {
-					mainController.passaAFrameCaricaOggetto(0, offertaDaModificare.getOggettiOfferti().get(0));
-				});
-		}
-		else {
-			lblCaricaOggetto[0].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(0, null);});
-		}
+		lblCaricaOggetto[0].setOnMouseClickedAction(() -> {
+			mainController.passaAFrameCaricaOggetto(0, null);
+		});
 		
 		lblCaricaOggetto[1] = new MyJLabel(this.defaultStringPerCaricaOggettoLbl);
 		lblCaricaOggetto[1].setAlignmentX(CENTER_ALIGNMENT);
@@ -374,49 +369,22 @@ public class DialogOffertaScambio extends MyJDialog {
 		lblCaricaOggetto[1].rendiLabelInteragibile();
 		lblCaricaOggetto[1].setOnMouseEnteredAction(() -> {});
 		lblCaricaOggetto[1].setOnMouseExitedAction(() -> {});
-		if(offertaDaModificare != null) {
-			if(offertaDaModificare.getOggettiOfferti().size() >= 2 && offertaDaModificare.getOggettiOfferti().get(1) == null)
-				lblCaricaOggetto[1].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(1, null);});
-			else if(offertaDaModificare.getOggettiOfferti().size() >= 2 && offertaDaModificare.getOggettiOfferti().get(1) != null)
-				lblCaricaOggetto[1].setOnMouseClickedAction(() -> {
-					mainController.passaAFrameCaricaOggetto(1, offertaDaModificare.getOggettiOfferti().get(1));
-				});
-			else
-				lblCaricaOggetto[1].setOnMouseClickedAction(() -> {
-					mainController.passaAFrameCaricaOggetto(1, null);
-				});
-		}
-		else {
+		lblCaricaOggetto[1].setOnMouseClickedAction(() -> {
+			mainController.passaAFrameCaricaOggetto(1, null);
+		});
 
-			lblCaricaOggetto[1].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(1, null);});
-		}
 		lblCaricaOggetto[2] = new MyJLabel(this.defaultStringPerCaricaOggettoLbl);
 		lblCaricaOggetto[2].setAlignmentX(CENTER_ALIGNMENT);
 		lblCaricaOggetto[2].aggiungiImmagineScalata("images/iconaAggiungiAnnuncio.png", 25, 25, true);
 		lblCaricaOggetto[2].rendiLabelInteragibile();
 		lblCaricaOggetto[2].setOnMouseEnteredAction(() -> {});
 		lblCaricaOggetto[2].setOnMouseExitedAction(() -> {});
-		if(offertaDaModificare != null) {
-			if(offertaDaModificare.getOggettiOfferti().size() >= 3 && offertaDaModificare.getOggettiOfferti().get(2) == null)
-				lblCaricaOggetto[2].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(2, null);});
-			else if(offertaDaModificare.getOggettiOfferti().size() >= 3 && offertaDaModificare.getOggettiOfferti().get(2) != null)
-				lblCaricaOggetto[2].setOnMouseClickedAction(() -> {
-					mainController.passaAFrameCaricaOggetto(2, offertaDaModificare.getOggettiOfferti().get(2));
-				});
-			else
-				lblCaricaOggetto[2].setOnMouseClickedAction(() -> {
-					mainController.passaAFrameCaricaOggetto(2, null);
-				});
-		}
-		else {
-			lblCaricaOggetto[2].setOnMouseClickedAction(() -> {mainController.passaAFrameCaricaOggetto(2, null);});
-		}
+		lblCaricaOggetto[2].setOnMouseClickedAction(() -> {
+			mainController.passaAFrameCaricaOggetto(2, null);
+		});
+
 		
-		if(offertaDaModificare != null) {
-			for(int i = 0; i < offertaDaModificare.getOggettiOfferti().size(); i++) {
-				aggiungiOggettoCaricato(i, "oggetto "+(i+1)+" offerto");
-			}
-		}
+		this.settaLabelEFlagSeOffertaDaModificare(offertaDaModificare);
 		
 		lblErroreCaricamentoOggetti = new MyJLabel(true);
 		lblErroreCaricamentoOggetti.setAlignmentX(CENTER_ALIGNMENT);
@@ -441,7 +409,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelCaricamentoOggetti;
 	}
 	
-	private MyJPanel creaPanelMessaggioMotivazionale(Offerta offertaDaModificare) {
+	private MyJPanel creaPanelMessaggioMotivazionale(OffertaScambio offertaDaModificare) {
 		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
 		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
 		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
@@ -475,7 +443,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelMessaggioMotivazionale;
 	}
 	
-	private MyJPanel creaPanelModalitaConsegnaScelta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private MyJPanel creaPanelModalitaConsegnaScelta(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		MyJPanel panelModalitaConsegnaScelta = new MyJPanel();
 		panelModalitaConsegnaScelta.setBackground(MyJPanel.uninaLightColor);
 		panelModalitaConsegnaScelta.setLayout(new BoxLayout(panelModalitaConsegnaScelta, BoxLayout.Y_AXIS));
@@ -642,13 +610,9 @@ public class DialogOffertaScambio extends MyJDialog {
 			SedeUniversita sedeScelta = null;
 			if(offertaDaModificare.getSedeDIncontroScelta() != null) {
 				oraInizioScelta = offertaDaModificare.getOraInizioIncontro();
-				System.out.println(offertaDaModificare.getOraInizioIncontro());
 				oraFineScelta = offertaDaModificare.getOraFineIncontro();
-				offertaDaModificare.getOraFineIncontro();
 				giornoScelto = GiornoEnum.confrontaConStringa(offertaDaModificare.getGiornoIncontro());
-				offertaDaModificare.getGiornoIncontro();
 				sedeScelta = offertaDaModificare.getSedeDIncontroScelta();
-				offertaDaModificare.getSedeDIncontroScelta();
 			}
 			for(AbstractButton radioButton: Collections.list(incontriBG.getElements())) {
 				
@@ -686,7 +650,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		return panelModalitaConsegnaScelta;
 	}
 	
-	private MyJPanel creaPanelNotaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private MyJPanel creaPanelNotaOfferta(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		MyJPanel panelNotaOfferta = new MyJPanel();
 		panelNotaOfferta.setLayout(new BorderLayout());
 		
@@ -749,7 +713,7 @@ public class DialogOffertaScambio extends MyJDialog {
 	}
 	
 
-	private MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		MyJPanel panelBottoni = new MyJPanel();
 		panelBottoni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelBottoni.setBackground(Color.orange);
@@ -757,15 +721,18 @@ public class DialogOffertaScambio extends MyJDialog {
 		panelBottoni.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 50));
 		panelBottoni.setBackground(new Color(220, 220, 220));
 		
-		MyJButton bottoneConfermaOfferta;
-		
+		MyJButton bottoneConfermaModificaOfferta;
+	
 		if(offertaDaModificare == null) {
-			bottoneConfermaOfferta = new MyJButton("Conferma la mia offerta!");
-			bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta, null);});
+			bottoneConfermaModificaOfferta = new MyJButton("Conferma la mia offerta!");
+			bottoneConfermaModificaOfferta.setDefaultAction(() -> {
+				this.clickBottoneConfermaOfferta(annuncioPerOfferta, null);
+			});
 		}
 		else {
-			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
-			bottoneConfermaOfferta.setDefaultAction(() -> {ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+			bottoneConfermaModificaOfferta = new MyJButton("Modifica la mia offerta!");
+			bottoneConfermaModificaOfferta.setDefaultAction(() -> {
+				ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
 				offertaDaModificare.setModalitaConsegnaScelta(modalitaConsegnaScelta);
 				if(modalitaConsegnaScelta.toString().equals("Spedizione")) {
 					offertaDaModificare.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
@@ -819,17 +786,19 @@ public class DialogOffertaScambio extends MyJDialog {
 			});
 		}
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
-		bottoneCiHoRipensato.setDefaultAction(() -> {mainController.passaAFrameHomePage(this);});
+		bottoneCiHoRipensato.setDefaultAction(() -> {
+			mainController.passaAFrameHomePage(this);
+		});
 		
 		panelBottoni.add(Box.createVerticalGlue());
 		panelBottoni.add(bottoneCiHoRipensato);
-		panelBottoni.add(bottoneConfermaOfferta);
+		panelBottoni.add(bottoneConfermaModificaOfferta);
 		panelBottoni.add(Box.createVerticalGlue());
 		
 		return panelBottoni;
 	}
 	
-	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+	private void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta, OffertaScambio offertaDaModificare) {
 		try {
 			this.nascondiLabelErrore(this.lblErroreSpedizione, this.lblErroreCaricamentoOggetti);
 			this.resettaBordiTextField(new EmptyBorder(5, 5, 5, 5), this.inserisciIndirizzoTextField);
@@ -843,10 +812,8 @@ public class DialogOffertaScambio extends MyJDialog {
 				mainController.onConfermaOffertaButtonClicked(newOfferta);
 			}
 			else {
-				System.out.println("Sono qui");
-				ArrayList<Oggetto> oggettiPrecedentementeOfferti = offertaDaModificare.getOggettiOfferti();
 				offertaDaModificare = this.organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
-				mainController.onModificaOffertaScambioButtonClicked(annuncioPerOfferta, offertaDaModificare, oggettiPrecedentementeOfferti);
+				mainController.onModificaOffertaScambioButtonClicked(annuncioPerOfferta, offertaDaModificare, operazioniDaEseguire);
 			}
 			
 		}
@@ -884,29 +851,47 @@ public class DialogOffertaScambio extends MyJDialog {
 			throw new OffertaScambioException("Devi caricare almeno un oggetto.");
 	}
 	
-	private OffertaScambio organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offerta) {
-		ArrayList<Oggetto> oggettiPrecedentementeOfferti = new ArrayList<Oggetto>();
-		if(offerta != null) {
-			oggettiPrecedentementeOfferti = offerta.getOggettiOfferti();
-		}
+	private OffertaScambio organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, OffertaScambio offerta) {
+		
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+
 		ArrayList<Oggetto> oggettiCaricati = new ArrayList<Oggetto>();
-		oggettiCaricati.addAll(oggettiPrecedentementeOfferti);
 		
-		for(int i = oggettiPrecedentementeOfferti.size(); i < isOggettoCaricato.length; i++)
-			if(isOggettoCaricato[i]) {
-				Oggetto oggettoCaricato;
-				oggettoCaricato = mainController.recuperaOggettoDaFrameCaricaOggetto(i, null);
-				
-				oggettiCaricati.add(oggettoCaricato);
-			}
-		Offerta offertaToAdd;
+		OffertaScambio offertaToAdd;
 		
-		if(offerta == null)
+		if(offerta == null) {
+			for(int i = 0; i < isOggettoCaricato.length; i++)
+				if(isOggettoCaricato[i]) {
+					Oggetto oggettoCaricato;
+					oggettoCaricato = mainController.recuperaOggettoDaFrameCaricaOggetto(i);
+					
+					oggettiCaricati.add(oggettoCaricato);
+				}
 			offertaToAdd = new OffertaScambio(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, oggettiCaricati);
+		}
 		else {
-			
-			((OffertaScambio)offerta).setOggettiOfferti(oggettiCaricati);
+			operazioniDaEseguire = new ArrayList<String>();
+
+			for(int i = 0; i < isOggettoCaricato.length; i++) {
+				if(isOggettoCaricato[i]) {
+
+					Oggetto oggettoToAdd = mainController.recuperaOggettoDaFrameCaricaOggetto(i);
+					oggettiCaricati.add(oggettoToAdd);
+					
+					if(isOggettoCaricatoPrimaDellaModifica[i]) {
+						oggettoToAdd.setIdOggetto(offerta.getOggettiOfferti().get(i).getIdOggetto());
+						operazioniDaEseguire.add("UPDATE");
+					}
+					else
+						operazioniDaEseguire.add("INSERT");
+				}
+				else if(isOggettoCaricatoPrimaDellaModifica[i]){
+					oggettiCaricati.add(offerta.getOggettiOfferti().get(i));
+					operazioniDaEseguire.add("DELETE");
+				}
+				
+			}
+			offerta.setOggettiOfferti(oggettiCaricati);
 			offertaToAdd = offerta;
 		}
 		
@@ -921,7 +906,7 @@ public class DialogOffertaScambio extends MyJDialog {
 			for (Enumeration<AbstractButton> buttons = this.incontriBG.getElements(); buttons.hasMoreElements();) {
 			    AbstractButton button = buttons.nextElement();
 			    if (button.getModel() == selectedModel) {
-			        rbSelezionato = (JRadioButton) button; // qui il cast è sicuro
+			        rbSelezionato = (JRadioButton) button;
 			        break;
 			    }
 			}
@@ -942,7 +927,7 @@ public class DialogOffertaScambio extends MyJDialog {
 		if(annuncioRiferito instanceof AnnuncioRegalo)
 			offertaToAdd.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
 		
-		return (OffertaScambio)offertaToAdd;
+		return offertaToAdd;
 	}
 
 	public void eliminaOggettoCaricato(int indiceDelFrameDaCuiRicevi) {
@@ -957,5 +942,29 @@ public class DialogOffertaScambio extends MyJDialog {
 		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		this.numeroOggettiCaricati++;
 		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = true;
+	}
+	
+	private void settaLabelEFlagSeOffertaDaModificare(OffertaScambio offertaDaModificare) {
+		if(offertaDaModificare != null) {
+			numeroOggettiCaricati = offertaDaModificare.getOggettiOfferti().size();
+
+			for(int i = 0; i < offertaDaModificare.getOggettiOfferti().size(); i++) {
+				lblCaricaOggetto[i].setText("Oggetto " + (i+1) + " offerto");
+				lblCaricaOggetto[i].aggiungiImmagineScalata("images/iconModify.png", 25, 25, false);
+				isOggettoCaricato[i] = true;
+				isOggettoCaricatoPrimaDellaModifica[i] = true;
+				
+				final int indiceAttuale = i;
+
+				lblCaricaOggetto[i].setOnMouseClickedAction(() -> {
+					if(isOggettoCaricato[indiceAttuale])
+						mainController.passaAFrameCaricaOggetto(indiceAttuale, offertaDaModificare.getOggettiOfferti().get(indiceAttuale));
+					else
+						mainController.passaAFrameCaricaOggetto(indiceAttuale, null);
+				});
+			}
+			
+		}
+		
 	}
 }

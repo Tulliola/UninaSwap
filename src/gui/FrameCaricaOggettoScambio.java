@@ -101,6 +101,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		mainController = controller;
 		this.indiceNellArrayDeiFrame = indiceNellArrayDeiFrame;
 		
+		if(oggettoCaricato != null)
+			isOggettoCaricato = true;
+		
 		this.settaContentPane(oggettoCaricato);
 	}
 
@@ -269,6 +272,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto1 = new MyJLabel();
 		if(oggettoCaricato == null)
 			lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
+			foto1Caricata = true;
+		}
 		
 		lblAggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto1.add(Box.createVerticalGlue());
@@ -282,11 +289,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto1.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto1.setOnMouseExitedAction(() -> {});
 
-		if(oggettoCaricato != null) {
-			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
-			foto1Caricata = true;
-		}
-		
 		MyJPanel panelFoto2 = new MyJPanel(Color.white);
 		panelFoto2.setPreferredSize(new Dimension(375, 500));
 		panelFoto2.setMaximumSize(new Dimension(375, 500));
@@ -295,6 +297,11 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto2 = new MyJLabel();
 		if(oggettoCaricato == null || oggettoCaricato.getImmagine(1) == null)
 			lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
+			foto2Caricata = true;			
+		}
+		
 		lblAggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto2.add(Box.createVerticalGlue());
 		panelFoto2.add(Box.createHorizontalGlue());
@@ -307,11 +314,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto2.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto2.setOnMouseExitedAction(() -> {});
 		
-		if(oggettoCaricato != null && oggettoCaricato.getImmagine(1) != null) {
-			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
-			foto2Caricata = true;
-		}
-		
 		MyJPanel panelFoto3 = new MyJPanel(Color.white);
 		panelFoto3.setPreferredSize(new Dimension(375, 500));
 		panelFoto3.setMaximumSize(new Dimension(375, 500));
@@ -320,6 +322,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto3 = new MyJLabel();
 		if(oggettoCaricato == null || oggettoCaricato.getImmagine(2) == null)
 			lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
+			foto3Caricata = true;
+		}		
 		
 		lblAggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
 		panelFoto3.add(Box.createVerticalGlue());
@@ -332,11 +338,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = lblAggiungiFoto3.aggiungiImmagineDaFileSystem();});
 		lblAggiungiFoto3.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto3.setOnMouseExitedAction(() -> {});
-		
-		if(oggettoCaricato != null && oggettoCaricato.getImmagine(2) != null) {
-			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
-			foto3Caricata = true;
-		}
 		
 		panelDelleFoto.add(panelFoto1);
 		panelDelleFoto.add(panelFoto2);
@@ -670,8 +671,22 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		bottoneTornaIndietro.setDefaultAction(() -> {mainController.tornaADialogOffertaScambio(this);});
 
 		bottoneCaricaOModificaOggetto.setText("Carica oggetto");
+		
+		if(this.isOggettoCaricato) {
+			bottoneEliminaOggetto = new MyJButton("Elimina oggetto");
+			bottoneEliminaOggetto.setPreferredSize(new Dimension(300, 100));
+			bottoneEliminaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+			bottoneEliminaOggetto.setDefaultAction(() -> {
+				mainController.tornaADialogOffertaScambioEliminandoFrame(this.indiceNellArrayDeiFrame);
+			});
 			
-		panelBottoni.add(bottoneTornaIndietro);
+			bottoneCaricaOModificaOggetto.setText("Modifica oggetto");
+			
+			panelBottoni.add(bottoneEliminaOggetto);
+		}
+		else
+			panelBottoni.add(bottoneTornaIndietro);
+		
 		panelBottoni.add(bottoneCaricaOModificaOggetto);
 		
 		return panelBottoni;
@@ -689,7 +704,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 				bottoneEliminaOggetto = new MyJButton("Elimina oggetto");
 				bottoneEliminaOggetto.setPreferredSize(new Dimension(300, 100));
 				bottoneEliminaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-				bottoneEliminaOggetto.setDefaultAction(() -> {mainController.tornaADialogOffertaScambioEliminandoFrame(this.indiceNellArrayDeiFrame);});
+				bottoneEliminaOggetto.setDefaultAction(() -> {
+					mainController.tornaADialogOffertaScambioEliminandoFrame(this.indiceNellArrayDeiFrame);
+				});
 				
 				bottoneCaricaOModificaOggetto.setText("Modifica oggetto");
 				
@@ -697,7 +714,8 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 				panelBottoni.add(bottoneEliminaOggetto, 0);
 			}
 			
-			this.isOggettoCaricato = true;
+			isOggettoCaricato = true;
+			
 			mainController.onCaricaOModificaOggettoButtonClicked(this.indiceNellArrayDeiFrame, this.nomeOggettoTextField.getText());
 		}
 		catch(OggettoException exc1) {
@@ -756,23 +774,28 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		}
 	}
 
-	public Oggetto passaOggettoAlController(Oggetto oggettoDaModificare) {
+	public Oggetto passaOggettoAlController() {
 		CategoriaEnum categoriaSelezionata = CategoriaEnum.confrontaConStringa(this.categorieOggettoComboBox.getSelectedItem().toString());
 		CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggettoComboBox.getSelectedItem().toString());
 		
 		Oggetto oggettoDaPassare;
-		if(oggettoDaModificare == null)
-			oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
+		oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
 					this.lblAggiungiFoto1.getImmagineInByte(), true);
-		else {
-			oggettoDaModificare.setCategoria(categoriaSelezionata);
-			oggettoDaModificare.setCondizioni(condizioneSelezionata);
-			oggettoDaModificare.setDescrizione(this.inserisciDescrizioneTextA.getText());
-			oggettoDaPassare = oggettoDaModificare;
-		}
-		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
-		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
+
+		oggettoDaPassare.setCategoria(categoriaSelezionata);
+		oggettoDaPassare.setCondizioni(condizioneSelezionata);
+		
 		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
+		
+		if(foto2Caricata)
+			oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
+		
+		if(foto3Caricata)
+			oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
+		
+		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
+		
+		
 		
 		return oggettoDaPassare;
 	}

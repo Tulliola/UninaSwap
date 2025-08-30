@@ -71,7 +71,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 					if(offerta instanceof OffertaAcquisto)
 						mainController.passaADialogOffertaAcquistoDaModificare(offerta);
 					else if(offerta instanceof OffertaScambio)
-						mainController.passaADialogOffertaScambioDaModificare(offerta);
+						mainController.passaADialogOffertaScambioDaModificare((OffertaScambio)offerta);
 					else {
 						mainController.passaADialogOffertaRegaloDaModificare(offerta);
 					}
