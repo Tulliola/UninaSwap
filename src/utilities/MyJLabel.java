@@ -206,6 +206,10 @@ public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 		return immagineInByte;
 	}
 	
+	public void setImmagineInByte(byte[] immagineInByte) {
+		this.immagineInByte = immagineInByte;
+	}
+	
 	public void rendiLabelInteragibile() {
 		this.addMouseListener(this);
 	}

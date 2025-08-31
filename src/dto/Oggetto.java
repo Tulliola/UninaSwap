@@ -48,7 +48,8 @@ public class Oggetto {
 	
 	public void aggiungiImmagini(byte[][] immagini, int numeroImmaginiDaInserire, int numeroImmaginiGiaPresenti) {
 		for(int i = 0; i < 3; i++) {
-			this.immagini[i] = immagini[i];
+			if(immagini[i] != null)
+				this.immagini[i] = immagini[i];
 		}
 	}
 	

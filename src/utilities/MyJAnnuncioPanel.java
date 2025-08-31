@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -74,9 +75,21 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelFotoOggetto.setPreferredSize(new Dimension(375, 500));
 		panelFotoOggetto.setMaximumSize(new Dimension(375, 500));
 		panelFotoOggetto.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, MyJPanel.uninaColorClicked));
-				
-		ImageIcon fotoToAdd = new ImageIcon(annuncioToAdd.getOggettoInAnnuncio().getImmagine(0));
-		MyJPanel panelInterno = new MyJPanel(fotoToAdd.getImage());
+		
+		ArrayList<byte[]> immaginiDaMostrare = new ArrayList<byte[]>();
+		
+		for(int i = 0; i < annuncioToAdd.getOggettoInAnnuncio().getImmagini().length; i++) {
+			byte[] immagineCorrente = annuncioToAdd.getOggettoInAnnuncio().getImmagine(i);
+			if(immagineCorrente != null) 
+				immaginiDaMostrare.add(immagineCorrente);
+		}
+		
+		ImageIcon primaFoto = new ImageIcon(immaginiDaMostrare.getFirst());
+		MyJPanel panelInterno = new MyJPanel(primaFoto.getImage());
+		panelInterno.rendiPanelInteragibile();
+		panelInterno.setOnMouseEnteredAction(() -> {});
+		panelInterno.setOnMouseExitedAction(() -> {});
+		panelInterno.setOnMouseClickedAction(() -> {mainController.passaADialogVisualizzaFoto(immaginiDaMostrare);});
 		
 		panelFotoOggetto.add(panelInterno, BorderLayout.CENTER);
 		

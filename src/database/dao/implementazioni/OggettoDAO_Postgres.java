@@ -58,22 +58,7 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 		return idOggettoInserito;
 	}
 	
-	@Override
-	public byte[] recuperaPrimaImmagineDiOggetto(int idOggetto) throws SQLException{
-		String recuperaImmagine = "SELECT File_immagine FROM Immagine WHERE idOggetto = ?";
-		
-		try(PreparedStatement psRecuperaImmagine = connessioneDB.prepareStatement(recuperaImmagine)){
-			psRecuperaImmagine.setInt(1, idOggetto);
-			
-			try(ResultSet rsRecuperaImmagine = psRecuperaImmagine.executeQuery()){
-				if(rsRecuperaImmagine.next())
-					return rsRecuperaImmagine.getBytes("File_immagine");
-				else
-					return null;
-			}
-		}
-	}
-	
+
 	@Override
 	public Oggetto recuperaOggettoConId(int idOggetto) throws SQLException{
 		
@@ -82,11 +67,13 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 			
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
 				rsOggetto.next();
+				
+				byte[][] immaginiOggetto = this.recuperaImmagini(idOggetto);
 				Oggetto oggettoInAnnuncio = new Oggetto(
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
-						this.recuperaPrimaImmagineDiOggetto(rsOggetto.getInt("idOggetto")),
+						immaginiOggetto[0],
 						isOggettoDisponibile(idOggetto)
 				);
 				
@@ -94,6 +81,10 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 					oggettoInAnnuncio.setDescrizione(rsOggetto.getString("Descrizione"));
 				}
 				
+				for(int i = 1; i < immaginiOggetto.length; i++)
+					if(immaginiOggetto[i] != null)
+						oggettoInAnnuncio.aggiungiImmagine(i, immaginiOggetto[i]);
+					
 				return oggettoInAnnuncio;
 			}
 		}
@@ -127,14 +118,12 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0], 
 							isOggettoDisponibile(rs.getInt("idOggetto")));
 					
-					if(immaginiOggetto[1] != null)
-						oggettoDaAggiungere.aggiungiImmagine(1, immaginiOggetto[1]);
-					
-					if(immaginiOggetto[2] != null)
-						oggettoDaAggiungere.aggiungiImmagine(2, immaginiOggetto[2]);
-					
 					if(rs.getString("Descrizione") != null) {
 						oggettoDaAggiungere.setDescrizione(rs.getString("Descrizione"));
+						
+						for(int i = 0; i < immaginiOggetto.length; i++)
+							if(immaginiOggetto[i] != null)
+								oggettoDaAggiungere.aggiungiImmagine(i, immaginiOggetto[i]);
 					
 						toReturn.add(oggettoDaAggiungere);
 					}

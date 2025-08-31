@@ -138,7 +138,7 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 	public void inserisciOfferta(Offerta offertaDaInserire) throws SQLException {
 		String inserisciOffertaScambio = "INSERT INTO Offerta_scambio(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
 				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, Messaggio_Motivazionale) "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta";
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idOfferta, Momento_proposta";
 		
 		connessioneDB.setAutoCommit(false);
 		
@@ -178,7 +178,7 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 				psInserisciOffertaScambio.setNull(9, Types.VARCHAR);
 			}
 				
-			psInserisciOffertaScambio.setString(10, modalitaConsegnaScelta);;
+			psInserisciOffertaScambio.setString(10, modalitaConsegnaScelta);
 			
 			if(offertaDaInserire.getMessaggioMotivazionale() == null)
 				psInserisciOffertaScambio.setNull(11, Types.VARCHAR);
@@ -189,6 +189,9 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 			
 			try(ResultSet rsInserisciOffertaScambio = psInserisciOffertaScambio.executeQuery()){
 				rsInserisciOffertaScambio.next();
+				
+				offertaDaInserire.setMomentoProposta(rsInserisciOffertaScambio.getTimestamp("Momento_proposta"));
+				
 				idOffertaInserita = rsInserisciOffertaScambio.getInt("idOfferta");
 			}
 			
@@ -225,7 +228,7 @@ public class OffertaScambioDAO_Postgres implements OffertaDAO, OffertaScambioDAO
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_scambio SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
 			ps.setString(1, stato.toString());
-			ps.setString(2, utenteLoggato.getEmail());
+			ps.setString(2, offerta.getUtenteProprietario().getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
 			
 			ps.executeUpdate();

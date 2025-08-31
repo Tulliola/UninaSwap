@@ -63,6 +63,7 @@ public class Controller {
 	private DialogVersamento dialogVersamento;
 	private DialogSegnalaUtente dialogSegnalaUtente;
 	private DialogVisualizzaOggetti dialogVisualizzaOggetti;
+	private DialogVisualizzaFoto dialogVisualizzaFoto;
 	private DialogConfermaRitiroOfferta dialogConfermaRitiroOfferte;
 	private DialogOffertaSpecificaUtente dialogOffertaSpecifica;
 	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
@@ -294,6 +295,10 @@ public class Controller {
 		dialogVisualizzaOggetti.setVisible(true);
 	}
 	
+	public void passaADialogVisualizzaFoto(ArrayList<byte[]> immaginiDaMostrare) {
+		dialogVisualizzaFoto = new DialogVisualizzaFoto(this, immaginiDaMostrare);
+		dialogVisualizzaFoto.setVisible(true);
+	}
 	
 	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
