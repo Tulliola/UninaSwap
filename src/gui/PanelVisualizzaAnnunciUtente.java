@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -126,9 +127,6 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci vendita");
 			SwingUtilities.invokeLater(() -> {
 				settaScrollabilita(isScrollPaneCentraleAnnunciVendita);
-				panelCentrale.revalidate();
-				panelCentrale.repaint();
-				parentFrame.pack();
 			});
 		});
 		lblVendita.setOnMouseEnteredAction(() -> {
@@ -149,9 +147,6 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci scambio");
 			SwingUtilities.invokeLater(() -> {
 				settaScrollabilita(isScrollPaneCentraleAnnunciScambio);
-				panelCentrale.revalidate();
-				panelCentrale.repaint();
-				parentFrame.pack();
 			});
 		});
 		lblScambio.setOnMouseEnteredAction(() -> {
@@ -171,11 +166,7 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			panelScambio.setBackground(Color.WHITE);
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci regalo");
 			SwingUtilities.invokeLater(() -> {
-				settaScrollabilita(isScrollPaneCentraleAnnunciRegalo);
-				panelCentrale.revalidate();
-				panelCentrale.repaint();
-				parentFrame.pack();
-				
+				settaScrollabilita(isScrollPaneCentraleAnnunciRegalo);			
 			});
 			
 		});
@@ -233,14 +224,19 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		
 		panelCentrale.add(panelDefault, "Default");
 		((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Default");
-		scrollPane.getViewport().setViewPosition(new Point(0, panelCentrale.getHeight()/4));
-		scrollPane.setWheelScrollingEnabled(false);
+		
 		panelCentrale.add(panelAnnunciVendita, "Annunci vendita");
 		panelCentrale.add(panelAnnunciScambio, "Annunci scambio");
 		panelCentrale.add(panelAnnunciRegalo, "Annunci regalo");
 		
 		lblMessaggioUtente = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
 		lblMessaggioUtente.setForeground(Color.BLACK);
+
+		SwingUtilities.invokeLater(() -> {
+			scrollPane.getViewport().setViewPosition(this.calcolaPosizioneCentralePerScrollPane());			
+			scrollPane.setWheelScrollingEnabled(false);
+		});
+		
 		panelCentrale.add(lblMessaggioUtente);
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 	}
@@ -260,9 +256,22 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			scrollPane.setWheelScrollingEnabled(true);
 		}
 		else {
-			double meta = Math.ceil(panelCentrale.getHeight()*0.5);
-			scrollPane.getViewport().setViewPosition(new Point(0, (int)meta));
+
 			scrollPane.setWheelScrollingEnabled(false);
+			scrollPane.getViewport().setViewPosition(this.calcolaPosizioneCentralePerScrollPane());			
 		}
+	}
+	
+	private Point calcolaPosizioneCentralePerScrollPane() {
+			Rectangle boundLabelCentrale = lblMessaggioUtente.getBounds();
+			Dimension extent = scrollPane.getViewport().getExtentSize();
+			
+			int x = boundLabelCentrale.x - (extent.width - boundLabelCentrale.width) / 2;
+			int y = boundLabelCentrale.y - (extent.height - boundLabelCentrale.height) / 2;
+	
+			x = Math.max(0, x);
+			y = Math.max(0, y);
+			
+			return new Point(x,y);
 	}
 }
