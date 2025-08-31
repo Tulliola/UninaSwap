@@ -50,9 +50,15 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 	protected MyJPanel panelAnnunciRegalo = new MyJPanel();
 	protected JScrollPane scrollPane;
 	protected MyJPanel panelDefault = new MyJPanel();
+	protected boolean isScrollPaneCentraleAnnunciVendita;
+	protected boolean isScrollPaneCentraleAnnunciScambio;
+	protected boolean isScrollPaneCentraleAnnunciRegalo;
+	protected MyJLabel lblMessaggioUtente;
+	protected MyJFrame parentFrame;
 	
 	public PanelVisualizzaAnnunciUtente(Controller mainController, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		this.mainController = mainController;
+		this.parentFrame = parentFrame;
 		
 		this.setLayout(new BorderLayout());
 		
@@ -61,8 +67,12 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(30);	
-		scrollPane.getViewport().setViewPosition(new Point(0, 0));
+//		scrollPane.getViewport().setViewPosition(new Point(0, 0));
 		scrollPane.addMouseWheelListener(e -> {
+			if (!scrollPane.isWheelScrollingEnabled()) {
+		        return; 
+		    }
+			
 			JScrollBar barraVerticale = scrollPane.getVerticalScrollBar();
 			JScrollBar barraOrizzontale = scrollPane.getHorizontalScrollBar();
 			
@@ -74,17 +84,20 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		});
 		parentFrame.add(scrollPane);
 		
-		settaPanelSuperiore();
 		settaPanelCentrale(messaggioAllUtente, annunciToDisplay);
+		settaPanelSuperiore();
 		
 		this.add(panelSuperiore, BorderLayout.NORTH);
 		this.add(scrollPane, BorderLayout.CENTER);
-		
 	}
 
 
 	private void settaPanelSuperiore() {
 		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
+		
+		isScrollPaneCentraleAnnunciVendita = panelAnnunciVendita.hasAnnunciPanels();
+		isScrollPaneCentraleAnnunciScambio = panelAnnunciScambio.hasAnnunciPanels();
+		isScrollPaneCentraleAnnunciRegalo = panelAnnunciRegalo.hasAnnunciPanels();
 		
 		MyJPanel panelVendita = new MyJPanel();
 		panelVendita.setLayout(new FlowLayout());
@@ -111,7 +124,12 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			panelScambio.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci vendita");
-			scrollPane.getViewport().setViewPosition(new Point(0, 0));
+			SwingUtilities.invokeLater(() -> {
+				settaScrollabilita(isScrollPaneCentraleAnnunciVendita);
+				panelCentrale.revalidate();
+				panelCentrale.repaint();
+				parentFrame.pack();
+			});
 		});
 		lblVendita.setOnMouseEnteredAction(() -> {
 			if(panelVendita.getBackground().equals(Color.WHITE)) {
@@ -129,7 +147,12 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			panelVendita.setBackground(Color.WHITE);
 			panelRegalo.setBackground(Color.WHITE);
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci scambio");
-			scrollPane.getViewport().setViewPosition(new Point(0, 0));
+			SwingUtilities.invokeLater(() -> {
+				settaScrollabilita(isScrollPaneCentraleAnnunciScambio);
+				panelCentrale.revalidate();
+				panelCentrale.repaint();
+				parentFrame.pack();
+			});
 		});
 		lblScambio.setOnMouseEnteredAction(() -> {
 			if(panelScambio.getBackground().equals(Color.WHITE)) {
@@ -147,7 +170,14 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 			panelVendita.setBackground(Color.WHITE);
 			panelScambio.setBackground(Color.WHITE);
 			((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Annunci regalo");
-			scrollPane.getViewport().setViewPosition(new Point(0, 0));
+			SwingUtilities.invokeLater(() -> {
+				settaScrollabilita(isScrollPaneCentraleAnnunciRegalo);
+				panelCentrale.revalidate();
+				panelCentrale.repaint();
+				parentFrame.pack();
+				
+			});
+			
 		});
 		lblRegalo.setOnMouseEnteredAction(() -> {
 			if(panelRegalo.getBackground().equals(Color.WHITE)) {
@@ -172,11 +202,11 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 	private void settaPanelCentrale(String messaggioAllUtente, ArrayList<Annuncio> annunciToDisplay) {
 		panelCentrale.setLayout(new CardLayout());
 		
-		panelAnnunciVendita.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelAnnunciVendita.setLayout(new MigLayout("wrap 2", "", ""));
 		panelAnnunciVendita.setBackground(uninaLightColor);
-		panelAnnunciScambio.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelAnnunciScambio.setLayout(new MigLayout("wrap 2", "", ""));
 		panelAnnunciScambio.setBackground(uninaLightColor);
-		panelAnnunciRegalo.setLayout(new MigLayout("wrap 2", "[]", ""));
+		panelAnnunciRegalo.setLayout(new MigLayout("wrap 2", "", ""));
 		panelAnnunciRegalo.setBackground(uninaLightColor);
 		
 		panelDefault.setLayout(new BoxLayout(panelDefault, BoxLayout.Y_AXIS));
@@ -203,16 +233,18 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		
 		panelCentrale.add(panelDefault, "Default");
 		((CardLayout) panelCentrale.getLayout()).show(panelCentrale, "Default");
-		scrollPane.getViewport().setViewPosition(new Point(0, 0));
+		scrollPane.getViewport().setViewPosition(new Point(0, panelCentrale.getHeight()/4));
+		scrollPane.setWheelScrollingEnabled(false);
 		panelCentrale.add(panelAnnunciVendita, "Annunci vendita");
 		panelCentrale.add(panelAnnunciScambio, "Annunci scambio");
 		panelCentrale.add(panelAnnunciRegalo, "Annunci regalo");
 		
-		MyJLabel messaggio = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
-		messaggio.setForeground(Color.BLACK);
-		panelCentrale.add(messaggio);
+		lblMessaggioUtente = new MyJLabel(messaggioAllUtente, new Font("Ubuntu Sans", Font.ITALIC, 16));
+		lblMessaggioUtente.setForeground(Color.BLACK);
+		panelCentrale.add(lblMessaggioUtente);
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 	}
+	
 	
 	protected abstract void settaPanelAnnunciVendita(ArrayList<Annuncio> annunciToDisplay);
 
@@ -221,4 +253,16 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 
 
 	protected abstract void settaPanelAnnunciRegalo(ArrayList<Annuncio> annunciToDisplay);
+	
+	private void settaScrollabilita(boolean isScrollPaneCentrale) {
+		if(isScrollPaneCentrale) {
+			scrollPane.getViewport().setViewPosition(new Point(0, 0));
+			scrollPane.setWheelScrollingEnabled(true);
+		}
+		else {
+			double meta = Math.ceil(panelCentrale.getHeight()*0.5);
+			scrollPane.getViewport().setViewPosition(new Point(0, (int)meta));
+			scrollPane.setWheelScrollingEnabled(false);
+		}
+	}
 }

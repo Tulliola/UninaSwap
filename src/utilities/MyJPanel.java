@@ -107,6 +107,14 @@ public class MyJPanel extends JPanel implements MouseListener {
 	    return false; 
 	}
 	
+	public boolean hasAnnunciPanels() {
+	    for (Component component : this.getComponents()) {
+	    	if(component instanceof MyJAnnuncioPanel)
+	    		return true;
+	    }
+	    return false; 
+	}
+	
 	public void rendiPanelInteragibile() {
 		this.addMouseListener(this);
 	}
