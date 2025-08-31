@@ -186,13 +186,21 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 			
 			psAggiornaOggetto.executeUpdate();
 
-//			
-//			for(int i = 0; i < 3; i++) {
-//				try(PreparedStatement psAggiornaFotoOggetto = connessioneDB.prepareStatement("UPDATE Immagine SET"
-//						+ "File_immagine = ? WHERE idOggetto = ?")) {
-//					
-//				}
-//			}
+			try(PreparedStatement psEliminaFotoOggetto = connessioneDB.prepareStatement("DELETE FROM Immagine WHERE idOggetto = ?")){
+				psEliminaFotoOggetto.setInt(1, oggettoDaModificare.getIdOggetto());
+				
+				psEliminaFotoOggetto.executeUpdate();
+				
+				for(int i = 0; i < 3; i++) {
+					if(oggettoDaModificare.getImmagine(i) != null)
+						try(PreparedStatement psInserisciFotoOggetto = connessioneDB.prepareStatement("INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)")){
+							psInserisciFotoOggetto.setBytes(1, oggettoDaModificare.getImmagine(i));
+							psInserisciFotoOggetto.setInt(2, oggettoDaModificare.getIdOggetto());
+							
+							psInserisciFotoOggetto.executeUpdate();
+						}
+				}
+			}
 		}
 	}
 }

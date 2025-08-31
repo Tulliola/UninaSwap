@@ -234,6 +234,17 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		}
 	}
 	
+
+	@Override
+	public void aggiornaSaldoUtente(ProfiloUtente utente, double importo) throws SQLException{
+		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Profilo_utente SET Saldo = ? WHERE Email = ?")){
+			ps.setDouble(1, utente.getSaldo()+importo);
+			ps.setString(2, utente.getEmail());
+						
+			ps.executeUpdate();
+		}
+	}
+	
 	//Metodi di utilità non ereditati dall'interfaccia
 	
 	private void isUtenteExisting(String emailOrUsername) throws SQLException{
@@ -253,13 +264,4 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
 
-	@Override
-	public void aggiornaSaldoUtente(ProfiloUtente utente, double importo) throws SQLException{
-		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Profilo_utente SET Saldo = ? WHERE Email = ?")){
-			ps.setDouble(1, utente.getSaldo()+importo);
-			ps.setString(2, utente.getEmail());
-			
-			ps.executeUpdate();
-		}
-	}
 }

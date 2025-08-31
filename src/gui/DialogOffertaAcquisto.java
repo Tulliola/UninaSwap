@@ -627,9 +627,9 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				
 		primaModalitaInserita.doClick();
 		
-//		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro()))) {
-//			primoIncontroInserito.doClick();
-//		}
+		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro()))) {
+			primoIncontroInserito.doClick();
+		}
 		
 		panelModalitaConsegnaScelta.add(lblModalitaScelta);
 		panelModalitaConsegnaScelta.add(sottoPanelModalitaScelta);
@@ -725,9 +725,6 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		else {
 			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
 			bottoneConfermaOfferta.setDefaultAction(() -> {
-				double vecchiaOfferta = offertaDaModificare.getPrezzoOfferto();
-				offertaDaModificare.getUtenteProprietario().aggiornaSaldo(vecchiaOfferta);
-				
 				double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
 				prezzoOfferto = Math.ceil(prezzoOfferto);
 				prezzoOfferto /= 100;

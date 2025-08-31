@@ -151,6 +151,7 @@ public class MyJOggettoPanel extends MyJPanel {
 		descrizioneOggettoTextArea.setPreferredSize(new Dimension(panelDescrizioneOggetto.getPreferredSize().width, 100));
 		descrizioneOggettoTextArea.setMaximumSize(new Dimension(panelDescrizioneOggetto.getPreferredSize().width, 100));
 		descrizioneOggettoTextArea.setEditable(false);
+		descrizioneOggettoTextArea.setFocusable(false);
 		descrizioneOggettoTextArea.setOpaque(true);
 		descrizioneOggettoTextArea.setLineWrap(true);
 		descrizioneOggettoTextArea.setWrapStyleWord(true);

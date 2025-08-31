@@ -177,8 +177,9 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	@Override
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
+			
 			ps.setString(1, stato.toString());
-			ps.setString(2, offerta.getUtenteProprietario().getEmail());
+			ps.setString(2, utenteLoggato.getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
 			
 			ps.executeUpdate();

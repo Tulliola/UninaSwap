@@ -367,11 +367,18 @@ public class Controller {
 	
 	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
 		OffertaDAO offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaToAdd, connessioneDB);
-		offertaDAO.inserisciOfferta(offertaToAdd);
-		utenteLoggato.aggiungiOfferta(offertaToAdd);		
 
-		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
+		offertaDAO.inserisciOfferta(offertaToAdd);
+		utenteLoggato.aggiungiOfferta(offertaToAdd);	
+		
+		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable()) {
+			ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+			
+			utenteDAO.aggiornaSaldoUtente(this.utenteLoggato, -offertaToAdd.getPrezzoOfferto());
+			this.utenteLoggato.aggiornaSaldo(-offertaToAdd.getPrezzoOfferto());
+			
 			dialogOffertaAcquisto.dispose();
+		}
 		
 		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
 			dialogOffertaScambio.dispose();
@@ -554,11 +561,12 @@ public class Controller {
 
 	public void onModificaOffertaAcquistoButtonClicked(Annuncio annuncioPerOfferta, Offerta offertaModificata) throws SQLException {
 		OffertaAcquistoDAO_Postgres offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
-		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
+		double prezzoPrecedentementeOfferto = offertaDAO.recuperaPrezzoOfferta(this.utenteLoggato.getEmail(), offertaModificata.getMomentoProposta());
 		offertaDAO.updateOfferta(offertaModificata);
-		offertaModificata.getUtenteProprietario().aggiornaSaldo(-offertaModificata.getPrezzoOfferto());
-		utenteDAO.aggiornaSaldoUtente(offertaModificata.getUtenteProprietario(), 0);
+		ProfiloUtenteDAO_Postgres profiloDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		profiloDAO.aggiornaSaldoUtente(this.utenteLoggato, prezzoPrecedentementeOfferto - offertaModificata.getPrezzoOfferto());
+		this.utenteLoggato.aggiornaSaldo(prezzoPrecedentementeOfferto - offertaModificata.getPrezzoOfferto());
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -568,6 +576,8 @@ public class Controller {
 		
 		if(dialogOffertaRegalo != null && dialogOffertaRegalo.isDisplayable())
 			dialogOffertaRegalo.dispose();
+		
+		this.passaAFrameHomePage(frameProfiloUtente);
 	}
 
 

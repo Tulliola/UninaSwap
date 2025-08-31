@@ -40,7 +40,8 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto WHERE Email = ? AND Prezzo_offerto > 0")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto AS O JOIN Annuncio AS A ON O.idAnnuncio =  A.idAnnuncio"
+				+ " WHERE O.Email = ? AND A.Tipo_annuncio = 'Vendita'")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -143,7 +144,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 
 		String inserisciOffertaAcquisto = "INSERT INTO Offerta_acquisto(Email, idAnnuncio, idUfficio, Nota, Indirizzo_spedizione, "
 				+ "Ora_inizio_incontro, Ora_fine_incontro, Giorno_incontro, Sede_incontro, Modalita_consegna_scelta, "
-				+ "Prezzo_offerto, Messaggio_motivazionale) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "Prezzo_offerto, Messaggio_motivazionale) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING Momento_proposta";
 
 		connessioneDB.setAutoCommit(false);
 					
@@ -185,13 +186,14 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 				psInserisciOffertaAcquisto.setNull(12, Types.VARCHAR);
 			else
 				psInserisciOffertaAcquisto.setString(12, offertaDaInserire.getMessaggioMotivazionale());
+						
+			try(ResultSet rsInserimentoOfferta = psInserisciOffertaAcquisto.executeQuery()){
+				rsInserimentoOfferta.next();
+				
+				offertaDaInserire.setMomentoProposta(rsInserimentoOfferta.getTimestamp("Momento_proposta"));
+			}
 			
-			psInserisciOffertaAcquisto.executeUpdate();
-			
-			ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-			utenteDAO.aggiornaSaldoUtente(offertaDaInserire.getUtenteProprietario(), -offertaDaInserire.getPrezzoOfferto());
-			
-			offertaDaInserire.getUtenteProprietario().aggiornaSaldo(-offertaDaInserire.getPrezzoOfferto());
+			connessioneDB.commit();
 		}
 		catch(SQLException exc) {
 			System.out.println(exc.getMessage());
@@ -207,13 +209,14 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 	@Override
 	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
+			
 			ps.setString(1, stato.toString());
 			ps.setString(2, offerta.getUtenteProprietario().getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
 			
-			if(stato.equals(StatoOffertaEnum.Accettata)) 
-				offerta.getAnnuncioRiferito().getUtenteProprietario().aggiornaSaldo(offerta.getPrezzoOfferto());			
-			
+			if(stato.equals(StatoOffertaEnum.Accettata) || stato.equals(StatoOffertaEnum.Ritirata))
+				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
+				
 			ps.executeUpdate();
 		}
 	}
@@ -224,6 +227,9 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, Prezzo_offerto = ?, idUfficio = ?"
 				+ " WHERE email = ? AND Momento_proposta = ?")){
+			
+			connessioneDB.setAutoCommit(false);
+			
 			String nota = offertaDaModificare.getNota();
 			String indirizzoSpedizione = offertaDaModificare.getIndirizzoSpedizione();
 			String oraInizioIncontro = null;
@@ -299,6 +305,31 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			
 			ps.executeUpdate();
 			
+		}
+		catch(SQLException exc) {
+			connessioneDB.rollback();
+			System.out.println(exc.getErrorCode());
+			System.out.println(exc.getMessage());
+			System.out.println(exc.getSQLState());
+			throw exc;
+		}
+		finally {
+			connessioneDB.setAutoCommit(true);
+		}
+	}
+	
+	public Double recuperaPrezzoOfferta(String email, Timestamp momentoProposta) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT prezzo_offerto from OFFERTA_ACQUISTO WHERE Email = ? AND Momento_proposta = ?")){
+			ps.setString(1, email);
+			ps.setTimestamp(2, momentoProposta);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				if(rs.next())
+					return rs.getDouble("prezzo_offerto");
+
+				else
+					return null;
+			}
 		}
 	}
 
