@@ -82,7 +82,6 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 
 	private void settaPanelCentrale(ArrayList<Offerta> offerte) {
 		panelCentrale.setLayout(new MigLayout("wrap 2", "[]", ""));
-//		panelCentrale.setPreferredSize(new Dimension(1100, 900));
 		panelCentrale.setBackground(MyJPanel.uninaLightColor);
 		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
 		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
@@ -97,13 +96,15 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		contentPane.add(panelLaterale, BorderLayout.WEST);
 		if(offerte.isEmpty()) {
 			this.setTitle("Non ci sono offerte per questo annuncio");
+			panelOfferte.setLayout(new MigLayout("fill, align center center"));
+			panelOfferte.setBackground(MyJPanel.uninaLightColor);
 			
 			MyJPanel panelInterno = new MyJPanel();
 			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
 			panelInterno.setAlignmentX(CENTER_ALIGNMENT);
 			panelInterno.setBackground(MyJPanel.uninaLightColor);
 			
-			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono annunci di vendita da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Non ci sono offerte a questo annuncio da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
 			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
 			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
 			MyJLabel lblNoResultsImage = new MyJLabel();
@@ -113,8 +114,10 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 			panelInterno.add(lblNonCiSonoAnnunci);
 			panelInterno.add(Box.createVerticalStrut(20));
 			panelInterno.add(lblNoResultsImage);
-
+			
+			panelOfferte.add(Box.createVerticalGlue());
 			panelOfferte.add(panelInterno, "align center center");
+			panelOfferte.add(Box.createVerticalGlue());
 		}
 		else
 			panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);

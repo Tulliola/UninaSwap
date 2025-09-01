@@ -374,7 +374,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 		
 
 		modalitaSceltaBG = new ButtonGroup();
-		JRadioButton primaModalitaInserita = null;;
+		JRadioButton primaModalitaInserita = null;
 		
 		if(annuncioPerOfferta.isSpedizione()) {
 			primaModalitaInserita = spedizioneRB;
@@ -388,6 +388,8 @@ public class DialogOffertaRegalo extends MyJDialog {
 					primaModalitaInserita = ritiroInPostaRB;
 				}
 			}
+			else if(primaModalitaInserita == null)
+				primaModalitaInserita = ritiroInPostaRB;
 			modalitaSceltaBG.add(ritiroInPostaRB);		
 			sottoPanelModalitaScelta.add(ritiroInPostaRB);
 		}
@@ -398,6 +400,9 @@ public class DialogOffertaRegalo extends MyJDialog {
 					primaModalitaInserita = incontroRB;
 				}
 			}
+			else if(primaModalitaInserita == null)
+				primaModalitaInserita = incontroRB;
+			
 			modalitaSceltaBG.add(incontroRB);
 			sottoPanelModalitaScelta.add(incontroRB);
 		}		
