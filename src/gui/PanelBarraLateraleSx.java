@@ -64,19 +64,19 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private void aggiungiRigheAnnunciNelPanel() {
 		
 		lblAnnunciDisponibili.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Disponibili");
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci disponibili");
 		});
 		
 		lblAnnunciUltimati.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Andati a buon fine");
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci andati a buon fine");
 		});
 		
 		lblAnnunciScaduti.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Scaduti");
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci scaduti");
 		});
 		
 		lblAnnunciRimossi.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Rimossi");
+			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
 		});
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
@@ -89,21 +89,21 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private void aggiungiRigheOfferteNelPanel() {
 		
 		lblOfferteAccettate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Accettate");
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte accettate");
 		});
 		
 		lblOfferteInAttesa.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        In attesa");
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte in attesa");
 			
 		});
 		
 		lblOfferteRifiutate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Rifiutate");
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte rifiutate");
 			
 		});
 		
 		lblOfferteRitirate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Ritirate");
+			mainController.passaASezioneInFrameProfiloUtente("        Offerte ritirate");
 			
 		});
 		
@@ -167,7 +167,7 @@ public class PanelBarraLateraleSx extends MyJPanel {
 		ArrayList<MyJLabel> jlabels = getLabelsFocusabili();
 		
 		for(MyJLabel label: jlabels) {
-			if(label.getText().equals(sezioneScelta)) {
+			if(sezioneScelta != null && sezioneScelta.toLowerCase().contains(label.getText().trim().toLowerCase())) {
 				label.setBackground(uninaColor);
 				lblSelezionata = label;
 			}
