@@ -20,6 +20,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -82,9 +83,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJLabel lblErroreFoto;
 	
 	//Flag per immagini
-	private boolean foto1Caricata;
-	private boolean foto2Caricata;
-	private boolean foto3Caricata;
+	private AtomicBoolean foto1Caricata = new AtomicBoolean(false);
+	private AtomicBoolean foto2Caricata = new AtomicBoolean(false);
+	private AtomicBoolean foto3Caricata = new AtomicBoolean(false);
 	
 	//Labels per le immagini
 	private MyJLabel lblAggiungiFoto1;
@@ -238,8 +239,8 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJPanel creaPanelAggiungiFoto(Oggetto oggettoCaricato) {
 		panelAggiungiFoto = new MyJPanel();
 		panelAggiungiFoto.setLayout(new BorderLayout());
-		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 580));
-		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 580));
+		panelAggiungiFoto.setPreferredSize(new Dimension(1225, 620));
+		panelAggiungiFoto.setMaximumSize(new Dimension(1225, 620));
 		
 		MyJPanel panelSuperiore = new MyJPanel(MyJPanel.uninaColorClicked);
 		panelSuperiore.setLayout(new BoxLayout(panelSuperiore, BoxLayout.X_AXIS));
@@ -255,89 +256,27 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		MyJPanel panelContieniFoto = new MyJPanel();
 		panelContieniFoto.setLayout(new BorderLayout());
-		panelContieniFoto.setPreferredSize(new Dimension(1225, 500));
-		panelContieniFoto.setMaximumSize(new Dimension(1225, 500));
+		panelContieniFoto.setPreferredSize(new Dimension(1225, 570));
+		panelContieniFoto.setMaximumSize(new Dimension(1225, 570));
 		panelContieniFoto.setBackground(MyJPanel.uninaLightColor);
 		
 		MyJPanel panelDelleFoto = new MyJPanel();
 		panelDelleFoto.setLayout(new FlowLayout());
-		panelDelleFoto.setPreferredSize(new Dimension(1225, 500));
-		panelDelleFoto.setMaximumSize(new Dimension(1225, 500));
+		panelDelleFoto.setPreferredSize(new Dimension(1225, 550));
+		panelDelleFoto.setMaximumSize(new Dimension(1225, 550));
 		panelDelleFoto.setBackground(MyJPanel.uninaLightColor);
 		
-		MyJPanel panelFoto1 = new MyJPanel(Color.white, new Dimension(375, 500));
-		panelFoto1.setMaximumSize(new Dimension(375, 500));
-		panelFoto1.setLayout(new BoxLayout(panelFoto1, BoxLayout.Y_AXIS));
-		panelFoto1.setAlignmentX(CENTER_ALIGNMENT);
+		MyJPanel panelFoto1 = new MyJPanel();
 		lblAggiungiFoto1 = new MyJLabel();
-		if(oggettoCaricato == null)
-			lblAggiungiFoto1.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto1.aggiungiImmagineScalata(oggettoCaricato.getImmagine(0), 375, 500, true);
-			foto1Caricata = true;
-		}
+		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, oggettoCaricato, 0, () -> {foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());});
 		
-		lblAggiungiFoto1.setAlignmentX(CENTER_ALIGNMENT);
-		panelFoto1.add(Box.createVerticalGlue());
-		panelFoto1.add(Box.createHorizontalGlue());
-		panelFoto1.add(lblAggiungiFoto1);
-		panelFoto1.add(Box.createHorizontalGlue());
-		panelFoto1.add(Box.createVerticalGlue());
-		
-		lblAggiungiFoto1.rendiLabelInteragibile();
-		lblAggiungiFoto1.setOnMouseClickedAction(() -> {foto1Caricata = lblAggiungiFoto1.aggiungiImmagineDaFileSystem();});
-		lblAggiungiFoto1.setOnMouseEnteredAction(() -> {});
-		lblAggiungiFoto1.setOnMouseExitedAction(() -> {});
-
-		MyJPanel panelFoto2 = new MyJPanel(Color.white);
-		panelFoto2.setPreferredSize(new Dimension(375, 500));
-		panelFoto2.setMaximumSize(new Dimension(375, 500));
-		panelFoto2.setLayout(new BoxLayout(panelFoto2, BoxLayout.Y_AXIS));
-		panelFoto2.setAlignmentX(CENTER_ALIGNMENT);
+		MyJPanel panelFoto2 = new MyJPanel();
 		lblAggiungiFoto2 = new MyJLabel();
-		if(oggettoCaricato == null || oggettoCaricato.getImmagine(1) == null)
-			lblAggiungiFoto2.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto2.aggiungiImmagineScalata(oggettoCaricato.getImmagine(1), 375, 500, true);
-			foto2Caricata = true;			
-		}
+		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, oggettoCaricato, 1, () -> {foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());});
 		
-		lblAggiungiFoto2.setAlignmentX(CENTER_ALIGNMENT);
-		panelFoto2.add(Box.createVerticalGlue());
-		panelFoto2.add(Box.createHorizontalGlue());
-		panelFoto2.add(lblAggiungiFoto2);
-		panelFoto2.add(Box.createHorizontalGlue());
-		panelFoto2.add(Box.createVerticalGlue());
-		
-		lblAggiungiFoto2.rendiLabelInteragibile();
-		lblAggiungiFoto2.setOnMouseClickedAction(() -> {foto2Caricata = lblAggiungiFoto2.aggiungiImmagineDaFileSystem();});
-		lblAggiungiFoto2.setOnMouseEnteredAction(() -> {});
-		lblAggiungiFoto2.setOnMouseExitedAction(() -> {});
-		
-		MyJPanel panelFoto3 = new MyJPanel(Color.white);
-		panelFoto3.setPreferredSize(new Dimension(375, 500));
-		panelFoto3.setMaximumSize(new Dimension(375, 500));
-		panelFoto3.setLayout(new BoxLayout(panelFoto3, BoxLayout.Y_AXIS));
-		panelFoto3.setAlignmentX(CENTER_ALIGNMENT);
+		MyJPanel panelFoto3 = new MyJPanel();
 		lblAggiungiFoto3 = new MyJLabel();
-		if(oggettoCaricato == null || oggettoCaricato.getImmagine(2) == null)
-			lblAggiungiFoto3.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
-		else {
-			lblAggiungiFoto3.aggiungiImmagineScalata(oggettoCaricato.getImmagine(2), 375, 500, true);
-			foto3Caricata = true;
-		}		
-		
-		lblAggiungiFoto3.setAlignmentX(CENTER_ALIGNMENT);
-		panelFoto3.add(Box.createVerticalGlue());
-		panelFoto3.add(Box.createHorizontalGlue());
-		panelFoto3.add(lblAggiungiFoto3);
-		panelFoto3.add(Box.createHorizontalGlue());
-		panelFoto3.add(Box.createVerticalGlue());
-		
-		lblAggiungiFoto3.rendiLabelInteragibile();
-		lblAggiungiFoto3.setOnMouseClickedAction(() -> {foto3Caricata = lblAggiungiFoto3.aggiungiImmagineDaFileSystem();});
-		lblAggiungiFoto3.setOnMouseEnteredAction(() -> {});
-		lblAggiungiFoto3.setOnMouseExitedAction(() -> {});
+		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, oggettoCaricato, 2, () -> {foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());});
 		
 		panelDelleFoto.add(panelFoto1);
 		panelDelleFoto.add(panelFoto2);
@@ -350,6 +289,8 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelContieniFoto.add(new MyJPanel(MyJPanel.uninaLightColor), BorderLayout.SOUTH);
 		
 		panelErroreFoto.setBackground(Color.white);
+		panelErroreFoto.setPreferredSize(new Dimension(1225, 35));
+		panelErroreFoto.setMaximumSize(new Dimension(1225, 35));
 		panelErroreFoto.setLayout(new BoxLayout(panelErroreFoto, BoxLayout.X_AXIS));
 		panelErroreFoto.setAlignmentX(LEFT_ALIGNMENT);
 		panelErroreFoto.setVisible(false);
@@ -761,7 +702,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	}
 	
 	private void checkFoto() throws FotoException{
-		if(!foto1Caricata && !foto2Caricata && !foto3Caricata)
+		if(!foto1Caricata.get() && !foto2Caricata.get() && !foto3Caricata.get())
 			throw new FotoException("Devi caricare almeno una foto.");
 		
 	}
@@ -782,21 +723,59 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
 					this.lblAggiungiFoto1.getImmagineInByte(), true);
 
-		oggettoDaPassare.setCategoria(categoriaSelezionata);
-		oggettoDaPassare.setCondizioni(condizioneSelezionata);
-		
+		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());	
+		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
 		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
-		
-		if(foto2Caricata)
-			oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
-		
-		if(foto3Caricata)
-			oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());
-		
-		oggettoDaPassare.setDescrizione(this.inserisciDescrizioneTextA.getText());
-		
-		
 		
 		return oggettoDaPassare;
 	}
+	
+	private void settaPanelFoto(MyJPanel panelContenenteFoto, MyJLabel lblAggiungiFoto, AtomicBoolean isFotoCaricata, Oggetto oggettoCaricato, int indiceDellaFoto, Runnable onMouseClickedAction) {
+		panelContenenteFoto.setBackground(MyJPanel.uninaLightColor);
+		panelContenenteFoto.setLayout(new BoxLayout(panelContenenteFoto, BoxLayout.Y_AXIS));
+		panelContenenteFoto.setPreferredSize(new Dimension(375, 550));
+		panelContenenteFoto.setMaximumSize(new Dimension(375, 550));
+		
+		MyJPanel panelFoto = new MyJPanel(Color.white, new Dimension(375, 500));
+		panelFoto.setMaximumSize(new Dimension(375, 500));
+		panelFoto.setLayout(new BoxLayout(panelFoto, BoxLayout.Y_AXIS));
+		panelFoto.setAlignmentX(CENTER_ALIGNMENT);
+
+		lblAggiungiFoto.setAlignmentX(CENTER_ALIGNMENT);
+		lblAggiungiFoto.rendiLabelInteragibile();
+		lblAggiungiFoto.setOnMouseClickedAction(() -> {onMouseClickedAction.run();});
+		lblAggiungiFoto.setOnMouseEnteredAction(() -> {});
+		lblAggiungiFoto.setOnMouseExitedAction(() -> {});
+		if(oggettoCaricato == null || oggettoCaricato.getImmagine(indiceDellaFoto) == null)
+			lblAggiungiFoto.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+		else {
+			lblAggiungiFoto.aggiungiImmagineScalata(oggettoCaricato.getImmagine(indiceDellaFoto), 375, 500, true);
+			isFotoCaricata.set(true);
+		}
+		
+		panelFoto.add(Box.createVerticalGlue());
+		panelFoto.add(Box.createHorizontalGlue());
+		panelFoto.add(lblAggiungiFoto);
+		panelFoto.add(Box.createHorizontalGlue());
+		panelFoto.add(Box.createVerticalGlue());
+				
+		MyJLabel lblRimuoviFoto = new MyJLabel();
+		lblRimuoviFoto.setAlignmentX(CENTER_ALIGNMENT);
+		lblRimuoviFoto.aggiungiImmagineScalata("images/iconaCestino.png", 30, 30, true);
+		
+		lblRimuoviFoto.rendiLabelInteragibile();
+		lblRimuoviFoto.setOnMouseExitedAction(() -> {});
+		lblRimuoviFoto.setOnMouseEnteredAction(() -> {});
+		lblRimuoviFoto.setOnMouseClickedAction(() -> {
+			if(isFotoCaricata.get()) {
+				lblAggiungiFoto.setImmagineInByte(null);
+				lblAggiungiFoto.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
+				isFotoCaricata.set(false);
+			}
+		});
+		
+		panelContenenteFoto.add(panelFoto);
+		panelContenenteFoto.add(lblRimuoviFoto);
+	}
+	
 }

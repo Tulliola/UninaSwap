@@ -1166,10 +1166,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 				resettaBordiTextA(new EmptyBorder(0, 10, 0, 0), this.inserisciNotaScambioTextA);
 				nascondiPanelErrore(this.panelErroreNotaScambio);
 			}
-			
-			System.out.println(foto1Caricata);
-			System.out.println(foto2Caricata);
-			System.out.println(foto3Caricata);
 
 			checkDatiInseriti();
 			Annuncio annuncioDaPassare = organizzaDatiDaPassareAlController();
