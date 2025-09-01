@@ -2,20 +2,16 @@ package utilities;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import controller.Controller;
 import dto.Oggetto;
 
 public class MyJOggettoPanel extends MyJPanel {
@@ -26,9 +22,7 @@ public class MyJOggettoPanel extends MyJPanel {
 	protected int altezza = 680;	
 	
 	public MyJOggettoPanel(Oggetto oggettoDaMostrare) {
-		
-		Random generatore = new Random();
-		
+				
 		this.setBackground(uninaLightColor);
 		this.setBorder(new EmptyBorder(0, 0, 0, 0));
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));

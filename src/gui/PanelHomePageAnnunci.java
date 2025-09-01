@@ -4,40 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Image;
 
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
@@ -53,17 +38,11 @@ import eccezioni.OffertaRegaloException;
 import eccezioni.OffertaScambioException;
 import net.miginfocom.swing.MigLayout;
 import utilities.CategoriaEnum;
-import utilities.MyJAnnuncioPanel;
 import utilities.MyJAnnuncioSegnalabilePanel;
-//import dto.AnnuncioRegalo;
-//import dto.AnnuncioScambio;
 import utilities.MyJButton;
 
 import utilities.MyJLabel;
 import utilities.MyJPanel;
-import utilities.MyJTextField;
-import utilities.StatoAnnuncioEnum;
-import utilities.StatoOffertaEnum;
 
 public class PanelHomePageAnnunci extends JPanel{
 
@@ -82,6 +61,10 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	
 	private Controller mainController;
+
+	private JComboBox tipologiaAnnunciCB;
+
+	private JComboBox categoriaOggettoInAnnuncioCB;
 	
 	public PanelHomePageAnnunci(Controller controller, ArrayList<Annuncio> annunci) {
 		mainController = controller;
@@ -161,7 +144,9 @@ public class PanelHomePageAnnunci extends JPanel{
 		campoDiTestoTextField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				filtraAnnunciPerRicerca(annunci, campoDiTestoTextField.getText());
+				String tipologiaSelezionata = tipologiaAnnunciCB.getSelectedItem().toString();
+				String categoriaSelezionata = categoriaOggettoInAnnuncioCB.getSelectedItem().toString();
+				filtraAnnunci(annunci, tipologiaSelezionata, categoriaSelezionata, campoDiTestoTextField.getText());
 			}
 		});
 		
@@ -172,8 +157,11 @@ public class PanelHomePageAnnunci extends JPanel{
 		lblIconaDiRicerca.rendiLabelInteragibile();
 		
 		lblIconaDiRicerca.setOnMouseClickedAction(() -> {
-			filtraAnnunciPerRicerca(annunci, campoDiTestoTextField.getText());
+			String tipologiaSelezionata = tipologiaAnnunciCB.getSelectedItem().toString();
+			String categoriaSelezionata = categoriaOggettoInAnnuncioCB.getSelectedItem().toString();
+			filtraAnnunci(annunci, tipologiaSelezionata, categoriaSelezionata, campoDiTestoTextField.getText());
 		});
+		
 		lblIconaDiRicerca.setOnMouseEnteredAction(() -> {
 			lblIconaDiRicerca.setBackground(new Color(220, 220, 220));
 			lblIconaDiRicerca.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -211,7 +199,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		barraDiRicerca.add(lblIconaDiEliminaTesto, BorderLayout.EAST);
 	
 		
-		JComboBox<String> tipologiaAnnunciCB = new JComboBox();
+		tipologiaAnnunciCB = new JComboBox();
 		tipologiaAnnunciCB.setBackground(Color.white);
 		tipologiaAnnunciCB.setMinimumSize(new Dimension(300, 35));
 		tipologiaAnnunciCB.setPreferredSize(new Dimension(300, 35));
@@ -224,7 +212,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		tipologiaAnnunciCB.addItem("Regalo");
 		tipologiaAnnunciCB.setSelectedIndex(0);
 		
-		JComboBox<String> categoriaOggettoInAnnuncioCB = new JComboBox();
+		categoriaOggettoInAnnuncioCB = new JComboBox();
 		categoriaOggettoInAnnuncioCB.setBackground(Color.white);
 		categoriaOggettoInAnnuncioCB.setMinimumSize(new Dimension(300, 35));
 		categoriaOggettoInAnnuncioCB.setPreferredSize(new Dimension(300, 35));
@@ -248,14 +236,14 @@ public class PanelHomePageAnnunci extends JPanel{
 		categoriaOggettoInAnnuncioCB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				aggiornaFiltri(annunci, tipologiaAnnunciCB, categoriaOggettoInAnnuncioCB);
+				filtraAnnunci(annunci, tipologiaAnnunciCB.getSelectedItem().toString(), categoriaOggettoInAnnuncioCB.getSelectedItem().toString(), campoDiTestoTextField.getText());
 			}
 		});
 		
 		tipologiaAnnunciCB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				aggiornaFiltri(annunci, tipologiaAnnunciCB, categoriaOggettoInAnnuncioCB);
+				filtraAnnunci(annunci, tipologiaAnnunciCB.getSelectedItem().toString(), categoriaOggettoInAnnuncioCB.getSelectedItem().toString(), campoDiTestoTextField.getText());
 			}
 		});
 		
@@ -274,7 +262,6 @@ public class PanelHomePageAnnunci extends JPanel{
 		bordoInferiore.setLayout(new BoxLayout(bordoInferiore, BoxLayout.X_AXIS));
 		bordoInferiore.setAlignmentX(CENTER_ALIGNMENT);
 		bordoInferiore.setPreferredSize(new Dimension(500, 100));
-//		bordoInferiore.setBackground(MyJPanel.uninaLightColor);
 		bordoInferiore.setBackground(Color.white);
 		bordoInferiore.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 		
@@ -384,18 +371,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		return panelFaiOfferta;
 	}
-	
-//		protected void ricalcolaAltezzaConAnnunci(ArrayList<Annuncio> annunciInBacheca) {
-//		int larghezza = panelAnnunci.getWidth();
-//		//600 è l'altezza di un singolo panel dell'annuncio. 10 sono dei pixel aggiuntivi
-//		int altezza = (annunciInBacheca.size() / 2 == 0) ? (annunciInBacheca.size()/2 * 610) : ((annunciInBacheca.size()/2+1) * 610);
-//		
-//		panelAnnunci.setPreferredSize(new Dimension(larghezza, altezza));
-//		panelAnnunci.setMaximumSize(new Dimension(larghezza, altezza));
-//	}
 
 	private void mostraAnnunciInBacheca(ArrayList<Annuncio> tuttiGliAnnunci) {
-//		this.ricalcolaAltezzaConAnnunci(tuttiGliAnnunci);
 		panelRisultatiDiRicerca.setVisible(false);
 		
 		panelAnnunci.removeAll();
@@ -410,8 +387,8 @@ public class PanelHomePageAnnunci extends JPanel{
 			});
 		}
 		
-//		panelAnnunci.revalidate();
-//		panelAnnunci.repaint();
+		panelAnnunci.revalidate();
+		panelAnnunci.repaint();
 		
 		SwingUtilities.invokeLater(() -> {
 			JScrollBar scrollBarDelPanel = scrollPanelAnnunci.getVerticalScrollBar();
@@ -419,84 +396,65 @@ public class PanelHomePageAnnunci extends JPanel{
 		});
 	}
 	
-	private void filtraAnnunciPerRicerca(ArrayList<Annuncio> tuttiGliAnnunci, String stringaIn) {
-		ArrayList<Annuncio> annunciFiltratiPerRicerca = new ArrayList();
-		
-		for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-			if((annuncioCorrente.getNome().toLowerCase()).contains(stringaIn.toLowerCase()))
-				annunciFiltratiPerRicerca.add(annuncioCorrente);
-
-		this.mostraAnnunciInBacheca(annunciFiltratiPerRicerca);
-		
-		panelRisultatiDiRicerca.setVisible(true);
-		
-		if(annunciFiltratiPerRicerca.size() == 0)
-			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma a quanto pare l'articolo che stai cercando non è presente.");
-		else 
-			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerRicerca.size() + " di " + tuttiGliAnnunci.size());
-	}
-	
-	private void filtraAnnunciPerTipoECategoria(ArrayList<Annuncio> tuttiGliAnnunci, String tipoAnnuncio, String categoriaOggetto) {
-		ArrayList<Annuncio> annunciFiltratiPerTipo = new ArrayList();
+	private void filtraAnnunci(ArrayList<Annuncio> tuttiGliAnnunci, String tipoAnnuncio, String categoriaOggetto, String ricerca) {
+		ArrayList<Annuncio> annunciFiltrati = new ArrayList();
 		
 		if(tipoAnnuncio.equals("Tutti gli annunci") && !categoriaOggetto.equals("Tutte le categorie")) {
 			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-				if(annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto))
-					annunciFiltratiPerTipo.add(annuncioCorrente);
+				if(annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto) && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+					annunciFiltrati.add(annuncioCorrente);
 		}
 		else if(!tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
 			if(tipoAnnuncio.equals("Vendita")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if(annuncioCorrente instanceof AnnuncioVendita)
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if(annuncioCorrente instanceof AnnuncioVendita && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+						annunciFiltrati.add(annuncioCorrente);
 			}
 			else if(tipoAnnuncio.equals("Scambio")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
-					if(annuncioCorrente instanceof AnnuncioScambio)
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if(annuncioCorrente instanceof AnnuncioScambio && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+						annunciFiltrati.add(annuncioCorrente);
 			}
 			else {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if(annuncioCorrente instanceof AnnuncioRegalo)
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if(annuncioCorrente instanceof AnnuncioRegalo && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+						annunciFiltrati.add(annuncioCorrente);
 			}
+		}
+		else if(tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
+			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
+				if(annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+					annunciFiltrati.add(annuncioCorrente);
 		}
 		else {
 			if(tipoAnnuncio.equals("Vendita")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if((annuncioCorrente instanceof AnnuncioVendita) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if((annuncioCorrente instanceof AnnuncioVendita) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto) 
+							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+						annunciFiltrati.add(annuncioCorrente);
 			}
 			else if(tipoAnnuncio.equals("Scambio")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
-					if((annuncioCorrente instanceof AnnuncioScambio) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if((annuncioCorrente instanceof AnnuncioScambio) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)
+							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+						annunciFiltrati.add(annuncioCorrente);
 			}
 			else {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if((annuncioCorrente instanceof AnnuncioRegalo) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)))
-						annunciFiltratiPerTipo.add(annuncioCorrente);
+					if((annuncioCorrente instanceof AnnuncioRegalo) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)
+							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+						annunciFiltrati.add(annuncioCorrente);
 			}
 		}
 		
-		this.mostraAnnunciInBacheca(annunciFiltratiPerTipo);
+		this.mostraAnnunciInBacheca(annunciFiltrati);
 	
 		panelRisultatiDiRicerca.setVisible(true);
 		
-		if(annunciFiltratiPerTipo.size() == 0)
-			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci di " + categoriaOggetto + " (" + tipoAnnuncio + " ).");
+		if(annunciFiltrati.size() == 0)
+			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci per " + ricerca + " di " + categoriaOggetto + " (" + tipoAnnuncio + ").");
 		else
-			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltratiPerTipo.size() + " di " + tuttiGliAnnunci.size());
-	}
-	
-	private void aggiornaFiltri(ArrayList<Annuncio> annunci, JComboBox tipologiaAnnunciCB, JComboBox categoriaOggettoInAnnuncio) {
-		String tipologiaSelezionata = tipologiaAnnunciCB.getSelectedItem().toString();
-		String categoriaSelezionata = categoriaOggettoInAnnuncio.getSelectedItem().toString();
-		if(tipologiaSelezionata.equals("Tutti gli annunci") && categoriaSelezionata.equals("Tutte le categorie"))
-			mostraAnnunciInBacheca(annunci);
-		else
-			filtraAnnunciPerTipoECategoria(annunci, tipologiaSelezionata, categoriaSelezionata);
-		
+			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltrati.size() + " di " + tuttiGliAnnunci.size());
 	}
 
 	private void checkOffertaAcquistoGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaAcquistoException{

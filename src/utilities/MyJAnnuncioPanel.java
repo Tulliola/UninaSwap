@@ -13,22 +13,17 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.*;
 
-import com.formdev.flatlaf.FlatClientProperties;
 
 import controller.Controller;
 import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
-import eccezioni.OffertaAcquistoException;
-import eccezioni.OffertaRegaloException;
-import eccezioni.OffertaScambioException;
 
 abstract public class MyJAnnuncioPanel extends MyJPanel {
 

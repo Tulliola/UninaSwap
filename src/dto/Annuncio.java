@@ -37,15 +37,10 @@ public abstract class Annuncio {
 	public Annuncio(int idAnnuncio, boolean spedizione, boolean ritiroInPosta,
 			boolean incontro, StatoAnnuncioEnum stato, Timestamp momentoPubblicazione, String nome, ProfiloUtente utenteProprietario, 
 			Oggetto oggettoInAnnuncio) {
+		this(spedizione, ritiroInPosta, incontro, stato, nome, utenteProprietario, oggettoInAnnuncio);
+
 		this.idAnnuncio = idAnnuncio;
-		this.spedizione = spedizione;
-		this.ritiroInPosta = ritiroInPosta;
-		this.incontro = incontro;
-		this.stato = stato;
 		this.momentoPubblicazione = momentoPubblicazione;
-		this.nome = nome;
-		this.utenteProprietario = utenteProprietario;
-		this.oggettoInAnnuncio = oggettoInAnnuncio;	
 	}
 	
 	//Costruzione per la costruzione di oggetti durante la create

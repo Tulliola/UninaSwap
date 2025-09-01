@@ -17,6 +17,8 @@ import dto.AnnuncioVendita;
 public abstract class MyJAnnuncioSegnalabilePanel extends MyJAnnuncioPanel{
 
 	
+	private static final long serialVersionUID = 1L;
+
 	public MyJAnnuncioSegnalabilePanel(Controller controller, Annuncio annuncioToAdd) {
 		super(controller, annuncioToAdd);
 	}

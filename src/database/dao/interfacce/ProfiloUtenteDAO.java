@@ -10,11 +10,11 @@ public interface ProfiloUtenteDAO {
 	public void inserisciSegnalazione(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException;
 	
 	//Metodi di aggiornamento
-	public void aggiornaUsernameUtente(String emailIn, String newUsername) throws SQLException;
-	public void aggiornaPasswordUtente(String emailIn, String newPassword) throws SQLException;
-	public void aggiornaResidenzaUtente(String emailIn, String newResidenza) throws SQLException;
-	public void aggiornaBioPicUtente(String emailIn, byte[] newBioPic) throws SQLException;
-	public void aggiornaSaldoUtente(ProfiloUtente utenteLoggato2, double importo) throws SQLException;
+	public void aggiornaUsernameUtente(ProfiloUtente utenteLoggato) throws SQLException;
+	public void aggiornaPasswordUtente(ProfiloUtente utenteLoggato) throws SQLException;
+	public void aggiornaResidenzaUtente(ProfiloUtente utenteLoggato) throws SQLException;
+	public void aggiornaBioPicUtente(ProfiloUtente utenteLoggato) throws SQLException;
+	public void aggiornaSaldoUtente(ProfiloUtente utenteLoggato) throws SQLException;
 	
 	//Metodi di eliminazione
 

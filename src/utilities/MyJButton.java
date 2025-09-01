@@ -1,7 +1,6 @@
 package utilities;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -19,6 +18,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class MyJButton extends JButton implements ActionListener, KeyListener{
+	private static final long serialVersionUID = 1L;
+	
 	public static final Color uninaColor = new Color(65, 106, 144);
 	public static final Color uninaLightColor = new Color(198, 210, 222);
 	
@@ -27,9 +28,6 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
 	private Runnable downAction;
 	
 	private Integer badgeText;
-	
-	private Component previousComponent;
-	private Component nextComponent;
 	
 	public MyJButton() {
 		this.setBackground(new Color(65, 106, 144));
@@ -141,20 +139,4 @@ public class MyJButton extends JButton implements ActionListener, KeyListener{
 		defaultAction.run();
 	}
 	
-	
-	public void setPreviousComponent(Component previousComponent) {
-		this.previousComponent = previousComponent;
-	}
-	
-	public Component getPreviousComponent() {
-		return this.previousComponent;
-	}
-	
-	public void setNextComponent(Component nextComponent) {
-		this.nextComponent = nextComponent;
-	}
-	
-	public Component getNextComponent() {
-		return this.nextComponent;
-	}
 }

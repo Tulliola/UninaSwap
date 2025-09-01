@@ -60,9 +60,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 	@Override
 	protected void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteVendita) {
 		for(int i = offerteVendita.size() - 1; i >= 0; i--) {
-			if(offerteVendita.get(i) instanceof OffertaAcquisto) {
 				panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
-			}
 		}
 		
 		if(!panelOfferteAcquisto.hasPanels()) {
@@ -91,9 +89,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 	@Override
 	protected void settaPanelOfferteScambio(ArrayList<Offerta> offerteScambio) {
 		for(int i = offerteScambio.size() - 1; i >= 0; i--) {
-			if(offerteScambio.get(i) instanceof OffertaScambio) {
 				panelOfferteScambio.add(settaPanel(mainController, offerteScambio.get(i)));
-			}
 			
 		}
 		if(!panelOfferteScambio.hasPanels()) {
@@ -122,9 +118,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 	@Override
 	protected void settaPanelOfferteRegalo(ArrayList<Offerta> offerteRegalo) {
 		for(int i = offerteRegalo.size() - 1; i >= 0; i--) {
-			if(offerteRegalo.get(i) instanceof OffertaRegalo) {
 				panelOfferteRegalo.add(settaPanel(mainController, offerteRegalo.get(i)));
-			}
 		}
 		
 		if(!panelOfferteRegalo.hasPanels()) {

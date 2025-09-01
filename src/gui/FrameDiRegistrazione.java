@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 
 import javax.swing.*;
@@ -272,6 +271,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 	}
 
 	//Istruzioni da eseguire quando si clicca il bottone conferma registrazione
+	@SuppressWarnings("deprecation")
 	private void clickConfermaRegistrazione() {
 		try {
 			checkDatiRegistrazione();
@@ -315,6 +315,7 @@ public class FrameDiRegistrazione extends MyJFrame {
 	}
 	
 	//Controllo dei valori inseriti nei field
+	@SuppressWarnings("deprecation")
 	private void checkDatiRegistrazione() throws UsernameException, EmailException, PasswordException, ResidenzaException{
 	
 		checkUsername(usernameTextField.getText());

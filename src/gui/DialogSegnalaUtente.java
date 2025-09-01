@@ -138,7 +138,6 @@ public class DialogSegnalaUtente extends MyJDialog {
 				this.settaLabelETextAreaDiErrore(this.lblErroreSegnalazione, exc1.getMessage(), this.inserisciMotivoSegnalazione);
 			}
 			catch(SQLException exc2) {
-				System.out.println(exc2.getMessage());
 				JOptionPane.showMessageDialog(this, "Hai già segnalato questo utente.");
 			}
 		});

@@ -649,7 +649,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 			}
 			else {
 				offertaDaModificare = organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
-				mainController.onModificaOffertaRegaloButtonClicked(annuncioPerOfferta, offertaDaModificare);
+				mainController.onModificaOffertaRegaloButtonClicked(offertaDaModificare);
 			}
 		}
 		catch(ResidenzaException exc2) {

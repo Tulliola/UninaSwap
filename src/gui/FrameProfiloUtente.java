@@ -127,10 +127,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelAnnunciScaduti = new PanelVisualizzaAnnunciScadutiUtente(mainController, utenteLoggato.getAnnunciScaduti(), "Qui troverai tutti i tuoi annunci che sono scaduti", this);
 		panelAnnunciRimossi = new PanelVisualizzaAnnunciRimossiUtente(mainController, utenteLoggato.getAnnunciRimossi(), "Qui troverai tutti i tuoi annunci rimossi da te o a causa di una sospensione passata", this);
 		
-		panelAnnunciCard.add(panelAnnunciDisponibili, "        Annunci disponibili");
-		panelAnnunciCard.add(panelAnnunciUltimati, "        Annunci andati a buon fine");
-		panelAnnunciCard.add(panelAnnunciScaduti, "        Annunci scaduti");
-		panelAnnunciCard.add(panelAnnunciRimossi, "        Annunci rimossi");
+		panelAnnunciCard.add(panelAnnunciDisponibili, "        Disponibili");
+		panelAnnunciCard.add(panelAnnunciUltimati, "        Andati a buon fine");
+		panelAnnunciCard.add(panelAnnunciScaduti, "        Scaduti");
+		panelAnnunciCard.add(panelAnnunciRimossi, "        Rimossi");
 		((CardLayout) panelAnnunciCard.getLayout()).show(panelAnnunciCard, sezioneScelta);
 	
 		panelOfferteCard.setLayout(new CardLayout());
@@ -139,10 +139,10 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelOfferteRifiutate = new PanelVisualizzaOfferteRifiutateUtente(utenteLoggato.getOfferteRifiutate(), "Qui troverai tutte le tue offerte rifiutate", this, mainController);
 		panelOfferteInAttesa = new PanelVisualizzaOfferteInAttesaUtente(utenteLoggato.getOfferteInAttesa(), "Qui troverai tutte le tue offerte ancora in attesa di essere valutate", this, mainController);
 		panelOfferteRitirate = new PanelVisualizzaOfferteRitirateUtente(utenteLoggato.getOfferteRitirate(), "Qui troverai tutte le tue offerte che hai ritirato", this, mainController);
-		panelOfferteCard.add(panelOfferteAccettate, "        Offerte accettate");
-		panelOfferteCard.add(panelOfferteRifiutate, "        Offerte rifiutate");
-		panelOfferteCard.add(panelOfferteInAttesa, "        Offerte in attesa");
-		panelOfferteCard.add(panelOfferteRitirate, "        Offerte ritirate");
+		panelOfferteCard.add(panelOfferteAccettate, "        Accettate");
+		panelOfferteCard.add(panelOfferteRifiutate, "        Rifiutate");
+		panelOfferteCard.add(panelOfferteInAttesa, "        In attesa");
+		panelOfferteCard.add(panelOfferteRitirate, "        Ritirate");
 		((CardLayout) panelOfferteCard.getLayout()).show(panelOfferteCard, sezioneScelta);
 		
 		panelReport = new PanelVisualizzaReport(utenteLoggato);
@@ -164,45 +164,45 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelLateraleSx.getLblAnnunciDisponibili().setOnMouseClickedAction(() -> 
 		{
 			this.setTitle("Il tuo profilo - Annunci disponibili");
-			setClickedActions(panelLateraleSx.getLblAnnunciDisponibili(), "        Annunci disponibili");
+			setClickedActions(panelLateraleSx.getLblAnnunciDisponibili(), "        Disponibili");
 		});
 		
 		panelLateraleSx.getLblAnnunciUltimati().setOnMouseClickedAction(() -> 
 		{
 			this.setTitle("Il tuo profilo - Annunci ultimati");
-			setClickedActions(panelLateraleSx.getLblAnnunciUltimati(), "        Annunci andati a buon fine");
+			setClickedActions(panelLateraleSx.getLblAnnunciUltimati(), "        Andati a buon fine");
 		});
 		
 		panelLateraleSx.getLblAnnunciScaduti().setOnMouseClickedAction(() -> 
 		{
 			this.setTitle("Il tuo profilo - Annunci scaduti");
-			setClickedActions(panelLateraleSx.getLblAnnunciScaduti(), "        Annunci scaduti");
+			setClickedActions(panelLateraleSx.getLblAnnunciScaduti(), "        Scaduti");
 		});
 		
 		panelLateraleSx.getLblAnnunciRimossi().setOnMouseClickedAction(() -> 
 		{        
 			this.setTitle("Il tuo profilo - Annunci rimossi");
-			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Annunci rimossi");
+			setClickedActions(panelLateraleSx.getLblAnnunciRimossi(), "        Rimossi");
 		});
 		
 		panelLateraleSx.getLblOfferteAccettate().setOnMouseClickedAction(() -> {
 			this.setTitle("Il tuo profilo - Offerte accettate");
-			setClickedActions(panelLateraleSx.getLblOfferteAccettate(),"        Offerte accettate");
+			setClickedActions(panelLateraleSx.getLblOfferteAccettate(),"        Accettate");
 		});
 		
 		panelLateraleSx.getLblOfferteRifiutate().setOnMouseClickedAction(() -> {
 			this.setTitle("Il tuo profilo - Offerte rifiutate");
-			setClickedActions(panelLateraleSx.getLblOfferteRifiutate(),"        Offerte rifiutate");
+			setClickedActions(panelLateraleSx.getLblOfferteRifiutate(),"        Rifiutate");
 		});
 		
 		panelLateraleSx.getLblOfferteInAttesa().setOnMouseClickedAction(() -> {
 			this.setTitle("Il tuo profilo - Offerte in attesa");
-			setClickedActions(panelLateraleSx.getLblOfferteInAttesa(),"        Offerte in attesa");
+			setClickedActions(panelLateraleSx.getLblOfferteInAttesa(),"        In attesa");
 		});
 		
 		panelLateraleSx.getLblOfferteRitirate().setOnMouseClickedAction(() -> {
 			this.setTitle("Il tuo profilo - Offerte ritirate");
-			setClickedActions(panelLateraleSx.getLblOfferteRitirate(),"        Offerte ritirate");
+			setClickedActions(panelLateraleSx.getLblOfferteRitirate(),"        Ritirate");
 		});
 		
 		panelLateraleSx.getLblReportOfferte().setOnMouseClickedAction(() -> {
@@ -507,9 +507,6 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelVersaCashout.add(cashoutButton);
 		panelVersaCashout.add(Box.createHorizontalGlue());
 		
-//		ImageIcon showPWDIcon = new ImageIcon("images/iconShowPWD.png");
-//		ImageIcon hidePWDIcon = new ImageIcon("images/iconHidePWD.png");
-		
 		Image resizedShowPWD = new ImageIcon("images/iconShowPWD.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
 		Image resizedHidePWD = new ImageIcon("images/iconHidePWD.png").getImage().getScaledInstance(25,  25, Image.SCALE_SMOOTH);
 		
@@ -566,7 +563,6 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelRiepilogoInfoUtente.add(saldoTextField);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelRiepilogoInfoUtente.add(panelVersaCashout);
-//		panelRiepilogoInfoUtente.aggiungiTextFieldConLabel(saldoTextField, lblSaldo);
 		panelRiepilogoInfoUtente.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelRiepilogoInfoUtente.add(panelResidenza);
 		panelRiepilogoInfoUtente.add(residenzaTextField);

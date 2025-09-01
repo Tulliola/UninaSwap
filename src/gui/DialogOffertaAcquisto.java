@@ -817,7 +817,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				mainController.onConfermaOffertaButtonClicked(newOfferta);
 			}
 			else {
-				mainController.onModificaOffertaAcquistoButtonClicked(annuncioPerOfferta, offertaDaModificare);
+				mainController.onModificaOffertaAcquistoButtonClicked(offertaDaModificare);
 			}
 			
 		}

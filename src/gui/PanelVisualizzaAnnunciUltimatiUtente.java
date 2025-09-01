@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,15 +9,11 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
 import net.miginfocom.swing.MigLayout;
 import utilities.MyJAnnuncioPanel;
-import utilities.MyJAnnuncioSegnalabilePanel;
 import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
@@ -26,6 +21,8 @@ import utilities.MyJPanel;
 
 public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunciUtente {
 	
+	private static final long serialVersionUID = 1L;
+
 	public PanelVisualizzaAnnunciUltimatiUtente(Controller controller, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		super(controller, annunciToDisplay, messaggioAllUtente, parentFrame);
 		
@@ -103,12 +100,13 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		return panelRiepilogoScadenza;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	protected void settaPanelAnnunciVendita(ArrayList<Annuncio> annunciToDisplay) {
 
 		
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelAnnunciVendita.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+			panelAnnunciVendita.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
@@ -147,12 +145,13 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		}
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	protected void settaPanelAnnunciScambio(ArrayList<Annuncio> annunciToDisplay) {
 
 //		panelAnnunciScambio.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelAnnunciScambio.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+			panelAnnunciScambio.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
@@ -191,12 +190,13 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		}
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	protected void settaPanelAnnunciRegalo(ArrayList<Annuncio> annunciToDisplay) {
 
 //		panelAnnunciRegalo.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
-			panelAnnunciRegalo.add(new MyJAnnuncioSegnalabilePanel(mainController, annunciToDisplay.get(i)) {
+			panelAnnunciRegalo.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {

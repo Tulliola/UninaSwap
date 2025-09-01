@@ -207,15 +207,13 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 	}
 
 	@Override
-	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException {
+	public void updateStatoOfferta(Offerta offerta) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
 			
-			ps.setString(1, stato.toString());
+			ps.setString(1, offerta.getStato());
 			ps.setString(2, offerta.getUtenteProprietario().getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
 			
-			if(stato.equals(StatoOffertaEnum.Accettata) || stato.equals(StatoOffertaEnum.Ritirata))
-				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
 				
 			ps.executeUpdate();
 		}

@@ -5,5 +5,5 @@ import java.sql.SQLException;
 import dto.Offerta;
 
 public interface OffertaRegaloDAO {
-	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException;
+	public void updateOfferta(Offerta offertaDaModificare) throws SQLException;
 }

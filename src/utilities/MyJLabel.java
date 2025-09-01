@@ -24,6 +24,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MyJLabel extends JLabel implements ActionListener, MouseListener{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private Runnable defaultAction;
 	private Runnable onMouseEnteredAction;
 	private Runnable onMouseExitedAction;

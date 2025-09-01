@@ -99,9 +99,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 	@Override
 	protected void settaPanelOfferteAcquisto(ArrayList<Offerta> offerteVendita) {
 		for(int i = offerteVendita.size() - 1; i >= 0; i--) {
-			if(offerteVendita.get(i) instanceof OffertaAcquisto) {
-				panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
-			}
+			panelOfferteAcquisto.add(settaPanel(mainController, offerteVendita.get(i)));
 		}
 		if(!panelOfferteAcquisto.hasPanels()) {
 			panelOfferteAcquisto.setLayout(new MigLayout("fill, align center center"));
@@ -129,9 +127,7 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 	@Override
 	protected void settaPanelOfferteScambio(ArrayList<Offerta> offerteScambio) {
 		for(int i = offerteScambio.size() - 1; i >= 0; i--) {
-			if(offerteScambio.get(i) instanceof OffertaScambio) {
-				panelOfferteScambio.add(settaPanel(mainController, offerteScambio.get(i)));
-			}
+			panelOfferteScambio.add(settaPanel(mainController, offerteScambio.get(i)));
 		}
 		if(!panelOfferteScambio.hasPanels()) {
 			panelOfferteScambio.setLayout(new MigLayout("fill, align center center"));
@@ -159,9 +155,8 @@ public class PanelVisualizzaOfferteInAttesaUtente extends PanelVisualizzaOfferte
 	@Override
 	protected void settaPanelOfferteRegalo(ArrayList<Offerta> offerteRegalo) {
 		for(int i = offerteRegalo.size() - 1; i >= 0; i--) {
-			if(offerteRegalo.get(i) instanceof OffertaRegalo) {
-				panelOfferteRegalo.add(settaPanel(mainController, offerteRegalo.get(i)));
-			}
+			panelOfferteRegalo.add(settaPanel(mainController, offerteRegalo.get(i)));
+
 		}
 
 		if(!panelOfferteRegalo.hasPanels()) {

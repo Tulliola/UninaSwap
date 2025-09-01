@@ -3,30 +3,18 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
@@ -34,8 +22,6 @@ import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
 import net.miginfocom.swing.MigLayout;
-import utilities.MyJAnnuncioPanel;
-import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
@@ -67,8 +53,8 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(30);	
-//		scrollPane.getViewport().setViewPosition(new Point(0, 0));
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		scrollPane.getHorizontalScrollBar().setUnitIncrement(20);		
 		scrollPane.addMouseWheelListener(e -> {
 			if (!scrollPane.isWheelScrollingEnabled()) {
 		        return; 
@@ -204,9 +190,9 @@ abstract public class PanelVisualizzaAnnunciUtente extends MyJPanel {
 		panelDefault.setPreferredSize(scrollPane.getViewport().getSize());
 		panelDefault.setBackground(uninaLightColor);
 		
-		ArrayList<Annuncio> annunciVendita = new ArrayList();
-		ArrayList<Annuncio> annunciScambio = new ArrayList();
-		ArrayList<Annuncio> annunciRegalo = new ArrayList();
+		ArrayList<Annuncio> annunciVendita = new ArrayList<Annuncio>();
+		ArrayList<Annuncio> annunciScambio = new ArrayList<Annuncio>();
+		ArrayList<Annuncio> annunciRegalo = new ArrayList<Annuncio>();
 		
 		for(Annuncio annuncio: annunciToDisplay) {
 			if(annuncio instanceof AnnuncioVendita)

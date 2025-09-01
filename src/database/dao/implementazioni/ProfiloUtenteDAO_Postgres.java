@@ -61,52 +61,45 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	//Metodi di aggiornamento
 	
 	@Override
-	public void aggiornaUsernameUtente(String emailIn, String newUsername) throws SQLException {
+	public void aggiornaUsernameUtente(ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET Username = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
-			prepStat.setString(1, newUsername);
-			prepStat.setString(2, emailIn);
+			prepStat.setString(1, utenteLoggato.getUsername());
+			prepStat.setString(2, utenteLoggato.getEmail());
 			prepStat.executeUpdate();
 			
-			utenteLoggato.setUsername(newUsername);
 		}
 	}
 	
 	@Override
-	public void aggiornaPasswordUtente(String emailIn, String newPassword) throws SQLException {
+	public void aggiornaPasswordUtente(ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET PW = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
-			prepStat.setString(1, newPassword);
-			prepStat.setString(2, emailIn);
+			prepStat.setString(1, utenteLoggato.getPassword());
+			prepStat.setString(2, utenteLoggato.getEmail());
 			prepStat.executeUpdate();
-			
-			utenteLoggato.setPassword(newPassword);
 		}
 	}
 	
 	@Override
-	public void aggiornaResidenzaUtente(String emailIn, String newResidenza) throws SQLException {
+	public void aggiornaResidenzaUtente(ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET Residenza = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
-			prepStat.setString(1, newResidenza);
-			prepStat.setString(2, emailIn);
+			prepStat.setString(1, utenteLoggato.getResidenza());
+			prepStat.setString(2, utenteLoggato.getEmail());
 			prepStat.executeUpdate();
-			
-			utenteLoggato.setResidenza(newResidenza);
 		}
 	}
 	
 	@Override
-	public void aggiornaBioPicUtente(String emailIn, byte[] newBioPic) throws SQLException {
+	public void aggiornaBioPicUtente(ProfiloUtente utenteLoggato) throws SQLException {
 		String aggiornaFoto = "UPDATE Profilo_utente SET Immagine_profilo = ? WHERE Email = ?";
 		
 		try(PreparedStatement psAggiornaFoto = connessioneDB.prepareStatement(aggiornaFoto)){
-			psAggiornaFoto.setBytes(1, newBioPic);
-			psAggiornaFoto.setString(2, emailIn);
+			psAggiornaFoto.setBytes(1, utenteLoggato.getImmagineProfilo());
+			psAggiornaFoto.setString(2, utenteLoggato.getEmail());
 			
 			psAggiornaFoto.executeUpdate();
-			
-			utenteLoggato.setImmagineProfilo(newBioPic);
 		}
 	}
 	
@@ -134,6 +127,9 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 													rs.getString("PW"),
 													rs.getBoolean("sospeso")
 				);
+				
+				if(rs.getDate("Data_sospensione") != null)
+					profiloToReturn.setDataSospensione(rs.getDate("Data_sospensione"));
 				
 				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn);
@@ -236,9 +232,9 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	
 
 	@Override
-	public void aggiornaSaldoUtente(ProfiloUtente utente, double importo) throws SQLException{
+	public void aggiornaSaldoUtente(ProfiloUtente utente) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Profilo_utente SET Saldo = ? WHERE Email = ?")){
-			ps.setDouble(1, utente.getSaldo()+importo);
+			ps.setDouble(1, utente.getSaldo());
 			ps.setString(2, utente.getEmail());
 						
 			ps.executeUpdate();

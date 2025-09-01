@@ -3,14 +3,10 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Image;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -25,8 +21,6 @@ public class FrameCambiaImmagine extends JFrame {
 	private JPanel contentPane;
 	private MyJPanel panelContenenteFoto;
 	private Controller mainController;
-
-	private byte[] immagineSelezionata;
 	
 	public FrameCambiaImmagine(Controller controller, byte[][] immaginiDiSistema) {
 		mainController = controller;

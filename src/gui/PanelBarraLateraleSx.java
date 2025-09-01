@@ -64,19 +64,19 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private void aggiungiRigheAnnunciNelPanel() {
 		
 		lblAnnunciDisponibili.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci disponibili");
+			mainController.passaASezioneInFrameProfiloUtente("        Disponibili");
 		});
 		
 		lblAnnunciUltimati.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci andati a buon fine");
+			mainController.passaASezioneInFrameProfiloUtente("        Andati a buon fine");
 		});
 		
 		lblAnnunciScaduti.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci scaduti");
+			mainController.passaASezioneInFrameProfiloUtente("        Scaduti");
 		});
 		
 		lblAnnunciRimossi.setOnMouseClickedAction(() ->{
-			mainController.passaASezioneInFrameProfiloUtente("        Annunci rimossi");
+			mainController.passaASezioneInFrameProfiloUtente("        Rimossi");
 		});
 		aggiungiRigaNelPanel(lblIMieiAnnunci, false, null);
 		aggiungiRigaNelPanel(lblAnnunciUltimati, true, "images/iconaAnnunciUltimati.png");
@@ -89,21 +89,21 @@ public class PanelBarraLateraleSx extends MyJPanel {
 	private void aggiungiRigheOfferteNelPanel() {
 		
 		lblOfferteAccettate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte accettate");
+			mainController.passaASezioneInFrameProfiloUtente("        Accettate");
 		});
 		
 		lblOfferteInAttesa.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte in attesa");
+			mainController.passaASezioneInFrameProfiloUtente("        In attesa");
 			
 		});
 		
 		lblOfferteRifiutate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte rifiutate");
+			mainController.passaASezioneInFrameProfiloUtente("        Rifiutate");
 			
 		});
 		
 		lblOfferteRitirate.setOnMouseClickedAction(()->{
-			mainController.passaASezioneInFrameProfiloUtente("        Offerte ritirate");
+			mainController.passaASezioneInFrameProfiloUtente("        Ritirate");
 			
 		});
 		

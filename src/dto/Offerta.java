@@ -28,11 +28,10 @@ public abstract class Offerta {
 
 	public Offerta(ProfiloUtente offerente, Timestamp momentoProposta, ModConsegnaEnum modalitaConsegnaScelta,
 			StatoOffertaEnum stato, Annuncio annuncioRiferito) {
-		this.utenteProprietario = offerente;
-		this.momentoProposta = momentoProposta;
-		this.modalitaConsegnaScelta = modalitaConsegnaScelta;
+		this(offerente, modalitaConsegnaScelta, annuncioRiferito);
+		
 		this.stato = stato;
-		this.annuncioRiferito = annuncioRiferito;
+		this.momentoProposta = momentoProposta;
 	}
 	
 	public Offerta(ProfiloUtente offerente, ModConsegnaEnum modalitaConsegnaScelta, Annuncio annuncioRiferito) {

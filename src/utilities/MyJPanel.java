@@ -4,21 +4,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-
-import com.formdev.flatlaf.FlatClientProperties;
 
 public class MyJPanel extends JPanel implements MouseListener {
+	private static final long serialVersionUID = 1L;
 	public static final Color uninaColor = new Color(65, 106, 144);
 	public static final Color uninaLightColor = new Color(198, 210, 222);
 	public static final Color uninaColorClicked = new Color(85, 126, 164);

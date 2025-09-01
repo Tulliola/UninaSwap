@@ -813,7 +813,7 @@ public class DialogOffertaScambio extends MyJDialog {
 			}
 			else {
 				offertaDaModificare = this.organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
-				mainController.onModificaOffertaScambioButtonClicked(annuncioPerOfferta, offertaDaModificare, operazioniDaEseguire);
+				mainController.onModificaOffertaScambioButtonClicked(offertaDaModificare, operazioniDaEseguire);
 			}
 			
 		}

@@ -175,11 +175,11 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	}
 
 	@Override
-	public void updateStatoOfferta(Offerta offerta, StatoOffertaEnum stato, ProfiloUtente utenteLoggato) throws SQLException {
+	public void updateStatoOfferta(Offerta offerta) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET Stato = ? WHERE email = ? AND Momento_proposta = ?")){
 			
-			ps.setString(1, stato.toString());
-			ps.setString(2, utenteLoggato.getEmail());
+			ps.setString(1, offerta.getStato());
+			ps.setString(2, offerta.getUtenteProprietario().getEmail());
 			ps.setTimestamp(3, offerta.getMomentoProposta());
 			
 			ps.executeUpdate();
@@ -218,7 +218,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 	}
 
 	@Override
-	public Offerta updateOfferta(Offerta offertaDaModificare) throws SQLException {
+	public void updateOfferta(Offerta offertaDaModificare) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Offerta_acquisto SET"
 				+ " Nota = ?, Indirizzo_spedizione = ?, Ora_inizio_incontro = ?, Ora_fine_incontro = ?, Giorno_incontro = ?, "
 				+ " Sede_incontro = ?, Modalita_consegna_scelta = ?, Messaggio_motivazionale = ?, idUfficio = ?"
@@ -297,7 +297,6 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 			
 			ps.executeUpdate();
 			
-			return offertaDaModificare;
 		}
 	}
 		

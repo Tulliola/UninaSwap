@@ -1,18 +1,12 @@
 package gui;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
+
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.CompoundBorder;
 
 import controller.Controller;
 import eccezioni.*;
@@ -155,17 +149,12 @@ public class FrameDiLogin extends MyJFrame {
 		
 		emailTextField.rendiTextFieldKeyListenable();
 		emailTextField.rendiTextFieldMouseListenable();
-		emailTextField.rendiTextFieldFocusable();
 		
 		emailTextField.setAlignmentX(LEFT_ALIGNMENT);
 		
 		MyJLabel lblPassword = new MyJLabel("Password", new Font("Ubuntu Sans", Font.BOLD, 15));
 		passwordField = new MyJPasswordField();
 		passwordField.setAlignmentX(LEFT_ALIGNMENT);
-
-		//Focus
-		emailTextField.setFocusGainedAction(() -> {});
-		emailTextField.setFocusLostAction(() -> {});
 		
 		//ActionListener
 		emailTextField.setDefaultAction(() -> {
@@ -242,19 +231,16 @@ public class FrameDiLogin extends MyJFrame {
 				
 			}
 		});
-		
-		accediButton.setPreviousComponent(passwordField);
-		
+				
 		accediButton.setUpAction(() -> {
-			accediButton.getPreviousComponent().setFocusable(true);
-			accediButton.getPreviousComponent().requestFocus();
+			passwordField.setFocusable(true);
+			passwordField.requestFocus();
 		});
 		
-		accediButton.setNextComponent(registratiButton);
 		
 		accediButton.setDownAction(() -> {
-			accediButton.getNextComponent().setFocusable(true);
-			accediButton.getNextComponent().requestFocus();
+			registratiButton.setFocusable(true);
+			registratiButton.requestFocus();
 		});
 		
 		JLabel lblOppureRegistrati = new JLabel ("Oppure, se non sei ancora registrato, fallo!");
@@ -286,6 +272,7 @@ public class FrameDiLogin extends MyJFrame {
 	}
 
 	//Verifica che l'utente riempia i campi
+	@SuppressWarnings("deprecation")
 	private void checkDatiAccesso() {
 		checkEmail(emailTextField.getText());
 		checkPassword(passwordField.getText());
@@ -302,6 +289,7 @@ public class FrameDiLogin extends MyJFrame {
 	}
 	
 	//Istruzioni da eseguire quando l'utente clicca "Accedi"
+	@SuppressWarnings("deprecation")
 	private void clickAccedi() throws IOException {
 		try {
 			checkDatiAccesso();
