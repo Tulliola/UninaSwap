@@ -56,6 +56,8 @@ public class Controller {
 	private DialogConfermaRimozioneAnnuncio dialogConfermaRimozioneAnnuncio;
 	private DialogCashout dialogCashout;
 	private DialogOffertaAccettataAnnuncio dialogOffertaAccettataAnnuncio;
+	private DialogDiAvvenutaRegistrazione dialogDiAvvenutaRegistrazione;
+	private DialogDiComunicataSospensione dialogDiComunicataSospensione;
 	
 	private static Connection connessioneDB;
 	
@@ -201,12 +203,12 @@ public class Controller {
 		
 	}
 	
-	public void passaAFrameHomePage(JDialog frameDiPartenza) {
+	public void passaAFrameHomePage(JDialog dialogDiPartenza) {
 		for(FrameCaricaOggettoScambio frameCaricaOggetti: frameCaricaOggetto) {
 			if(frameCaricaOggetti != null)
 				frameCaricaOggetti.dispose();
 		}
-		frameDiPartenza.dispose();
+		dialogDiPartenza.dispose();
 	}
 
 	public void passaAFramePubblicaAnnuncio(String tipoAnnuncioDaPubblicare) {
@@ -230,8 +232,8 @@ public class Controller {
 		String[] motiviSegnalazioni = utenteDAO.recuperaMotiviSegnalazioni(utenteLoggato.getEmail());
 		String[] utentiSegnalanti = utenteDAO.recuperaUtentiSegnalanti(utenteLoggato.getEmail());
 		
-		DialogDiComunicataSospensione comunicaSospensione = new DialogDiComunicataSospensione(frameDiLogin, utenteLoggato.getDataSospensione(), motiviSegnalazioni, true, utentiSegnalanti);
-		comunicaSospensione.setVisible(true);
+		dialogDiComunicataSospensione = new DialogDiComunicataSospensione(frameDiLogin, utenteLoggato.getDataSospensione(), motiviSegnalazioni, true, utentiSegnalanti);
+		dialogDiComunicataSospensione.setVisible(true);
 		frameDiLogin.dispose();
 	}
 	
@@ -274,8 +276,83 @@ public class Controller {
 		dialogVisualizzaFoto.setVisible(true);
 	}
 	
+	public void passaADialogConfermaLogout() {
+		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
+		dialogConfermaLogout.setVisible(true);
+	}
+
+	
+	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
+		frameProfiloUtente.setVisible(false);
+		frameVisualizzaOfferteAnnuncio = new FrameVisualizzaOfferteAnnuncio(offerte, this);
+		frameVisualizzaOfferteAnnuncio.setVisible(true);
+	}
+
+	public void passaADialogVersamento() {
+		dialogVersamento = new DialogVersamento(this, utenteLoggato, frameProfiloUtente);
+		dialogVersamento.setVisible(true);
+	}	
+
+	public void passaADialogConfermaRimozioneAnnuncio(Annuncio annuncioToRemove) {
+		dialogConfermaRimozioneAnnuncio = new DialogConfermaRimozioneAnnuncio(this, frameProfiloUtente, annuncioToRemove);
+		dialogConfermaRimozioneAnnuncio.setVisible(true);
+	}
+	
+
+	public void passaADialogCashout() {
+		dialogCashout = new DialogCashout(this, utenteLoggato, frameProfiloUtente);
+		dialogCashout.setVisible(true);
+	}
+
+
+	public void passaADialogConfermaRitiroOfferta(Offerta offertaDaRitirare) {
+		dialogConfermaRitiroOfferte = new DialogConfermaRitiroOfferta(this, frameProfiloUtente, offertaDaRitirare);
+		dialogConfermaRitiroOfferte.setVisible(true);
+	}
+	
+	
+
+	public void passaADialogSegnalaUtente(Annuncio annuncio) {
+		dialogSegnalaUtente = new DialogSegnalaUtente(this, frameHomePage, utenteLoggato, annuncio.getUtenteProprietario());
+		dialogSegnalaUtente.setVisible(true);
+	}
+
+
+	public void passaADialogVisualizzaOffertaSpecificaUtente(Offerta offerta, Container container) {
+		dialogOffertaSpecifica = new DialogOffertaSpecificaUtente(offerta, this, container);
+		dialogOffertaSpecifica.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaAccettataAnnuncio(Offerta offertaAccettata) {
+		dialogOffertaAccettataAnnuncio = new DialogOffertaAccettataAnnuncio(offertaAccettata, this, frameProfiloUtente);
+		dialogOffertaAccettataAnnuncio.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaAcquistoDaModificare(Offerta offertaDaModificare) {
+		dialogOffertaAcquisto = new DialogOffertaAcquisto(offertaDaModificare.getAnnuncioRiferito(), this, offertaDaModificare);
+		dialogOffertaAcquisto.setVisible(true);
+	}
+	
+	public void passaADialogOffertaScambioDaModificare(OffertaScambio offerta) {
+		
+		dialogOffertaScambio = new DialogOffertaScambio(offerta.getAnnuncioRiferito(), this, offerta);
+		
+		for(int i = 0; i < offerta.getOggettiOfferti().size(); i++)
+			frameCaricaOggetto[i] = new FrameCaricaOggettoScambio(this, i, offerta.getOggettiOfferti().get(i));
+		
+		dialogOffertaScambio.setVisible(true);
+	}
+
+
+	public void passaADialogOffertaRegaloDaModificare(Offerta offerta) {
+		dialogOffertaRegalo = new DialogOffertaRegalo(offerta.getAnnuncioRiferito(), this, offerta);
+		dialogOffertaRegalo.setVisible(true);
+	}
+	
 	// Metodi onButtonClicked
-	public void onAccessoButtonClicked(String email, String password) throws SQLException, IOException{
+	public void onAccessoButtonClicked(String email, String password) throws SQLException{
 		utenteLoggato = utenteDAO.recuperaUtenteConEmailOUsernameEPassword(email, password);
 		
 		if(utenteLoggato.isSospeso())
@@ -299,8 +376,8 @@ public class Controller {
 		
 		utenteDAO.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
 		
-		DialogDiAvvenutaRegistrazione caricamentoTornaALoginFrame = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
-		caricamentoTornaALoginFrame.setVisible(true);
+		dialogDiAvvenutaRegistrazione = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
+		dialogDiAvvenutaRegistrazione.setVisible(true);
 		
 		this.tornaALogin();
 	}
@@ -378,160 +455,6 @@ public class Controller {
 		dialogSegnalaUtente.dispose();
 	}
 	
-	// Metodi di recupero
-	
-	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame) {
-		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
-		
-		return oggettoRecuperato;
-	}
-	
-	//Getters
-	public ProfiloUtente getUtenteLoggato() {
-		return utenteLoggato;
-	}
-	
-	public ArrayList<UfficioPostale> getUfficiPostali(){
-		return ufficiPresenti;
-	}
-
-	public void logout() {
-		frameProfiloUtente.dispose();
-		frameDiLogin = new FrameDiLogin(this);
-		frameDiLogin.setVisible(true);
-	}
-
-
-	public void passaADialogConfermaLogout() {
-		this.dialogConfermaLogout = new DialogConfermaLogout(this, frameProfiloUtente);
-		dialogConfermaLogout.setVisible(true);
-	}
-
-
-	public void chiudiDialogConfermaLogout() {
-		dialogConfermaLogout.dispose();
-	}
-
-	public void chiudiDialogVersamento(boolean hasVersato) {
-		dialogVersamento.dispose();
-		if(hasVersato)
-			this.passaAFrameHomePage(frameProfiloUtente);
-	}
-	
-	public void passaAFrameVisualizzaOfferte(ArrayList<Offerta> offerte) {
-		frameProfiloUtente.setVisible(false);
-		frameVisualizzaOfferteAnnuncio = new FrameVisualizzaOfferteAnnuncio(offerte, this);
-		frameVisualizzaOfferteAnnuncio.setVisible(true);
-	}
-
-
-	public void aggiornaStatoOfferta(Offerta offerta, StatoOffertaEnum newStato) {
-		offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offerta, connessioneDB);
-		
-		try {
-			if(offerta instanceof OffertaAcquisto && (newStato.equals(StatoOffertaEnum.Accettata) || newStato.equals(StatoOffertaEnum.Ritirata)))
-				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
-			
-			offerta.setStato(newStato);
-			offertaDAO.updateStatoOfferta(offerta);
-			passaAFrameHomePage(frameProfiloUtente);
-		} 
-		catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-
-	public void passaADialogVersamento() {
-		dialogVersamento = new DialogVersamento(this, utenteLoggato, frameProfiloUtente);
-		dialogVersamento.setVisible(true);
-	}
-
-
-	public void aggiornaSaldoUtente(double importo) {
-		
-		try {
-			utenteLoggato.aggiornaSaldo(importo);
-			utenteDAO.aggiornaSaldoUtente(utenteLoggato);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public void passaADialogConfermaRimozioneAnnuncio(Annuncio annuncioToRemove) {
-		dialogConfermaRimozioneAnnuncio = new DialogConfermaRimozioneAnnuncio(this, frameProfiloUtente, annuncioToRemove);
-		dialogConfermaRimozioneAnnuncio.setVisible(true);
-	}
-
-
-	public void chiudDialogConfermaRimozioneAnnuncio(boolean prelevatoOVersato) {
-		dialogConfermaRimozioneAnnuncio.dispose();
-	}
-
-
-	public void aggiornaStatoAnnuncio(Annuncio annuncio, StatoAnnuncioEnum stato) {
-		try {
-			annuncio.setStatoEnum(stato);
-			annuncioDAO.aggiornaStatoAnnuncio(annuncio);
-			passaAFrameHomePage(frameProfiloUtente);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public void passaADialogCashout() {
-		dialogCashout = new DialogCashout(this, utenteLoggato, frameProfiloUtente);
-		dialogCashout.setVisible(true);
-	}
-
-
-	public void chiudiDialogCashout(boolean hasPrelevato) {
-		dialogCashout.dispose();
-		if(hasPrelevato)
-			this.passaAFrameHomePage(frameProfiloUtente);
-	}
-
-
-	public void passaADialogConfermaRitiroOfferta(Offerta offerta) {
-		dialogConfermaRitiroOfferte = new DialogConfermaRitiroOfferta(this, frameProfiloUtente, offerta);
-		dialogConfermaRitiroOfferte.setVisible(true);
-	}
-
-
-	public void chiudiDialogConfermaRitiroOfferta() {
-		dialogConfermaRitiroOfferte.dispose();
-	}
-
-
-	public void passaADialogSegnalaUtente(Annuncio annuncio) {
-		dialogSegnalaUtente = new DialogSegnalaUtente(this, frameHomePage, utenteLoggato, annuncio.getUtenteProprietario());
-		dialogSegnalaUtente.setVisible(true);
-	}
-
-
-	public void passaADialogVisualizzaOffertaSpecificaUtente(Offerta offerta, Controller mainController,
-			Container container) {
-		dialogOffertaSpecifica = new DialogOffertaSpecificaUtente(offerta, this, container);
-		dialogOffertaSpecifica.setVisible(true);
-	}
-
-
-	public void passaADialogOffertaAccettataAnnuncio(Offerta offertaAccettata) {
-		dialogOffertaAccettataAnnuncio = new DialogOffertaAccettataAnnuncio(offertaAccettata, this, frameProfiloUtente);
-		dialogOffertaAccettataAnnuncio.setVisible(true);
-	}
-
-
-	public void passaADialogOffertaAcquistoDaModificare(Offerta offertaDaModificare) {
-		dialogOffertaAcquisto = new DialogOffertaAcquisto(offertaDaModificare.getAnnuncioRiferito(), this, offertaDaModificare);
-		dialogOffertaAcquisto.setVisible(true);
-	}
-
-
 	public void onModificaOffertaAcquistoButtonClicked(Offerta offertaModificata) throws SQLException {
 		offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		
@@ -574,24 +497,6 @@ public class Controller {
 			dialogOffertaRegalo.dispose();
 	}
 
-
-	public void passaADialogOffertaScambioDaModificare(OffertaScambio offerta) {
-		
-		dialogOffertaScambio = new DialogOffertaScambio(offerta.getAnnuncioRiferito(), this, offerta);
-		
-		for(int i = 0; i < offerta.getOggettiOfferti().size(); i++)
-			frameCaricaOggetto[i] = new FrameCaricaOggettoScambio(this, i, offerta.getOggettiOfferti().get(i));
-		
-		dialogOffertaScambio.setVisible(true);
-	}
-
-
-	public void passaADialogOffertaRegaloDaModificare(Offerta offerta) {
-		dialogOffertaRegalo = new DialogOffertaRegalo(offerta.getAnnuncioRiferito(), this, offerta);
-		dialogOffertaRegalo.setVisible(true);
-	}
-
-
 	public void onModificaOffertaRegaloButtonClicked(Offerta offertaDaModificare) throws SQLException {
 		offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
 		
@@ -607,4 +512,97 @@ public class Controller {
 			dialogOffertaRegalo.dispose();
 	}
 	
+	// Metodi di recupero
+	
+	public Oggetto recuperaOggettoDaFrameCaricaOggetto(int indiceDelFrame) {
+		Oggetto oggettoRecuperato = frameCaricaOggetto[indiceDelFrame].passaOggettoAlController();
+		
+		return oggettoRecuperato;
+	}
+	
+	//Getters
+	public ProfiloUtente getUtenteLoggato() {
+		return utenteLoggato;
+	}
+	
+	public ArrayList<UfficioPostale> getUfficiPostali(){
+		return ufficiPresenti;
+	}
+
+	public void logout() {
+		frameProfiloUtente.dispose();
+		frameDiLogin = new FrameDiLogin(this);
+		frameDiLogin.setVisible(true);
+	}
+
+
+	
+
+	public void aggiornaStatoOfferta(Offerta offerta, StatoOffertaEnum newStato) {
+		offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offerta, connessioneDB);
+		
+		try {
+			if(offerta instanceof OffertaAcquisto && (newStato.equals(StatoOffertaEnum.Accettata) || newStato.equals(StatoOffertaEnum.Ritirata)))
+				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
+			
+			offerta.setStato(newStato);
+			offertaDAO.updateStatoOfferta(offerta);
+			passaAFrameHomePage(frameProfiloUtente);
+		} 
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+
+	public void aggiornaSaldoUtente(double newImporto) {
+		
+		try {
+			utenteLoggato.aggiornaSaldo(newImporto);
+			utenteDAO.aggiornaSaldoUtente(utenteLoggato);
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void aggiornaStatoAnnuncio(Annuncio annuncio, StatoAnnuncioEnum newStato) {
+		try {
+			annuncio.setStatoEnum(newStato);
+			annuncioDAO.aggiornaStatoAnnuncio(annuncio);
+			passaAFrameHomePage(frameProfiloUtente);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void chiudiDialogConfermaLogout() {
+		dialogConfermaLogout.dispose();
+	}
+
+	public void chiudiDialogVersamento(boolean haVersato) {
+		dialogVersamento.dispose();
+		if(haVersato)
+			this.passaAFrameHomePage(frameProfiloUtente);
+	}
+
+	public void chiudDialogConfermaRimozioneAnnuncio(boolean prelevatoOVersato) {
+		dialogConfermaRimozioneAnnuncio.dispose();
+	}
+
+
+	public void chiudiDialogCashout(boolean haPrelevato) {
+		dialogCashout.dispose();
+		if(haPrelevato)
+			this.passaAFrameHomePage(frameProfiloUtente);
+	}
+
+
+	public void chiudiDialogConfermaRitiroOfferta() {
+		dialogConfermaRitiroOfferte.dispose();
+	}
+
 }

@@ -6,15 +6,15 @@ public class UfficioPostale {
 	private String via;
 	private String civico;
 	private String comune;
-	private String cap;
+	private String CAP;
 	
-	public UfficioPostale(int idUfficio, String nome, String via, String civico, String comune, String cap) {
+	public UfficioPostale(int idUfficio, String nome, String via, String civico, String comune, String CAP) {
 		this.idUfficio = idUfficio;
 		this.nome = nome;
 		this.via = via;
 		this.civico = civico;
 		this.comune = comune;
-		this.cap = cap;
+		this.CAP = CAP;
 	}
 
 	public int getIdUfficio() {
@@ -58,16 +58,16 @@ public class UfficioPostale {
 	}
 
 	public String getCap() {
-		return cap;
+		return CAP;
 	}
 
 	public void setCap(String cap) {
-		this.cap = cap;
+		this.CAP = cap;
 	}
 	
 	@Override
 	public String toString() {
-		return nome+" - " +via+ ", "+civico+", "+comune+", "+cap;
+		return nome+" - " +via+ ", "+civico+", "+comune+", "+CAP;
 	}
 	
 	@Override 

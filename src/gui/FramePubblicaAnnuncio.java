@@ -1307,7 +1307,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		CondizioneEnum condizioneSelezionata = CondizioneEnum.confrontaConStringa(this.condizioniOggettoComboBox.getSelectedItem().toString());
 		
 		Oggetto oggettoDaPassare = new Oggetto(categoriaSelezionata, condizioneSelezionata, 
-				this.lblAggiungiFoto1.getImmagineInByte(), true);
+				this.lblAggiungiFoto1.getImmagineInByte());
 		
 		oggettoDaPassare.aggiungiImmagine(1, this.lblAggiungiFoto2.getImmagineInByte());
 		oggettoDaPassare.aggiungiImmagine(2, this.lblAggiungiFoto3.getImmagineInByte());

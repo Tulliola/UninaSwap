@@ -178,7 +178,7 @@ public abstract class Offerta {
 		
 		toReturn += "Momento proposta = "+momentoProposta+"\n";
 		toReturn += "Nota = "+nota+"\n";
-//		toReturn += "Sede Incontro = "+sedeIncontro+"\n";
+		toReturn += "Sede Incontro = "+sedeDIncontroScelta+"\n";
 		toReturn += "Indirizzo spedizione = "+indirizzoSpedizione+"\n";
 		toReturn += "Ora inizio incontro scelta = "+oraInizioIncontro+"\n";
 		toReturn += "Ora fine incontro scelta = "+oraFineIncontro+"\n";

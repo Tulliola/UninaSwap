@@ -73,8 +73,7 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
 						CondizioneEnum.confrontaConStringa(rsOggetto.getString("Condizioni")),
-						immaginiOggetto[0],
-						isOggettoDisponibile(idOggetto)
+						immaginiOggetto[0]
 				);
 				
 				if(rsOggetto.getString("Descrizione") != null) {
@@ -91,21 +90,6 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 	}
 	
 	@Override
-	public boolean isOggettoDisponibile(int idOggetto) throws SQLException {
-		try(PreparedStatement ps = connessioneDB.prepareStatement("(SELECT idOggetto FROM OGGETTO NATURAL JOIN ANNUNCIO WHERE idOggetto = ? AND "
-				+ "(NOT(Stato = 'Venduto' OR Stato = 'Regalato' OR Stato = 'Scambiato' OR Stato = 'Indisponibile')))"
-				+ "UNION (SELECT idOggetto FROM OGGETTO NATURAL JOIN OFFERTA_SCAMBIO WHERE idOggetto = ? AND"
-				+ "(NOT(Stato = 'Accettata')))")){
-			ps.setInt(1, idOggetto);
-			ps.setInt(2, idOggetto);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				return rs.next();
-			}
-		}
-	}
-	
-	@Override
 	public ArrayList<Oggetto> recuperaOggettiOffertiConIdOfferta(int idOfferta) throws SQLException {
 		ArrayList<Oggetto> toReturn = new ArrayList();
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Oggetto_offerto NATURAL JOIN Offerta_scambio NATURAL JOIN Oggetto WHERE idOfferta = ? ORDER BY Momento_proposta DESC")){
@@ -115,8 +99,7 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 				while(rs.next()) {
 					byte[][] immaginiOggetto = recuperaImmagini(rs.getInt("idOggetto"));
 					Oggetto oggettoDaAggiungere = new Oggetto(rs.getInt("idOggetto"), CategoriaEnum.confrontaConStringa(rs.getString("categoria")),
-							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0], 
-							isOggettoDisponibile(rs.getInt("idOggetto")));
+							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0]);
 					
 					if(rs.getString("Descrizione") != null) {
 						oggettoDaAggiungere.setDescrizione(rs.getString("Descrizione"));

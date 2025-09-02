@@ -11,9 +11,9 @@ import utilities.StatoOffertaEnum;
 public class OffertaScambio extends Offerta {
 	//Attributi propri
 	Integer idOfferta;
+	private int numOggettiOffribili = 3;
 	
 	//Attributi derivati da relazioni
-	private int numOggettiOffribili = 3;
 	private ArrayList<Oggetto> oggettiOfferti = new ArrayList<>();
 	
 	

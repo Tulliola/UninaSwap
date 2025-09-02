@@ -10,24 +10,16 @@ public class Oggetto {
 	private CategoriaEnum categoria;
 	private CondizioneEnum condizioni;
 	private byte[][] immagini = new byte[3][];
-	private boolean disponibile = true;
-	
-	//Attributi derivati da relazioni
-	private Annuncio annuncioContenente;
-
-	
-	
-	public Oggetto(int idOggetto, CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine,
-			boolean disponibile) {
-		this(categoria, condizioni, immagine, disponibile);
+		
+	public Oggetto(int idOggetto, CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine) {
+		this(categoria, condizioni, immagine);
 		this.idOggetto = idOggetto;
 	}
 	
-	public Oggetto(CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine, boolean disponibile) {
+	public Oggetto(CategoriaEnum categoria, CondizioneEnum condizioni, byte[] immagine) {
 		this.categoria = categoria;
 		this.condizioni = condizioni;
 		this.immagini[0] = immagine;
-		this.disponibile = disponibile;
 	}
 	
 
@@ -36,15 +28,11 @@ public class Oggetto {
 			this.immagini[index] = immagine;
 	}
 	
-	public void aggiungiImmagini(byte[][] immagini, int numeroImmaginiDaInserire, int numeroImmaginiGiaPresenti) {
+	public void aggiungiImmagini(byte[][] immagini) {
 		for(int i = 0; i < 3; i++) {
 			if(immagini[i] != null)
 				this.immagini[i] = immagini[i];
 		}
-	}
-	
-	public void impostaOggettoInAnnuncio() {
-		annuncioContenente.setOggettoInAnnuncio(this);
 	}
 
 	public int getIdOggetto() {
@@ -102,21 +90,6 @@ public class Oggetto {
 		this.immagini = immagini;
 	}
 
-	public boolean isDisponibile() {
-		return disponibile;
-	}
-
-	public void setDisponibile(boolean disponibile) {
-		this.disponibile = disponibile;
-	}
-
-	public Annuncio getAnnuncioContenente() {
-		return annuncioContenente;
-	}
-
-	public void setAnnuncioContenente(Annuncio annuncioContenente) {
-		this.annuncioContenente = annuncioContenente;
-	}
 	
 	@Override
 	public String toString() {
@@ -126,8 +99,6 @@ public class Oggetto {
 		toReturn += "Descrizione = "+descrizione+"\n";
 		toReturn += "Categoria = "+categoria+"\n";
 		toReturn += "Condizioni = "+condizioni+"\n";
-		toReturn += "Disponibile? = "+disponibile+"\n";
-		toReturn += "Annuncio in cui è eventualmente contenuto = "+annuncioContenente+"\n";
 		
 		return toReturn;
 	}

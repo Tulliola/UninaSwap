@@ -11,23 +11,23 @@ import utilities.StatoAnnuncioEnum;
 
 public abstract class Annuncio {
 	//Attributi propri
-	private int idAnnuncio;
-	private boolean spedizione;
-	private boolean ritiroInPosta;
-	private boolean incontro;
-	private StatoAnnuncioEnum stato = StatoAnnuncioEnum.Disponibile;
-	private Timestamp momentoPubblicazione;
-	private String nome;
-	private Date dataScadenza = null;
+	protected int idAnnuncio;
+	protected boolean spedizione;
+	protected boolean ritiroInPosta;
+	protected boolean incontro;
+	protected StatoAnnuncioEnum stato = StatoAnnuncioEnum.Disponibile;
+	protected Timestamp momentoPubblicazione;
+	protected String nome;
+	protected Date dataScadenza = null;
 
 	//Attributi derivati da relazioni
-	private ArrayList<Offerta> offerteRicevute = new ArrayList();
-	private ProfiloUtente utenteProprietario;
-	private Oggetto oggettoInAnnuncio;
-	private ArrayList<SedeUniversita> sedeIncontroProposte = new ArrayList();
-	private ArrayList<String> oraInizioIncontro = new ArrayList();
-	private ArrayList<String> oraFineIncontro = new ArrayList();
-	private ArrayList<GiornoEnum> giornoIncontro = new ArrayList();
+	protected ArrayList<Offerta> offerteRicevute = new ArrayList();
+	protected ProfiloUtente utenteProprietario;
+	protected Oggetto oggettoInAnnuncio;
+	protected ArrayList<SedeUniversita> sedeIncontroProposte = new ArrayList();
+	protected ArrayList<String> oraInizioIncontro = new ArrayList();
+	protected ArrayList<String> oraFineIncontro = new ArrayList();
+	protected ArrayList<GiornoEnum> giornoIncontro = new ArrayList();
 	
 	//Attributi per le interazioni
 	private Random generatoreCasualeDiInterazioni = new Random();

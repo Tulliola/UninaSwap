@@ -29,7 +29,6 @@ import utilities.MyJPanel;
 public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOfferteUtente {
 
 	private static final long serialVersionUID = 1L;
-
 	
 	public PanelVisualizzaOfferteAccettateUtente(ArrayList<Offerta> offerteToDisplay, String messaggioAllUtente, MyJFrame parentFrame, Controller controller) {
 		super(offerteToDisplay, messaggioAllUtente, parentFrame, controller);
@@ -156,7 +155,7 @@ public class PanelVisualizzaOfferteAccettateUtente extends PanelVisualizzaOffert
 				
 				MyJButton visualizzaOffertaButton = new MyJButton("Visualizza i dettagli dell'offerta accettata");
 				visualizzaOffertaButton.setDefaultAction(()->{
-					mainController.passaADialogVisualizzaOffertaSpecificaUtente(offerta, mainController, this.getTopLevelAncestor());
+					mainController.passaADialogVisualizzaOffertaSpecificaUtente(offerta, this.getTopLevelAncestor());
 				});
 				
 				panelSottoDescrizione.add(Box.createHorizontalGlue());
