@@ -14,12 +14,10 @@ import database.dao.interfacce.OffertaAcquistoDAO;
 import database.dao.interfacce.OffertaDAO;
 import dto.Annuncio;
 
-import dto.AnnuncioVendita;
 import dto.Offerta;
 
 import dto.OffertaAcquisto;
 import dto.OffertaRegalo;
-import dto.Oggetto;
 import dto.ProfiloUtente;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
@@ -69,7 +67,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
 						offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
 						offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
-						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+						SedeUniversita sedeScelta = sedeDAO.recuperaSedeDaNome(rs.getString("Sede_incontro"));
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
 			
@@ -121,7 +119,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 						offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
 						offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
 						offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
-						SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+						SedeUniversita sedeScelta = sedeDAO.recuperaSedeDaNome(rs.getString("Sede_incontro"));
 						offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 					}
 					
@@ -315,6 +313,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 			connessioneDB.setAutoCommit(true);
 		}
 	}
+	
 	
 	public Double recuperaPrezzoOfferta(String email, Timestamp momentoProposta) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT prezzo_offerto from OFFERTA_ACQUISTO WHERE Email = ? AND Momento_proposta = ?")){

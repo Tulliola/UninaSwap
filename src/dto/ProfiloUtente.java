@@ -24,13 +24,17 @@ public class ProfiloUtente {
 	
 	public ProfiloUtente(String username, String email, double saldo, byte[] immagineProfilo, String residenza,
 			String password, boolean sospeso) {
-		this.username = username;
-		this.email = email;
+		this(username, email, residenza, password);
 		this.saldo = saldo;
 		this.immagineProfilo = immagineProfilo;
+		this.sospeso = sospeso;
+	}
+	
+	public ProfiloUtente(String username, String email, String residenza, String password) {
+		this.username = username;
+		this.email = email;
 		this.residenza = residenza;
 		this.password = password;
-		this.sospeso = sospeso;
 	}
 	
 	public void aggiungiAnnuncio(Annuncio annuncioAggiunto) {

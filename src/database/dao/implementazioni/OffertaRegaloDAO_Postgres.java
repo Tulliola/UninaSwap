@@ -94,7 +94,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 							offertaToAdd.setGiornoIncontro(GiornoEnum.confrontaConStringa(rs.getString("Giorno_incontro")));
 							offertaToAdd.setOraInizioIncontro(rs.getString("Ora_inizio_incontro"));
 							offertaToAdd.setOraFineIncontro(rs.getString("Ora_fine_incontro"));
-							SedeUniversita sedeScelta = sedeDAO.recuperaSedeNome(rs.getString("Sede_incontro"));
+							SedeUniversita sedeScelta = sedeDAO.recuperaSedeDaNome(rs.getString("Sede_incontro"));
 							offertaToAdd.setSedeDIncontroScelta(sedeScelta);
 						}
 						
@@ -168,7 +168,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 		
 			psInserisciOffertaRegalo.setString(10, modalitaConsegnaScelta);;
 			psInserisciOffertaRegalo.setDouble(11, 0);
-			psInserisciOffertaRegalo.setString(12, offertaDaInserire.getMessaggioMotivazionale());
+			psInserisciOffertaRegalo.setString(12, messaggioMotivazionale);
 			
 			psInserisciOffertaRegalo.executeUpdate();
 		}

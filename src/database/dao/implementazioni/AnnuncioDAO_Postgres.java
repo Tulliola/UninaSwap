@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import database.dao.interfacce.AnnuncioDAO;
 import dto.Annuncio;
@@ -16,33 +14,20 @@ import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
 import dto.Offerta;
-import dto.OffertaAcquisto;
-import dto.OffertaScambio;
 import dto.Oggetto;
 import dto.ProfiloUtente;
 import dto.SedeUniversita;
-import utilities.CategoriaEnum;
-import utilities.CondizioneEnum;
 import utilities.GiornoEnum;
-import utilities.ModConsegnaEnum;
 import utilities.StatoAnnuncioEnum;
-import utilities.StatoOffertaEnum;
 
 public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	private Connection connessioneDB;
-	private Annuncio annuncio;
 	
 	//Costruttore per il retrieve
 	public AnnuncioDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
 	}
 	
-	//Costruttore per INSERT, UPDATE e DELETE
-	public AnnuncioDAO_Postgres(Connection connessioneDB, Annuncio annuncio) {
-		this.connessioneDB = connessioneDB;
-		this.annuncio = annuncio;
-	}
-
 	@Override
 	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
 		ArrayList<Annuncio> toReturn = new ArrayList();

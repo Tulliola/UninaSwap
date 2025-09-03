@@ -1,11 +1,11 @@
 package database.dao.interfacce;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import dto.Offerta;
-import dto.ProfiloUtente;
-import utilities.StatoOffertaEnum;
 
 public interface OffertaAcquistoDAO extends OffertaDAO{
 	public void updateOfferta(Offerta offertaDaModificare) throws SQLException;
+	public Double recuperaPrezzoOfferta(String email, Timestamp momentoProposta) throws SQLException;
 }

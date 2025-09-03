@@ -1,8 +1,11 @@
-package utilities;
+package database.dao.implementazioni;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import database.dao.interfacce.ImmagineDiSistemaDAO;
+
 import java.sql.Connection;
 
 public class ImmagineDiSistemaDAO_Postgres implements ImmagineDiSistemaDAO{

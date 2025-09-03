@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Insets;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -17,8 +16,6 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
-import utilities.ImmagineDiSistemaDAO;
-import utilities.ImmagineDiSistemaDAO_Postgres;
 import utilities.MapOffertaToOffertaDAO;
 import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
@@ -374,8 +371,8 @@ public class Controller {
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{
-		
-		utenteDAO.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
+		ProfiloUtente nuovoUtente = new ProfiloUtente(usernameIn, emailIn, residenzaIn, passwordIn);
+		utenteDAO.inserisciNuovoUtente(nuovoUtente);
 		
 		dialogDiAvvenutaRegistrazione = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		dialogDiAvvenutaRegistrazione.setVisible(true);
