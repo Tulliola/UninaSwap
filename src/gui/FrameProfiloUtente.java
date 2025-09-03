@@ -2,21 +2,13 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import controller.Controller;
-import dto.Annuncio;
-import dto.Offerta;
 import dto.ProfiloUtente;
-import eccezioni.EmailException;
 import eccezioni.PasswordException;
 import eccezioni.ResidenzaException;
 import eccezioni.UsernameException;
@@ -26,7 +18,6 @@ import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJPasswordField;
 import utilities.MyJTextField;
-import utilities.StatoAnnuncioEnum;
 
 public class FrameProfiloUtente extends MyJFrame {
 
@@ -34,7 +25,7 @@ public class FrameProfiloUtente extends MyJFrame {
 	
 	//Panels
 	private MyJPanel contentPane;
-	private JPanel panelProfilo;
+	private MyJPanel panelProfilo;
 	private PanelBarraLateraleSx panelLateraleSx;
 	private MyJPanel panelRiepilogoInfoUtente;
 	private MyJPanel panelBottoni;
@@ -210,7 +201,7 @@ public class FrameProfiloUtente extends MyJFrame {
 			setClickedActions(panelLateraleSx.getLblReportOfferte(), "        Report");
 		});
 		
-		panelProfilo = new JPanel();
+		panelProfilo = new MyJPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setBackground(Color.white);
 		
@@ -661,14 +652,7 @@ public class FrameProfiloUtente extends MyJFrame {
 		}
 	}
 	
-	public void resettaTextFieldsDopoModifiche(MyJTextField textFieldIn, String nuovoText) {
-		textFieldIn.settaBordiTextFieldStandard();
-		textFieldIn.setText(nuovoText);
-		textFieldIn.setEnabled(false);
-		textFieldIn.modificaBGColorSeEnabled(Color.LIGHT_GRAY, Color.white);
-	}
-	
-	public void mostraONascondiCambiaPWDField() {
+	private void mostraONascondiCambiaPWDField() {
 		cambiaPWDField.setVisible(mostraCambiaPWDField);
 		rigidArea.setVisible(mostraCambiaPWDField);
 	}

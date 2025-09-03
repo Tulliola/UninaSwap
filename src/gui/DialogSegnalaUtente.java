@@ -2,31 +2,19 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.ProfiloUtente;
@@ -35,7 +23,6 @@ import utilities.MyJButton;
 import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
-import utilities.MyJTextField;
 
 public class DialogSegnalaUtente extends MyJDialog {
 

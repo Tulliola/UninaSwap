@@ -9,11 +9,8 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.ProfiloUtente;
@@ -40,6 +37,7 @@ public class DialogCashout extends MyJDialog {
 	MyJLabel lblErroreImporto = new MyJLabel("Inserire un importo valido");
 	
 	MyJTextField textFieldImporto = new MyJTextField();
+	
 	public DialogCashout(Controller controller, ProfiloUtente utenteLoggato, JFrame parentFrame) {
 		this.mainController = controller;
 		

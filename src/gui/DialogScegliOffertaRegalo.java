@@ -109,7 +109,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneAccettaRegalo.setFocusable(false);
 		bottoneAccettaRegalo.setDefaultAction(() -> {
 			try {
-				this.checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaRegalo(annuncio);
 			}
 			catch(OffertaException exc) {
@@ -121,7 +121,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneFaiOffertaScambio.setFocusable(false);
 		bottoneFaiOffertaScambio.setDefaultAction(() -> {
 			try {
-				this.checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaScambio(annuncio);
 			}
 			catch(OffertaException exc) {
@@ -133,7 +133,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneFaiOffertaAcquisto.setFocusable(false);
 		bottoneFaiOffertaAcquisto.setDefaultAction(() -> {			
 			try {
-				this.checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaAcquisto(annuncio);
 			}
 			catch(OffertaException exc) {
@@ -163,11 +163,4 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		return panelInferiore;
 	}
 	
-	private void checkOffertaGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaException{
-		
-		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
-			if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
-				throw new OffertaException("Hai già un'offerta attiva per questo annuncio. Ritirala o attendi che venga valutata dal venditore!");
-		}
-	}
 }

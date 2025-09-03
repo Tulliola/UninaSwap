@@ -3,6 +3,7 @@ package dto;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import eccezioni.OffertaException;
 import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
 
@@ -42,6 +43,14 @@ public class ProfiloUtente {
 
 	public void aggiornaSaldo(double importoDaAggiungere) {
 		this.saldo += importoDaAggiungere;
+	}
+	
+	public void checkOffertaGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaException{
+		
+		for(Offerta offertaCorrente : getOfferteInAttesa()) {		
+			if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
+				throw new OffertaException("Hai già un'offerta attiva per questo annuncio. Ritirala o attendi che venga valutata dal venditore!");
+		}
 	}
 	
 	public String getUsername() {

@@ -1,26 +1,18 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.awt.Point;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
@@ -28,9 +20,7 @@ import controller.Controller;
 import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaScambio;
-import dto.Oggetto;
 import net.miginfocom.swing.MigLayout;
-import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJOffertaPanel;
@@ -45,11 +35,13 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 	private Controller mainController;
 	
 	private MyJPanel contentPane;
-	private PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this, "UninaSwap");
-	private MyJPanel panelCentrale = new MyJPanel();
-	private PanelBarraLateraleSx panelLaterale;
-	private JScrollPane scrollPane;
 	private MyJPanel panelOfferte = new MyJPanel();
+	private MyJPanel panelCentrale = new MyJPanel();
+	private PanelHomePageSuperiore panelSuperiore = new PanelHomePageSuperiore(this, "UninaSwap");
+	private PanelBarraLateraleSx panelLaterale;
+
+	private JScrollPane scrollPane;
+	
 	private MyJLabel lblTornaAllaHomePage = new MyJLabel("   Torna alla home page");
 	
 	public FrameVisualizzaOfferteAnnuncio(ArrayList<Offerta> offerte, Controller mainController) {
@@ -120,10 +112,10 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 			panelOfferte.add(Box.createVerticalGlue());
 		}
 		else
-			panelCentrale.add(settaPanelOfferte(offerte), BorderLayout.CENTER);
+			panelCentrale.add(creaPanelOfferte(offerte), BorderLayout.CENTER);
 	}
 
-	private MyJPanel settaPanelOfferte(ArrayList<Offerta> offerte) {
+	private MyJPanel creaPanelOfferte(ArrayList<Offerta> offerte) {
 		panelOfferte.setBackground(MyJPanel.uninaLightColor);
 		panelOfferte.setLayout(new MigLayout("wrap 2", "[]", ""));
 		for(Offerta offerta: offerte) {
@@ -220,17 +212,5 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		panelSpecifico.add(lblOggettiInCambio);
 		panelSpecifico.add(lblCliccabile);
 		panelSpecifico.add(lblOggetti);
-	}
-	
-	private PanelBarraLateraleSx settaPanelLaterale() {
-		panelLaterale = new PanelBarraLateraleSx(panelCentrale, mainController, this, "        Annunci disponibili");
-		panelLaterale.aggiungiRigaNelPanel(lblTornaAllaHomePage, true, "images/iconaHomePage.png");
-		panelLaterale.add(lblTornaAllaHomePage, 0);
-		
-		return this.panelLaterale;
-	}
-
-	private Dimension getDimension(ArrayList<Offerta> offerte) {
-		return new Dimension(800, offerte.size()*400);
 	}
 }

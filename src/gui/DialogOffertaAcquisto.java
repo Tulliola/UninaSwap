@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,10 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -46,7 +42,6 @@ import utilities.GiornoEnum;
 import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
 import utilities.MyJDialog;
-import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
@@ -70,18 +65,22 @@ public class DialogOffertaAcquisto extends MyJDialog {
 
 	private MyJPanel panelBottoni = new MyJPanel();
 	
-	private Controller mainController;
 	private MyJTextField inserisciPrezzoTextField;
 	private MyJTextField inserisciIndirizzoTextField;
-	private ButtonGroup modalitaSceltaBG;
+	private MyJTextField inserisciMessaggioTextField;
+
 	private JTextArea inserisciNotaTextArea;
+	
 	private MyJLabel lblErrorePrezzoOfferto;
 	private MyJLabel lblErroreSpedizione;
 	
 	private JComboBox<UfficioPostale> ufficiPostaliCB;
+
 	private ButtonGroup incontriBG;
-	private MyJTextField inserisciMessaggioTextField;
+	private ButtonGroup modalitaSceltaBG;
 	
+	private Controller mainController;
+
 	public DialogOffertaAcquisto(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
 		
