@@ -215,7 +215,6 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelNomeAnnuncio.setLayout(new BoxLayout(panelNomeAnnuncio, BoxLayout.PAGE_AXIS));
 		panelNomeAnnuncio.setPreferredSize(new Dimension(425, 100));
 		panelNomeAnnuncio.setMaximumSize(new Dimension(425, 100));
-//		panelNomeAnnuncio.setBackground(MyJPanel.uninaLightColor);
 		panelNomeAnnuncio.setBackground(Color.white);
 		panelNomeAnnuncio.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, uninaColor));
 		JTextArea nomeAnnuncioTextArea = new JTextArea(annuncio.getNome());
@@ -224,6 +223,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		nomeAnnuncioTextArea.setPreferredSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setMaximumSize(new Dimension(425, 100));
 		nomeAnnuncioTextArea.setEditable(false);
+		nomeAnnuncioTextArea.setFocusable(false);
 		nomeAnnuncioTextArea.setOpaque(true);
 		nomeAnnuncioTextArea.setLineWrap(true);
 		nomeAnnuncioTextArea.setWrapStyleWord(true);
@@ -240,6 +240,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		descrizioneAnnuncioTextArea.setPreferredSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setMaximumSize(new Dimension(425, 270));
 		descrizioneAnnuncioTextArea.setEditable(false);
+		descrizioneAnnuncioTextArea.setFocusable(false);
 		descrizioneAnnuncioTextArea.setOpaque(true);
 		descrizioneAnnuncioTextArea.setLineWrap(true);
 		descrizioneAnnuncioTextArea.setWrapStyleWord(true);
@@ -265,7 +266,6 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 	protected MyJPanel creaPanelDataScadenza(Annuncio annuncio) {
 		MyJPanel panelDataScadenza = new MyJPanel();
 		panelDataScadenza.setLayout(new BoxLayout(panelDataScadenza, BoxLayout.X_AXIS));
-//		panelDataScadenza.setBackground(new Color(123, 183, 237));
 		panelDataScadenza.setBackground(Color.white);
 		panelDataScadenza.setAlignmentX(LEFT_ALIGNMENT);
 		MyJLabel lblDataScadenza = new MyJLabel("Data scadenza - N/A");
@@ -277,7 +277,9 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 			lblDataScadenza.setFont(new Font("Ubuntu Sans", Font.BOLD, 13));
 			long giorniRimasti = ChronoUnit.DAYS.between(LocalDate.now(), annuncio.getDataScadenza().toLocalDate());
 			
-			if(giorniRimasti == 1)
+			if(giorniRimasti == 0)
+				lblDataScadenza.setText("Questo annuncio scade oggi, affrettati!");
+			else if(giorniRimasti == 1)
 				lblDataScadenza.setText(lblDataScadenza.getText() + giorniRimasti + " giorno!");
 			else
 				lblDataScadenza.setText(lblDataScadenza.getText() + giorniRimasti + " giorni!");

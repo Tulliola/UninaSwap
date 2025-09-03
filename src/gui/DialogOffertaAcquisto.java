@@ -326,7 +326,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 		inserisciPrezzoTextField = new MyJTextField();
 		
 		if(annuncioPerOfferta instanceof AnnuncioVendita) {
-			Double prezzoOffertaMinimo = annuncioPerOfferta.getPrezzoIniziale() * 100;
+			Double prezzoOffertaMinimo = (annuncioPerOfferta.getPrezzoIniziale() * 0.4) * 100;
 			prezzoOffertaMinimo = Math.ceil(prezzoOffertaMinimo);
 			prezzoOffertaMinimo /= 100;
 			inserisciPrezzoTextField.setText(prezzoOffertaMinimo.toString());
@@ -627,9 +627,10 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				
 		primaModalitaInserita.doClick();
 		
-		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro()))) {
+		
+
+		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro")) && annuncioPerOfferta.isIncontro()))
 			primoIncontroInserito.doClick();
-		}
 		
 		panelModalitaConsegnaScelta.add(lblModalitaScelta);
 		panelModalitaConsegnaScelta.add(sottoPanelModalitaScelta);
@@ -877,6 +878,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 			double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
 			prezzoOfferto = Math.ceil(prezzoOfferto);
 			prezzoOfferto /= 100;
+			System.out.println(prezzoOfferto);
 			offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, prezzoOfferto);
 		}
 		else {

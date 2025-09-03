@@ -3,12 +3,14 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.SwingUtilities;
 
 import controller.Controller;
 import dto.Annuncio;
@@ -46,6 +48,7 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 		panelDefault.add(Box.createVerticalGlue());
 		panelDefault.add(panelInternoCentrale);
 		panelDefault.add(Box.createVerticalGlue());
+
 	}
 
 	private MyJPanel creaPanelVisualizzaOffertaAccettata(Annuncio annuncio) {

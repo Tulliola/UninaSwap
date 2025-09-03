@@ -154,6 +154,7 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 					panelSpecifico.setBackground(coloreCasualePerBG);
 					
 					if(offerta.getPrezzoOfferto() != null) {
+						System.out.println(offerta.getPrezzoOfferto());
 						MyJLabel lblPrezzoOfferto = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto " + offerta.getPrezzoOfferto() + " €!");
 						lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
 						lblPrezzoOfferto.setHorizontalTextPosition(SwingConstants.RIGHT);

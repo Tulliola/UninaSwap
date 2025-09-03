@@ -377,6 +377,27 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		panelAnnunci.removeAll();
 		
+		if(tuttiGliAnnunci.size() == 0) {
+			this.panelAnnunci.setLayout(new MigLayout("fill, align center center"));
+			
+			MyJPanel panelInterno = new MyJPanel();
+			panelInterno.setLayout(new BoxLayout(panelInterno, BoxLayout.Y_AXIS));
+			panelInterno.setBackground(MyJPanel.uninaLightColor);
+			
+			MyJLabel lblNonCiSonoAnnunci = new MyJLabel("Al momento non ci sono annunci da mostrare", new Font("Ubuntu Sans", Font.ITALIC, 20));
+			lblNonCiSonoAnnunci.setForeground(Color.BLACK);
+			lblNonCiSonoAnnunci.setAlignmentX(CENTER_ALIGNMENT);
+			MyJLabel lblNoResultsImage = new MyJLabel();
+			lblNoResultsImage.aggiungiImmagineScalata("images/iconaNoResults.png", 100, 100, false);
+			lblNoResultsImage.setAlignmentX(CENTER_ALIGNMENT);
+			
+			panelInterno.add(lblNonCiSonoAnnunci);
+			panelInterno.add(Box.createVerticalStrut(20));
+			panelInterno.add(lblNoResultsImage);
+
+			this.panelAnnunci.add(panelInterno, "align center center");
+		}
+		
 		for(int i = tuttiGliAnnunci.size()-1; i >= 0; i--) {
 			this.panelAnnunci.add(new MyJAnnuncioSegnalabilePanel(mainController, tuttiGliAnnunci.get(i)) {
 

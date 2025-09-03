@@ -1,5 +1,8 @@
-/gui/
-/dto/
+/.classpath
+/.project
 /controller/
 /database/
+/dto/
+/eccezioni/
+/gui/
 /utilities/
