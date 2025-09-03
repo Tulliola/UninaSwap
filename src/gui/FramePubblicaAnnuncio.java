@@ -5,12 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,20 +25,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Controller;
 
@@ -72,7 +61,6 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.AnnuncioScambio;
 import dto.AnnuncioVendita;
-import dto.ProfiloUtente;
 import dto.SedeUniversita;
 
 public class FramePubblicaAnnuncio extends MyJFrame {
@@ -189,7 +177,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
 		this.creaPanelAggiungiFoto();
-		this.creaPanelNomeAnnuncio();
+		this.settaPanelNomeAnnuncio();
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 20)));
 		panelCentrale.add(panelNomeAnnuncio);
@@ -207,7 +195,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		return scrollPane;
 	}
 	
-	private void creaPanelNomeAnnuncio() {		
+	private void settaPanelNomeAnnuncio() {		
 		panelNomeAnnuncio = new MyJPanel();
 		panelNomeAnnuncio.setPreferredSize(new Dimension(1225, 115));
 		panelNomeAnnuncio.setMaximumSize(new Dimension(1225, 115));
@@ -460,10 +448,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		});
 		componentToAdd.setText(stringaDiDefaultPerTextA);
 		
-//		JScrollPane scrollPaneTesto = new JScrollPane(componentToAdd);
-//		scrollPaneTesto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-//		scrollPaneTesto.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		panelCentrale.add(scrollPaneTesto, BorderLayout.CENTER);
 		panelCentrale.add(componentToAdd, BorderLayout.CENTER);	
 		
 		panelDiErrore.setPreferredSize(new Dimension(1225, 30));
@@ -848,7 +832,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		MyJPanel rigaIncontro = new MyJPanel();
 		rigaIncontro.setBackground(MyJPanel.uninaLightColor);
-//		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
 		rigaIncontro.setLayout(new FlowLayout());
 		rigaIncontro.setPreferredSize(new Dimension(1225, 250));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 300));
@@ -921,7 +904,6 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 	private MyJPanel aggiungiNuovaRigaIncontro(MyJPanel panelPerIncontri, ArrayList<SedeUniversita> sediPresenti) {
 		MyJPanel rigaIncontro = new MyJPanel();
 		rigaIncontro.setBackground(MyJPanel.uninaLightColor);
-//		rigaIncontro.setLayout(new BoxLayout(rigaIncontro, BoxLayout.X_AXIS));
 		rigaIncontro.setLayout(new FlowLayout());
 		rigaIncontro.setPreferredSize(new Dimension(1225, 250));
 		rigaIncontro.setMaximumSize(new Dimension(1225, 250));
@@ -1339,12 +1321,12 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 			annuncioDaPassare.setDataScadenza(Date.valueOf(LocalDate.now().plusDays(31)));
 		
 		if(this.incontroCheckBox.isSelected())
-			this.aggiungiIncontriAdAnnuncio(annuncioDaPassare);
+			this.aggiungiIncontroAdAnnuncioDaPassare(annuncioDaPassare);
 		
 		return annuncioDaPassare;
 	}
 	
-	private void aggiungiIncontriAdAnnuncio(Annuncio annuncioDaPassare) {
+	private void aggiungiIncontroAdAnnuncioDaPassare(Annuncio annuncioDaPassare) {
 		for(RigaIncontro incontroAttuale : this.incontriSpecificati) {
 			SedeUniversita sedeScelta = incontroAttuale.getSedeDiIncontro();
 			String inizioIncontro = incontroAttuale.getOraInizioIncontro()+":"+incontroAttuale.getMinutoInizioIncontro();

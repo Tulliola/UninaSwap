@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Insets;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ import database.dao.interfacce.*;
 
 //Import dal package GUI
 import gui.*;
-import utilities.ImmagineDiSistemaDAO;
 import utilities.MapOffertaToOffertaDAO;
 import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
@@ -71,7 +69,7 @@ public class Controller {
 	private ProfiloUtenteDAO_Postgres utenteDAO;
 	private SedeUniversitaDAO_Postgres sedeDAO;
 	private UfficioPostaleDAO_Postgres ufficioDAO;
-	private ImmagineDiSistemaDAO immagineDAO;
+	private ImmagineDiSistemaDAO_Postgres immagineDAO;
 	private AnnuncioDAO_Postgres annuncioDAO;
 	private OffertaDAO offertaDAO;
 	
@@ -361,11 +359,11 @@ public class Controller {
 			annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 			sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-			immagineDAO = new ImmagineDiSistemaDAO(connessioneDB);
+			immagineDAO = new ImmagineDiSistemaDAO_Postgres(connessioneDB);
 			
 			this.ufficiPresenti = ufficioDAO.recuperaUfficiPostali();
 			this.sediPresenti = sedeDAO.recuperaSediPresenti();
-			this.immaginiDiSistema = immagineDAO.getImmaginiDiSistema();
+			this.immaginiDiSistema = immagineDAO.recuperaImmaginiDiSistema();
 			this.annunciInBacheca = annuncioDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			
 			this.passaAFrameHomePage(frameDiLogin);
@@ -373,8 +371,8 @@ public class Controller {
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{
-		
-		utenteDAO.inserisciNuovoUtente(usernameIn, emailIn, passwordIn, residenzaIn);
+		ProfiloUtente nuovoUtente = new ProfiloUtente(usernameIn, emailIn, residenzaIn, passwordIn);
+		utenteDAO.inserisciNuovoUtente(nuovoUtente);
 		
 		dialogDiAvvenutaRegistrazione = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		dialogDiAvvenutaRegistrazione.setVisible(true);

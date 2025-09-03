@@ -68,4 +68,8 @@ public class OffertaScambio extends Offerta {
 		
 		return toReturn;
 	}
+
+	public void setIdOfferta(int idOfferta) {
+		this.idOfferta = idOfferta;
+	}
 }

@@ -7,22 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import database.dao.interfacce.SedeUniversitaDAO;
-import dto.Annuncio;
 import dto.SedeUniversita;
 
 public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 	private Connection connessioneDB;
-	private SedeUniversita sede;
 	
 	public SedeUniversitaDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
 	}
 	
-	public SedeUniversitaDAO_Postgres(Connection connessioneDB, SedeUniversita sede) {
-		this.connessioneDB = connessioneDB;
-		this.sede = sede;
-	}
-
 	@Override
 	public ArrayList<SedeUniversita> recuperaSediPresenti() throws SQLException {
 		String recuperaSedi = "SELECT idSede, nome FROM Sede_universita";
@@ -55,7 +48,7 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 	}
 
 	@Override
-	public SedeUniversita recuperaSedeNome(String nomeSede) throws SQLException {
+	public SedeUniversita recuperaSedeDaNome(String nomeSede) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idSede, Nome FROM Sede_universita WHERE Nome = ?")){
 			ps.setString(1, nomeSede);
 			try(ResultSet rs = ps.executeQuery()){

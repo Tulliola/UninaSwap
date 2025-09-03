@@ -1,22 +1,24 @@
-package utilities;
+package database.dao.implementazioni;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import database.dao.interfacce.ImmagineDiSistemaDAO;
+
 import java.sql.Connection;
 
-public class ImmagineDiSistemaDAO {
+public class ImmagineDiSistemaDAO_Postgres implements ImmagineDiSistemaDAO{
 	private Connection connessioneDB;
-	private byte[][] immaginiDiSistema;
 	
-	public ImmagineDiSistemaDAO(Connection connessioneDB) {
+	public ImmagineDiSistemaDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
-		
-		this.recuperaImmaginiDiSistema();
 	}
 	
-	private void recuperaImmaginiDiSistema() {
+	@Override
+	public byte[][] recuperaImmaginiDiSistema() throws SQLException{
 		String recuperaNumFoto = "SELECT COUNT(*) AS numFoto FROM Immagine_di_sistema";
+		byte[][] immaginiDiSistema;
 		
 		try(PreparedStatement psRecuperaNumFoto = connessioneDB.prepareStatement(recuperaNumFoto);
 			ResultSet rsRecuperaNumFoto = psRecuperaNumFoto.executeQuery()){
@@ -38,12 +40,7 @@ public class ImmagineDiSistemaDAO {
 			}
 			
 		}
-		catch(SQLException exc) {
-			exc.printStackTrace();
-		}
-	}
-	
-	public byte[][] getImmaginiDiSistema() {
+		
 		return immaginiDiSistema;
 	}
 }

@@ -4,22 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-import dto.Oggetto;
 import utilities.MyJDialog;
 import utilities.MyJLabel;
-import utilities.MyJOggettoPanel;
 import utilities.MyJPanel;
 
 public class DialogVisualizzaFoto extends MyJDialog {

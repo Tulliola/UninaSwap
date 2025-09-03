@@ -11,12 +11,6 @@ import java.util.ArrayList;
 
 public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	private Connection connessioneDB = null;
-	private ProfiloUtente utenteLoggato;
-	
-	public ProfiloUtenteDAO_Postgres(Connection connInput, ProfiloUtente utenteIn) {
-		this.connessioneDB = connInput;
-		this.utenteLoggato = utenteIn;
-	}
 
 	public ProfiloUtenteDAO_Postgres(Connection connessioneDB) {
 		this.connessioneDB = connessioneDB;
@@ -25,18 +19,18 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	//Metodi di inserimento
 
 	@Override
-	public void inserisciNuovoUtente(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException, MatricolaNonTrovataException{
+	public void inserisciNuovoUtente(ProfiloUtente newUtente) throws SQLException, MatricolaNonTrovataException{
 		
-		String matricolaDaEmail = this.recuperaMatricolaConEmail(emailIn);
+		String matricolaDaEmail = this.recuperaMatricolaConEmail(newUtente.getEmail());
 		
 		if(matricolaDaEmail != null) {
 			String sqlQuery = "INSERT INTO Profilo_utente (Username, Matricola, Email, PW, Residenza) VALUES (?, ?, ?, ?, ?)";
 			try (PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)) {
-				prepStat.setString(1, usernameIn);
+				prepStat.setString(1, newUtente.getUsername());
 				prepStat.setString(2, matricolaDaEmail);
-				prepStat.setString(3, emailIn);
-				prepStat.setString(4, passwordIn);
-				prepStat.setString(5, residenzaIn);
+				prepStat.setString(3, newUtente.getEmail());
+				prepStat.setString(4, newUtente.getPassword());
+				prepStat.setString(5, newUtente.getResidenza());
 				prepStat.executeUpdate();
 			}
 		}

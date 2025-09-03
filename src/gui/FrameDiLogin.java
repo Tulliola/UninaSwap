@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.*;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.*;
@@ -225,11 +224,7 @@ public class FrameDiLogin extends MyJFrame {
 			registratiButton.setFocusable(true);
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);
 			resettaBordiTextField(blackBorder, emailTextField, passwordField);
-			try {
-				clickAccedi();
-			} catch (IOException e) {
-				
-			}
+			clickAccedi();
 		});
 				
 		accediButton.setUpAction(() -> {
@@ -290,7 +285,7 @@ public class FrameDiLogin extends MyJFrame {
 	
 	//Istruzioni da eseguire quando l'utente clicca "Accedi"
 	@SuppressWarnings("deprecation")
-	private void clickAccedi() throws IOException {
+	private void clickAccedi() {
 		try {
 			checkDatiAccesso();
 			nascondiLabelErrore(lblErroreEmail, lblErrorePassword, lblErroreComunicazioneColDB);

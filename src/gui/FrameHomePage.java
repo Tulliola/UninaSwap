@@ -4,18 +4,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import gui.PanelHomePageAnnunci;
-import gui.PanelHomePageSuperiore;
 import utilities.MyJFrame;
 import utilities.MyJPanel;
 import controller.Controller;
 import dto.Annuncio;
-//import dto.AnnuncioRegalo;
-//import dto.AnnuncioScambio;
 import dto.ProfiloUtente;
 
 public class FrameHomePage extends MyJFrame {
@@ -30,10 +24,6 @@ public class FrameHomePage extends MyJFrame {
 	public FrameHomePage(Controller controller, ProfiloUtente utenteLoggato, ArrayList<Annuncio> annunci) {
 		mainController = controller;
 		settaContentPane(utenteLoggato, annunci);
-	}
-	
-	public Controller getController() {
-		return mainController;
 	}
 
 	private void settaContentPane(ProfiloUtente utenteLoggato, ArrayList<Annuncio> annunci) {

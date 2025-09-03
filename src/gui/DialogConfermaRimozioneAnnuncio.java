@@ -1,9 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -44,16 +41,16 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 		this.setTitle("Rimuovere annuncio?");
 
 		this.add(panelSuperiore, BorderLayout.NORTH);
-		this.add(settaPanelSx(), BorderLayout.WEST);
-		this.add(settaPanelDx(), BorderLayout.EAST);
-		settaPanelInferiore(annuncio);
-		this.add(settaPanelCentrale(), BorderLayout.CENTER);
+		this.add(creaPanelSx(), BorderLayout.WEST);
+		this.add(creaPanelDx(), BorderLayout.EAST);
+		creaPanelInferiore(annuncio);
+		this.add(creaPanelCentrale(), BorderLayout.CENTER);
 		
 		
 		this.setLocationRelativeTo(parent);
 	}
 
-	private MyJPanel settaPanelInferiore(Annuncio annuncioToRemove) {
+	private MyJPanel creaPanelInferiore(Annuncio annuncioToRemove) {
 		panelInferiore.setLayout(new BoxLayout(panelInferiore, BoxLayout.X_AXIS));
 		panelInferiore.setSize(this.WIDTH, 100);
 		
@@ -77,7 +74,7 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 		return this.panelInferiore;
 	}
 
-	private MyJPanel settaPanelCentrale() {
+	private MyJPanel creaPanelCentrale() {
 		panelCentrale.setLayout(new BoxLayout(panelCentrale, BoxLayout.Y_AXIS));
 		
 		panelCentrale.add(Box.createVerticalGlue());
@@ -88,14 +85,14 @@ public class DialogConfermaRimozioneAnnuncio extends JDialog {
 		return this.panelCentrale;
 	}
 
-	private MyJPanel settaPanelDx() {
+	private MyJPanel creaPanelDx() {
 		panelDx.setSize(50, this.getHeight()-100);
 		panelDx.setBackground(MyJPanel.uninaColor);
 		
 		return this.panelDx;
 	}
 
-	private MyJPanel settaPanelSx() {
+	private MyJPanel creaPanelSx() {
 		panelSx.setSize(50, this.getHeight()-100);
 		panelSx.setBackground(MyJPanel.uninaColor);
 	

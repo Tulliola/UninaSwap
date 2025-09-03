@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,10 +10,7 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -30,11 +25,11 @@ public class DialogOffertaAccettataAnnuncio extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
 	private static final Color[] tonalitaDiUninaLightColor = new Color[5]; 
-	protected Color coloreCasualePerBG;
-	protected Controller mainController;
-	protected int larghezza = 800;
-	protected int distanzaDalBordo = 10;
-	protected int altezza = 400;
+	private Color coloreCasualePerBG;
+	private Controller mainController;
+	private int larghezza = 800;
+	private int distanzaDalBordo = 10;
+	private int altezza = 400;
 	
 	static {
 		tonalitaDiUninaLightColor[0] = new Color(118, 146, 175);

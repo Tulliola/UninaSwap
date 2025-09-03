@@ -4,16 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Oggetto;
@@ -26,8 +20,11 @@ public class DialogVisualizzaOggetti extends MyJDialog {
 
 	private static final long serialVersionUID = 1L;
 	private final MyJPanel contentPane = new MyJPanel();
+	
 	private Controller mainController;
+	
 	private Color coloreCasualePerBG;
+	
 	private MyJPanel panelFrecciaSx;
 	private MyJPanel panelCentrale;
 	private MyJPanel panelFrecciaDx;

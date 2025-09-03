@@ -1,15 +1,11 @@
 package database.dao.interfacce;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dto.Annuncio;
 import dto.Offerta;
-import dto.OffertaAcquisto;
-import dto.Oggetto;
 import dto.ProfiloUtente;
-import utilities.StatoOffertaEnum;
 
 public interface OffertaDAO {
 	public ArrayList<Offerta> recuperaOfferteDiUtente(ProfiloUtente utenteLoggato) throws SQLException;

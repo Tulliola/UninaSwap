@@ -4,22 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.Box;
@@ -38,7 +31,6 @@ import controller.Controller;
 import dto.Oggetto;
 import eccezioni.DescrizioneException;
 import eccezioni.FotoException;
-import eccezioni.NotaScambioException;
 import eccezioni.OggettoException;
 import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
@@ -68,8 +60,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJButton bottoneTornaIndietro;
 	private MyJButton bottoneCaricaOModificaOggetto;
 	private MyJButton bottoneEliminaOggetto;
+	private MyJButton bottoneCaricaOggetto;
 	
 	private JComboBox categorieOggettoComboBox;
+	private JComboBox condizioniOggettoComboBox;
 
 	//TextFields
 	private MyJTextField nomeOggettoTextField;
@@ -91,11 +85,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJLabel lblAggiungiFoto1;
 	private MyJLabel lblAggiungiFoto2;
 	private MyJLabel lblAggiungiFoto3;
-	private JComboBox condizioniOggettoComboBox;
-	private MyJButton bottoneCaricaOggetto;
 		
 	//Variabili per gestire la funzionalita di caricamento oggetti
-	public int indiceNellArrayDeiFrame;
+	private int indiceNellArrayDeiFrame;
 	private boolean isOggettoCaricato = false;
 	
 	public FrameCaricaOggettoScambio(Controller controller, int indiceNellArrayDeiFrame, Oggetto oggettoCaricato) {
@@ -137,7 +129,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelCentrale.setAlignmentX(CENTER_ALIGNMENT);
 		
 		this.creaPanelAggiungiFoto(oggettoCaricato);
-		this.creaPanelNomeOggetto();
+		this.settaPanelNomeOggetto();
 		
 		panelCentrale.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelCentrale.add(panelNomeOggetto);
@@ -155,7 +147,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		return scrollPane;
 	}
 	
-	private void creaPanelNomeOggetto() {		
+	private void settaPanelNomeOggetto() {		
 		panelNomeOggetto = new MyJPanel();
 		panelNomeOggetto.setPreferredSize(new Dimension(1225, 115));
 		panelNomeOggetto.setMaximumSize(new Dimension(1225, 115));
@@ -167,6 +159,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		nomeOggettoTextField.setPreferredSize(new Dimension(1225, 30));
 		nomeOggettoTextField.setMaximumSize(new Dimension(1225, 30));
 		nomeOggettoTextField.rendiTextFieldFocusable();
+		
+		if(isOggettoCaricato)
+			nomeOggettoTextField.setText("Oggetto " + (indiceNellArrayDeiFrame+1) + " caricato");
 		
 		nomeOggettoTextField.setFocusGainedAction(() -> {
 			if(nomeOggettoTextField.getText().equals("Nome"))
@@ -188,7 +183,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		lblErroreNomeOggetto = new MyJLabel(true);
 		lblErroreNomeOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		lblErroreNomeOggetto.setText("prova");
 		lblErroreNomeOggetto.setVisible(true);
 		lblErroreNomeOggetto.setBorder(new EmptyBorder(0, 10, 0, 0));
 		lblErroreNomeOggetto.setAlignmentX(LEFT_ALIGNMENT);
@@ -388,10 +382,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		});
 		componentToAdd.setText(stringaDiDefaultPerTextA);
 		
-//		JScrollPane scrollPaneTesto = new JScrollPane(componentToAdd);
-//		scrollPaneTesto.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-//		scrollPaneTesto.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		panelCentrale.add(scrollPaneTesto, BorderLayout.CENTER);
 		panelCentrale.add(componentToAdd);
 		
 		panelDiErrore.setPreferredSize(new Dimension(1225, 30));
@@ -550,7 +540,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		categorieOggetto.addItem("Collezionismo");
 		
 		ComboBoxModel<String> model = categorieOggetto.getModel();
-		if(oggettoCaricato != null) {
+		if(isOggettoCaricato) {
 			for (int i = 0; i < model.getSize(); i++) {
 			    if(model.getElementAt(i).equals(oggettoCaricato.getCategoria())) {
 			    	categorieOggetto.setSelectedIndex(i);
@@ -581,7 +571,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		condizioniOggetto.addItem("Ricondizionato");
 		
 		ComboBoxModel<String> model = condizioniOggetto.getModel();
-		if(oggettoCaricato != null) {
+		if(isOggettoCaricato) {
 			for (int i = 0; i < model.getSize(); i++) {
 			    if(model.getElementAt(i).equals(oggettoCaricato.getCondizioni())) {
 			    	condizioniOggetto.setSelectedIndex(i);

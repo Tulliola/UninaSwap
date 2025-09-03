@@ -6,7 +6,7 @@ import dto.ProfiloUtente;
 
 public interface ProfiloUtenteDAO {
 	//Metodi di inserimento
-	public void inserisciNuovoUtente(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException;
+	public void inserisciNuovoUtente(ProfiloUtente newUtente) throws SQLException;
 	public void inserisciSegnalazione(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException;
 	
 	//Metodi di aggiornamento
@@ -19,7 +19,7 @@ public interface ProfiloUtenteDAO {
 	//Metodi di eliminazione
 
 	//Metodi di ricerca
-	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String email, String password) throws SQLException;
+	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String emailOUsername, String password) throws SQLException;
 	public String recuperaMatricolaConEmail(String emailIn) throws SQLException;
 	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException;
 	public String[] recuperaUtentiSegnalanti(String emailSegnalato) throws SQLException;
