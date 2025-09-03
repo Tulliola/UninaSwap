@@ -626,7 +626,7 @@ public class DialogOffertaAcquisto extends MyJDialog {
 				
 		primaModalitaInserita.doClick();
 		
-		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro()))) {
+		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro")) && annuncioPerOfferta.isIncontro())) {
 			primoIncontroInserito.doClick();
 		}
 		

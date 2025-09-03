@@ -18,6 +18,7 @@ import database.dao.interfacce.*;
 //Import dal package GUI
 import gui.*;
 import utilities.ImmagineDiSistemaDAO;
+import utilities.ImmagineDiSistemaDAO_Postgres;
 import utilities.MapOffertaToOffertaDAO;
 import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
@@ -71,7 +72,7 @@ public class Controller {
 	private ProfiloUtenteDAO_Postgres utenteDAO;
 	private SedeUniversitaDAO_Postgres sedeDAO;
 	private UfficioPostaleDAO_Postgres ufficioDAO;
-	private ImmagineDiSistemaDAO immagineDAO;
+	private ImmagineDiSistemaDAO_Postgres immagineDAO;
 	private AnnuncioDAO_Postgres annuncioDAO;
 	private OffertaDAO offertaDAO;
 	
@@ -361,11 +362,11 @@ public class Controller {
 			annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
 			sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
 			ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-			immagineDAO = new ImmagineDiSistemaDAO(connessioneDB);
+			immagineDAO = new ImmagineDiSistemaDAO_Postgres(connessioneDB);
 			
 			this.ufficiPresenti = ufficioDAO.recuperaUfficiPostali();
 			this.sediPresenti = sedeDAO.recuperaSediPresenti();
-			this.immaginiDiSistema = immagineDAO.getImmaginiDiSistema();
+			this.immaginiDiSistema = immagineDAO.recuperaImmaginiDiSistema();
 			this.annunciInBacheca = annuncioDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
 			
 			this.passaAFrameHomePage(frameDiLogin);

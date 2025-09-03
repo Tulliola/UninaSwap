@@ -530,7 +530,7 @@ public class DialogOffertaRegalo extends MyJDialog {
 				
 		primaModalitaInserita.doClick();
 		
-		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro"))))
+		if((annuncioPerOfferta.isIncontro() && offertaDaModificare == null) || (offertaDaModificare != null && !(offertaDaModificare.getModalitaConsegnaScelta().equals("Incontro") && annuncioPerOfferta.isIncontro())))
 			primoIncontroInserito.doClick();
 		
 		panelModalitaConsegnaScelta.add(lblModalitaScelta);
