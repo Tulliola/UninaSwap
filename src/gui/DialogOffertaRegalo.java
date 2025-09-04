@@ -30,7 +30,6 @@ import utilities.MyJPanel;
 public class DialogOffertaRegalo extends DialogOfferta {
 
 	private static final long serialVersionUID = 1L;
-	private MyJPanel panelMieProposte;
 
 	public DialogOffertaRegalo(Annuncio annuncioPerOfferta, Controller controller) {
 		super(annuncioPerOfferta, controller);

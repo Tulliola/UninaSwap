@@ -75,9 +75,9 @@ public abstract class DialogOfferta extends MyJDialog{
 	protected ArrayList<String> operazioniDaEseguire;
 	protected MyJTextField inserisciMessaggioTextField = new MyJTextField();
 
-	protected MyJPanel panelMieProposte;
-
 	protected MyJLabel lblErroreCaricamentoOggetti;
+	
+	protected MyJPanel panelMieProposte;
 	
 	public DialogOfferta(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;

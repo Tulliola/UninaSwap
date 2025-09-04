@@ -37,7 +37,7 @@ import utilities.MyJTextField;
 public class DialogOffertaAcquisto extends DialogOfferta {
 
 	private static final long serialVersionUID = 1L;
-	private MyJPanel panelMieProposte;
+
 	private MyJTextField inserisciPrezzoTextField;
 	private MyJLabel lblErrorePrezzoOfferto;
 	
