@@ -3,6 +3,7 @@ package gui;
 import java.awt.*;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
@@ -31,6 +32,9 @@ public class FrameHomePage extends MyJFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setTitle("Il mercatino digitale federiciano");
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 		
 		contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());

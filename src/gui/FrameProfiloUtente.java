@@ -86,7 +86,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
-		
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 	}
 	
 	private String settaTitolo(String sezioneScelta) {

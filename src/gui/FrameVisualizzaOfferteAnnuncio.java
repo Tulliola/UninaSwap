@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.awt.Point;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -49,6 +51,9 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		if(!offerte.isEmpty())
 			this.setTitle("Le offerte al tuo annuncio - "+offerte.get(0).getAnnuncioRiferito().getNome());
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 		
 		this.setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,7 +151,6 @@ public class FrameVisualizzaOfferteAnnuncio extends MyJFrame {
 					panelSpecifico.setBackground(coloreCasualePerBG);
 					
 					if(offerta.getPrezzoOfferto() != null) {
-						System.out.println(offerta.getPrezzoOfferto());
 						MyJLabel lblPrezzoOfferto = new MyJLabel(offerta.getUtenteProprietario().getUsername() + " ti ha offerto " + offerta.getPrezzoOfferto() + " €!");
 						lblPrezzoOfferto.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
 						lblPrezzoOfferto.setHorizontalTextPosition(SwingConstants.RIGHT);

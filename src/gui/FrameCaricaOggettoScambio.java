@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -96,6 +97,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		if(oggettoCaricato != null)
 			isOggettoCaricato = true;
+		
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 		
 		this.settaContentPane(oggettoCaricato);
 	}

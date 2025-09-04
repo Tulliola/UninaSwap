@@ -83,7 +83,18 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		panelInfoOfferta.setLayout(new BoxLayout(panelInfoOfferta, BoxLayout.Y_AXIS));
 		panelInfoOfferta.setBackground(coloreCasualePerBG);
 		
+		
 		if(offertaToAdd.getMessaggioMotivazionale() != null) {
+			MyJPanel panelMessaggioMotivazionale = new MyJPanel();
+			panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.X_AXIS));
+			panelMessaggioMotivazionale.setBackground(coloreCasualePerBG);
+			panelMessaggioMotivazionale.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
+			panelMessaggioMotivazionale.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
+			
+			MyJLabel lblIconaMessaggioMotivazionale = new MyJLabel();
+			lblIconaMessaggioMotivazionale.aggiungiImmagineScalata("images/iconaMuscolo.png", 25, 25, false);
+			
+			
 			JTextArea messaggioMotivazionaleTextArea = new JTextArea(offertaToAdd.getMessaggioMotivazionale());
 			messaggioMotivazionaleTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 			messaggioMotivazionaleTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
@@ -94,10 +105,14 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 			messaggioMotivazionaleTextArea.setOpaque(false);
 			messaggioMotivazionaleTextArea.setLineWrap(true);
 			messaggioMotivazionaleTextArea.setWrapStyleWord(true);
-			messaggioMotivazionaleTextArea.setAlignmentX(LEFT_ALIGNMENT);
+			messaggioMotivazionaleTextArea.setAlignmentX(CENTER_ALIGNMENT);
 			
 			messaggioMotivazionaleTextArea.setFont(messaggioMotivazionaleTextArea.getFont().deriveFont(Font.ITALIC));
-			panelInfoOfferta.add(messaggioMotivazionaleTextArea);
+			
+			panelMessaggioMotivazionale.add(lblIconaMessaggioMotivazionale);
+			panelMessaggioMotivazionale.add(messaggioMotivazionaleTextArea);
+			
+			panelInfoOfferta.add(panelMessaggioMotivazionale);
 		}
 		
 		panelInfoOfferta.add(creaPanelModalitaConsegnaScelta(offertaToAdd));

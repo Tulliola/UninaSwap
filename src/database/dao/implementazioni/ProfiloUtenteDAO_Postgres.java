@@ -195,8 +195,8 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				String[] motiviSegnalazione = new String[3];
 				
 				for(int i = 0; i < 3; i++) {
-					rs.next();
-					motiviSegnalazione[i] = rs.getString("motivo_segnalazione");
+					if(rs.next())
+						motiviSegnalazione[i] = rs.getString("motivo_segnalazione");
 				}
 				
 				return motiviSegnalazione;
@@ -215,8 +215,8 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				String[] utentiSegnalanti = new String[3];
 				
 				for(int i = 0; i < 3; i++) {
-					rs.next();
-					utentiSegnalanti[i] = rs.getString("username");
+					if(rs.next())
+						utentiSegnalanti[i] = rs.getString("username");
 				}
 				
 				return utentiSegnalanti;

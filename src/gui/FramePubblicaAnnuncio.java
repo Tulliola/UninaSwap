@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -140,6 +141,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setLocationRelativeTo(null);
 		this.setTitle("Pubblica ora il tuo nuovo annuncio di "+tipoAnnuncio.toLowerCase()+"!");
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		contentPane.setLayout(new BorderLayout());

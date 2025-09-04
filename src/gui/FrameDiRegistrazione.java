@@ -69,6 +69,9 @@ public class FrameDiRegistrazione extends MyJFrame {
 		this.setSize(500, 800);
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
+		ImageIcon iconaFinestraPartenza = new ImageIcon("images/logo_uninaswap.png");
+		Image iconaFinestra = iconaFinestraPartenza.getImage().getScaledInstance(2048, 2048, Image.SCALE_SMOOTH);
+		this.setIconImage(iconaFinestra);
 		
 		contentPane = new MyJPanel(Color.WHITE);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
