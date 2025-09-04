@@ -538,6 +538,55 @@ public abstract class DialogOfferta extends MyJDialog{
 		return panelNotaOfferta;
 	}
 	
+	protected void checkResidenza() throws ResidenzaException{
+		String indirizzoDiSpedizione = this.inserisciIndirizzoTextField.getText();
+		
+		if(indirizzoDiSpedizione == null || indirizzoDiSpedizione.isBlank())
+			throw new ResidenzaException("Il campo residenza è obbligatorio.");
+		
+		if(indirizzoDiSpedizione.startsWith(" "))
+			throw new ResidenzaException("La residenza non può iniziare con uno spazio vuoto.");
+		
+		if(indirizzoDiSpedizione.endsWith(" "))
+			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
+		
+		if(indirizzoDiSpedizione.length() > 75)
+			throw new ResidenzaException("La residenza deve essere di massimo 75 caratteri.");
+
+	}
+	
+	protected MyJPanel creaPanelMessaggioMotivazionale(Offerta offertaDaModificare) {
+		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
+		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
+		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
+		panelMessaggioMotivazionale.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 40));
+		panelMessaggioMotivazionale.setBackground(MyJPanel.uninaLightColor);
+		panelMessaggioMotivazionale.setAlignmentX(CENTER_ALIGNMENT);
+		
+		MyJLabel lblMessaggio = new MyJLabel("Lascia un messaggio motivazionale");
+		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
+		inserisciMessaggioTextField = new MyJTextField();
+		inserisciMessaggioTextField.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-20, 30));
+		inserisciMessaggioTextField.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-20, 30));
+		inserisciMessaggioTextField.setAlignmentX(CENTER_ALIGNMENT);
+		inserisciMessaggioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
+		if(offertaDaModificare != null)
+			inserisciMessaggioTextField.setText(offertaDaModificare.getMessaggioMotivazionale());
+		inserisciMessaggioTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent ke) {
+				if(inserisciMessaggioTextField.getText().length() > 100)
+					ke.consume();
+			}
+		});
+		
+		panelMessaggioMotivazionale.add(lblMessaggio);
+		panelMessaggioMotivazionale.add(inserisciMessaggioTextField);
+		panelMessaggioMotivazionale.add(Box.createRigidArea(new Dimension(0, 20)));
+
+		return panelMessaggioMotivazionale;
+	}
+	
 	protected abstract MyJPanel creaPanelDatiProposte(Annuncio annuncioPerOfferta); 
 	
 	protected abstract MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
@@ -545,8 +594,6 @@ public abstract class DialogOfferta extends MyJDialog{
 	protected abstract MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
 	
 	protected abstract void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
-	
-	protected abstract void checkResidenza(String indirizzoDiSpedizione) throws ResidenzaException;
-	
+		
 	protected abstract Offerta organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offertaDaModificare);
 }

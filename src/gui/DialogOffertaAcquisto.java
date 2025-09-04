@@ -188,38 +188,6 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 
 	}
 	
-	private MyJPanel creaPanelMessaggioMotivazionale(Offerta offertaDaModificare) {
-		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
-		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
-		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
-		panelMessaggioMotivazionale.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 40));
-		panelMessaggioMotivazionale.setBackground(MyJPanel.uninaLightColor);
-		panelMessaggioMotivazionale.setAlignmentX(CENTER_ALIGNMENT);
-		
-		MyJLabel lblMessaggio = new MyJLabel("Lascia un messaggio motivazionale");
-		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
-		inserisciMessaggioTextField = new MyJTextField();
-		inserisciMessaggioTextField.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-20, 30));
-		inserisciMessaggioTextField.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-20, 30));
-		inserisciMessaggioTextField.setAlignmentX(CENTER_ALIGNMENT);
-		inserisciMessaggioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
-		if(offertaDaModificare != null)
-			inserisciMessaggioTextField.setText(offertaDaModificare.getMessaggioMotivazionale());
-		inserisciMessaggioTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent ke) {
-				if(inserisciMessaggioTextField.getText().length() > 100)
-					ke.consume();
-			}
-		});
-		
-		panelMessaggioMotivazionale.add(lblMessaggio);
-		panelMessaggioMotivazionale.add(inserisciMessaggioTextField);
-		panelMessaggioMotivazionale.add(Box.createRigidArea(new Dimension(0, 20)));
-
-		return panelMessaggioMotivazionale;
-	}
-	
 	@Override
 	protected MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
 		MyJPanel panelBottoni = new MyJPanel();
@@ -324,7 +292,7 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), 0.01, 0);
 
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
-				checkResidenza(this.inserisciIndirizzoTextField.getText());
+				checkResidenza();
 			
 			if(offertaDaModificare == null) {
 				OffertaAcquisto newOfferta = (OffertaAcquisto) this.organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
@@ -348,23 +316,6 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 		}
 		
 	}
-
-	@Override
-	protected void checkResidenza(String indirizzoDiSpedizione) throws ResidenzaException{
-		if(indirizzoDiSpedizione == null || indirizzoDiSpedizione.isBlank())
-			throw new ResidenzaException("Il campo residenza è obbligatorio.");
-		
-		if(indirizzoDiSpedizione.startsWith(" "))
-			throw new ResidenzaException("La residenza non può iniziare con uno spazio vuoto.");
-		
-		if(indirizzoDiSpedizione.endsWith(" "))
-			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
-		
-		if(indirizzoDiSpedizione.length() > 75)
-			throw new ResidenzaException("La residenza deve essere di massimo 75 caratteri.");
-
-	}
-
 	
 	private void checkPrezzoOfferto(String prezzoOfferto, double prezzoMinimo, double prezzoIniziale) throws SaldoException, PrezzoOffertoException {
 		

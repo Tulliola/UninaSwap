@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -34,7 +31,6 @@ import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
-import utilities.MyJTextField;
 
 public class DialogOffertaScambio extends DialogOfferta {
 	
@@ -181,80 +177,6 @@ public class DialogOffertaScambio extends DialogOfferta {
 		
 		return panelCaricamentoOggetti;
 	}
-	
-	private MyJPanel creaPanelMessaggioMotivazionale(Offerta offertaDaModificare) {
-		MyJPanel panelMessaggioMotivazionale = new MyJPanel();
-		panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.Y_AXIS));
-		panelMessaggioMotivazionale.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width, 40));
-		panelMessaggioMotivazionale.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width, 40));
-		panelMessaggioMotivazionale.setBackground(MyJPanel.uninaLightColor);
-		panelMessaggioMotivazionale.setAlignmentX(CENTER_ALIGNMENT);
-		
-		MyJLabel lblMessaggio = new MyJLabel("Lascia un messaggio motivazionale");
-		lblMessaggio.setAlignmentX(CENTER_ALIGNMENT);
-		inserisciMessaggioTextField = new MyJTextField();
-		inserisciMessaggioTextField.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-20, 30));
-		inserisciMessaggioTextField.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getMaximumSize().width-20, 30));
-		inserisciMessaggioTextField.setAlignmentX(CENTER_ALIGNMENT);
-		inserisciMessaggioTextField.setBorder(new EmptyBorder(0, 0, 0, 0));
-		inserisciMessaggioTextField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent ke) {
-				if(inserisciMessaggioTextField.getText().length() > 100)
-					ke.consume();
-			}
-		});
-		
-		if(offertaDaModificare != null) {
-			inserisciMessaggioTextField.setText(offertaDaModificare.getMessaggioMotivazionale());
-		}
-		
-		panelMessaggioMotivazionale.add(lblMessaggio);
-		panelMessaggioMotivazionale.add(inserisciMessaggioTextField);
-		panelMessaggioMotivazionale.add(Box.createRigidArea(new Dimension(0, 20)));
-
-		return panelMessaggioMotivazionale;
-	}
-	
-	@Override
-	protected MyJPanel creaPanelNotaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
-		MyJPanel panelNotaOfferta = new MyJPanel();
-		panelNotaOfferta.setLayout(new BorderLayout());
-		
-		MyJPanel panelSuperiore = new MyJPanel();
-		panelSuperiore.setBackground(MyJPanel.uninaColorClicked);
-		panelSuperiore.setLayout(new FlowLayout(FlowLayout.CENTER));
-		MyJLabel lblTitolo = new MyJLabel("Hai qualcosa da indicare al venditore?");
-		lblTitolo.setForeground(Color.white);
-		panelSuperiore.add(lblTitolo);
-		
-		MyJPanel panelCentrale = new MyJPanel();
-		panelCentrale.setBackground(MyJPanel.uninaLightColor);
-		inserisciNotaTextArea = new JTextArea("Ciao " + annuncioPerOfferta.getUtenteProprietario().getUsername() + ", ho visto il tuo annuncio \"" + annuncioPerOfferta.getNome() + "\".");
-		inserisciNotaTextArea.setFont(new Font("Ubuntu Sans", Font.PLAIN, 13));
-		inserisciNotaTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-		inserisciNotaTextArea.setLineWrap(true);
-		inserisciNotaTextArea.setWrapStyleWord(true);
-		inserisciNotaTextArea.setPreferredSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-50, 200));
-		inserisciNotaTextArea.setMaximumSize(new Dimension(this.panelLaMiaOfferta.getPreferredSize().width-50, 200));
-		if(offertaDaModificare != null)
-			inserisciNotaTextArea.setText(offertaDaModificare.getNota());
-		
-		inserisciNotaTextArea.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent ke) {
-				if(inserisciNotaTextArea.getText().length() > 300)
-					ke.consume();
-			}
-		});
-		
-		panelCentrale.add(inserisciNotaTextArea);
-		
-		panelNotaOfferta.add(panelSuperiore, BorderLayout.NORTH);
-		panelNotaOfferta.add(panelCentrale, BorderLayout.CENTER);
-		
-		return panelNotaOfferta;
-	}	
 
 	@Override
 	protected MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
@@ -350,7 +272,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 			
 			checkNumeroOggettiCaricati();
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
-				this.checkResidenza(this.inserisciIndirizzoTextField.getText());
+				this.checkResidenza();
 			
 			if(offertaDaModificare == null) {
 				OffertaScambio newOfferta = this.organizzaDatiDaPassareAlController(annuncioPerOfferta, null);
@@ -374,22 +296,6 @@ public class DialogOffertaScambio extends DialogOfferta {
 			System.out.println(exc3.getMessage());
 			System.out.println(exc3.getSQLState());
 		}
-	}
-
-	@Override
-	protected void checkResidenza(String indirizzoDiSpedizione) throws ResidenzaException{
-		if(indirizzoDiSpedizione == null || indirizzoDiSpedizione.isBlank())
-			throw new ResidenzaException("Il campo residenza è obbligatorio.");
-		
-		if(indirizzoDiSpedizione.startsWith(" "))
-			throw new ResidenzaException("La residenza non può iniziare con uno spazio vuoto.");
-		
-		if(indirizzoDiSpedizione.endsWith(" "))
-			throw new ResidenzaException("La residenza non può terminare con uno spazio vuoto.");
-		
-		if(indirizzoDiSpedizione.length() > 75)
-			throw new ResidenzaException("La residenza deve essere di massimo 75 caratteri.");
-
 	}
 	
 	private void checkNumeroOggettiCaricati() throws OffertaScambioException{
