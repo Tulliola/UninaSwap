@@ -268,19 +268,22 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		MyJPanel panelFoto1 = new MyJPanel();
 		lblAggiungiFoto1 = new MyJLabel();
 		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, oggettoCaricato, 0, () -> {
-			foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());
+			if(!foto1Caricata.get())
+				foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());
 		});
 		
 		MyJPanel panelFoto2 = new MyJPanel();
 		lblAggiungiFoto2 = new MyJLabel();
 		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, oggettoCaricato, 1, () -> {
-			foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());
+			if(!foto2Caricata.get())
+				foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());
 		});
 		
 		MyJPanel panelFoto3 = new MyJPanel();
 		lblAggiungiFoto3 = new MyJLabel();
 		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, oggettoCaricato, 2, () -> {
-			foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());
+			if(!foto3Caricata.get())
+				foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());
 		});
 		
 		panelDelleFoto.add(panelFoto1);

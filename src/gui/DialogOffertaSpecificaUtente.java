@@ -89,6 +89,37 @@ public class DialogOffertaSpecificaUtente extends MyJDialog {
 		panelInfoOfferta.setLayout(new BoxLayout(panelInfoOfferta, BoxLayout.Y_AXIS));
 		panelInfoOfferta.setBackground(coloreCasualePerBG);
 		
+		if(offertaToDisplay.getMessaggioMotivazionale() != null && !offertaToDisplay.getMessaggioMotivazionale().isBlank()) {
+			MyJPanel panelMessaggioMotivazionale = new MyJPanel();
+			panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.X_AXIS));
+			panelMessaggioMotivazionale.setBackground(coloreCasualePerBG);
+			panelMessaggioMotivazionale.setPreferredSize(new Dimension(larghezza-distanzaDalBordo, 50));
+			panelMessaggioMotivazionale.setMaximumSize(new Dimension(larghezza-distanzaDalBordo, 50));
+			
+			MyJLabel lblIconaMessaggioMotivazionale = new MyJLabel();
+			lblIconaMessaggioMotivazionale.aggiungiImmagineScalata("images/iconaMuscolo.png", 25, 25, false);
+			
+			
+			JTextArea messaggioMotivazionaleTextArea = new JTextArea(offertaToDisplay.getMessaggioMotivazionale());
+			messaggioMotivazionaleTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+			messaggioMotivazionaleTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
+			messaggioMotivazionaleTextArea.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));
+			messaggioMotivazionaleTextArea.setEditable(false);
+			messaggioMotivazionaleTextArea.setEnabled(false);
+			messaggioMotivazionaleTextArea.setDisabledTextColor(Color.black);
+			messaggioMotivazionaleTextArea.setOpaque(false);
+			messaggioMotivazionaleTextArea.setLineWrap(true);
+			messaggioMotivazionaleTextArea.setWrapStyleWord(true);
+			messaggioMotivazionaleTextArea.setAlignmentX(CENTER_ALIGNMENT);
+			
+			messaggioMotivazionaleTextArea.setFont(messaggioMotivazionaleTextArea.getFont().deriveFont(Font.ITALIC));
+			
+			panelMessaggioMotivazionale.add(lblIconaMessaggioMotivazionale);
+			panelMessaggioMotivazionale.add(messaggioMotivazionaleTextArea);
+			
+			panelInfoOfferta.add(panelMessaggioMotivazionale);
+		}
+		
 		panelInfoOfferta.add(creaPanelModalitaConsegnaScelta(offertaToDisplay));
 		panelInfoOfferta.add(creaPanelNota(offertaToDisplay));
 		panelInfoOfferta.add(creaPanelSpecifico(offertaToDisplay));

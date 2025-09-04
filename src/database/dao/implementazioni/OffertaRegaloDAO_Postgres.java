@@ -53,9 +53,7 @@ public class OffertaRegaloDAO_Postgres implements OffertaDAO, OffertaRegaloDAO{
 
 						offertaToAdd = new OffertaRegalo(utenteLoggato, momentoProposta, modConsegna, stato, annuncioRiferito);
 						
-						if(rs.getString("Messaggio_motivazionale") != null) {
-							offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
-						}
+						offertaToAdd.setMessaggioMotivazionale(rs.getString("Messaggio_motivazionale"));
 						
 						if(modConsegna.equals(ModConsegnaEnum.Ritiro_in_posta)) {
 							UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);

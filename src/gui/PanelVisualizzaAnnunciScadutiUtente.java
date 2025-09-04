@@ -73,6 +73,7 @@ public class PanelVisualizzaAnnunciScadutiUtente extends PanelVisualizzaAnnunciU
 		}
 		else 
 			lblDataScadenza.setText("Questo annuncio non prevedeva una data di scadenza");
+		
 		panelRiepilogoScadenza.add(Box.createHorizontalGlue());
 		panelRiepilogoScadenza.add(lblDataScadenza);
 		panelRiepilogoScadenza.add(Box.createHorizontalGlue());

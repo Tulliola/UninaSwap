@@ -84,7 +84,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 		panelInfoOfferta.setBackground(coloreCasualePerBG);
 		
 		
-		if(offertaToAdd.getMessaggioMotivazionale() != null) {
+		if(offertaToAdd.getMessaggioMotivazionale() != null && !offertaToAdd.getMessaggioMotivazionale().isBlank()) {
 			MyJPanel panelMessaggioMotivazionale = new MyJPanel();
 			panelMessaggioMotivazionale.setLayout(new BoxLayout(panelMessaggioMotivazionale, BoxLayout.X_AXIS));
 			panelMessaggioMotivazionale.setBackground(coloreCasualePerBG);
@@ -96,6 +96,7 @@ public abstract class MyJOffertaPanel extends MyJPanel {
 			
 			
 			JTextArea messaggioMotivazionaleTextArea = new JTextArea(offertaToAdd.getMessaggioMotivazionale());
+							
 			messaggioMotivazionaleTextArea.setBorder(new EmptyBorder(5, 5, 5, 5));
 			messaggioMotivazionaleTextArea.setPreferredSize(new Dimension(larghezza - distanzaDalBordo, 100));
 			messaggioMotivazionaleTextArea.setMaximumSize(new Dimension(larghezza - distanzaDalBordo, 100));

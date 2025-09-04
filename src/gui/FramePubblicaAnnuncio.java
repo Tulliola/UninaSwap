@@ -312,15 +312,24 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		MyJPanel panelFoto1 = new MyJPanel();
 		lblAggiungiFoto1 = new MyJLabel();
-		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, () -> {foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, () -> {
+			if(!foto1Caricata.get())
+				foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());
+		});
 		
 		MyJPanel panelFoto2 = new MyJPanel();
 		lblAggiungiFoto2 = new MyJLabel();
-		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, () -> {foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, () -> {
+			if(!foto2Caricata.get())
+				foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());
+		});
 		
 		MyJPanel panelFoto3 = new MyJPanel();
 		lblAggiungiFoto3 = new MyJLabel();
-		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, () -> {foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, () -> {
+			if(!foto3Caricata.get())
+				foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());
+		});
 		
 		panelDelleFoto.add(panelFoto1);
 		panelDelleFoto.add(panelFoto2);
