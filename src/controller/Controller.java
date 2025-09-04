@@ -440,10 +440,10 @@ public class Controller {
 			dialogOffertaRegalo.dispose();
 	}
 	
-	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {
+	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto, String operazione) {
 		this.frameCaricaOggetto[indiceNellArrayDeiFrame].setVisible(false);
 		
-		dialogOffertaScambio.aggiungiOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
+		dialogOffertaScambio.aggiungiOModificaOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto, operazione);
 		dialogOffertaScambio.setVisible(true);
 	}
 	

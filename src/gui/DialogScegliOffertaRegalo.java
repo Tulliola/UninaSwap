@@ -5,33 +5,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 
 import controller.Controller;
 import dto.Annuncio;
-import dto.Offerta;
-import dto.OffertaAcquisto;
-import dto.OffertaRegalo;
-import dto.OffertaScambio;
-import eccezioni.OffertaAcquistoException;
 import eccezioni.OffertaException;
-import eccezioni.OffertaRegaloException;
-import eccezioni.OffertaScambioException;
 import utilities.MyJButton;
 import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
-import gui.PanelHomePageAnnunci;
 
 public class DialogScegliOffertaRegalo extends MyJDialog {
 

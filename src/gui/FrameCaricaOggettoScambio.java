@@ -651,7 +651,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 			
 			isOggettoCaricato = true;
 			
-			mainController.onCaricaOModificaOggettoButtonClicked(this.indiceNellArrayDeiFrame, this.nomeOggettoTextField.getText());
+			if(bottoneCaricaOModificaOggetto.getText().equals("Modifica oggetto"))
+				mainController.onCaricaOModificaOggettoButtonClicked(this.indiceNellArrayDeiFrame, this.nomeOggettoTextField.getText(), "Modifica");
+			else
+				mainController.onCaricaOModificaOggettoButtonClicked(indiceNellArrayDeiFrame, nomeOggettoTextField.getText(), "Carica");
 		}
 		catch(OggettoException exc1) {
 			this.settaLabelETextFieldDiErrore(lblErroreNomeOggetto, exc1.getMessage(), this.nomeOggettoTextField);

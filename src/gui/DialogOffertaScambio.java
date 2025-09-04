@@ -484,7 +484,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = false;
 	}
 	
-	public void aggiungiOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto) {
+	public void aggiungiOModificaOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto, String operazione) {
 		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].setText(nomeOggetto);
 		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		this.numeroOggettiCaricati++;

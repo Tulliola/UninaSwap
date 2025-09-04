@@ -190,12 +190,17 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		}
 		else {
 			OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
+			OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+			OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
 			annuncioRecuperato = new AnnuncioRegalo(idAnnuncioRecuperato, spedizione, 
 				ritiroInPosta, incontro, stato, momentoPubblicazione, nome, 
 				utente, oggettoInAnnuncio
 			);
-			ArrayList<Offerta> offerte = new ArrayList<Offerta>();
+			
+			ArrayList<Offerta> offerte = new ArrayList<>();
 			offerte.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			offerte.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
+			offerte.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioRecuperato));
 			
 			annuncioRecuperato.setOfferteRicevute(offerte);
 		}

@@ -376,12 +376,17 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 		if(mainController.getUtenteLoggato().getSaldo() <= prezzoOffertoDouble)
 			throw new SaldoException("Saldo insufficiente.");
 		
-		if(prezzoIniziale > 0) {
+		if(prezzoIniziale > 0.0) {
 			if(prezzoOffertoDouble < prezzoMinimo)
 				throw new PrezzoOffertoException("Il prezzo offerto deve essere almeno pari a " + prezzoMinimo + "€ (il 40%).");
 			
 			if(prezzoOffertoDouble > prezzoIniziale)
 				throw new PrezzoOffertoException("Il prezzo offerto deve essere al più pari al prezzo iniziale.");
+		}
+		else if(prezzoIniziale == 0.0) {
+			if(prezzoOffertoDouble < prezzoMinimo)
+				throw new PrezzoOffertoException("Il prezzo offerto deve essere almeno pari a € 0.01. Se vuoi accettare il regalo, ritira questa offerta.");
+			
 		}
 	}
 	

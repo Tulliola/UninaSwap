@@ -38,8 +38,8 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
 		AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto AS O JOIN Annuncio AS A ON O.idAnnuncio =  A.idAnnuncio"
-				+ " WHERE O.Email = ? AND A.Tipo_annuncio = 'Vendita'")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto "
+				+ " WHERE Email = ? AND Prezzo_offerto > 0")){
 			ps.setString(1, utenteLoggato.getEmail());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -86,7 +86,7 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 		ArrayList<Offerta> toReturn = new ArrayList<Offerta>();
 		
 		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto WHERE idAnnuncio = ?")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Offerta_acquisto WHERE idAnnuncio = ? AND prezzo_offerto > 0")){
 			ps.setInt(1, annuncio.getIdAnnuncio());
 			
 			try(ResultSet rs = ps.executeQuery()){
@@ -99,12 +99,8 @@ public class OffertaAcquistoDAO_Postgres implements OffertaDAO, OffertaAcquistoD
 					double prezzoOfferto = rs.getDouble("Prezzo_offerto");
 					
 					Offerta offertaToAdd;
-					if(prezzoOfferto > 0)
-						offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegnaScelta, stato,
+					offertaToAdd = new OffertaAcquisto(offerente, momentoProposta, modConsegnaScelta, stato,
 							annuncioRiferito, prezzoOfferto);
-					else
-						offertaToAdd = new OffertaRegalo(offerente, momentoProposta, modConsegnaScelta, stato,
-								annuncioRiferito);
 					
 					if(modConsegnaScelta.equals(ModConsegnaEnum.Ritiro_in_posta)) {
 						UfficioPostaleDAO_Postgres ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
