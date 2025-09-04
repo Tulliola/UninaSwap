@@ -12,17 +12,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -30,14 +27,11 @@ import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
 import dto.Annuncio;
-import dto.AnnuncioRegalo;
 import dto.Offerta;
-import dto.OffertaAcquisto;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
 import eccezioni.ResidenzaException;
 import utilities.GiornoEnum;
-import utilities.ModConsegnaEnum;
 import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
@@ -45,6 +39,8 @@ import utilities.MyJTextField;
 
 public abstract class DialogOfferta extends MyJDialog{
 	
+	private static final long serialVersionUID = 1L;
+
 	private final JPanel contentPane = new MyJPanel();
 
 	protected MyJPanel panelProposteVenditore = new MyJPanel();
