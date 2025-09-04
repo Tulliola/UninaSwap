@@ -484,11 +484,15 @@ public class DialogOffertaScambio extends DialogOfferta {
 		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = false;
 	}
 	
-	public void aggiungiOModificaOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto, String operazione) {
+	public void aggiungiOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto) {
 		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].setText(nomeOggetto);
 		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].aggiungiImmagineScalata("images/iconModify.png", 25, 25, true);
 		this.numeroOggettiCaricati++;
 		this.isOggettoCaricato[indiceDelFrameDaCuiRicevi] = true;
+	}
+	
+	public void modificaOggettoCaricato(int indiceDelFrameDaCuiRicevi, String nomeOggetto) {
+		this.lblCaricaOggetto[indiceDelFrameDaCuiRicevi].setText(nomeOggetto);
 	}
 	
 	private void settaLabelEFlagSeOffertaDaModificare(Offerta offertaDaModificare) {

@@ -74,7 +74,6 @@ public class Controller {
 	private OffertaDAO offertaDAO;
 	
 	public Controller() {
-		this.definisciConnessioneAlDB();
 		
 		utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
@@ -84,6 +83,8 @@ public class Controller {
 	}
 
 	static {
+		definisciConnessioneAlDB();
+
 		UIManager.put("ToolTip.font", new Font("Ubuntu Sans", Font.BOLD, 16));
 		UIManager.put("ToolTip.background", Color.white);
 		 try {
@@ -196,9 +197,7 @@ public class Controller {
 		
 		SwingUtilities.invokeLater(() -> {
 			frameHomePage.setVisible(true);
-		});
-
-		
+		});	
 	}
 	
 	public void passaAFrameHomePage(JDialog dialogDiPartenza) {
@@ -440,10 +439,17 @@ public class Controller {
 			dialogOffertaRegalo.dispose();
 	}
 	
-	public void onCaricaOModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto, String operazione) {
+	public void onCaricaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {
 		this.frameCaricaOggetto[indiceNellArrayDeiFrame].setVisible(false);
 		
-		dialogOffertaScambio.aggiungiOModificaOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto, operazione);
+		dialogOffertaScambio.aggiungiOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
+		dialogOffertaScambio.setVisible(true);
+	}
+	
+	public void onModificaOggettoButtonClicked(int indiceNellArrayDeiFrame, String nomeOggetto) {
+		this.frameCaricaOggetto[indiceNellArrayDeiFrame].setVisible(false);
+		
+		dialogOffertaScambio.modificaOggettoCaricato(indiceNellArrayDeiFrame, nomeOggetto);
 		dialogOffertaScambio.setVisible(true);
 	}
 	

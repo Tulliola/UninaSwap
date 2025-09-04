@@ -59,7 +59,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJPanel panelErroreFoto = new MyJPanel();
 	
 	private MyJButton bottoneTornaIndietro;
-	private MyJButton bottoneCaricaOModificaOggetto;
+	private MyJButton bottoneCaricaOggetto;
 	private MyJButton bottoneEliminaOggetto;
 	
 	private JComboBox categorieOggettoComboBox;
@@ -89,6 +89,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	//Variabili per gestire la funzionalita di caricamento oggetti
 	private int indiceNellArrayDeiFrame;
 	private boolean isOggettoCaricato = false;
+	private MyJButton bottoneModificaOggetto;
 	
 	public FrameCaricaOggettoScambio(Controller controller, int indiceNellArrayDeiFrame, Oggetto oggettoCaricato) {
 		mainController = controller;
@@ -266,15 +267,21 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		
 		MyJPanel panelFoto1 = new MyJPanel();
 		lblAggiungiFoto1 = new MyJLabel();
-		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, oggettoCaricato, 0, () -> {foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto1, lblAggiungiFoto1, foto1Caricata, oggettoCaricato, 0, () -> {
+			foto1Caricata.set(lblAggiungiFoto1.aggiungiImmagineDaFileSystem());
+		});
 		
 		MyJPanel panelFoto2 = new MyJPanel();
 		lblAggiungiFoto2 = new MyJLabel();
-		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, oggettoCaricato, 1, () -> {foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto2, lblAggiungiFoto2, foto2Caricata, oggettoCaricato, 1, () -> {
+			foto2Caricata.set(lblAggiungiFoto2.aggiungiImmagineDaFileSystem());
+		});
 		
 		MyJPanel panelFoto3 = new MyJPanel();
 		lblAggiungiFoto3 = new MyJLabel();
-		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, oggettoCaricato, 2, () -> {foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());});
+		this.settaPanelFoto(panelFoto3, lblAggiungiFoto3, foto3Caricata, oggettoCaricato, 2, () -> {
+			foto3Caricata.set(lblAggiungiFoto3.aggiungiImmagineDaFileSystem());
+		});
 		
 		panelDelleFoto.add(panelFoto1);
 		panelDelleFoto.add(panelFoto2);
@@ -594,18 +601,21 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelBottoni.setBackground(Color.white);
 		panelBottoni.setPreferredSize(new Dimension(1225, 100));
 		panelBottoni.setMaximumSize(new Dimension(1225, 100));
-		
-		bottoneCaricaOModificaOggetto = new MyJButton();
-		bottoneCaricaOModificaOggetto.setPreferredSize(new Dimension(300, 100));
-		bottoneCaricaOModificaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
-		bottoneCaricaOModificaOggetto.setDefaultAction(() -> {this.clickBottoneCaricaOModificaOggetto();});
 
+		
 		bottoneTornaIndietro = new MyJButton("Torna all'offerta");
 		bottoneTornaIndietro.setPreferredSize(new Dimension(300, 100));
 		bottoneTornaIndietro.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
 		bottoneTornaIndietro.setDefaultAction(() -> {mainController.tornaADialogOffertaScambio(this);});
+	
+		panelBottoni.add(bottoneTornaIndietro);
 
-		bottoneCaricaOModificaOggetto.setText("Carica oggetto");
+		bottoneModificaOggetto = new MyJButton("Modifica oggetto");
+		bottoneModificaOggetto.setPreferredSize(new Dimension(300, 100));
+		bottoneModificaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+		bottoneModificaOggetto.setDefaultAction(() -> {
+			this.clickBottoneModificaOggetto();
+		});
 		
 		if(this.isOggettoCaricato) {
 			bottoneEliminaOggetto = new MyJButton("Elimina oggetto");
@@ -615,27 +625,34 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 				mainController.tornaADialogOffertaScambioEliminandoFrame(this.indiceNellArrayDeiFrame);
 			});
 			
-			bottoneCaricaOModificaOggetto.setText("Modifica oggetto");
+			
 			
 			panelBottoni.add(bottoneEliminaOggetto);
+			panelBottoni.add(bottoneModificaOggetto);
 		}
-		else
-			panelBottoni.add(bottoneTornaIndietro);
-		
-		panelBottoni.add(bottoneCaricaOModificaOggetto);
-		
+		else {
+			bottoneCaricaOggetto = new MyJButton();
+			bottoneCaricaOggetto.setText("Carica oggetto");
+			bottoneCaricaOggetto.setPreferredSize(new Dimension(300, 100));
+			bottoneCaricaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
+			bottoneCaricaOggetto.setDefaultAction(() -> {this.clickBottoneCaricaOggetto();});
+			
+			panelBottoni.add(bottoneCaricaOggetto);
+		}
+				
 		return panelBottoni;
 	}
 	
-	private void clickBottoneCaricaOModificaOggetto() {
+	private void clickBottoneCaricaOggetto() {
 		try {
 			resettaBordiTextField(new EmptyBorder(0, 10, 0, 0), this.nomeOggettoTextField);
 			resettaBordiTextA(new EmptyBorder(0, 10, 0, 0), this.inserisciDescrizioneTextA);	
 			nascondiPanelErrore(this.panelErroreNomeOggetto, this.panelErroreFoto, this.panelErroreDescrizione);
 			
 			checkDatiInseriti();
-			
+							
 			if(!this.isOggettoCaricato) {
+				
 				bottoneEliminaOggetto = new MyJButton("Elimina oggetto");
 				bottoneEliminaOggetto.setPreferredSize(new Dimension(300, 100));
 				bottoneEliminaOggetto.setFont(new Font("Ubuntu Sans", Font.BOLD, 20));
@@ -643,18 +660,51 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 					mainController.tornaADialogOffertaScambioEliminandoFrame(this.indiceNellArrayDeiFrame);
 				});
 				
-				bottoneCaricaOModificaOggetto.setText("Modifica oggetto");
-				
-				panelBottoni.remove(bottoneTornaIndietro);
-				panelBottoni.add(bottoneEliminaOggetto, 0);
+				panelBottoni.remove(bottoneCaricaOggetto);
+				panelBottoni.add(bottoneEliminaOggetto);
+				panelBottoni.add(bottoneModificaOggetto);
 			}
-			
+		
 			isOggettoCaricato = true;
 			
-			if(bottoneCaricaOModificaOggetto.getText().equals("Modifica oggetto"))
-				mainController.onCaricaOModificaOggettoButtonClicked(this.indiceNellArrayDeiFrame, this.nomeOggettoTextField.getText(), "Modifica");
-			else
-				mainController.onCaricaOModificaOggettoButtonClicked(indiceNellArrayDeiFrame, nomeOggettoTextField.getText(), "Carica");
+			mainController.onCaricaOggettoButtonClicked(indiceNellArrayDeiFrame, nomeOggettoTextField.getText());
+		}
+		catch(OggettoException exc1) {
+			this.settaLabelETextFieldDiErrore(lblErroreNomeOggetto, exc1.getMessage(), this.nomeOggettoTextField);
+			SwingUtilities.invokeLater(() -> {
+				this.nomeOggettoTextField.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(nomeOggettoTextField.getBounds());				
+			});
+			panelErroreNomeOggetto.setVisible(true);
+		}
+		catch(FotoException exc2) {
+			SwingUtilities.invokeLater(() -> {
+				this.nomeOggettoTextField.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(nomeOggettoTextField.getBounds());				
+			});
+			lblErroreFoto.setText(exc2.getMessage());
+			panelErroreFoto.setVisible(true);
+		}
+		catch(DescrizioneException exc3) {
+			this.settaLabelETextAreaDiErrore(lblErroreDescrizione, exc3.getMessage(), this.inserisciDescrizioneTextA);
+			SwingUtilities.invokeLater(() -> {
+				this.panelInserimentoDati.requestFocusInWindow();
+				this.panelCentrale.scrollRectToVisible(inserisciDescrizioneTextA.getBounds());				
+			});
+			panelErroreDescrizione.setVisible(true);
+		}
+		
+	}
+	
+	private void clickBottoneModificaOggetto() {
+		try {
+			resettaBordiTextField(new EmptyBorder(0, 10, 0, 0), this.nomeOggettoTextField);
+			resettaBordiTextA(new EmptyBorder(0, 10, 0, 0), this.inserisciDescrizioneTextA);	
+			nascondiPanelErrore(this.panelErroreNomeOggetto, this.panelErroreFoto, this.panelErroreDescrizione);
+			
+			checkDatiInseriti();
+							
+			mainController.onModificaOggettoButtonClicked(indiceNellArrayDeiFrame, nomeOggettoTextField.getText());
 		}
 		catch(OggettoException exc1) {
 			this.settaLabelETextFieldDiErrore(lblErroreNomeOggetto, exc1.getMessage(), this.nomeOggettoTextField);
