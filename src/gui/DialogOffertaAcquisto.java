@@ -66,10 +66,10 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 		lblPrezzoIniziale.setAlignmentX(LEFT_ALIGNMENT);
 
 		if(!(annuncioPerOfferta instanceof AnnuncioRegalo)) {
-			lblPrezzoIniziale.setText(mainController.getUtenteLoggato().getUsername()+ ", il prezzo iniziale del mio articolo è " + annuncioPerOfferta.getPrezzoIniziale() + "€ ...");
+			lblPrezzoIniziale.setText(mainController.getUtenteLoggato().getUsername()+ ", il prezzo iniziale del mio articolo è €" + annuncioPerOfferta.getPrezzoIniziale() + "...");
 			lblPrezzoIniziale.aggiungiImmagineScalata("images/iconaPrezzoIniziale.png", 25, 25, false);
 			panelPrezzoIniziale.add(lblPrezzoIniziale);
-			panelPrezzoIniziale.add(new MyJLabel("... ma sono disposto a trattare!"));
+			panelPrezzoIniziale.add(new MyJLabel(" ma sono disposto a trattare!"));
 		}
 		else {
 			lblPrezzoIniziale.setText(mainController.getUtenteLoggato().getUsername()+ ", questo articolo è in regalo!");
@@ -127,11 +127,11 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 			inserisciPrezzoTextField.setText(prezzoOffertoRound.toString());
 		}
 		
-		MyJLabel lblEuro = new MyJLabel(" €.");
+		MyJLabel lblEuro = new MyJLabel(" € ");
 		
 		panelWrapper.add(lblPrezzoOfferto);
-		panelWrapper.add(inserisciPrezzoTextField);
 		panelWrapper.add(lblEuro);
+		panelWrapper.add(inserisciPrezzoTextField);
 		
 		lblErrorePrezzoOfferto = new MyJLabel(true);
 		lblErrorePrezzoOfferto.setAlignmentX(CENTER_ALIGNMENT);
@@ -388,17 +388,19 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 	@Override
 	protected Offerta organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offertaDaModificare) {
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+		double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
+		prezzoOfferto = Math.ceil(prezzoOfferto);
+		prezzoOfferto /= 100;
+		
 		
 		OffertaAcquisto offertaToAdd;
 		if(offertaDaModificare == null) {
-			double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
-			prezzoOfferto = Math.ceil(prezzoOfferto);
-			prezzoOfferto /= 100;
 			offertaToAdd = new OffertaAcquisto(mainController.getUtenteLoggato(), modalitaConsegnaScelta, annuncioRiferito, prezzoOfferto);
 		}
 		else {
 			offertaToAdd = (OffertaAcquisto)offertaDaModificare;
 			offertaToAdd.setModalitaConsegnaScelta(modalitaConsegnaScelta);
+			offertaToAdd.setPrezzoOfferto(prezzoOfferto);
 		}
 		
 		if(modalitaConsegnaScelta.toString().equals("Spedizione"))

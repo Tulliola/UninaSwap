@@ -109,7 +109,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneAccettaRegalo.setFocusable(false);
 		bottoneAccettaRegalo.setDefaultAction(() -> {
 			try {
-				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				mainController.getUtenteLoggato().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaRegalo(annuncio);
 			}
 			catch(OffertaException exc) {
@@ -121,7 +121,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneFaiOffertaScambio.setFocusable(false);
 		bottoneFaiOffertaScambio.setDefaultAction(() -> {
 			try {
-				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				mainController.getUtenteLoggato().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaScambio(annuncio);
 			}
 			catch(OffertaException exc) {
@@ -133,7 +133,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		bottoneFaiOffertaAcquisto.setFocusable(false);
 		bottoneFaiOffertaAcquisto.setDefaultAction(() -> {			
 			try {
-				annuncio.getUtenteProprietario().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+				mainController.getUtenteLoggato().checkOffertaGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 				mainController.passaADialogOffertaAcquisto(annuncio);
 			}
 			catch(OffertaException exc) {

@@ -50,7 +50,7 @@ public class ProfiloUtente {
 	}
 	
 	public void checkOffertaGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaException{
-		
+		System.out.print(idAnnuncioRiferito);
 		for(Offerta offertaCorrente : getOfferteInAttesa()) {		
 			if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
 				throw new OffertaException("Hai già un'offerta attiva per questo annuncio. Ritirala o attendi che venga valutata dal venditore!");

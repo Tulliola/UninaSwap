@@ -456,9 +456,9 @@ public class Controller {
 	public void onModificaOffertaAcquistoButtonClicked(Offerta offertaModificata) throws SQLException {
 		offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
 		
-		((OffertaAcquistoDAO_Postgres)offertaDAO).updateOfferta(offertaModificata);
-		
 		double prezzoPrecedentementeOfferto = ((OffertaAcquistoDAO_Postgres)offertaDAO).recuperaPrezzoOfferta(this.utenteLoggato.getEmail(), offertaModificata.getMomentoProposta());
+		
+		((OffertaAcquistoDAO_Postgres)offertaDAO).updateOfferta(offertaModificata);		
 		this.utenteLoggato.aggiornaSaldo(prezzoPrecedentementeOfferto - offertaModificata.getPrezzoOfferto());
 		utenteDAO.aggiornaSaldoUtente(this.utenteLoggato);
 		

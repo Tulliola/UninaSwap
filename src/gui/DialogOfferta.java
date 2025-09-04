@@ -79,7 +79,7 @@ public abstract class DialogOfferta extends MyJDialog{
 	public DialogOfferta(Annuncio annuncioPerOfferta, Controller controller) {
 		mainController = controller;
 		
-		this.setSize(1200, 800);
+		this.setSize(1750, 800);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -91,7 +91,7 @@ public abstract class DialogOfferta extends MyJDialog{
 	public DialogOfferta(Annuncio annuncioPerOfferta, Controller controller, Offerta offertaDaModificare) {
 		mainController = controller;
 		
-		this.setSize(1200, 800);
+		this.setSize(1750, 800);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

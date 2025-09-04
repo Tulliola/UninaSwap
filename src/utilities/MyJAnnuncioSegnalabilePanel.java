@@ -48,11 +48,11 @@ public abstract class MyJAnnuncioSegnalabilePanel extends MyJAnnuncioPanel{
 		lblSegnala.setOnMouseExitedAction(() -> {});
 		
 		if(annuncio instanceof AnnuncioVendita) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, true);
 			lblIconaTipoAnnuncio.setToolTipText("Prezzo iniziale - "+annuncio.getPrezzoIniziale()+"€");
 		}
 		else if(annuncio instanceof AnnuncioScambio) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, true);
 			lblIconaTipoAnnuncio.setToolTipText(annuncio.getNotaScambio());
 		}
 		else if(annuncio instanceof AnnuncioRegalo)

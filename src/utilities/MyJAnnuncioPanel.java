@@ -181,11 +181,11 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		MyJLabel lblIconaTipoAnnuncio = new MyJLabel();
 		
 		if(annuncio instanceof AnnuncioVendita) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioVenditaWhite.png", 50, 50, true);
 			lblIconaTipoAnnuncio.setToolTipText("Prezzo iniziale - "+annuncio.getPrezzoIniziale()+"€");
 		}
 		else if(annuncio instanceof AnnuncioScambio) {
-			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, false);
+			lblIconaTipoAnnuncio.aggiungiImmagineScalata("images/iconaAnnuncioScambioWhite.png", 50, 50, true);
 			lblIconaTipoAnnuncio.setToolTipText(annuncio.getNotaScambio());
 		}
 		else if(annuncio instanceof AnnuncioRegalo)
@@ -343,7 +343,7 @@ abstract public class MyJAnnuncioPanel extends MyJPanel {
 		panelIncontro.setMaximumSize(new Dimension(60, 30));
 		panelIncontro.setBackground(Color.white);
 		MyJLabel lblIncontro = new MyJLabel();
-		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, false);
+		lblIncontro.aggiungiImmagineScalata("images/iconaIncontro.png", 25, 25, true);
 		panelIncontro.add(lblIncontro);
 		if(annuncio.isIncontro()) {
 			String stringaPerToolTip = "<html>Sono disposto ad un incontro di persona secondo le seguenti disponibilità: <br>";

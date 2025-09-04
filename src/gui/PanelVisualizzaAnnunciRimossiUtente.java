@@ -2,32 +2,26 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.DateFormatter;
 
 import controller.Controller;
 import dto.Annuncio;
 import net.miginfocom.swing.MigLayout;
 import utilities.MyJAnnuncioPanel;
-import utilities.MyJButton;
 import utilities.MyJFrame;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 
 public class PanelVisualizzaAnnunciRimossiUtente extends PanelVisualizzaAnnunciUtente {
 	
+	private static final long serialVersionUID = 1L;
+
 	public PanelVisualizzaAnnunciRimossiUtente(Controller controller, ArrayList<Annuncio> annunciToDisplay, String messaggioAllUtente, MyJFrame parentFrame) {
 		super(controller, annunciToDisplay, messaggioAllUtente, parentFrame);
 		
@@ -85,7 +79,7 @@ public class PanelVisualizzaAnnunciRimossiUtente extends PanelVisualizzaAnnunciU
 		panelDataRimosso.setLayout(new BoxLayout(panelDataRimosso, BoxLayout.X_AXIS));
 		panelDataRimosso.setBackground(new Color(220, 220, 220));
 		panelDataRimosso.setAlignmentX(LEFT_ALIGNMENT);
-		MyJLabel lblDataRimosso = new MyJLabel("A quanto pare hai rimosso questo annuncio...", new Font("Ubuntu Sans", Font.ITALIC, 18));
+		MyJLabel lblDataRimosso = new MyJLabel("A quanto pare questo annuncio è stato rimosso...", new Font("Ubuntu Sans", Font.ITALIC, 18));
 		lblDataRimosso.setAlignmentX(CENTER_ALIGNMENT);
 		lblDataRimosso.setForeground(Color.black);
 
@@ -100,6 +94,8 @@ public class PanelVisualizzaAnnunciRimossiUtente extends PanelVisualizzaAnnunciU
 	protected void settaPanelAnnunciVendita(ArrayList<Annuncio> annunciToDisplay) {
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciVendita.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
+
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
@@ -142,6 +138,8 @@ public class PanelVisualizzaAnnunciRimossiUtente extends PanelVisualizzaAnnunciU
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciScambio.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
 					return creaPanelRiepilogoScadenza(annuncio);
@@ -182,6 +180,8 @@ public class PanelVisualizzaAnnunciRimossiUtente extends PanelVisualizzaAnnunciU
 	protected void settaPanelAnnunciRegalo(ArrayList<Annuncio> annunciToDisplay) {
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciRegalo.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
+
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				public MyJPanel creaPanelSottoDescrizione(Annuncio annuncio) {
