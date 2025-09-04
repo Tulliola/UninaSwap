@@ -30,7 +30,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 	
 	@Override
 	public ArrayList<Annuncio> recuperaAnnunciDiUtente(ProfiloUtente utenteLoggato) throws SQLException{
-		ArrayList<Annuncio> toReturn = new ArrayList();
+		ArrayList<Annuncio> toReturn = new ArrayList<>();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email = ? ORDER BY Momento_pubblicazione ASC")){
 			ps.setString(1, utenteLoggato.getEmail());
@@ -46,7 +46,7 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 
 	@Override
 	public ArrayList<Annuncio> recuperaAnnunciInBacheca(String emailUtenteLoggato) throws SQLException{
-		ArrayList<Annuncio> toReturn = new ArrayList();
+		ArrayList<Annuncio> toReturn = new ArrayList<>();
 		
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM ANNUNCIO WHERE Email <> ? AND Stato = 'Disponibile' ORDER BY Momento_pubblicazione ASC")){
 			ps.setString(1, emailUtenteLoggato);
@@ -159,7 +159,6 @@ public class AnnuncioDAO_Postgres implements AnnuncioDAO{
 		Annuncio annuncioRecuperato;
 		
 		OggettoDAO_Postgres oggettoDAO = new OggettoDAO_Postgres(connessioneDB);
-		ProfiloUtenteDAO_Postgres utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
 		
 		int idAnnuncioRecuperato = rs.getInt("idAnnuncio");
 		boolean spedizione = rs.getBoolean("Spedizione");
