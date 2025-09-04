@@ -40,7 +40,7 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 				idOggettoInserito = rsInserimentoOggetto.getInt("idOggetto");
 			}
 			
-			for(int i = 0; i < 3; i++) {
+			for(int i = 0; i < oggettoToAdd.getImmagini().length; i++) {
 				if(oggettoToAdd.getImmagine(i) != null) {
 					String inserimentoImmagini = "INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)";
 					
@@ -52,6 +52,8 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 					}
 				}
 			}
+			
+			oggettoToAdd.setIdOggetto(idOggettoInserito);		
 		}
 
 		

@@ -5,30 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
@@ -38,18 +24,14 @@ import dto.Annuncio;
 import dto.AnnuncioRegalo;
 import dto.Offerta;
 import dto.OffertaScambio;
-import dto.OffertaScambio;
 import dto.SedeUniversita;
 import dto.UfficioPostale;
 import dto.Oggetto;
 import eccezioni.OffertaScambioException;
-import eccezioni.PrezzoOffertoException;
 import eccezioni.ResidenzaException;
-import eccezioni.SaldoException;
 import utilities.GiornoEnum;
 import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
-import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
 import utilities.MyJTextField;
@@ -60,7 +42,6 @@ public class DialogOffertaScambio extends DialogOfferta {
 		
 	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller) {
 		super(annuncioPerOfferta, controller);
-		System.out.print(lblCaricaOggetto);
 	}
 	
 	public DialogOffertaScambio(Annuncio annuncioPerOfferta, Controller controller, OffertaScambio offertaDaModificare) {
@@ -514,7 +495,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 		if(offertaDaModificare != null) {
 			numeroOggettiCaricati = offertaDaModificare.getOggettiOfferti().size();
 
-			for(int i = 0; i < offertaDaModificare.getOggettiOfferti().size(); i++) {
+			for(int i = 0; i < numeroOggettiCaricati; i++) {
 				lblCaricaOggetto[i].setText("Oggetto " + (i+1) + " offerto");
 				lblCaricaOggetto[i].aggiungiImmagineScalata("images/iconModify.png", 25, 25, false);
 				isOggettoCaricato[i] = true;

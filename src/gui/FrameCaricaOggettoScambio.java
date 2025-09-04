@@ -61,7 +61,6 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 	private MyJButton bottoneTornaIndietro;
 	private MyJButton bottoneCaricaOModificaOggetto;
 	private MyJButton bottoneEliminaOggetto;
-	private MyJButton bottoneCaricaOggetto;
 	
 	private JComboBox categorieOggettoComboBox;
 	private JComboBox condizioniOggettoComboBox;
@@ -741,6 +740,7 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		lblAggiungiFoto.setOnMouseClickedAction(() -> {onMouseClickedAction.run();});
 		lblAggiungiFoto.setOnMouseEnteredAction(() -> {});
 		lblAggiungiFoto.setOnMouseExitedAction(() -> {});
+		
 		if(oggettoCaricato == null || oggettoCaricato.getImmagine(indiceDellaFoto) == null)
 			lblAggiungiFoto.aggiungiImmagineScalata("images/iconaAggiungiImmagine.png", 100, 100, true);
 		else {
