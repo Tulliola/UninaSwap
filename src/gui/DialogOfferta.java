@@ -12,12 +12,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -32,6 +34,7 @@ import dto.SedeUniversita;
 import dto.UfficioPostale;
 import eccezioni.ResidenzaException;
 import utilities.GiornoEnum;
+import utilities.ModConsegnaEnum;
 import utilities.MyJDialog;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
@@ -70,7 +73,7 @@ public abstract class DialogOfferta extends MyJDialog{
 	protected boolean isOggettoCaricato[] = new boolean[3];
 	protected boolean isOggettoCaricatoPrimaDellaModifica[] = new boolean[3];
 	protected ArrayList<String> operazioniDaEseguire;
-	protected MyJTextField inserisciMessaggioTextField;
+	protected MyJTextField inserisciMessaggioTextField = new MyJTextField();
 
 	protected MyJPanel panelMieProposte;
 
@@ -587,6 +590,60 @@ public abstract class DialogOfferta extends MyJDialog{
 		return panelMessaggioMotivazionale;
 	}
 	
+	protected void gestisciAttributiComuniDaModificare(Annuncio annuncioPerOfferta, Offerta offertaDaModificare) {
+		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
+		offertaDaModificare.setModalitaConsegnaScelta(modalitaConsegnaScelta);		
+		if(modalitaConsegnaScelta.toString().equals("Spedizione")) {
+			offertaDaModificare.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
+			offertaDaModificare.setUfficioRitiro(null);
+			offertaDaModificare.setOraInizioIncontro(null);
+			offertaDaModificare.setOraFineIncontro(null);
+			offertaDaModificare.setGiornoIncontro(null);
+			offertaDaModificare.setSedeDIncontroScelta(null);
+		}
+		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta")) {
+			offertaDaModificare.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
+			offertaDaModificare.setIndirizzoSpedizione(null);
+			offertaDaModificare.setOraInizioIncontro(null);
+			offertaDaModificare.setOraFineIncontro(null);
+			offertaDaModificare.setGiornoIncontro(null);
+			offertaDaModificare.setSedeDIncontroScelta(null);
+		}
+		else {
+			ButtonModel selectedModel = this.incontriBG.getSelection();
+			JRadioButton rbSelezionato = null;
+
+			for (Enumeration<AbstractButton> buttons = this.incontriBG.getElements(); buttons.hasMoreElements();) {
+			    AbstractButton button = buttons.nextElement();
+			    if (button.getModel() == selectedModel) {
+			        rbSelezionato = (JRadioButton) button;
+			        break;
+			    }
+			}
+
+			
+			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
+			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
+			GiornoEnum giornoIncontro = (GiornoEnum) rbSelezionato.getClientProperty("Giorno");
+			SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
+
+			offertaDaModificare.setUfficioRitiro(null);
+			offertaDaModificare.setIndirizzoSpedizione(null);
+			
+			offertaDaModificare.setOraInizioIncontro(oraInizio);
+			offertaDaModificare.setOraFineIncontro(oraFine);
+			offertaDaModificare.setGiornoIncontro(giornoIncontro);
+			offertaDaModificare.setSedeDIncontroScelta(sedeIncontro);
+		}		
+		
+		offertaDaModificare.setNota(this.inserisciNotaTextArea.getText());
+		
+		if(!this.inserisciMessaggioTextField.getText().isBlank())
+			offertaDaModificare.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
+		
+		this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
+	}
+	
 	protected abstract MyJPanel creaPanelDatiProposte(Annuncio annuncioPerOfferta); 
 	
 	protected abstract MyJPanel creaPanelMieProposte(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
@@ -594,6 +651,6 @@ public abstract class DialogOfferta extends MyJDialog{
 	protected abstract MyJPanel creaPanelBottoni(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
 	
 	protected abstract void clickBottoneConfermaOfferta(Annuncio annuncioPerOfferta, Offerta offertaDaModificare);
-		
+	
 	protected abstract Offerta organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offertaDaModificare);
 }

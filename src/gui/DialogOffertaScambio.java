@@ -198,57 +198,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 		else {
 			bottoneConfermaModificaOfferta = new MyJButton("Modifica la mia offerta!");
 			bottoneConfermaModificaOfferta.setDefaultAction(() -> {
-				ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
-				offertaDaModificare.setModalitaConsegnaScelta(modalitaConsegnaScelta);
-				if(modalitaConsegnaScelta.toString().equals("Spedizione")) {
-					offertaDaModificare.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
-					offertaDaModificare.setUfficioRitiro(null);
-					offertaDaModificare.setOraInizioIncontro(null);
-					offertaDaModificare.setOraFineIncontro(null);
-					offertaDaModificare.setGiornoIncontro(null);
-					offertaDaModificare.setSedeDIncontroScelta(null);
-				}
-				else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta")) {
-					offertaDaModificare.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
-					offertaDaModificare.setIndirizzoSpedizione(null);
-					offertaDaModificare.setOraInizioIncontro(null);
-					offertaDaModificare.setOraFineIncontro(null);
-					offertaDaModificare.setGiornoIncontro(null);
-					offertaDaModificare.setSedeDIncontroScelta(null);
-				}
-				else {
-					ButtonModel selectedModel = this.incontriBG.getSelection();
-					JRadioButton rbSelezionato = null;
-	
-					for (Enumeration<AbstractButton> buttons = this.incontriBG.getElements(); buttons.hasMoreElements();) {
-					    AbstractButton button = buttons.nextElement();
-					    if (button.getModel() == selectedModel) {
-					        rbSelezionato = (JRadioButton) button;
-					        break;
-					    }
-					}
-	
-					
-					String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
-					String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
-					GiornoEnum giornoIncontro = (GiornoEnum) rbSelezionato.getClientProperty("Giorno");
-					SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
-	
-					offertaDaModificare.setUfficioRitiro(null);
-					offertaDaModificare.setIndirizzoSpedizione(null);
-					
-					offertaDaModificare.setOraInizioIncontro(oraInizio);
-					offertaDaModificare.setOraFineIncontro(oraFine);
-					offertaDaModificare.setGiornoIncontro(giornoIncontro);
-					offertaDaModificare.setSedeDIncontroScelta(sedeIncontro);
-				}	
-				
-				offertaDaModificare.setNota(this.inserisciNotaTextArea.getText());
-				
-				if(annuncioPerOfferta instanceof AnnuncioRegalo)
-					offertaDaModificare.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
-				
-				this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
+				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
 			});
 		}
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");

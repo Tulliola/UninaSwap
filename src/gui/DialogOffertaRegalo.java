@@ -26,13 +26,12 @@ import utilities.ModConsegnaEnum;
 import utilities.MyJButton;
 import utilities.MyJLabel;
 import utilities.MyJPanel;
-import utilities.MyJTextField;
 
 public class DialogOffertaRegalo extends DialogOfferta {
 
 	private static final long serialVersionUID = 1L;
 	private MyJPanel panelMieProposte;
-	private MyJTextField inserisciMessaggioTextField;
+
 	public DialogOffertaRegalo(Annuncio annuncioPerOfferta, Controller controller) {
 		super(annuncioPerOfferta, controller);
 	}
@@ -93,11 +92,15 @@ public class DialogOffertaRegalo extends DialogOfferta {
 		
 		if(offertaDaModificare == null) {
 			bottoneConfermaOfferta = new MyJButton("Conferma la mia offerta!");
-			bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta, null);});
+			bottoneConfermaOfferta.setDefaultAction(() -> {
+				this.clickBottoneConfermaOfferta(annuncioPerOfferta, null);
+			});
 		}
 		else {
 			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
-			bottoneConfermaOfferta.setDefaultAction(() -> {this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);});
+			bottoneConfermaOfferta.setDefaultAction(() -> {
+				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+			});
 		}
 		
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
