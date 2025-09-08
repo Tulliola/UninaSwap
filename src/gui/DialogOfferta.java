@@ -641,7 +641,6 @@ public abstract class DialogOfferta extends MyJDialog{
 		if(!this.inserisciMessaggioTextField.getText().isBlank())
 			offertaDaModificare.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
 		
-		this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
 	}
 	
 	protected abstract MyJPanel creaPanelDatiProposte(Annuncio annuncioPerOfferta); 

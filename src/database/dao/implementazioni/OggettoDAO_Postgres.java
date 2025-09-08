@@ -12,14 +12,9 @@ import utilities.CategoriaEnum;
 import utilities.CondizioneEnum;
 
 public class OggettoDAO_Postgres implements OggettoDAO {
-	private Connection connessioneDB;
 	
-	public OggettoDAO_Postgres(Connection connessioneDB) {
-		this.connessioneDB = connessioneDB;
-	}
-
 	@Override
-	public Integer inserisciOggetto(Oggetto oggettoToAdd, String emailUtenteProprietario) throws SQLException {
+	public Integer inserisciOggetto(Connection connessioneDB, Oggetto oggettoToAdd, String emailUtenteProprietario) throws SQLException {
 		String descrizioneOggetto = oggettoToAdd.getDescrizione();
 		String categoriaOggetto = oggettoToAdd.getCategoria();
 		String condizioniOggetto = oggettoToAdd.getCondizioni();
@@ -40,29 +35,16 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 				idOggettoInserito = rsInserimentoOggetto.getInt("idOggetto");
 			}
 			
-			for(int i = 0; i < oggettoToAdd.getImmagini().length; i++) {
-				if(oggettoToAdd.getImmagine(i) != null) {
-					String inserimentoImmagini = "INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)";
-					
-					try(PreparedStatement psInserimentoImmagini = connessioneDB.prepareStatement(inserimentoImmagini)){
-						psInserimentoImmagini.setBytes(1, oggettoToAdd.getImmagine(i));
-						psInserimentoImmagini.setInt(2, idOggettoInserito);
-						
-						psInserimentoImmagini.executeUpdate();
-					}
-				}
-			}
-			
 			oggettoToAdd.setIdOggetto(idOggettoInserito);		
 		}
-
 		
 		return idOggettoInserito;
+
 	}
 	
 
 	@Override
-	public Oggetto recuperaOggettoConId(int idOggetto) throws SQLException{
+	public Oggetto recuperaOggettoConId(Connection connessioneDB, int idOggetto) throws SQLException{
 		
 		try(PreparedStatement psOggetto = connessioneDB.prepareStatement("SELECT * FROM OGGETTO WHERE idOggetto = ?")){
 			psOggetto.setInt(1, idOggetto);
@@ -70,7 +52,8 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 			try(ResultSet rsOggetto = psOggetto.executeQuery()){
 				rsOggetto.next();
 				
-				byte[][] immaginiOggetto = this.recuperaImmagini(idOggetto);
+				ImmagineDAO_Postgres immagineDAO = new ImmagineDAO_Postgres();
+				byte[][] immaginiOggetto = immagineDAO.recuperaImmagini(connessioneDB, idOggetto);
 				Oggetto oggettoInAnnuncio = new Oggetto(
 						rsOggetto.getInt("idOggetto"),
 						CategoriaEnum.confrontaConStringa(rsOggetto.getString("Categoria")),
@@ -92,14 +75,16 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 	}
 	
 	@Override
-	public ArrayList<Oggetto> recuperaOggettiOffertiConIdOfferta(int idOfferta) throws SQLException {
-		ArrayList<Oggetto> toReturn = new ArrayList();
+	public ArrayList<Oggetto> recuperaOggettiOffertiConIdOfferta(Connection connessioneDB, int idOfferta) throws SQLException {
+		ArrayList<Oggetto> toReturn = new ArrayList<Oggetto>();
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Oggetto_offerto NATURAL JOIN Offerta_scambio NATURAL JOIN Oggetto WHERE idOfferta = ? ORDER BY Momento_proposta DESC")){
 			ps.setInt(1, idOfferta);
 			
 			try(ResultSet rs = ps.executeQuery()){
+				ImmagineDAO_Postgres immagineDAO = new ImmagineDAO_Postgres();
+				
 				while(rs.next()) {
-					byte[][] immaginiOggetto = recuperaImmagini(rs.getInt("idOggetto"));
+					byte[][] immaginiOggetto = immagineDAO.recuperaImmagini(connessioneDB, rs.getInt("idOggetto"));
 					Oggetto oggettoDaAggiungere = new Oggetto(rs.getInt("idOggetto"), CategoriaEnum.confrontaConStringa(rs.getString("categoria")),
 							CondizioneEnum.confrontaConStringa(rs.getString("condizioni")), immaginiOggetto[0]);
 					
@@ -117,28 +102,9 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 		}
 		return toReturn;
 	}
-	
-	@Override
-	public byte[][] recuperaImmagini(int idOggetto) throws SQLException {
-		byte[][] toReturn = new byte[3][];
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT file_immagine FROM IMMAGINE WHERE idOggetto = ?")){
-			ps.setInt(1, idOggetto);
-			
-			try(ResultSet rs = ps.executeQuery()){
-				int i = 0;
-				
-				while(rs.next()) {
-					toReturn[i] = rs.getBytes("file_immagine");
-					i++;
-				}
-				
-				return toReturn;
-			}
-		}
-	}
 
 	@Override
-	public void deleteOggetto(int idOggetto) throws SQLException {
+	public void deleteOggetto(Connection connessioneDB, int idOggetto) throws SQLException {
 		try(PreparedStatement psEliminaOggetto = connessioneDB.prepareStatement("DELETE FROM Oggetto WHERE idOggetto = ?")){
 						
 			psEliminaOggetto.setInt(1, idOggetto);
@@ -148,7 +114,7 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 	}
 
 	@Override
-	public void updateOggetto(Oggetto oggettoDaModificare) throws SQLException {
+	public void updateOggetto(Connection connessioneDB, Oggetto oggettoDaModificare) throws SQLException {
 		
 		
 		try(PreparedStatement psAggiornaOggetto = connessioneDB.prepareStatement("UPDATE Oggetto SET"
@@ -160,21 +126,11 @@ public class OggettoDAO_Postgres implements OggettoDAO {
 			
 			psAggiornaOggetto.executeUpdate();
 
-			try(PreparedStatement psEliminaFotoOggetto = connessioneDB.prepareStatement("DELETE FROM Immagine WHERE idOggetto = ?")){
-				psEliminaFotoOggetto.setInt(1, oggettoDaModificare.getIdOggetto());
-				
-				psEliminaFotoOggetto.executeUpdate();
-				
-				for(int i = 0; i < 3; i++) {
-					if(oggettoDaModificare.getImmagine(i) != null)
-						try(PreparedStatement psInserisciFotoOggetto = connessioneDB.prepareStatement("INSERT INTO Immagine (File_immagine, idOggetto) VALUES (?, ?)")){
-							psInserisciFotoOggetto.setBytes(1, oggettoDaModificare.getImmagine(i));
-							psInserisciFotoOggetto.setInt(2, oggettoDaModificare.getIdOggetto());
-							
-							psInserisciFotoOggetto.executeUpdate();
-						}
-				}
-			}
+			ImmagineDAO_Postgres immagineDAO = new ImmagineDAO_Postgres();
+			
+			immagineDAO.deleteImmaginiDiOggetto(connessioneDB, oggettoDaModificare.getIdOggetto());
+			immagineDAO.inserisciImmagini(connessioneDB, oggettoDaModificare);
+			
 		}
 	}
 }

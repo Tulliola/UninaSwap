@@ -98,7 +98,7 @@ public class DialogOffertaRegalo extends DialogOfferta {
 		else {
 			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
 			bottoneConfermaOfferta.setDefaultAction(() -> {
-				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+				this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
 			});
 		}
 		
@@ -128,6 +128,8 @@ public class DialogOffertaRegalo extends DialogOfferta {
 			}
 			else {
 				offertaDaModificare = organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
+				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+				
 				mainController.onModificaOffertaRegaloButtonClicked(offertaDaModificare);
 			}
 		}

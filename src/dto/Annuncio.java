@@ -66,6 +66,14 @@ public abstract class Annuncio {
 		}
 	}
 	
+	public void aggiungiOfferte(ArrayList<Offerta> offerteToAdd) {
+		this.offerteRicevute.addAll(offerteToAdd);
+	}
+	
+	public void aggiungiOfferta(Offerta offerteToAdd) {
+		this.offerteRicevute.add(offerteToAdd);
+	}
+	
 	//Metodo che setta l'eventuale scadenza dell'annuncio
 	public void impostaDataScadenza(Date dataScadenza) {
 		if(this.dataScadenza == null)

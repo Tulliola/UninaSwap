@@ -10,16 +10,11 @@ import database.dao.interfacce.SedeUniversitaDAO;
 import dto.SedeUniversita;
 
 public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
-	private Connection connessioneDB;
-	
-	public SedeUniversitaDAO_Postgres(Connection connessioneDB) {
-		this.connessioneDB = connessioneDB;
-	}
 	
 	@Override
-	public ArrayList<SedeUniversita> recuperaSediPresenti() throws SQLException {
+	public ArrayList<SedeUniversita> recuperaSediPresenti(Connection connessioneDB) throws SQLException {
 		String recuperaSedi = "SELECT idSede, nome FROM Sede_universita";
-		ArrayList<SedeUniversita> sediRitornate = new ArrayList();
+		ArrayList<SedeUniversita> sediRitornate = new ArrayList<SedeUniversita>();
 		
 		try(PreparedStatement psRecuperaSedi = connessioneDB.prepareStatement(recuperaSedi)){
 			try(ResultSet rsRecuperaSedi = psRecuperaSedi.executeQuery()){
@@ -33,7 +28,7 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 	}
 	
 	@Override
-	public SedeUniversita recuperaSedeDaId(int idSede) throws SQLException {
+	public SedeUniversita recuperaSedeDaId(Connection connessioneDB, int idSede) throws SQLException {
 		String recuperaSede = "SELECT Nome FROM Sede_universita WHERE idSede = ?";
 		
 		try(PreparedStatement psRecuperaSede = connessioneDB.prepareStatement(recuperaSede)){
@@ -48,7 +43,7 @@ public class SedeUniversitaDAO_Postgres implements SedeUniversitaDAO{
 	}
 
 	@Override
-	public SedeUniversita recuperaSedeDaNome(String nomeSede) throws SQLException {
+	public SedeUniversita recuperaSedeDaNome(Connection connessioneDB, String nomeSede) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idSede, Nome FROM Sede_universita WHERE Nome = ?")){
 			ps.setString(1, nomeSede);
 			try(ResultSet rs = ps.executeQuery()){

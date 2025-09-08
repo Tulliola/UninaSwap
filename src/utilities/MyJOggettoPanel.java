@@ -87,7 +87,7 @@ public class MyJOggettoPanel extends MyJPanel {
 		
 		MyJPanel panelCondizioni = new MyJPanel();
 		panelCondizioni.setBackground(Color.white);
-		panelCondizioni.setLayout(new BoxLayout(panelCondizioni, BoxLayout.X_AXIS));
+		panelCondizioni.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panelCondizioni.setPreferredSize(new Dimension(panelCondizioniECategoria.getPreferredSize().width/2, panelCondizioniECategoria.getPreferredSize().height));
 		panelCondizioni.setMaximumSize(new Dimension(panelCondizioniECategoria.getMaximumSize().width/2, panelCondizioniECategoria.getMaximumSize().height));
 		
@@ -96,17 +96,17 @@ public class MyJOggettoPanel extends MyJPanel {
 		if(!condizioneOggetto.equals(CondizioneEnum.Ricondizionato)){
 			MyJPanel panelStelleCondizioni = new MyJPanel();
 			panelStelleCondizioni.setBackground(Color.white);
-			panelStelleCondizioni.setPreferredSize(new Dimension(90, 30));
+			panelStelleCondizioni.setPreferredSize(new Dimension(150, 30));
 			MyJLabel lblStella1 = new MyJLabel();
 			lblStella1.aggiungiImmagineScalata(condizioneOggetto.getStella1(), 25, 25, false);
 			MyJLabel lblStella2 = new MyJLabel();
 			lblStella2.aggiungiImmagineScalata(condizioneOggetto.getStella2(), 25, 25, false);
 			MyJLabel lblStella3 = new MyJLabel();
 			lblStella3.aggiungiImmagineScalata(condizioneOggetto.getStella3(), 25, 25, false);
+			panelStelleCondizioni.add(lblCondizioni);
 			panelStelleCondizioni.add(lblStella1);
 			panelStelleCondizioni.add(lblStella2);
 			panelStelleCondizioni.add(lblStella3);
-			panelStelleCondizioni.add(lblCondizioni);
 			
 			panelCondizioni.add(panelStelleCondizioni);
 		}

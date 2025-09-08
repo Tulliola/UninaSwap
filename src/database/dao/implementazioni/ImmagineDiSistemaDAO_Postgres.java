@@ -1,22 +1,15 @@
 package database.dao.implementazioni;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.dao.interfacce.ImmagineDiSistemaDAO;
 
-import java.sql.Connection;
-
 public class ImmagineDiSistemaDAO_Postgres implements ImmagineDiSistemaDAO{
-	private Connection connessioneDB;
-	
-	public ImmagineDiSistemaDAO_Postgres(Connection connessioneDB) {
-		this.connessioneDB = connessioneDB;
-	}
-	
 	@Override
-	public byte[][] recuperaImmaginiDiSistema() throws SQLException{
+	public byte[][] recuperaImmaginiDiSistema(Connection connessioneDB) throws SQLException{
 		String recuperaNumFoto = "SELECT COUNT(*) AS numFoto FROM Immagine_di_sistema";
 		byte[][] immaginiDiSistema;
 		

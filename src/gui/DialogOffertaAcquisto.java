@@ -205,12 +205,7 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 		else {
 			bottoneConfermaOfferta = new MyJButton("Modifica la mia offerta!");
 			bottoneConfermaOfferta.setDefaultAction(() -> {
-				double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
-				prezzoOfferto = Math.ceil(prezzoOfferto);
-				prezzoOfferto /= 100;
-				((OffertaAcquisto)offertaDaModificare).setPrezzoOfferto(prezzoOfferto);
-				
-				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+				this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
 			});		
 		}
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
@@ -235,10 +230,10 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 				offertaMinima = Math.ceil(offertaMinima);
 				offertaMinima *= 0.4;
 				offertaMinima /= 100;
-				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), offertaMinima, annuncioPerOfferta.getPrezzoIniziale());
+				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), offertaMinima, annuncioPerOfferta.getPrezzoIniziale(), offertaDaModificare);
 			}
 			else if(annuncioPerOfferta instanceof AnnuncioRegalo)
-				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), 0.01, 0);
+				checkPrezzoOfferto(this.inserisciPrezzoTextField.getText(), 0.01, 0, offertaDaModificare);
 
 			if(this.modalitaSceltaBG.getSelection().getActionCommand().equals("Spedizione"))
 				checkResidenza();
@@ -248,6 +243,12 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 				mainController.onConfermaOffertaButtonClicked(newOfferta);
 			}
 			else {
+				double prezzoOfferto = Double.parseDouble(inserisciPrezzoTextField.getText()) * 100;
+				prezzoOfferto = Math.ceil(prezzoOfferto);
+				prezzoOfferto /= 100;
+				((OffertaAcquisto)offertaDaModificare).setPrezzoOfferto(prezzoOfferto);
+				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+
 				mainController.onModificaOffertaAcquistoButtonClicked(offertaDaModificare);
 			}
 			
@@ -266,15 +267,21 @@ public class DialogOffertaAcquisto extends DialogOfferta {
 		
 	}
 	
-	private void checkPrezzoOfferto(String prezzoOfferto, double prezzoMinimo, double prezzoIniziale) throws SaldoException, PrezzoOffertoException {
+	private void checkPrezzoOfferto(String prezzoOfferto, double prezzoMinimo, double prezzoIniziale, Offerta offertaDaModificare) throws SaldoException, PrezzoOffertoException {
 		
 		if(this.inserisciPrezzoTextField.getText().isEmpty() || this.inserisciPrezzoTextField.getText() == null)
 			throw new PrezzoOffertoException("Inserisci un'offerta monetaria.");
 		
 		double prezzoOffertoDouble = Double.valueOf(prezzoOfferto);
 		
-		if(mainController.getUtenteLoggato().getSaldo() <= prezzoOffertoDouble)
-			throw new SaldoException("Saldo insufficiente.");
+		if(offertaDaModificare == null) {
+			if(mainController.getUtenteLoggato().getSaldo() < prezzoOffertoDouble)
+				throw new SaldoException("Saldo insufficiente.");
+		}
+		else {
+			if(mainController.getUtenteLoggato().getSaldo() + offertaDaModificare.getPrezzoOfferto() < prezzoOffertoDouble)
+				throw new SaldoException("Saldo insufficiente.");
+		}
 		
 		if(prezzoIniziale > 0.0) {
 			if(prezzoOffertoDouble < prezzoMinimo)

@@ -1,9 +1,10 @@
 package database.dao.interfacce;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import dto.Offerta;
 
 public interface OffertaRegaloDAO {
-	public void updateOfferta(Offerta offertaDaModificare) throws SQLException;
+	public void updateOfferta(Connection connessioneDB, Offerta offertaDaModificare) throws SQLException;
 }

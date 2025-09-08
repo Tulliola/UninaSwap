@@ -1,27 +1,24 @@
 package database.dao.implementazioni;
 
-import database.dao.interfacce.ProfiloUtenteDAO;
-import dto.Annuncio;
-import dto.Offerta;
-import dto.ProfiloUtente;
-import eccezioni.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.sql.*;
-import java.util.ArrayList;
+import database.dao.interfacce.ProfiloUtenteDAO;
+import dto.ProfiloUtente;
+import eccezioni.MatricolaNonTrovataException;
+import eccezioni.UtenteNonTrovatoException;
+import eccezioni.UtentePasswordMismatchException;
 
 public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
-	private Connection connessioneDB = null;
-
-	public ProfiloUtenteDAO_Postgres(Connection connessioneDB) {
-		this.connessioneDB = connessioneDB;
-	}
 
 	//Metodi di inserimento
 
 	@Override
-	public void inserisciNuovoUtente(ProfiloUtente newUtente) throws SQLException, MatricolaNonTrovataException{
+	public void inserisciNuovoUtente(Connection connessioneDB, ProfiloUtente newUtente) throws SQLException, MatricolaNonTrovataException{
 		
-		String matricolaDaEmail = this.recuperaMatricolaConEmail(newUtente.getEmail());
+		String matricolaDaEmail = this.recuperaMatricolaConEmail(connessioneDB, newUtente.getEmail());
 		
 		if(matricolaDaEmail != null) {
 			String sqlQuery = "INSERT INTO Profilo_utente (Username, Matricola, Email, PW, Residenza) VALUES (?, ?, ?, ?, ?)";
@@ -38,24 +35,10 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 			throw new MatricolaNonTrovataException("Non è stata trovata alcuna matricola associata a questa email.");
 	}
 	
-	@Override
-	public void inserisciSegnalazione(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException {
-		
-		String inserisciSegnalazione = "INSERT INTO Segnalazione (Email_utente_segnalante, Email_utente_segnalato, Motivo_segnalazione) VALUES (?, ?, ?)";
-		
-		try(PreparedStatement psInserisciSegnalazione = connessioneDB.prepareStatement(inserisciSegnalazione)){
-			psInserisciSegnalazione.setString(1, emailSegnalante);
-			psInserisciSegnalazione.setString(2, emailSegnalato);
-			psInserisciSegnalazione.setString(3, motivoSegnalazione);
-			
-			psInserisciSegnalazione.executeUpdate();
-		}
-	}
-	
 	//Metodi di aggiornamento
 	
 	@Override
-	public void aggiornaUsernameUtente(ProfiloUtente utenteLoggato) throws SQLException {
+	public void aggiornaUsernameUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET Username = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, utenteLoggato.getUsername());
@@ -66,7 +49,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 	
 	@Override
-	public void aggiornaPasswordUtente(ProfiloUtente utenteLoggato) throws SQLException {
+	public void aggiornaPasswordUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET PW = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, utenteLoggato.getPassword());
@@ -76,7 +59,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 	
 	@Override
-	public void aggiornaResidenzaUtente(ProfiloUtente utenteLoggato) throws SQLException {
+	public void aggiornaResidenzaUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET Residenza = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, utenteLoggato.getResidenza());
@@ -86,7 +69,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 	
 	@Override
-	public void aggiornaBioPicUtente(ProfiloUtente utenteLoggato) throws SQLException {
+	public void aggiornaBioPicUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException {
 		String aggiornaFoto = "UPDATE Profilo_utente SET Immagine_profilo = ? WHERE Email = ?";
 		
 		try(PreparedStatement psAggiornaFoto = connessioneDB.prepareStatement(aggiornaFoto)){
@@ -99,11 +82,11 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	
 	//Metodi di ricerca
 	@Override
-	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(String emailOrUsername, String password) throws SQLException  {
+	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(Connection connessioneDB, String emailOrUsername, String password) throws SQLException  {
 		
-		isUtenteExisting(emailOrUsername);
+		isUtenteExisting(connessioneDB, emailOrUsername);
 		
-		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE PW = ? AND (Email = ? OR Username = ?);")){
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE PW = ? AND (Email = ? OR Username = ?)")){
 			ps.setString(1, password);
 			ps.setString(2, emailOrUsername);
 			ps.setString(3, emailOrUsername);
@@ -125,36 +108,13 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 				if(rs.getDate("Data_sospensione") != null)
 					profiloToReturn.setDataSospensione(rs.getDate("Data_sospensione"));
 				
-				AnnuncioDAO_Postgres annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-				ArrayList<Annuncio> annunciDiUtente = annuncioDAO.recuperaAnnunciDiUtente(profiloToReturn);
-				
-				OffertaAcquistoDAO_Postgres offerteAcquistoDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
-				OffertaScambioDAO_Postgres offerteScambioDAO = new OffertaScambioDAO_Postgres(connessioneDB);
-				OffertaRegaloDAO_Postgres offerteRegaloDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
-				
-				ArrayList<Offerta> offerteDiAnnuncio = new ArrayList<Offerta>();
-				for(Annuncio annuncioCorrente : annunciDiUtente) {
-					profiloToReturn.aggiungiAnnuncio(annuncioCorrente);
-					offerteDiAnnuncio.addAll(offerteAcquistoDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
-					offerteDiAnnuncio.addAll(offerteScambioDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
-					offerteDiAnnuncio.addAll(offerteRegaloDAO.recuperaOfferteDiAnnuncio(annuncioCorrente));
-				}
-				
-				ArrayList<Offerta> offerteDiUtente = new ArrayList<Offerta>();
-				offerteDiUtente.addAll(offerteAcquistoDAO.recuperaOfferteDiUtente(profiloToReturn));
-				offerteDiUtente.addAll(offerteScambioDAO.recuperaOfferteDiUtente(profiloToReturn));
-				offerteDiUtente.addAll(offerteRegaloDAO.recuperaOfferteDiUtente(profiloToReturn));
-				
-				
-				profiloToReturn.setOfferteUtente(offerteDiUtente);
-				
 				return profiloToReturn;
 			}
 		}
 	}
 
 	@Override
-	public ProfiloUtente recuperaUtenteNonLoggatoConEmail(String email) throws SQLException{
+	public ProfiloUtente recuperaUtenteNonLoggatoConEmail(Connection connessioneDB, String email) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE Email = ?")){
 			ps.setString(1, email);
 			
@@ -172,7 +132,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	}
 	
 	@Override
-	public String recuperaMatricolaConEmail(String emailIn) throws SQLException {
+	public String recuperaMatricolaConEmail(Connection connessioneDB, String emailIn) throws SQLException {
 		String sqlQuery = "SELECT Matricola FROM Studente WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
 			prepStat.setString(1, emailIn);
@@ -185,48 +145,10 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		
 		return null;
 	}
-
-	@Override
-	public String[] recuperaMotiviSegnalazioni(String emailIn) throws SQLException {
-		String sqlQuery = "SELECT motivo_segnalazione, data_segnalazione FROM SEGNALAZIONE WHERE Email_utente_segnalato = ? ORDER BY data_segnalazione DESC LIMIT 3";
-		try(PreparedStatement ps = connessioneDB.prepareStatement(sqlQuery)){
-			ps.setString(1, emailIn);
-			try(ResultSet rs = ps.executeQuery()){
-				String[] motiviSegnalazione = new String[3];
-				
-				for(int i = 0; i < 3; i++) {
-					if(rs.next())
-						motiviSegnalazione[i] = rs.getString("motivo_segnalazione");
-				}
-				
-				return motiviSegnalazione;
-			}
-		}
-		
-	}
-	
-	@Override
-	public String[] recuperaUtentiSegnalanti(String emailSegnalato) throws SQLException {
-		String sqlQuery = "SELECT username FROM SEGNALAZIONE AS S JOIN PROFILO_UTENTE AS P ON S.email_utente_segnalante = P.Email WHERE email_utente_segnalato = ? ORDER BY data_segnalazione DESC LIMIT 3";
-		
-		try(PreparedStatement ps = connessioneDB.prepareStatement(sqlQuery)){
-			ps.setString(1, emailSegnalato);
-			try(ResultSet rs = ps.executeQuery()){
-				String[] utentiSegnalanti = new String[3];
-				
-				for(int i = 0; i < 3; i++) {
-					if(rs.next())
-						utentiSegnalanti[i] = rs.getString("username");
-				}
-				
-				return utentiSegnalanti;
-			}
-		}
-	}
 	
 
 	@Override
-	public void aggiornaSaldoUtente(ProfiloUtente utente) throws SQLException{
+	public void aggiornaSaldoUtente(Connection connessioneDB, ProfiloUtente utente) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("UPDATE Profilo_utente SET Saldo = ? WHERE Email = ?")){
 			ps.setDouble(1, utente.getSaldo());
 			ps.setString(2, utente.getEmail());
@@ -237,7 +159,7 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	
 	//Metodi di utilità non ereditati dall'interfaccia
 	
-	private void isUtenteExisting(String emailOrUsername) throws SQLException{
+	private void isUtenteExisting(Connection connessioneDB, String emailOrUsername) throws SQLException{
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT * FROM Profilo_utente WHERE (Email = ? OR Username = ?);")){
 			ps.setString(1, emailOrUsername);
 			ps.setString(2, emailOrUsername);

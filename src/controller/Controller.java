@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import org.apache.log4j.Logger;
+
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import database.dao.implementazioni.*;
@@ -23,10 +25,8 @@ import utilities.StatoOffertaEnum;
 import dto.*;
 
 //Import dal package DAO
-import database.DBConnection;
-
+import database.DatabaseManager;
 //Import dal package Eccezioni
-import eccezioni.*;
 
 public class Controller {
 	private FrameDiLogin frameDiLogin;
@@ -56,8 +56,10 @@ public class Controller {
 	private DialogOffertaAccettataAnnuncio dialogOffertaAccettataAnnuncio;
 	private DialogDiAvvenutaRegistrazione dialogDiAvvenutaRegistrazione;
 	private DialogDiComunicataSospensione dialogDiComunicataSospensione;
+		
+	private static Logger logger = Logger.getLogger(Controller.class);
 	
-	private static Connection connessioneDB;
+	private Connection connessioneDB;
 	
 	private byte[][] immaginiDiSistema;
 	
@@ -66,16 +68,28 @@ public class Controller {
 	private ArrayList<SedeUniversita> sediPresenti;
 	private ArrayList<UfficioPostale> ufficiPresenti;
 	
-	private ProfiloUtenteDAO_Postgres utenteDAO;
-	private SedeUniversitaDAO_Postgres sedeDAO;
-	private UfficioPostaleDAO_Postgres ufficioDAO;
-	private ImmagineDiSistemaDAO_Postgres immagineDAO;
-	private AnnuncioDAO_Postgres annuncioDAO;
+	private ProfiloUtenteDAO utenteDAO;
+	private SedeUniversitaDAO sedeDAO;
+	private UfficioPostaleDAO ufficioDAO;
+	private ImmagineDiSistemaDAO immagineDiSistemaDAO;
+	private AnnuncioDAO annuncioDAO;
+	private OggettoDAO oggettoDAO;
 	private OffertaDAO offertaDAO;
+	private IncontroDAO incontroDAO;
+	private SegnalazioneDAO segnalazioneDAO;
+	private ImmagineDAO immagineDAO;
 	
 	public Controller() {
 		
-		utenteDAO = new ProfiloUtenteDAO_Postgres(connessioneDB);
+		utenteDAO = new ProfiloUtenteDAO_Postgres();
+		sedeDAO = new SedeUniversitaDAO_Postgres();
+		ufficioDAO = new UfficioPostaleDAO_Postgres();
+		immagineDiSistemaDAO = new ImmagineDiSistemaDAO_Postgres();
+		immagineDAO = new ImmagineDAO_Postgres();
+		annuncioDAO = new AnnuncioDAO_Postgres();
+		oggettoDAO = new OggettoDAO_Postgres();
+		incontroDAO = new IncontroDAO_Postgres();
+		segnalazioneDAO = new SegnalazioneDAO_Postgres();
 		
 		frameDiLogin = new FrameDiLogin(this);
 		frameDiLogin.setVisible(true);
@@ -83,8 +97,6 @@ public class Controller {
 	}
 
 	static {
-		definisciConnessioneAlDB();
-
 		UIManager.put("ToolTip.font", new Font("Ubuntu Sans", Font.BOLD, 16));
 		UIManager.put("ToolTip.background", Color.white);
 		 try {
@@ -101,35 +113,6 @@ public class Controller {
 		new Controller();
 	}
 
-	
-	private static void definisciConnessioneAlDB() {
-		DBConnection dbConn = DBConnection.getConnessioneAlDB();
-		
-		try {
-			connessioneDB = dbConn.connettitiTramiteSchema("uninaswap");
-			
-		}
-		catch(NomeSchemaException exc1) {
-			System.out.println(exc1.getMessage());
-			
-			try {
-				connessioneDB.close();
-			}
-			catch(SQLException exc2) {
-				exc2.printStackTrace();
-			}
-		}
-		
-		if(connessioneDB == null) {
-			System.out.println("C'è stato un errore nella connessione al database.");
-			System.exit(0);
-		}
-		else
-			System.out.println("La connessione è stata definita con successo.");
-		
-	}
-
-	
 	// Metodi tornaA
 	public void tornaALogin() {
 		frameDiRegistrazione.dispose();
@@ -225,12 +208,28 @@ public class Controller {
 		frameCaricaOggetto[frameOggettoIesimo].setVisible(true);
 	}
 
-	public void passaADialogDiComunicataSospensione(String emailUtente) throws SQLException {
-		String[] motiviSegnalazioni = utenteDAO.recuperaMotiviSegnalazioni(utenteLoggato.getEmail());
-		String[] utentiSegnalanti = utenteDAO.recuperaUtentiSegnalanti(utenteLoggato.getEmail());
+	public void passaADialogDiComunicataSospensione(String emailUtente) throws SQLException{
+		String[] motiviSegnalazioni;
+		String[] utentiSegnalanti;
+		
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
+			motiviSegnalazioni = segnalazioneDAO.recuperaMotiviSegnalazioni(connessioneDB, utenteLoggato.getEmail());
+			utentiSegnalanti = segnalazioneDAO.recuperaUtentiSegnalanti(connessioneDB, utenteLoggato.getEmail());
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 		
 		dialogDiComunicataSospensione = new DialogDiComunicataSospensione(frameDiLogin, utenteLoggato.getDataSospensione(), motiviSegnalazioni, true, utentiSegnalanti);
 		dialogDiComunicataSospensione.setVisible(true);
+		
 		frameDiLogin.dispose();
 	}
 	
@@ -350,29 +349,51 @@ public class Controller {
 	
 	// Metodi onButtonClicked
 	public void onAccessoButtonClicked(String email, String password) throws SQLException{
-		utenteLoggato = utenteDAO.recuperaUtenteConEmailOUsernameEPassword(email, password);
 		
-		if(utenteLoggato.isSospeso())
-			this.passaADialogDiComunicataSospensione(email);
-		else {
-			annuncioDAO = new AnnuncioDAO_Postgres(connessioneDB);
-			sedeDAO = new SedeUniversitaDAO_Postgres(connessioneDB);
-			ufficioDAO = new UfficioPostaleDAO_Postgres(connessioneDB);
-			immagineDAO = new ImmagineDiSistemaDAO_Postgres(connessioneDB);
+		try {
+			connessioneDB = DatabaseManager.getConnection();
 			
-			this.ufficiPresenti = ufficioDAO.recuperaUfficiPostali();
-			this.sediPresenti = sedeDAO.recuperaSediPresenti();
-			this.immaginiDiSistema = immagineDAO.recuperaImmaginiDiSistema();
-			this.annunciInBacheca = annuncioDAO.recuperaAnnunciInBacheca(utenteLoggato.getEmail());
+			this.impostaDatiPerUtenteLoggato(connessioneDB, email, password);
 			
-			this.passaAFrameHomePage(frameDiLogin);
+			if(utenteLoggato.isSospeso()) 
+				this.passaADialogDiComunicataSospensione(email);
+			else {
+				
+				this.ufficiPresenti = ufficioDAO.recuperaUfficiPostali(connessioneDB);
+				this.sediPresenti = sedeDAO.recuperaSediPresenti(connessioneDB);
+				this.immaginiDiSistema = immagineDiSistemaDAO.recuperaImmaginiDiSistema(connessioneDB);
+				this.annunciInBacheca = annuncioDAO.recuperaAnnunciInBacheca(connessioneDB, utenteLoggato.getEmail());
+				
+				
+				this.passaAFrameHomePage(frameDiLogin);
+			}
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
 		}
 	}
 	
 	public void onConfermaRegistrazioneButtonClicked(String usernameIn, String emailIn, String passwordIn, String residenzaIn) throws SQLException{
 		ProfiloUtente nuovoUtente = new ProfiloUtente(usernameIn, emailIn, residenzaIn, passwordIn);
-		utenteDAO.inserisciNuovoUtente(nuovoUtente);
 		
+		try{
+			connessioneDB = DatabaseManager.getConnection();
+			utenteDAO.inserisciNuovoUtente(connessioneDB, nuovoUtente);
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
+				
 		dialogDiAvvenutaRegistrazione = new DialogDiAvvenutaRegistrazione(frameDiRegistrazione, "Ti diamo il benvenuto in UninaSwap!", true);
 		dialogDiAvvenutaRegistrazione.setVisible(true);
 		
@@ -381,7 +402,19 @@ public class Controller {
 
 	public void onConfermaCambiaImmagineButton(byte[] newBioPic) throws SQLException{
 		utenteLoggato.setImmagineProfilo(newBioPic);
-		utenteDAO.aggiornaBioPicUtente(utenteLoggato);
+		
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			utenteDAO.aggiornaBioPicUtente(connessioneDB, utenteLoggato);
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 		
 		dialogConfermaCambiaImmagine.dispose();
 		frameCambiaImmagine.dispose();
@@ -393,21 +426,83 @@ public class Controller {
 	
 	public void onSalvaModificheButtonClickedAggiornaUsername(String newUsername) throws SQLException{
 		utenteLoggato.setUsername(newUsername);
-		utenteDAO.aggiornaUsernameUtente(utenteLoggato);
+		
+		try{
+			connessioneDB = DatabaseManager.getConnection();
+			utenteDAO.aggiornaUsernameUtente(connessioneDB, utenteLoggato);
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 	}
 	
 	public void onSalvaModificheButtonClickedAggiornaPWD(String newPassword) throws SQLException{
 		utenteLoggato.setPassword(newPassword);
-		utenteDAO.aggiornaPasswordUtente(utenteLoggato);
+		
+		try{
+			connessioneDB = DatabaseManager.getConnection();
+			utenteDAO.aggiornaPasswordUtente(connessioneDB, utenteLoggato);
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 	}
 	
 	public void onSalvaModificheButtonClickedAggiornaResidenza(String newResidenza) throws SQLException{
 		utenteLoggato.setResidenza(newResidenza);
-		utenteDAO.aggiornaResidenzaUtente(utenteLoggato);
+		
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			utenteDAO.aggiornaResidenzaUtente(connessioneDB, utenteLoggato);			
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
+
 	}
 	
 	public void onPubblicaAnnuncioButtonClicked(Annuncio newAnnuncio) throws SQLException{
-		annuncioDAO.inserisciAnnuncio(newAnnuncio);
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			connessioneDB.setAutoCommit(false);
+			
+			oggettoDAO.inserisciOggetto(connessioneDB, newAnnuncio.getOggettoInAnnuncio(), utenteLoggato.getEmail());
+			immagineDAO.inserisciImmagini(connessioneDB, newAnnuncio.getOggettoInAnnuncio());
+			annuncioDAO.inserisciAnnuncio(connessioneDB, newAnnuncio);
+			
+			if(newAnnuncio.isIncontro())
+				for(int i = 0; i < newAnnuncio.getSedeIncontroProposte().size(); i++)					
+					incontroDAO.inserisciIncontro(connessioneDB, newAnnuncio, i);
+			
+			connessioneDB.commit();
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			connessioneDB.rollback();
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null) {
+				connessioneDB.setAutoCommit(true);
+				connessioneDB.close();
+			}
+		}
+		
 		utenteLoggato.aggiungiAnnuncio(newAnnuncio);
 		
 		this.passaAFrameHomePage(framePubblicaAnnuncio);
@@ -416,15 +511,34 @@ public class Controller {
 	public void onConfermaOffertaButtonClicked(Offerta offertaToAdd) throws SQLException {
 		offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offertaToAdd, connessioneDB);
 
-		offertaDAO.inserisciOfferta(offertaToAdd);
-		utenteLoggato.aggiungiOfferta(offertaToAdd);	
-		
-		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable()) {
+		try {
+			connessioneDB = DatabaseManager.getConnection();
 			
-			this.utenteLoggato.aggiornaSaldo(-offertaToAdd.getPrezzoOfferto());
-			utenteDAO.aggiornaSaldoUtente(this.utenteLoggato);
+			connessioneDB.setAutoCommit(false);
+			offertaDAO.inserisciOfferta(connessioneDB, offertaToAdd);
 			
-			dialogOffertaAcquisto.dispose();
+			utenteLoggato.aggiungiOfferta(offertaToAdd);	
+			
+			if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable()) {
+				
+				this.utenteLoggato.aggiornaSaldo(-offertaToAdd.getPrezzoOfferto());
+				utenteDAO.aggiornaSaldoUtente(connessioneDB, this.utenteLoggato);
+				
+				dialogOffertaAcquisto.dispose();
+			}
+			
+			connessioneDB.commit();
+		}
+		catch(SQLException exc) {
+			connessioneDB.rollback();
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null) {
+				connessioneDB.setAutoCommit(true);
+				connessioneDB.close();
+			}
 		}
 		
 		if(dialogOffertaScambio != null && dialogOffertaScambio.isDisplayable()) {
@@ -454,19 +568,43 @@ public class Controller {
 	}
 	
 	public void onConfermaSegnalazioneButtonClicked(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException{
-		utenteDAO.inserisciSegnalazione(emailSegnalante, emailSegnalato, motivoSegnalazione);
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			segnalazioneDAO.inserisciSegnalazione(connessioneDB, emailSegnalante, emailSegnalato, motivoSegnalazione);			
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 		
 		dialogSegnalaUtente.dispose();
 	}
 	
 	public void onModificaOffertaAcquistoButtonClicked(Offerta offertaModificata) throws SQLException {
-		offertaDAO = new OffertaAcquistoDAO_Postgres(connessioneDB);
+		offertaDAO = new OffertaAcquistoDAO_Postgres();
 		
-		double prezzoPrecedentementeOfferto = ((OffertaAcquistoDAO_Postgres)offertaDAO).recuperaPrezzoOfferta(this.utenteLoggato.getEmail(), offertaModificata.getMomentoProposta());
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
+			double prezzoPrecedentementeOfferto = ((OffertaAcquistoDAO_Postgres)offertaDAO).recuperaPrezzoOfferta(connessioneDB, this.utenteLoggato.getEmail(), offertaModificata.getMomentoProposta());
+			
+			((OffertaAcquistoDAO_Postgres)offertaDAO).updateOfferta(connessioneDB, offertaModificata);		
+			this.utenteLoggato.aggiornaSaldo(prezzoPrecedentementeOfferto - offertaModificata.getPrezzoOfferto());
+			utenteDAO.aggiornaSaldoUtente(connessioneDB, this.utenteLoggato);			
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 		
-		((OffertaAcquistoDAO_Postgres)offertaDAO).updateOfferta(offertaModificata);		
-		this.utenteLoggato.aggiornaSaldo(prezzoPrecedentementeOfferto - offertaModificata.getPrezzoOfferto());
-		utenteDAO.aggiornaSaldoUtente(this.utenteLoggato);
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -482,9 +620,27 @@ public class Controller {
 
 
 	public void onModificaOffertaScambioButtonClicked(Offerta offertaDaModificare, ArrayList<String> operazioniDaEseguire) throws SQLException {
-		offertaDAO = new OffertaScambioDAO_Postgres(connessioneDB);
+		offertaDAO = new OffertaScambioDAO_Postgres();
 		
-		((OffertaScambioDAO_Postgres)offertaDAO).updateOfferta(offertaDaModificare, operazioniDaEseguire);
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
+			connessioneDB.setAutoCommit(false);
+			((OffertaScambioDAO_Postgres)offertaDAO).updateOfferta(connessioneDB, offertaDaModificare, operazioniDaEseguire);
+			
+			connessioneDB.commit();
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			connessioneDB.rollback();
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null) {
+				connessioneDB.setAutoCommit(true);
+				connessioneDB.close();
+			}
+		}
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -502,9 +658,20 @@ public class Controller {
 	}
 
 	public void onModificaOffertaRegaloButtonClicked(Offerta offertaDaModificare) throws SQLException {
-		offertaDAO = new OffertaRegaloDAO_Postgres(connessioneDB);
+		offertaDAO = new OffertaRegaloDAO_Postgres();
 		
-		((OffertaRegaloDAO_Postgres)offertaDAO).updateOfferta(offertaDaModificare);
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			((OffertaRegaloDAO_Postgres)offertaDAO).updateOfferta(connessioneDB, offertaDaModificare);			
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+		finally {
+			if(connessioneDB != null)
+				connessioneDB.close();
+		}
 		
 		if(dialogOffertaAcquisto != null && dialogOffertaAcquisto.isDisplayable())
 			dialogOffertaAcquisto.dispose();
@@ -546,16 +713,27 @@ public class Controller {
 		offertaDAO = MapOffertaToOffertaDAO.getOffertaDAO(offerta, connessioneDB);
 		
 		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
 			if(offerta instanceof OffertaAcquisto && (newStato.equals(StatoOffertaEnum.Accettata) || newStato.equals(StatoOffertaEnum.Ritirata)))
 				utenteLoggato.aggiornaSaldo(offerta.getPrezzoOfferto());
 			
 			offerta.setStato(newStato);
-			offertaDAO.updateStatoOfferta(offerta);
+			offertaDAO.updateStatoOfferta(connessioneDB, offerta);
 			passaAFrameHomePage(frameProfiloUtente);
 		} 
 		catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error(e);
+		}
+		finally {
+			if(connessioneDB != null) {
+				try {
+					connessioneDB.close();					
+				}
+				catch(SQLException exc) {
+					logger.error(exc);
+				}
+			}
 		}
 	}
 
@@ -564,22 +742,47 @@ public class Controller {
 	public void aggiornaSaldoUtente(double newImporto) {
 		
 		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
 			utenteLoggato.aggiornaSaldo(newImporto);
-			utenteDAO.aggiornaSaldoUtente(utenteLoggato);
+			utenteDAO.aggiornaSaldoUtente(connessioneDB, utenteLoggato);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			if(connessioneDB != null) {
+				try {
+					connessioneDB.close();					
+				}
+				catch(SQLException exc) {
+					logger.error(exc);
+				}
+			}
 		}
 	}
 
 
 	public void aggiornaStatoAnnuncio(Annuncio annuncio, StatoAnnuncioEnum newStato) {
 		try {
+			connessioneDB = DatabaseManager.getConnection();
+			
 			annuncio.setStatoEnum(newStato);
-			annuncioDAO.aggiornaStatoAnnuncio(annuncio);
+			annuncioDAO.aggiornaStatoAnnuncio(connessioneDB, annuncio);
+			
 			passaAFrameHomePage(frameProfiloUtente);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			if(connessioneDB != null) {
+				try {
+					connessioneDB.close();					
+				}
+				catch(SQLException exc) {
+					logger.error(exc);
+				}
+			}
 		}
 	}
 
@@ -609,4 +812,36 @@ public class Controller {
 		dialogConfermaRitiroOfferte.dispose();
 	}
 
+	private void impostaDatiPerUtenteLoggato(Connection connessioneDB, String email, String password) throws SQLException{
+		try {			
+			annuncioDAO = new AnnuncioDAO_Postgres();
+			
+			utenteLoggato = utenteDAO.recuperaUtenteConEmailOUsernameEPassword(connessioneDB, email, password);
+			utenteLoggato.setAnnunciUtente(annuncioDAO.recuperaAnnunciDiUtente(connessioneDB, utenteLoggato));
+			
+			for(Annuncio annuncioCorrente: utenteLoggato.getAnnunci()) {
+				offertaDAO = new OffertaAcquistoDAO_Postgres();
+				annuncioCorrente.aggiungiOfferte(offertaDAO.recuperaOfferteDiAnnuncio(connessioneDB, annuncioCorrente));
+				
+				offertaDAO = new OffertaScambioDAO_Postgres();
+				annuncioCorrente.aggiungiOfferte(offertaDAO.recuperaOfferteDiAnnuncio(connessioneDB, annuncioCorrente));
+				
+				offertaDAO = new OffertaRegaloDAO_Postgres();
+				annuncioCorrente.aggiungiOfferte(offertaDAO.recuperaOfferteDiAnnuncio(connessioneDB, annuncioCorrente));
+			}
+			
+			offertaDAO = new OffertaAcquistoDAO_Postgres();
+			utenteLoggato.aggiungiOfferte(offertaDAO.recuperaOfferteDiUtente(connessioneDB, utenteLoggato));
+			
+			offertaDAO = new OffertaScambioDAO_Postgres();
+			utenteLoggato.aggiungiOfferte(offertaDAO.recuperaOfferteDiUtente(connessioneDB, utenteLoggato));
+			
+			offertaDAO = new OffertaRegaloDAO_Postgres();
+			utenteLoggato.aggiungiOfferte(offertaDAO.recuperaOfferteDiUtente(connessioneDB, utenteLoggato));
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+			throw exc;
+		}
+	}
 }

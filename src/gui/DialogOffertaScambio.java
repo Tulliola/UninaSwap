@@ -198,7 +198,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 		else {
 			bottoneConfermaModificaOfferta = new MyJButton("Modifica la mia offerta!");
 			bottoneConfermaModificaOfferta.setDefaultAction(() -> {
-				this.gestisciAttributiComuniDaModificare(annuncioPerOfferta, offertaDaModificare);
+				this.clickBottoneConfermaOfferta(annuncioPerOfferta, offertaDaModificare);
 			});
 		}
 		MyJButton bottoneCiHoRipensato = new MyJButton("Ci ho ripensato...");
@@ -230,6 +230,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 			}
 			else {
 				offertaDaModificare = this.organizzaDatiDaPassareAlController(annuncioPerOfferta, offertaDaModificare);
+
 				mainController.onModificaOffertaScambioButtonClicked(offertaDaModificare, operazioniDaEseguire);
 			}
 			
@@ -257,7 +258,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 	protected OffertaScambio organizzaDatiDaPassareAlController(Annuncio annuncioRiferito, Offerta offerta) {
 		
 		ModConsegnaEnum modalitaConsegnaScelta = ModConsegnaEnum.confrontaConStringa(modalitaSceltaBG.getSelection().getActionCommand());
-
+		
 		ArrayList<Oggetto> oggettiCaricati = new ArrayList<Oggetto>();
 		
 		OffertaScambio offertaToAdd;
@@ -298,37 +299,7 @@ public class DialogOffertaScambio extends DialogOfferta {
 			offertaToAdd = (OffertaScambio) offerta;
 		}
 		
-		if(modalitaConsegnaScelta.toString().equals("Spedizione"))
-			offertaToAdd.setIndirizzoSpedizione(this.inserisciIndirizzoTextField.getText());
-		else if(modalitaConsegnaScelta.toString().equals("Ritiro in posta"))
-			offertaToAdd.setUfficioRitiro((UfficioPostale)this.ufficiPostaliCB.getSelectedItem());
-		else {
-			ButtonModel selectedModel = this.incontriBG.getSelection();
-			JRadioButton rbSelezionato = null;
-
-			for (Enumeration<AbstractButton> buttons = this.incontriBG.getElements(); buttons.hasMoreElements();) {
-			    AbstractButton button = buttons.nextElement();
-			    if (button.getModel() == selectedModel) {
-			        rbSelezionato = (JRadioButton) button;
-			        break;
-			    }
-			}
-
-			String oraInizio = (String)rbSelezionato.getClientProperty("Ora inizio");
-			String oraFine = (String)rbSelezionato.getClientProperty("Ora fine");
-			GiornoEnum giornoIncontro = (GiornoEnum)rbSelezionato.getClientProperty("Giorno");
-			SedeUniversita sedeIncontro = (SedeUniversita)rbSelezionato.getClientProperty("Sede");
-
-			offertaToAdd.setOraInizioIncontro(oraInizio);
-			offertaToAdd.setOraFineIncontro(oraFine);
-			offertaToAdd.setGiornoIncontro(giornoIncontro);
-			offertaToAdd.setSedeDIncontroScelta(sedeIncontro);
-		}		
-		
-		offertaToAdd.setNota(this.inserisciNotaTextArea.getText());
-		
-		if(annuncioRiferito instanceof AnnuncioRegalo)
-			offertaToAdd.setMessaggioMotivazionale(this.inserisciMessaggioTextField.getText());
+		this.gestisciAttributiComuniDaModificare(annuncioRiferito, offertaToAdd);
 		
 		return offertaToAdd;
 	}

@@ -4,22 +4,17 @@ import java.io.*;
 import java.sql.*;
 import eccezioni.NomeSchemaException;
 
-public class DBConnection implements AutoCloseable{
-	private static DBConnection connessioneAlDB = null;
-	private Connection connessione = null;
+public class DBConnectionService implements AutoCloseable{
+	private static Connection connessione = null;
 	
-	private DBConnection() {
+	public static Connection getConnessioneAlDB(String nomeSchema) throws NomeSchemaException, SQLException{
+		if(connessione == null || connessione.isClosed())
+			connessione = connettitiTramiteSchema(nomeSchema);
 		
+		return connessione;
 	}
 	
-	public static DBConnection getConnessioneAlDB() {
-		if(connessioneAlDB == null)
-			connessioneAlDB = new DBConnection();
-		
-		return connessioneAlDB;
-	}
-	
-	public Connection connettitiTramiteSchema(String nomeSchema) throws NomeSchemaException {
+	private static Connection connettitiTramiteSchema(String nomeSchema) throws NomeSchemaException {
 		
 		if(nomeSchema == null)
 			throw new NomeSchemaException("Non è stato passato alcun nome di schema.");

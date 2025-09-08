@@ -11,15 +11,9 @@ import dto.UfficioPostale;
 
 public class UfficioPostaleDAO_Postgres implements UfficioPostaleDAO{
 	
-	private Connection connessioneDB;
-	
-	public UfficioPostaleDAO_Postgres(Connection connessioneDB) {
-		this.connessioneDB = connessioneDB;
-	}
-
 	@Override
-	public ArrayList<UfficioPostale> recuperaUfficiPostali() throws SQLException {
-		ArrayList<UfficioPostale> ufficiRecuperati = new ArrayList();
+	public ArrayList<UfficioPostale> recuperaUfficiPostali(Connection connessioneDB) throws SQLException {
+		ArrayList<UfficioPostale> ufficiRecuperati = new ArrayList<UfficioPostale>();
 		
 		String recuperaUffici = "SELECT * FROM Ufficio_postale";
 		
@@ -41,7 +35,7 @@ public class UfficioPostaleDAO_Postgres implements UfficioPostaleDAO{
 	}
 
 	@Override
-	public UfficioPostale recuperaUfficioPostaleConId(int idUfficio) throws SQLException {
+	public UfficioPostale recuperaUfficioPostaleConId(Connection connessioneDB, int idUfficio) throws SQLException {
 		try(PreparedStatement psRecuperaUfficio = connessioneDB.prepareStatement("SELECT * FROM Ufficio_postale WHERE idUfficio = ?")){
 			psRecuperaUfficio.setInt(1, idUfficio);
 			
@@ -57,7 +51,7 @@ public class UfficioPostaleDAO_Postgres implements UfficioPostaleDAO{
 	}
 	
 	@Override
-	public Integer recuperaIdUfficio(String nome) throws SQLException {
+	public Integer recuperaIdUfficio(Connection connessioneDB, String nome) throws SQLException {
 		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT idUfficio FROM Ufficio_postale WHERE nome = ?")){
 				ps.setString(1, nome);
 				try(ResultSet rs = ps.executeQuery()){

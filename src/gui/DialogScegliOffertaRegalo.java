@@ -39,6 +39,7 @@ public class DialogScegliOffertaRegalo extends MyJDialog {
 		this.setSize(600, 300);
 		this.setLocationRelativeTo(framePadre);
 		this.setResizable(false);
+		this.setTitle("Scegli che tipo di offerta fare a questo annuncio di regalo!");
 		
 		MyJPanel contentPane = new MyJPanel();
 		contentPane.setLayout(new BorderLayout());

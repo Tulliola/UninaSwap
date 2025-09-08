@@ -44,6 +44,10 @@ public class ProfiloUtente {
 	public void aggiungiOfferta(Offerta offertaAggiunta) {
 		this.offerteUtente.add(offertaAggiunta);
 	}
+	
+	public void aggiungiOfferte(ArrayList<Offerta> offerteToAdd) {
+		this.offerteUtente.addAll(offerteToAdd);
+	}
 
 	public void aggiornaSaldo(double importoDaAggiungere) {
 		this.saldo += importoDaAggiungere;

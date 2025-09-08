@@ -13,10 +13,10 @@ import dto.OffertaScambio;
 public class MapOffertaToOffertaDAO {
 	public static OffertaDAO getOffertaDAO(Offerta offerta, Connection connessioneDB) {
 		if(offerta instanceof OffertaScambio) 
-			return new OffertaScambioDAO_Postgres(connessioneDB);
+			return new OffertaScambioDAO_Postgres();
 		else if(offerta instanceof OffertaRegalo) 
-			return new OffertaRegaloDAO_Postgres(connessioneDB);
+			return new OffertaRegaloDAO_Postgres();
 		else 
-			return new OffertaAcquistoDAO_Postgres(connessioneDB);
+			return new OffertaAcquistoDAO_Postgres();
 	}
 }
