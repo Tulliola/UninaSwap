@@ -3,7 +3,9 @@ package dto;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import eccezioni.OffertaAcquistoException;
 import eccezioni.OffertaException;
+import eccezioni.OffertaScambioException;
 import utilities.StatoAnnuncioEnum;
 import utilities.StatoOffertaEnum;
 
@@ -246,4 +248,23 @@ public class ProfiloUtente {
 	public ArrayList<Annuncio> getAnnunci() {
 		return this.annunciUtente;
 	}
-}
+	
+	public void checkOffertaAcquistoGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaAcquistoException{
+		
+		for(Offerta offertaCorrente : this.getOfferteInAttesa()) {		
+			if(offertaCorrente instanceof OffertaAcquisto) {
+				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
+					throw new OffertaAcquistoException("Hai già un'offerta di acquisto attiva per questo annuncio.");
+			}
+		}
+	}
+	
+	public void checkOffertaScambioGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaScambioException{
+		
+		for(Offerta offertaCorrente : this.getOfferteInAttesa()) {		
+			if(offertaCorrente instanceof OffertaScambio) {
+				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
+					throw new OffertaScambioException("Hai già un'offerta di scambio attiva per questo annuncio.");
+			}
+		}
+	}}

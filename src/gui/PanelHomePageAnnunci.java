@@ -6,6 +6,9 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -62,9 +65,9 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	private Controller mainController;
 
-	private JComboBox tipologiaAnnunciCB;
+	private JComboBox<String> tipologiaAnnunciCB;
 
-	private JComboBox categoriaOggettoInAnnuncioCB;
+	private JComboBox<String> categoriaOggettoInAnnuncioCB;
 	
 	public PanelHomePageAnnunci(Controller controller, ArrayList<Annuncio> annunci) {
 		mainController = controller;
@@ -74,7 +77,6 @@ public class PanelHomePageAnnunci extends JPanel{
 		this.settaBordoSuperiore(annunci);
 		this.settaBordoInferiore();
 
-		panelAnnunci.setLayout(new MigLayout("wrap 2", "[]", ""));
 		panelAnnunci.setBackground(MyJPanel.uninaLightColor);
 		
 		scrollPanelAnnunci = new JScrollPane(panelAnnunci);
@@ -122,25 +124,28 @@ public class PanelHomePageAnnunci extends JPanel{
 		barraDiRicerca.setMaximumSize(new Dimension(450, 35));
 		barraDiRicerca.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-		JTextField campoDiTestoTextField = new JTextField("Cerca ora!");
+		JTextField campoDiTestoTextField = new JTextField() {
+		    @Override
+		    protected void paintComponent(Graphics g) {
+		        super.paintComponent(g);
+		        if (getText().isEmpty() && !isFocusOwner()) {
+		            Graphics2D graficaCampoDiTestoTextField = (Graphics2D) g.create();
+		            graficaCampoDiTestoTextField.setColor(Color.GRAY);
+		            graficaCampoDiTestoTextField.setFont(new Font("Ubuntu Sans", Font.ITALIC, 15));
+		            Insets dimensioni = getInsets();
+		            graficaCampoDiTestoTextField.drawString("Cerca ora!", dimensioni.left + 2,
+		                          getHeight() / 2 + graficaCampoDiTestoTextField.getFontMetrics().getAscent() / 2 - 2);
+		            graficaCampoDiTestoTextField.dispose();
+		        }
+		    }
+		};
+
+		
 		campoDiTestoTextField.setBorder(new EmptyBorder(0, 10, 0, 0));
 		campoDiTestoTextField.setFont(new Font("Ubuntu Sans", Font.PLAIN, 15));
 		campoDiTestoTextField.setMinimumSize(new Dimension(390, 35));
 		campoDiTestoTextField.setPreferredSize(new Dimension(390, 35));
 		campoDiTestoTextField.setMaximumSize(new Dimension(390, 35));
-		campoDiTestoTextField.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent fe) {
-				if(campoDiTestoTextField.getText().equals("Cerca ora!"))
-					campoDiTestoTextField.setText("");
-			}
-			
-			@Override
-			public void focusLost(FocusEvent fe) {
-				if(campoDiTestoTextField.getText().isEmpty())
-					campoDiTestoTextField.setText("Cerca ora!");
-			}
-		});
 		campoDiTestoTextField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
@@ -328,7 +333,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		if(annuncio instanceof AnnuncioVendita)
 			bottoneFaiOfferta.setDefaultAction(() -> {
 				try {
-					this.checkOffertaAcquistoGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+					mainController.getUtenteLoggato().checkOffertaAcquistoGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 					mainController.passaADialogOffertaAcquisto(annuncio);
 				}
 				catch(OffertaAcquistoException exc) {
@@ -338,7 +343,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		else if(annuncio instanceof AnnuncioScambio)
 			bottoneFaiOfferta.setDefaultAction(() -> {
 				try {
-					this.checkOffertaScambioGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+					mainController.getUtenteLoggato().checkOffertaScambioGiaEsistentePerUtente(annuncio.getIdAnnuncio());
 					mainController.passaADialogOffertaScambio(annuncio);
 				}
 				catch(OffertaScambioException exc) {
@@ -377,6 +382,8 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		panelAnnunci.removeAll();
 		
+		panelAnnunci.setLayout(new MigLayout("wrap 2", "[]", ""));
+
 		if(tuttiGliAnnunci.size() == 0) {
 			this.panelAnnunci.setLayout(new MigLayout("fill, align center center"));
 			
@@ -476,25 +483,5 @@ public class PanelHomePageAnnunci extends JPanel{
 			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci per " + ricerca + " di " + categoriaOggetto + " (" + tipoAnnuncio + ").");
 		else
 			lblRisultatiDiRicerca.setText("Risultati: " + annunciFiltrati.size() + " di " + tuttiGliAnnunci.size());
-	}
-
-	private void checkOffertaAcquistoGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaAcquistoException{
-		
-		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
-			if(offertaCorrente instanceof OffertaAcquisto) {
-				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
-					throw new OffertaAcquistoException("Hai già un'offerta di acquisto attiva per questo annuncio.");
-			}
-		}
-	}
-	
-	private void checkOffertaScambioGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaScambioException{
-		
-		for(Offerta offertaCorrente : mainController.getUtenteLoggato().getOfferteInAttesa()) {		
-			if(offertaCorrente instanceof OffertaScambio) {
-				if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
-					throw new OffertaScambioException("Hai già un'offerta di scambio attiva per questo annuncio.");
-			}
-		}
 	}
 }
