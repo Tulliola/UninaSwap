@@ -429,48 +429,52 @@ public class PanelHomePageAnnunci extends JPanel{
 		
 		if(tipoAnnuncio.equals("Tutti gli annunci") && !categoriaOggetto.equals("Tutte le categorie")) {
 			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-				if(annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto) && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+				if(annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto) && (
+						annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase())))
 					annunciFiltrati.add(annuncioCorrente);
 		}
 		else if(!tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
 			if(tipoAnnuncio.equals("Vendita")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if(annuncioCorrente instanceof AnnuncioVendita && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+					if(annuncioCorrente instanceof AnnuncioVendita && (
+							annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase())))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 			else if(tipoAnnuncio.equals("Scambio")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
-					if(annuncioCorrente instanceof AnnuncioScambio && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+					if(annuncioCorrente instanceof AnnuncioScambio && (
+							annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase())))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 			else {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-					if(annuncioCorrente instanceof AnnuncioRegalo && annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+					if(annuncioCorrente instanceof AnnuncioRegalo && (
+							annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase())))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 		}
 		else if(tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
 			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
-				if(annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()))
+				if(annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase()))
 					annunciFiltrati.add(annuncioCorrente);
 		}
 		else {
 			if(tipoAnnuncio.equals("Vendita")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
 					if((annuncioCorrente instanceof AnnuncioVendita) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto) 
-							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+							&& (annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase()))))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 			else if(tipoAnnuncio.equals("Scambio")) {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci )
 					if((annuncioCorrente instanceof AnnuncioScambio) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)
-							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+							&& (annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase()))))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 			else {
 				for(Annuncio annuncioCorrente: tuttiGliAnnunci)
 					if((annuncioCorrente instanceof AnnuncioRegalo) && (annuncioCorrente.getOggettoInAnnuncio().getCategoria().equals(categoriaOggetto)
-							&& annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase())))
+							&& (annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase()))))
 						annunciFiltrati.add(annuncioCorrente);
 			}
 		}

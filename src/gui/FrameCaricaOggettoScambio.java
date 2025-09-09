@@ -334,10 +334,10 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		panelInserimentoDati.add(this.creaPanelAggiungiFoto(oggettoOfferto));
 		panelInserimentoDati.add(Box.createVerticalGlue());
 		if(oggettoOfferto == null)
-			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
+			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo! (massimo 300 caratteri)", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
 				lblErroreDescrizione, panelErroreDescrizione));
 		else
-			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", oggettoOfferto.getDescrizione(), inserisciDescrizioneTextA, 
+			panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo! (massimo 300 caratteri)", oggettoOfferto.getDescrizione(), inserisciDescrizioneTextA, 
 					lblErroreDescrizione, panelErroreDescrizione));
 			
 		panelInserimentoDati.add(Box.createVerticalGlue());
@@ -763,6 +763,9 @@ public class FrameCaricaOggettoScambio extends MyJFrame {
 		{
 			throw new DescrizioneException("Inserisci una descrizione per il tuo articolo.");
 		}
+		
+		if(this.inserisciDescrizioneTextA.getText().length() > 300)
+			throw new DescrizioneException("La descrizione deve essere di massimo 300 caratteri");
 	}
 
 	public Oggetto passaOggettoAlController() {

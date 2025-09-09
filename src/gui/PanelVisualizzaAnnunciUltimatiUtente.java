@@ -152,7 +152,6 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 	@Override
 	protected void settaPanelAnnunciScambio(ArrayList<Annuncio> annunciToDisplay) {
 
-//		panelAnnunciScambio.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciScambio.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 
@@ -197,7 +196,6 @@ public class PanelVisualizzaAnnunciUltimatiUtente extends PanelVisualizzaAnnunci
 	@Override
 	protected void settaPanelAnnunciRegalo(ArrayList<Annuncio> annunciToDisplay) {
 
-//		panelAnnunciRegalo.setPreferredSize(new Dimension(panelCentrale.getWidth(), ((annunciToDisplay.size()/2 + 1) * 610)));
 		for(int i = annunciToDisplay.size()-1; i >= 0; i--) {
 			panelAnnunciRegalo.add(new MyJAnnuncioPanel(mainController, annunciToDisplay.get(i)) {
 

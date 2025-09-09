@@ -386,7 +386,7 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		
 		panelInserimentoDati.add(this.creaPanelAggiungiFoto());
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
-		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo!", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
+		panelInserimentoDati.add(this.creaPanelTextArea("Descrivi il tuo articolo! (massimo 300 caratteri)", stringaDiDefaultPerDescrizione, inserisciDescrizioneTextA,
 				lblErroreDescrizione, panelErroreDescrizione));
 		panelInserimentoDati.add(Box.createRigidArea(new Dimension(0, 50)));
 		panelInserimentoDati.add(this.creaPanelCategoria());
@@ -1270,6 +1270,9 @@ public class FramePubblicaAnnuncio extends MyJFrame {
 		{
 			throw new DescrizioneException("Inserisci una descrizione per il tuo articolo.");
 		}
+		
+		if(this.inserisciDescrizioneTextA.getText().length() > 300)
+			throw new DescrizioneException("La descrizione deve essere di massimo 300 caratteri.");
 	}
 	
 	private void checkNotaScambio() throws NotaScambioException{

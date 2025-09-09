@@ -206,9 +206,9 @@ public class FrameProfiloUtente extends MyJFrame {
 		panelProfilo = new MyJPanel();
 		panelProfilo.setPreferredSize(new Dimension(600, this.getHeight()));
 		panelProfilo.setBackground(Color.white);
+		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));
 		
 		panelProfilo.setMaximumSize(new Dimension(600, this.getHeight()));
-		panelProfilo.setLayout(new BoxLayout(panelProfilo, BoxLayout.Y_AXIS));
 		panelProfilo.setBorder(new EmptyBorder(20, 0, 0, 0));
 		impostaPanelProfilo(utenteLoggato);
 		
