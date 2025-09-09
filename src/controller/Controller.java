@@ -567,10 +567,18 @@ public class Controller {
 		dialogOffertaScambio.setVisible(true);
 	}
 	
-	public void onConfermaSegnalazioneButtonClicked(String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException{
+	public void onConfermaSegnalazioneButtonClicked(String emailSegnalante, ProfiloUtente utenteSegnalato, String motivoSegnalazione) throws SQLException{
 		try {
 			connessioneDB = DatabaseManager.getConnection();
-			segnalazioneDAO.inserisciSegnalazione(connessioneDB, emailSegnalante, emailSegnalato, motivoSegnalazione);			
+			segnalazioneDAO.inserisciSegnalazione(connessioneDB, emailSegnalante, utenteSegnalato, motivoSegnalazione);
+			
+			if(utenteDAO.isUtenteSospeso(connessioneDB, utenteSegnalato)) {
+				for(Offerta offertaCorrente: utenteLoggato.getOfferteInAttesa())
+					if(offertaCorrente.getAnnuncioRiferito().getUtenteProprietario().getUsername().equals(utenteSegnalato.getUsername())) {
+						offertaCorrente.setStato(StatoOffertaEnum.Rifiutata);
+						utenteLoggato.aggiornaSaldo(offertaCorrente.getPrezzoOfferto());
+					}
+			}
 		}
 		catch(SQLException exc) {
 			logger.error(exc);
@@ -843,5 +851,28 @@ public class Controller {
 			logger.error(exc);
 			throw exc;
 		}
+	}
+	
+	public boolean isUtenteSospeso(ProfiloUtente utente) {
+		boolean toReturn = false;
+		try {
+			connessioneDB = DatabaseManager.getConnection();
+			toReturn = utenteDAO.isUtenteSospeso(connessioneDB, utente);
+		}
+		catch(SQLException exc) {
+			logger.error(exc);
+		}
+		finally {
+			if(connessioneDB != null) {
+				try {
+					connessioneDB.close();					
+				}
+				catch(SQLException excInChiusura) {
+					logger.error(excInChiusura);
+				}
+			}
+		}
+		
+		return toReturn;
 	}
 }

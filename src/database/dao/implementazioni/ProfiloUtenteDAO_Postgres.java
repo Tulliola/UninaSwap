@@ -157,6 +157,20 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		}
 	}
 	
+	@Override
+	public boolean isUtenteSospeso(Connection connessioneDB, ProfiloUtente utente) throws SQLException {
+		try(PreparedStatement ps = connessioneDB.prepareStatement("SELECT Sospeso FROM Profilo_utente WHERE Email = ?")){
+			ps.setString(1, utente.getEmail());
+						
+			try(ResultSet rs = ps.executeQuery()){
+				if(rs.next())
+					return rs.getBoolean("Sospeso");
+				else
+					return false;
+			}
+		}
+	}
+	
 	//Metodi di utilità non ereditati dall'interfaccia
 	
 	private void isUtenteExisting(Connection connessioneDB, String emailOrUsername) throws SQLException{
@@ -175,5 +189,4 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 		if(!(rs.next()))
 			throw new UtentePasswordMismatchException("L'email/username o la password sono errati");	
 	}
-
 }

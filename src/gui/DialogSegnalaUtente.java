@@ -119,7 +119,7 @@ public class DialogSegnalaUtente extends MyJDialog {
 			try {
 				this.nascondiLabelErrore(this.lblErroreSegnalazione);
 				this.checkMotivoSegnalazione();
-				this.mainController.onConfermaSegnalazioneButtonClicked(utenteSegnalante.getEmail(), utenteSegnalato.getEmail(), this.inserisciMotivoSegnalazione.getText());
+				this.mainController.onConfermaSegnalazioneButtonClicked(utenteSegnalante.getEmail(), utenteSegnalato, this.inserisciMotivoSegnalazione.getText());
 			}
 			catch(MotivoSegnalazioneException exc1) {
 				this.settaLabelETextAreaDiErrore(this.lblErroreSegnalazione, exc1.getMessage(), this.inserisciMotivoSegnalazione);

@@ -22,4 +22,6 @@ public interface ProfiloUtenteDAO {
 	public ProfiloUtente recuperaUtenteConEmailOUsernameEPassword(Connection connessioneDB, String emailOUsername, String password) throws SQLException;
 	public String recuperaMatricolaConEmail(Connection connessioneDB, String emailIn) throws SQLException;
 	public ProfiloUtente recuperaUtenteNonLoggatoConEmail(Connection connessioneDB, String email) throws SQLException;
+	public boolean isUtenteSospeso(Connection connessioneDB, ProfiloUtente utente) throws SQLException;
+
 }

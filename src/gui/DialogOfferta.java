@@ -433,7 +433,6 @@ public abstract class DialogOfferta extends MyJDialog{
 			SedeUniversita sedeScelta = null;
 			if(offertaDaModificare.getSedeDIncontroScelta() != null) {
 				oraInizioScelta = offertaDaModificare.getOraInizioIncontro();
-				System.out.println(offertaDaModificare.getOraInizioIncontro());
 				oraFineScelta = offertaDaModificare.getOraFineIncontro();
 				offertaDaModificare.getOraFineIncontro();
 				giornoScelto = GiornoEnum.confrontaConStringa(offertaDaModificare.getGiornoIncontro());

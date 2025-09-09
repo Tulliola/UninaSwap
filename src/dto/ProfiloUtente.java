@@ -51,12 +51,12 @@ public class ProfiloUtente {
 		this.offerteUtente.addAll(offerteToAdd);
 	}
 
-	public void aggiornaSaldo(double importoDaAggiungere) {
-		this.saldo += importoDaAggiungere;
+	public void aggiornaSaldo(Double importoDaAggiungere) {
+		if(importoDaAggiungere != null)
+			this.saldo += importoDaAggiungere;
 	}
 	
 	public void checkOffertaGiaEsistentePerUtente(int idAnnuncioRiferito) throws OffertaException{
-		System.out.print(idAnnuncioRiferito);
 		for(Offerta offertaCorrente : getOfferteInAttesa()) {		
 			if(offertaCorrente.getAnnuncioRiferito().getIdAnnuncio() == idAnnuncioRiferito)
 				throw new OffertaException("Hai già un'offerta attiva per questo annuncio. Ritirala o attendi che venga valutata dal venditore!");

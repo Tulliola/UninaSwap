@@ -11,8 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -37,6 +35,7 @@ import dto.Offerta;
 import dto.OffertaAcquisto;
 import dto.OffertaScambio;
 import eccezioni.OffertaAcquistoException;
+import eccezioni.OffertaException;
 import eccezioni.OffertaRegaloException;
 import eccezioni.OffertaScambioException;
 import net.miginfocom.swing.MigLayout;
@@ -333,8 +332,12 @@ public class PanelHomePageAnnunci extends JPanel{
 		if(annuncio instanceof AnnuncioVendita)
 			bottoneFaiOfferta.setDefaultAction(() -> {
 				try {
-					mainController.getUtenteLoggato().checkOffertaAcquistoGiaEsistentePerUtente(annuncio.getIdAnnuncio());
-					mainController.passaADialogOffertaAcquisto(annuncio);
+					if(mainController.isUtenteSospeso(annuncio.getUtenteProprietario()))
+						JOptionPane.showMessageDialog(this, "Grazie alla tua segnalazione l'utente è stato sospeso!");
+					else {
+						mainController.getUtenteLoggato().checkOffertaAcquistoGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+						mainController.passaADialogOffertaAcquisto(annuncio);
+					}
 				}
 				catch(OffertaAcquistoException exc) {
 					JOptionPane.showMessageDialog(this, exc.getMessage());
@@ -343,8 +346,12 @@ public class PanelHomePageAnnunci extends JPanel{
 		else if(annuncio instanceof AnnuncioScambio)
 			bottoneFaiOfferta.setDefaultAction(() -> {
 				try {
-					mainController.getUtenteLoggato().checkOffertaScambioGiaEsistentePerUtente(annuncio.getIdAnnuncio());
-					mainController.passaADialogOffertaScambio(annuncio);
+					if(mainController.isUtenteSospeso(annuncio.getUtenteProprietario()))
+						JOptionPane.showMessageDialog(this, "Grazie alla tua segnalazione l'utente è stato sospeso!");
+					else {
+						mainController.getUtenteLoggato().checkOffertaScambioGiaEsistentePerUtente(annuncio.getIdAnnuncio());
+						mainController.passaADialogOffertaScambio(annuncio);
+					}
 				}
 				catch(OffertaScambioException exc) {
 					JOptionPane.showMessageDialog(this, exc.getMessage());
@@ -353,7 +360,10 @@ public class PanelHomePageAnnunci extends JPanel{
 		else
 			bottoneFaiOfferta.setDefaultAction(() -> {
 				try {
-					mainController.passaADialogScegliOffertaRegalo(annuncio);
+					if(mainController.isUtenteSospeso(annuncio.getUtenteProprietario()))
+						JOptionPane.showMessageDialog(this, "Grazie alla tua segnalazione l'utente è stato sospeso!");
+					else
+						mainController.passaADialogScegliOffertaRegalo(annuncio);
 				}
 				catch(OffertaRegaloException exc) {
 					JOptionPane.showMessageDialog(this, exc.getMessage());
@@ -378,8 +388,6 @@ public class PanelHomePageAnnunci extends JPanel{
 	}
 
 	private void mostraAnnunciInBacheca(ArrayList<Annuncio> tuttiGliAnnunci) {
-		panelRisultatiDiRicerca.setVisible(false);
-		
 		panelAnnunci.removeAll();
 		
 		panelAnnunci.setLayout(new MigLayout("wrap 2", "[]", ""));
@@ -426,6 +434,7 @@ public class PanelHomePageAnnunci extends JPanel{
 	
 	private void filtraAnnunci(ArrayList<Annuncio> tuttiGliAnnunci, String tipoAnnuncio, String categoriaOggetto, String ricerca) {
 		ArrayList<Annuncio> annunciFiltrati = new ArrayList();
+		panelRisultatiDiRicerca.setVisible(true);
 		
 		if(tipoAnnuncio.equals("Tutti gli annunci") && !categoriaOggetto.equals("Tutte le categorie")) {
 			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
@@ -454,6 +463,8 @@ public class PanelHomePageAnnunci extends JPanel{
 			}
 		}
 		else if(tipoAnnuncio.equals("Tutti gli annunci") && categoriaOggetto.equals("Tutte le categorie")) {
+			if(ricerca.isBlank())
+				panelRisultatiDiRicerca.setVisible(false);
 			for(Annuncio annuncioCorrente: tuttiGliAnnunci)
 				if(annuncioCorrente.getOggettoInAnnuncio().getDescrizione().toLowerCase().contains(ricerca.toLowerCase()) || annuncioCorrente.getNome().toLowerCase().contains(ricerca.toLowerCase()))
 					annunciFiltrati.add(annuncioCorrente);
@@ -480,9 +491,7 @@ public class PanelHomePageAnnunci extends JPanel{
 		}
 		
 		this.mostraAnnunciInBacheca(annunciFiltrati);
-	
-		panelRisultatiDiRicerca.setVisible(true);
-		
+			
 		if(annunciFiltrati.size() == 0)
 			lblRisultatiDiRicerca.setText("Siamo spiacenti, ma in questo momento non sono presenti annunci per " + ricerca + " di " + categoriaOggetto + " (" + tipoAnnuncio + ").");
 		else

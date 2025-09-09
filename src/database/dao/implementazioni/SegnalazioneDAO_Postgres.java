@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.dao.interfacce.SegnalazioneDAO;
+import dto.ProfiloUtente;
 
 public class SegnalazioneDAO_Postgres implements SegnalazioneDAO {
 
@@ -48,16 +49,16 @@ public class SegnalazioneDAO_Postgres implements SegnalazioneDAO {
 	}
 
 	@Override
-	public void inserisciSegnalazione(Connection connessioneDB, String emailSegnalante, String emailSegnalato, String motivoSegnalazione) throws SQLException {
+	public void inserisciSegnalazione(Connection connessioneDB, String emailSegnalante, ProfiloUtente utenteSegnalato, String motivoSegnalazione) throws SQLException {
 		
 		String inserisciSegnalazione = "INSERT INTO Segnalazione (Email_utente_segnalante, Email_utente_segnalato, Motivo_segnalazione) VALUES (?, ?, ?)";
 		
 		try(PreparedStatement psInserisciSegnalazione = connessioneDB.prepareStatement(inserisciSegnalazione)){
 			psInserisciSegnalazione.setString(1, emailSegnalante);
-			psInserisciSegnalazione.setString(2, emailSegnalato);
+			psInserisciSegnalazione.setString(2, utenteSegnalato.getEmail());
 			psInserisciSegnalazione.setString(3, motivoSegnalazione);
 			
-			psInserisciSegnalazione.executeUpdate();
+			psInserisciSegnalazione.executeUpdate();	
 		}
 	}
 
