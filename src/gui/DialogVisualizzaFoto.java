@@ -32,7 +32,7 @@ public class DialogVisualizzaFoto extends MyJDialog {
 	private int panelCorrente;
 	
 	private int larghezza = 800;
-	private int altezza = 1000;
+	private int altezza = 800;
 	
 	public DialogVisualizzaFoto(Controller controller, ArrayList<byte[]> fotoDaMostrare) {
 		mainController = controller;

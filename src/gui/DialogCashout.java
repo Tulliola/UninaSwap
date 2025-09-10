@@ -111,7 +111,7 @@ public class DialogCashout extends MyJDialog {
 				String sottoStringaOltreDueDecimali = importo.substring(decimalIndex+3);
 				for(Character carattere: sottoStringaOltreDueDecimali.toCharArray()) {
 					if(!carattere.equals('0'))
-						throw new NumberFormatException("Importo non valido.");
+						throw new NumberFormatException("Importo non valido. Inserire massimo due cifre decimali");
 				}
 			}
 			

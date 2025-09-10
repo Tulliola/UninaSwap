@@ -94,21 +94,17 @@ public class MyJOggettoPanel extends MyJPanel {
 		MyJLabel lblCondizioni = new MyJLabel(condizioneOggetto.toString(), condizioneOggetto.getColoreCondizione());
 
 		if(!condizioneOggetto.equals(CondizioneEnum.Ricondizionato)){
-			MyJPanel panelStelleCondizioni = new MyJPanel();
-			panelStelleCondizioni.setBackground(Color.white);
-			panelStelleCondizioni.setPreferredSize(new Dimension(150, 30));
 			MyJLabel lblStella1 = new MyJLabel();
 			lblStella1.aggiungiImmagineScalata(condizioneOggetto.getStella1(), 25, 25, false);
 			MyJLabel lblStella2 = new MyJLabel();
 			lblStella2.aggiungiImmagineScalata(condizioneOggetto.getStella2(), 25, 25, false);
 			MyJLabel lblStella3 = new MyJLabel();
 			lblStella3.aggiungiImmagineScalata(condizioneOggetto.getStella3(), 25, 25, false);
-			panelStelleCondizioni.add(lblCondizioni);
-			panelStelleCondizioni.add(lblStella1);
-			panelStelleCondizioni.add(lblStella2);
-			panelStelleCondizioni.add(lblStella3);
 			
-			panelCondizioni.add(panelStelleCondizioni);
+			panelCondizioni.add(lblCondizioni);
+			panelCondizioni.add(lblStella1);
+			panelCondizioni.add(lblStella2);
+			panelCondizioni.add(lblStella3);
 		}
 		else {
 			lblCondizioni.aggiungiImmagineScalata(condizioneOggetto.getFixPerRicondizionato(), 25, 25, false);
