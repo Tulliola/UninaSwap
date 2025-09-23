@@ -158,8 +158,12 @@ public class PanelVisualizzaReport extends MyJPanel {
 	private CategoryDataset creaDataSetPerLineChart() {
 		DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
 			
-		for(Double valoreAttuale : valoriOfferteAccettate)
-			dataSet.addValue(valoreAttuale, "Offerte", String.valueOf(valoreAttuale));
+		int i = 1;
+		
+		for(Double valoreAttuale : valoriOfferteAccettate) {
+			dataSet.addValue(valoreAttuale, "Offerte", String.valueOf(i));
+			i++;
+		}
 		
 		return dataSet;
 	}

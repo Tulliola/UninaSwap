@@ -38,10 +38,10 @@ public class ProfiloUtenteDAO_Postgres implements ProfiloUtenteDAO{
 	//Metodi di aggiornamento
 	
 	@Override
-	public void aggiornaUsernameUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException {
+	public void aggiornaUsernameUtente(Connection connessioneDB, ProfiloUtente utenteLoggato, String newUsername) throws SQLException {
 		String sqlQuery = "UPDATE Profilo_utente SET Username = ? WHERE Email = ?";
 		try(PreparedStatement prepStat = connessioneDB.prepareStatement(sqlQuery)){
-			prepStat.setString(1, utenteLoggato.getUsername());
+			prepStat.setString(1, newUsername);
 			prepStat.setString(2, utenteLoggato.getEmail());
 			prepStat.executeUpdate();
 			

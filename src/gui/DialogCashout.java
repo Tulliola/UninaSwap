@@ -119,7 +119,7 @@ public class DialogCashout extends MyJDialog {
 		}	
 		try {
 			if(Double.parseDouble(importo) > utente.getSaldo()) 
-				throw new SaldoException("Non puoi fare prelevare più di quanto possiedi.");
+				throw new SaldoException("Non puoi prelevare più di quanto possiedi.");
 			else if(Double.parseDouble(importo) < 0)
 				throw new SaldoException("L'importo non può essere negativo.");
 		}catch(NumberFormatException e) {

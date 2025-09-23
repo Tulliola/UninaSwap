@@ -1,6 +1,6 @@
-/log4j.properties
-/controller/
 /database/
 /dto/
+/controller/
 /gui/
 /utilities/
+/eccezioni/

@@ -10,7 +10,7 @@ public interface ProfiloUtenteDAO {
 	public void inserisciNuovoUtente(Connection connessioneDB, ProfiloUtente newUtente) throws SQLException;
 	
 	//Metodi di aggiornamento
-	public void aggiornaUsernameUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException;
+	public void aggiornaUsernameUtente(Connection connessioneDB, ProfiloUtente utenteLoggato, String newUsername) throws SQLException;
 	public void aggiornaPasswordUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException;
 	public void aggiornaResidenzaUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException;
 	public void aggiornaBioPicUtente(Connection connessioneDB, ProfiloUtente utenteLoggato) throws SQLException;

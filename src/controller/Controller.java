@@ -101,8 +101,8 @@ public class Controller {
 		UIManager.put("ToolTip.background", Color.white);
 		 try {
 	            UIManager.setLookAndFeel(new FlatMacLightLaf());
-	            UIManager.put("TextComponent.arc", 20); 
-	            UIManager.put("TextComponent.padding", new Insets(5, 10, 5, 10)); 
+//	            UIManager.put("TextComponent.arc", 20); 
+//	            UIManager.put("TextComponent.padding", new Insets(5, 10, 5, 10)); 
 
 	        } catch (UnsupportedLookAndFeelException e) {
 	            e.printStackTrace();
@@ -226,7 +226,7 @@ public class Controller {
 			if(connessioneDB != null)
 				connessioneDB.close();
 		}
-		
+
 		dialogDiComunicataSospensione = new DialogDiComunicataSospensione(frameDiLogin, utenteLoggato.getDataSospensione(), motiviSegnalazioni, true, utentiSegnalanti);
 		dialogDiComunicataSospensione.setVisible(true);
 		
@@ -425,11 +425,11 @@ public class Controller {
 	}
 	
 	public void onSalvaModificheButtonClickedAggiornaUsername(String newUsername) throws SQLException{
-		utenteLoggato.setUsername(newUsername);
 		
 		try{
 			connessioneDB = DatabaseManager.getConnection();
-			utenteDAO.aggiornaUsernameUtente(connessioneDB, utenteLoggato);
+			utenteDAO.aggiornaUsernameUtente(connessioneDB, utenteLoggato, newUsername);
+			utenteLoggato.setUsername(newUsername);
 		}
 		catch(SQLException exc) {
 			logger.error(exc);
